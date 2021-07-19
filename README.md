@@ -1,5 +1,3 @@
-# CSSWENG-AY2021T3-S11-G3
-
 # Disciples Christian Church DB
 
 ## Instructions
@@ -12,7 +10,7 @@
 ## Instructions for building executable
 1. run `npm run dist`
 2. wait for the build to finish
-3. access the executable at election/output/win-unpacked
+3. access the executable at dist/win-unpacked
 
 #### dependencies
 - body-parser
