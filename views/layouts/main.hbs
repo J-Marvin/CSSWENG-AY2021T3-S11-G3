@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="/bootstrap-5.0.2-dist/css/bootstrap.min.css">
+        
+        {{#each styles}}
+        <link rel="stylesheet" type="text/css" href="/css/{{this}}.css">
+        {{/each}}
+        
+        {{#each scripts}}
+        <script type="text/javascript" src="/js/{{this}}.js"></script>
+        {{/each}}
+        
+        <title>{{title}}</title>
+    </head>
+    <body>
+        {{{body}}}
+        <script src="./bootstrap-5.0.2-dist/js/bootstrap.bundle.min.js">
+        </script>
+    </body>
+</html>
