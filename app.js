@@ -14,17 +14,15 @@ var hbs = exphbs.create({
     partialsDir: path.join(__dirname, 'views/partials')
 });
 
-dotenv.config({path: path.join(__dirname, '.env')});
+dotenv.config({ path: path.join(__dirname, '.env') });
 
 var port = process.env.PORT;
 var hostname = process.env.HOSTNAME;
 
 app.engine('hbs', hbs.engine);
 app.set('view engine', '.hbs');
-app.set('views', path.join(__dirname, 'views'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, '/public')));
-
 
 app.use('/', routes);
 
