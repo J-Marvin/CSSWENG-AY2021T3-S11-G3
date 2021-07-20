@@ -20,6 +20,8 @@ function createWindow() {
         }
     });
 
+    mainWindow.setMinimumSize(800, 600)
+
     mainWindow.loadURL('http://' + hostname + ':' + port);
 
     mainWindow.on('closed', () => {
