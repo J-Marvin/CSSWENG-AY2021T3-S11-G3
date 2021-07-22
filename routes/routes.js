@@ -1,11 +1,15 @@
-const express = require('express');
-const path = require('path');
+const express = require('express')
+const path = require('path')
 
-const indexController = require('../controllers/indexController.js');
+// controllers
+const indexController = require('../controllers/indexController.js')
 
-const app = express();
-app.set('views', path.join(__dirname, '../views'));
+const app = express()
 
-app.get('/', indexController.getIndex);
+// Setting the view path here ensures the proper path will be set when the application is built
+app.set('views', path.join(__dirname, '../views'))
 
-module.exports = app;
+// Home page
+app.get('/', indexController.getIndex)
+
+module.exports = app

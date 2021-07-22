@@ -1,43 +1,45 @@
-const {app, BrowserWindow, Menu} = require('electron');
-const dotenv = require('dotenv');
-const path = require('path');
+const { app, BrowserWindow } = require('electron')
+const dotenv = require('dotenv')
+const path = require('path')
 
-dotenv.config({ path: path.join(__dirname, '.env') });
+dotenv.config({ path: path.join(__dirname, '.env') })
 
-var port = process.env.PORT;
-var hostname = process.env.HOSTNAME;
+const port = process.env.PORT
+const hostname = process.env.HOSTNAME
 
-const server = require('./app.js');
+const server = require('./app.js')
 
-let mainWindow;
+// This object represents the main window
+const mainWindow = {
+  // This function initializes the browser window and opens the local server
+  initWindow: function () {
+    this.window = new BrowserWindow({
+      width: 800,
+      height: 600,
+      webPreferences: {
+        nodeIntegration: true
+      }
+    })
 
-function createWindow() {
-    mainWindow = new BrowserWindow({
-        width: 800,
-        height: 600,
-        webPreferences: {
-            nodeIntegration: true
-        }
-    });
+    this.window.setMinimumSize(800, 600)
 
-    mainWindow.setMinimumSize(800, 600)
+    this.window.loadURL('http://' + hostname + ':' + port)
+  },
+  // the window object
+  window: null
+}
 
-    mainWindow.loadURL('http://' + hostname + ':' + port);
+// When the app is ready, initialize the window
+app.on('ready', mainWindow.initWindow)
 
-    mainWindow.on('closed', () => {
-        mainWindow = null;
-    });
-
-    console.log(hostname + " " + port);
-};
-
-app.on('ready', createWindow);
 app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin')
-        app.quit();
-});
+  if (process.platform !== 'darwin') {
+    app.quit()
+  }
+})
 
 app.on('activate', function () {
-    if (mainWindow === null)
-        createWindow();
-});
+  if (mainWindow.window === null) {
+    mainWindow.initWindow()
+  }
+})

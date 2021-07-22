@@ -23,3 +23,4 @@
 - electron
 - electron-builder
 - nodemon
+- standard
