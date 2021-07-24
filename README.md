@@ -3,6 +3,7 @@
 ## Instructions
 1. run `npm i` to install dependencies
 2. run `./node_modules/.bin/electron-rebuild` to install native modules
+   - if you run up to any issues with this command, run `.\node_modules\.bin\electron-rebuild.cmd` instead
 3. run `npm start` to open app in BrowserWindow or `npm dev` to open local server
    1. Note: once the BrowserWindow is closed, the server closes
    2. Note: either of the two commands will open the server
