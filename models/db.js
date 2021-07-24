@@ -14,13 +14,13 @@ const tables = {
   infantTable: 'infant'
 }
 
-function insertMember(data, callback = null) {
+function insertMember (data, callback = null) {
   const db = sqlite3(path.join(folder, file), { verbose: console.log })
   // if there are required fields are present
   // if data.personid is null callback(false) or throw error
   // if data's required fields are present insert to db
 
-  // const insert = db.prepare('INSERT INTO members required fields VALUES vals')
+  const insert = db.prepare('INSERT INTO members required fields VALUES vals')
   const member = db.run(insert)
 
   const template =
