@@ -1,5 +1,6 @@
 const sqlite3 = require('better-sqlite3')
 const path = require('path')
+// const tables
 
 const database = {
   initDB: async function (file, folder) {
@@ -44,7 +45,7 @@ const database = {
       'level TEXT NOT NULL PRIMARY KEY,' +
       'hashed_password TEXT' +
       ')'
-      
+
     const createPreNuptial =
       'CREATE TABLE IF NOT EXISTS pre_nuptial (' +
         'record_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,' +
@@ -86,7 +87,7 @@ const database = {
         'FOREIGN KEY(member_id) REFERENCES members(member_id) ' +
       ')'
 
-    const createAddress = 
+    const createAddress =
       'CREATE TABLE IF NOT EXISTS address (' +
         'address_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
         'street TEXT, ' +
@@ -101,7 +102,7 @@ const database = {
         'address_id INTEGER,' +
         'bap_reg_id INTEGER,' +
         'wedding_reg_id INTEGER,' +
-        'prenup_record_id INTEGER,' + 
+        'prenup_record_id INTEGER,' +
         'member_status TEXT,' +
         'first_name TEXT,' +
         'middle_name TEXT,' +
@@ -132,6 +133,59 @@ const database = {
     db.prepare(createChurchIncome).run()
 
     db.close()
+  },
+  /*
+    insertData: function (table) {
+      if (table == CONST_MEMBER) {
+        insertMember ();
+      }
+    }
+  */
+  insertMember: function (req, res) {
+    // to edit later
+    const firstName = req.body.firstName
+    const midName = req.body.midName
+    const lastName = req.body.lastName
+    const civilStatus = req.body.civilStatus
+    const age = req.body.age
+    const birthday = req.body.age
+    const occupation = req.body.occupation
+    const workplace = req.body.workplace
+    const email = req.body.email
+    const mobile = req.body.mobile
+    const educ = req.body.educ
+    const almaMater = req.body.almaMater
+
+    const query = 'INSERT INTO members (' +
+    'member_status,' +
+    'first_name' +
+    'middle_name' +
+    'last_name' +
+    'civil_status' +
+    'age' +
+    'birthday' +
+    'occupation' +
+    'workplace' +
+    'email' +
+    'mobile' +
+    'educ_attainment' +
+    'alma_mater' +
+    ')' +
+    'VALUES' +
+    firstName +
+    midName +
+    lastName +
+    civilStatus +
+    age +
+    birthday +
+    occupation +
+    workplace +
+    email +
+    mobile +
+    educ +
+    almaMater
+
+    // db.prepare(query).run()
   }
 }
 
