@@ -1,25 +1,38 @@
 const sqlite3 = require('better-sqlite3')
 const path = require('path')
-
-// this will stay
-const Constants = {
-  member: 'MEMBER',
-  address: 'ADDRESS',
-  accounts: 'ACCOUNT',
-  person: 'PERSON',
-  donation: 'DONATION',
-  baptismal: 'BAPTISMAL',
-  wedding: 'WEDDING',
-  prenuptial: 'PRE-NUPTIAL',
-  witness: 'WITNESS',
-  infant: 'INFANT'
+// const tables
+const tables = {
+  memberTable: 'members',
+  addressTable: 'address',
+  accountTable: 'account',
+  personTable: 'person',
+  donationTable: 'donation',
+  baptismalTable: 'baptismal',
+  weddingTable: 'wedding',
+  prenuptialTable: 'pre-nuptial',
+  witnessTable: 'witness',
+  infantTable: 'infant'
 }
 
-// helper functions
-function insertMember (data, callback) {
+function insertMember(data, callback = null) {
+  const db = sqlite3(path.join(folder, file), { verbose: console.log })
+  // if there are required fields are present
+  // if data.personid is null callback(false) or throw error
+  // if data's required fields are present insert to db
+
+  // const insert = db.prepare('INSERT INTO members required fields VALUES vals')
+  const member = db.run(insert)
+
+  const template =
+      db.prepare('UPDATE members' +
+                  'SET ? = ?' +
+                  'WHERE member_id = ' + str(member.member_id))
+
+  if (data.wedding_reg_id !== null) {
+    db.run(template, 'wedding_reg_id', data.wedding_reg_id)
+  }
 }
 
-// const object to export
 const database = {
   initDB: async function (file, folder) {
     // opens the file and verbose prints the statements executed
@@ -100,7 +113,7 @@ const database = {
         'FOREIGN KEY(prenup_record_id) REFERENCES pre_nuptial(record_id)' +
       ')'
 
-    const createDonationRecord = 
+    const createDonationRecord =
       'CREATE TABLE IF NOT EXISTS donatations (' +
         'donation_record_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,' +
         'member_id INTEGER NOT NULL,' +
@@ -144,8 +157,8 @@ const database = {
         'FOREIGN KEY(person_id) REFERENCES people(person_id)' +
       ')'
 
-    const createPerson = 
-      'CREATE TABLE IF NOT EXISTS people(' + 
+    const createPerson =
+      'CREATE TABLE IF NOT EXISTS people(' +
         'person_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
         'member_id INTEGER,' +
         'first_name TEXT,' +
@@ -155,14 +168,14 @@ const database = {
       ')'
 
     const createAttendance = 
-      'CREATE TABLE IF NOT EXISTS attendance(' + 
+      'CREATE TABLE IF NOT EXISTS attendance(' +
         'attendance_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
         'person_id INTEGER NOT NULL,' +
         'date TEXT,' +
         'FOREIGN KEY(person_id) REFERENCES people(person_id)' +
       ')'
-    
-    const createCouple = 
+
+    const createCouple =
       'CREATE TABLE IF NOT EXISTS couples(' + 
       'couple_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
       'female_id INTEGER NOT NULL,' +
@@ -184,60 +197,20 @@ const database = {
 
     db.close()
   },
-  /*
-    insertOne: function(table, data, callback) {
-    if(table === Constants.member)
+
+  // get data from req
+  // member = {req.body.info}
+  // person = {req.body.name}
+  // db.insertOne(file, db.PEOPLETABLE, person, function(err, res) { member.id = res.id })
+  insertOne: function (file, table, data, callback) {
+    if (table === tables.MEMBERTABLE) {
       insertMember(data, callback)
-    else if(cond2)
-    ...
+    } else if (table === tables.PEOPLETABLE) {
+      // insertPerson(data, callback)
     }
-  */
-  insertMember: function (req, res) {
-    // to edit later
-    const firstName = req.body.firstName
-    const midName = req.body.midName
-    const lastName = req.body.lastName
-    const civilStatus = req.body.civilStatus
-    const age = req.body.age
-    const birthday = req.body.age
-    const occupation = req.body.occupation
-    const workplace = req.body.workplace
-    const email = req.body.email
-    const mobile = req.body.mobile
-    const educ = req.body.educ
-    const almaMater = req.body.almaMater
+  },
 
-    const query = 'INSERT INTO members (' +
-    'member_status,' +
-    'first_name' +
-    'middle_name' +
-    'last_name' +
-    'civil_status' +
-    'age' +
-    'birthday' +
-    'occupation' +
-    'workplace' +
-    'email' +
-    'mobile' +
-    'educ_attainment' +
-    'alma_mater' +
-    ')' +
-    'VALUES' +
-    firstName +
-    midName +
-    lastName +
-    civilStatus +
-    age +
-    birthday +
-    occupation +
-    workplace +
-    email +
-    mobile +
-    educ +
-    almaMater
-
-    // db.prepare(query).run()
-  }
+  tables: tables
 }
 
 module.exports = database
