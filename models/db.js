@@ -1,14 +1,32 @@
 const sqlite3 = require('better-sqlite3')
 const path = require('path')
-// const tables
 
+// this will stay
+const Constants = {
+  member: 'MEMBER',
+  address: 'ADDRESS',
+  accounts: 'ACCOUNT',
+  person: 'PERSON',
+  donation: 'DONATION',
+  baptismal: 'BAPTISMAL',
+  wedding: 'WEDDING',
+  prenuptial: 'PRE-NUPTIAL',
+  witness: 'WITNESS',
+  infant: 'INFANT'
+}
+
+// helper functions
+function insertMember (data, callback) {
+}
+
+// const object to export
 const database = {
   initDB: async function (file, folder) {
     // opens the file and verbose prints the statements executed
     const db = sqlite3(path.join(folder, file), { verbose: console.log })
 
     /* This statement creates the Baptismal Registry table
-       Fields: 
+       Fields:
        reg_id - primary id
        date - date of the baptism
        location - location of the baptism
@@ -167,10 +185,11 @@ const database = {
     db.close()
   },
   /*
-    insertData: function (table) {
-      if (table == CONST_MEMBER) {
-        insertMember ();
-      }
+    insertOne: function(table, data, callback) {
+    if(table === Constants.member)
+      insertMember(data, callback)
+    else if(cond2)
+    ...
     }
   */
   insertMember: function (req, res) {
