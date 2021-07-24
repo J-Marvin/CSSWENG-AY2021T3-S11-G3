@@ -1,6 +1,30 @@
 const sqlite3 = require('better-sqlite3')
 const path = require('path')
 // const tables
+const tables = {
+  memberTable: 'members',
+  addressTable: 'address'
+}
+
+function insertMember(data, callback = null) {
+  const db = sqlite3(path.join(folder, file), { verbose: console.log })
+  // if there are required fields are present
+  // if data.personid is null callback(false) or throw error
+  // if data's required fields are present insert to db
+
+  // const insert = db.prepare('INSERT INTO members required fields VALUES vals')
+    const member = db.run(insert)
+
+    const template = 
+      db.prepare('UPDATE members' +
+                  'SET ? = ?' + 
+                  'WHERE member_id = ' + str(member.member_id))
+
+    if(data.wedding_reg_id !== null) {
+      db.run(template, "wedding_reg_id", data.wedding_reg_id)
+    }
+    
+}
 
 const database = {
   initDB: async function (file, folder) {
@@ -166,6 +190,19 @@ const database = {
 
     db.close()
   },
+
+  // get data from req
+  // member = {req.body.info}
+  // person = {req.body.name}
+  // db.insertOne(file, db.PEOPLETABLE, person, function(err, res) { member.id = res.id })
+  insertOne: function(file, table, data, callback) {
+    if(table === tables.MEMBERTABLE) {
+      insertMember(data, callback)
+    } 
+    else if(table === tables.PEOPLETABLE) {
+      insertPerson(data, callback)
+    }
+  }
   /*
     insertData: function (table) {
       if (table == CONST_MEMBER) {
@@ -218,7 +255,8 @@ const database = {
     almaMater
 
     // db.prepare(query).run()
-  }
+  },
+  tables: tables
 }
 
 module.exports = database
