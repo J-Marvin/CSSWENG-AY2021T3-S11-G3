@@ -1,42 +1,91 @@
 const sqlite3 = require('better-sqlite3')
 const path = require('path')
-// const tables
+
 const tables = {
-  memberTable: 'members',
-  addressTable: 'address',
-  accountTable: 'account',
-  personTable: 'person',
-  donationTable: 'donation',
-  baptismalTable: 'baptismal',
-  weddingTable: 'wedding',
-  prenuptialTable: 'pre-nuptial',
-  witnessTable: 'witness',
-  infantTable: 'infant'
+  MEMBERTABLE: 'members',
+  ADDRESSTABLE: 'address',
+  ACCOUNTTABLE: 'account',
+  PERSONTABLE: 'person',
+  DONATIONTABLE: 'donation',
+  BAPTISMALTABLE: 'baptismal',
+  WEDDINGTABLE: 'wedding',
+  PRENUPTIALTABLE: 'pre-nuptial',
+  WITNESSTABLE: 'witness',
+  INFANTTABLE: 'infant'
 }
 
-function insertMember (data, callback = null) {
-  const db = sqlite3(path.join(folder, file), { verbose: console.log })
+function insertMember (data, file, callback = null) {
+  const db = file
   // if there are required fields are present
   // if data.personid is null callback(false) or throw error
   // if data's required fields are present insert to db
+  if (data.person_id === null) {
+    callback = callback(false)
+    return callback
+  } else if (data.address_id !== null &&
+            data.member_status !== null &&
+            data.civil_status !== null &&
+            data.age !== null &&
+            data.birthday !== null &&
+            data.occupation !== null &&
+            data.workplace !== null &&
+            data.email !== null &&
+            data.mobile !== null &&
+            data.educ_attainment !== null &&
+            data.alma_mater !== null) {
+    const insert = db.prepare('INSERT INTO members (' +
+              'address_id' +
+              'member_status' +
+              'civil_status' +
+              'age' +
+              'birthday' +
+              'occupation' +
+              'workplace' +
+              'email' +
+              'mobile' +
+              'educ_attainment' +
+              'alma_mater' +
+              'VALUES (' +
+              data.address_id +
+              data.member_status +
+              data.civil_status +
+              data.age +
+              data.birthday +
+              data.occupation +
+              data.workplace +
+              data.email +
+              data.mobile +
+              data.educ_attainment +
+              data.alma_mater +
+              ')')
+    const member = db.run(insert)
 
-  const insert = db.prepare('INSERT INTO members required fields VALUES vals')
-  const member = db.run(insert)
-
-  const template =
+    const template =
       db.prepare('UPDATE members' +
                   'SET ? = ?' +
-                  'WHERE member_id = ' + str(member.member_id))
+                  'WHERE member_id = ' + member.member_id.toString())
 
-  if (data.wedding_reg_id !== null) {
-    db.run(template, 'wedding_reg_id', data.wedding_reg_id)
+    // if there is a wedding registry
+    if (data.wedding_reg_id !== null) {
+      db.run(template, 'wedding_reg_id', data.wedding_reg_id)
+    }
+
+    // if there is a baptismal registry
+    if (data.baptismal_reg_id !== null) {
+      db.run(template, 'bap_reg_id', data.baptismal_reg_id)
+    }
+
+    // if there is a prenup record
+    if (data.prenup_record_id !== null) {
+      db.run(template, 'prenup_record_id', data.prenup_record_id)
+    }
   }
 }
 
 const database = {
-  initDB: async function (file, folder) {
+  initDB: async function (file) {
     // opens the file and verbose prints the statements executed
-    const db = sqlite3(path.join(folder, file), { verbose: console.log })
+    const db = file
 
     /* This statement creates the Baptismal Registry table
        Fields:
@@ -53,13 +102,14 @@ const database = {
         'officiant TEXT' +
         ')'
 
-    /* This statement create the Infant Dedication table 
+    /* This statement create the Infant Dedication table
        Fields:
        dedication_id - primary id
        person_id - an id referencing the person(infant)
        date - the date of the event
        place - the place of the event
-       officiant - the officiant 
+       officiant - the officiant
+       parents_id - an id referencing the parents(couple_id)
     */
     const createInfDedication =
       'CREATE TABLE IF NOT EXISTS inf_dedication (' +
@@ -147,7 +197,7 @@ const database = {
         'occupation TEXT,' +
         'workplace TEXT,' +
         'email TEXT,' +
-        'mobile INTEGER,' +
+        'mobile TEXT,' +
         'educ_attainment TEXT,' +
         'alma_mater TEXT,' +
         'FOREIGN KEY(address_id) REFERENCES address(address_id),' +
@@ -204,12 +254,15 @@ const database = {
   // db.insertOne(file, db.PEOPLETABLE, person, function(err, res) { member.id = res.id })
   insertOne: function (file, table, data, callback) {
     if (table === tables.MEMBERTABLE) {
-      insertMember(data, callback)
-    } else if (table === tables.PEOPLETABLE) {
+      insertMember(data, file, callback)
+    } else if (table === tables.PERSONTABLE) {
       // insertPerson(data, callback)
     }
   },
-
+  /*
+    This table is a constant hashmap containing the constant strings
+    of the tables
+  */
   tables: tables
 }
 
