@@ -1,23 +1,22 @@
 const sqlite3 = require('better-sqlite3')
-const path = require('path')
 const knex = require('knex')
 
 // gettings fields of all tables
-const member_fields = require('./members.js')
-const address_fields = require('./address.js')
-const account_fields = require('./accounts.js')
-const person_fields = require('./Person.js')
-const donation_fields = require('./donation.js')
-const bap_reg_fields = require('./baptismalRegistry.js')
-const wedding_reg_fields = require('./weddingRegistry.js')
-const prenup_record_fields = require('./prenupRecord.js')
-const witness_fields = require('./witness.js')
-const inf_ded_fields = require('./infantDedication.js')
-const couple_fields = require('./Couple.js')
+const memberFields = require('./members.js')
+const addressFields = require('./address.js')
+const accountFields = require('./accounts.js')
+const personFields = require('./Person.js')
+const donationFields = require('./donation.js')
+const bapRegFields = require('./baptismalRegistry.js')
+const weddingRegFields = require('./weddingRegistry.js')
+const prenupRecordFields = require('./prenupRecord.js')
+const witnessFields = require('./witness.js')
+const infDedFields = require('./infantDedication.js')
+const coupleFields = require('./Couple.js')
 
 let knexClient = null
 
-let tables = {
+const tables = {
   MEMBER_TABLE: 'members',
   ADDRESS_TABLE: 'address',
   ACCOUNT_TABLE: 'accounts',
@@ -30,30 +29,30 @@ let tables = {
   INFANT_TABLE: 'inf_dedication',
   COUPLE_TABLE: 'couples'
 }
-let tableNames = Object.values(tables)
+const tableNames = Object.values(tables)
 
-let fields = {
-  members : Object.values(member_fields),
-  address : Object.values(address_fields),
-  accounts : Object.values(account_fields),
-  people : Object.values(person_fields),
-  donations : Object.values(donation_fields),
-  bap_reg : Object.values(bap_reg_fields),
-  wedding_reg : Object.values(wedding_reg_fields),
-  pre_nuptial : Object.values(prenup_record_fields),
-  witness : Object.values(witness_fields),
-  inf_dedication : Object.values(inf_ded_fields),
-  couples : Object.values(couple_fields),
+const fields = {
+  members: Object.values(memberFields),
+  address: Object.values(addressFields),
+  accounts: Object.values(accountFields),
+  people: Object.values(personFields),
+  donations: Object.values(donationFields),
+  bap_reg: Object.values(bapRegFields),
+  wedding_reg: Object.values(weddingRegFields),
+  pre_nuptial: Object.values(prenupRecordFields),
+  witness: Object.values(witnessFields),
+  inf_dedication: Object.values(infDedFields),
+  couples: Object.values(coupleFields)
 }
 
 const database = {
   /**
    * This function initializes the database given the path of the file.
-   * @param {string} file the path of the file to be opened 
+   * @param {string} file the path of the file to be opened
    */
   initDB: async function (file) {
     // opens the file and verbose prints the statements executed
-    const db = sqlite3(file , { verbose: console.log })
+    const db = sqlite3(file, { verbose: console.log })
 
     // Initialize Knex connection
     knexClient = knex({
@@ -63,7 +62,6 @@ const database = {
       },
       useNullAsDefault: true
     })
-
 
     /* This statement creates the Baptismal Registry table
        Fields:
@@ -99,9 +97,8 @@ const database = {
         'officiant TEXT,' +
         'FOREIGN KEY(person_id) REFERENCES people(person_id),' +
         'FOREIGN KEY(parents_id) REFERENCES couples(couple_id)' +
-      ')' 
-    
-    
+      ')'
+
     const createWitness =
       'CREATE TABLE IF NOT EXISTS witness (' +
         'witness_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
@@ -109,7 +106,7 @@ const database = {
         'wedding_id INTEGER,' +
         'person_id INTEGER NOT NULL,' +
         'FOREIGN KEY(dedication_id) REFERENCES inf_dedication(dedication_id),' +
-        'FOREIGN KEY(wedding_id) REFERENCES wedding_red(reg_id),' + 
+        'FOREIGN KEY(wedding_id) REFERENCES wedding_red(reg_id),' +
         'FOREIGN KEY(person_id) REFERENCES people(person_id)' +
       ')'
 
@@ -196,7 +193,7 @@ const database = {
         'FOREIGN KEY(member_id) references members(member_id)' +
       ')'
 
-    const createAttendance = 
+    const createAttendance =
       'CREATE TABLE IF NOT EXISTS attendance(' +
         'attendance_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
         'person_id INTEGER NOT NULL,' +
@@ -205,7 +202,7 @@ const database = {
       ')'
 
     const createCouple =
-      'CREATE TABLE IF NOT EXISTS couples(' + 
+      'CREATE TABLE IF NOT EXISTS couples(' +
       'couple_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
       'female_id INTEGER NOT NULL,' +
       'male_id INTEGER NOT NULL' +
@@ -229,7 +226,6 @@ const database = {
     db.close()
   },
 
-
   /**
    * This function inserts the data into a specified table in the database and passes the result to the
    * callback function
@@ -238,36 +234,43 @@ const database = {
    * @param {function} callback - the function to be executed after inserting the data
    */
   insertOne: function (table, data, callback = null) {
-    
     // if table is not in database
-    if(!(tableNames.includes(table))) {
-      console.log(table )
+    if (!(tableNames.includes(table))) {
+      const success = false
+      console.log(table)
       console.log(tableNames)
-      callback(false)
+      callback(success)
     } else {
-      for (let key in data)
+      for (const key in data) {
         if (fields[table].includes(key) && // if the key is a valid field
-           (data[key] === null || data[key] === undefined)) // if the value is valid
+           (data[key] === null || data[key] === undefined)) {
+          // if the value is valid
           delete data[key]
+        }
 
-      knexClient(table)
-      .insert(data) // insert data
-      .then(function (result) {
-        if(callback !== null) // if there is a callback function return id of inserted row
-          callback(result)
-      }).catch(function(err) {
-        console.log(err) 
-        if(callback !== null)
-          callback(false) // pass false to the callback function where an error occurred 
-      })
+        knexClient(table)
+          .insert(data) // insert data
+          .then(function (result) {
+            if (callback !== null) {
+              callback(result) // if there is a callback function return id of inserted row
+            }
+          }).catch(function (err) {
+            console.log(err)
+            if (callback !== null) {
+              const flag = false
+              callback(flag) // pass false to the callback function where an error occurred
+            }
+          })
+      }
     }
   },
+
   /*
     This table is a constant object containing the constant strings
     of the tables
   */
   tables: tables,
-
+  
   // make insert table to make code more reusable
   /**
    * This function creates a new table specified by the param object newTable and
