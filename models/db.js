@@ -266,9 +266,101 @@ const database = {
     This table is a constant object containing the constant strings
     of the tables
   */
-  tables: tables
+  tables: tables,
 
   // make insert table to make code more reusable
+  /**
+   * This function creates a new table specified by the param object newTable and
+   * passes a callback function after execution
+   * @param {string} newTable - the table name to be created
+   * @param {array} columns - the array of strings containing column names
+   *                      e.g. columns = ['name', 'age', 'city']
+   * @param {object} types - the object containing the data types paired to the columns array
+   *                      e.g. types = {name: 'string', age: 'integer', city: 'string'}
+   */
+  createTable: function (newTable, columns, types, callback = null) {
+    knexClient.schema.createTable(newTable, function (table) {
+      table.increments()
+      // traverses to columns array
+      for (let i = 0; i < columns.length; i++) {
+        // determines the data type using a switch
+        switch (types[columns[i]]) {
+          // each case corresponds to what data type function to use
+          case 'string':
+            table.string(columns[i])
+            break
+          case 'integer':
+            table.integer(columns[i])
+            break
+          case 'date':
+            table.date(columns[i])
+            break
+          case 'boolean':
+            table.boolean(columns[i])
+            break
+          case 'float':
+          case 'decimal':
+            table.decimal(columns[i])
+            break
+        }
+      }
+      table.timestamps()
+    })
+      .then(function (result) {
+        if (callback !== null) { // if there is a callback function return id of inserted row
+          callback(result)
+        }
+      }).catch(function (err) {
+        console.log(err)
+        if (callback !== null) {
+          callback(false) // pass false to the callback function where an error occurred
+        }
+      })
+  },
+
+  /**
+   * This function updates a data into a specified table based on the object data and
+   * condition, afterwards it passes the callback function
+   * @param {string} table - refers to the table name where the data will be updated onto a row
+   * @param {object} data - the object containing the values paired to their respective column name
+   * @param {object} condition - the object containing the WHERE conditions paired to their respective column name
+   */
+  updateOne: function (table, data, condition, callback = null) {
+    knexClient(table)
+      .where(condition)
+      .update(data)
+      .then(function (result) {
+        if (callback !== null) { // if there is a callback function return id of inserted row
+          callback(result)
+        }
+      }).catch(function (err) {
+        console.log(err)
+        if (callback !== null) {
+          callback(false) // pass false to the callback function where an error occurred
+        }
+      })
+  },
+
+  /**
+   * This function deletes a row in a table specified by the provided condition and passes
+   * a callback function
+   * @param {string} table - refers to the table name where the row will be deleted
+   * @param {object} condition - the object containing the WHERE conditions paired to their respective column name
+   */
+  deleteOne: function (table, condition) {
+    knexClient(table)
+      .del(condition)
+      .then(function (result) {
+        if (callback !== null) { // if there is a callback function return id of inserted row
+          callback(result)
+        }
+      }).catch(function (err) {
+        console.log(err)
+        if (callback !== null) {
+          callback(false) // pass false to the callback function where an error occurred
+        }
+      })
+  }
 }
 
 module.exports = database
