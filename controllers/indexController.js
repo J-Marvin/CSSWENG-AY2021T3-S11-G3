@@ -13,8 +13,8 @@ const controller = {
 
     db.insertOne(db.tables.MEMBER_TABLE, data, function(result) {
       console.log(result)
+      res.render('index')
     })
-    res.render('index')
   }
 }
 

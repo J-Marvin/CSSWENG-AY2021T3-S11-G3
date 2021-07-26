@@ -1,8 +1,8 @@
 
-const bap_reg_fields = {
+const bapRegFields = {
   ID: 'reg_id',
   DATE: 'date',
   LOCATION: 'location',
   OFFICIANT: 'officiant'
 }
-module.exports = bap_reg_fields
+module.exports = bapRegFields

@@ -1,6 +1,6 @@
-const account_fields = {
-  ID: "level",
-  PASSWORD: "hased_password"
+const accountFields = {
+  ID: 'level',
+  PASSWORD: 'hashed_password'
 }
 
-module.exports = account_fields
+module.exports = accountFields
