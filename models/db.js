@@ -52,7 +52,9 @@ const database = {
    */
   initDB: async function (file) {
     // opens the file and verbose prints the statements executed
-    const db = sqlite3(file, { verbose: console.log })
+    const db = sqlite3(file)
+    const bcrypt = require('bcrypt')
+    const saltRounds = 10
 
     // Initialize Knex connection
     knexClient = knex({
@@ -222,6 +224,51 @@ const database = {
     db.prepare(createPerson).run()
     db.prepare(createAttendance).run()
 
+    // if the accounts table is empty then insert passwords
+    knexClient('accounts').select().then(function (res) {
+      if (res.length === 0) {
+        bcrypt.hash('NormandyN7', saltRounds, (err, hash) => {
+          if (err) {
+            console.log(err)
+          }
+          knexClient('accounts').insert({
+            level: 1,
+            hashed_password: hash
+          }).then(function (result) {
+            console.log(result)
+          }).catch(function (err) {
+            console.log(err)
+          })
+        })
+        bcrypt.hash('HelloSweng', saltRounds, (err, hash) => {
+          if (err) {
+            console.log(err)
+          }
+
+          knexClient('accounts').insert({
+            level: 2,
+            hashed_password: hash
+          }).then(function (result) {
+            console.log(result)
+          }).catch(function (err) {
+            console.log(err)
+          })
+        })
+        bcrypt.hash('Coffee118', saltRounds, (err, hash) => {
+          if (err) {
+            console.log(err)
+          }
+          knexClient('accounts').insert({
+            level: 3,
+            hashed_password: hash
+          }).then(function (result) {
+            console.log(result)
+          }).catch(function (err) {
+            console.log(err)
+          })
+        })
+      }
+    })
     // close the connection to the db
     db.close()
   },
@@ -237,8 +284,6 @@ const database = {
     // if table is not in database
     if (!(tableNames.includes(table))) {
       const success = false
-      console.log(table)
-      console.log(tableNames)
       callback(success)
     } else {
       for (const key in data) {
@@ -247,7 +292,6 @@ const database = {
           // if the value is valid
           delete data[key]
         }
-
         knexClient(table)
           .insert(data) // insert data
           .then(function (result) {
@@ -263,6 +307,10 @@ const database = {
           })
       }
     }
+  },
+
+  find: function (table, query, callback = null) {
+
   },
   /**
    * This table is a constant object containing the constant strings of the tables

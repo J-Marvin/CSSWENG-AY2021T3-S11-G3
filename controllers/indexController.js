@@ -1,14 +1,14 @@
 const db = require('../models/db.js')
-const sqlite3 = require('better-sqlite3')
-const memberFields = require('../models/members.js')
+const personFields = require('../models/person')
 
 const controller = {
-  getIndex: function (req, res) {
-    const data = {}
+  getIndex: async function (req, res) {
+    const data = {
+    }
+    data[personFields.FIRST_NAME] = 'Jan Marvin'
+    data[personFields.LAST_NAME] = 'Lim'
 
-    data[memberFields.WORKPLACE] = 'Baguio'
-
-    db.insertOne(db.tables.MEMBER_TABLE, data, function(result) {
+    db.insertOne(db.tables.PERSON_TABLE, data, function (result) {
       console.log(result)
       res.render('index')
     })
