@@ -310,7 +310,7 @@ const database = {
   },
 
   find: function(table, query, projection, callback) {
-    knexClient.select(projection).where(query).then(function (result) {
+    knexClient(table).select(projection).where(query).then(function (result) {
       callback(result)
     }).catch((err) => {
       console.log(err)
