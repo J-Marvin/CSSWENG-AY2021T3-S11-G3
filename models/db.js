@@ -1,91 +1,69 @@
 const sqlite3 = require('better-sqlite3')
 const path = require('path')
+const knex = require('knex')
 
-const tables = {
-  MEMBERTABLE: 'members',
-  ADDRESSTABLE: 'address',
-  ACCOUNTTABLE: 'account',
-  PERSONTABLE: 'person',
-  DONATIONTABLE: 'donation',
-  BAPTISMALTABLE: 'baptismal',
-  WEDDINGTABLE: 'wedding',
-  PRENUPTIALTABLE: 'pre-nuptial',
-  WITNESSTABLE: 'witness',
-  INFANTTABLE: 'infant'
+// gettings fields of all tables
+const member_fields = require('./members.js')
+const address_fields = require('./address.js')
+const account_fields = require('./accounts.js')
+const person_fields = require('./Person.js')
+const donation_fields = require('./donation.js')
+const bap_reg_fields = require('./baptismalRegistry.js')
+const wedding_reg_fields = require('./weddingRegistry.js')
+const prenup_record_fields = require('./prenupRecord.js')
+const witness_fields = require('./witness.js')
+const inf_ded_fields = require('./infantDedication.js')
+const couple_fields = require('./Couple.js')
+
+let knexClient = null
+
+let tables = {
+  MEMBER_TABLE: 'members',
+  ADDRESS_TABLE: 'address',
+  ACCOUNT_TABLE: 'accounts',
+  PERSON_TABLE: 'people',
+  DONATION_TABLE: 'donations',
+  BAPTISMAL_TABLE: 'bap_reg',
+  WEDDING_TABLE: 'wedding_reg',
+  PRENUPTIAL_TABLE: 'pre_nuptial',
+  WITNESS_TABLE: 'witness',
+  INFANT_TABLE: 'inf_dedication',
+  COUPLE_TABLE: 'couples'
 }
+let tableNames = Object.values(tables)
 
-function insertMember (data, file, callback = null) {
-  const db = file
-  // if there are required fields are present
-  // if data.personid is null callback(false) or throw error
-  // if data's required fields are present insert to db
-  if (data.person_id === null) {
-    callback = callback(false)
-    return callback
-  } else if (data.address_id !== null &&
-            data.member_status !== null &&
-            data.civil_status !== null &&
-            data.age !== null &&
-            data.birthday !== null &&
-            data.occupation !== null &&
-            data.workplace !== null &&
-            data.email !== null &&
-            data.mobile !== null &&
-            data.educ_attainment !== null &&
-            data.alma_mater !== null) {
-    const insert = db.prepare('INSERT INTO members (' +
-              'address_id' +
-              'member_status' +
-              'civil_status' +
-              'age' +
-              'birthday' +
-              'occupation' +
-              'workplace' +
-              'email' +
-              'mobile' +
-              'educ_attainment' +
-              'alma_mater' +
-              'VALUES (' +
-              data.address_id +
-              data.member_status +
-              data.civil_status +
-              data.age +
-              data.birthday +
-              data.occupation +
-              data.workplace +
-              data.email +
-              data.mobile +
-              data.educ_attainment +
-              data.alma_mater +
-              ')')
-    const member = db.run(insert)
-
-    const template =
-      db.prepare('UPDATE members' +
-                  'SET ? = ?' +
-                  'WHERE member_id = ' + member.member_id.toString())
-
-    // if there is a wedding registry
-    if (data.wedding_reg_id !== null) {
-      db.run(template, 'wedding_reg_id', data.wedding_reg_id)
-    }
-
-    // if there is a baptismal registry
-    if (data.baptismal_reg_id !== null) {
-      db.run(template, 'bap_reg_id', data.baptismal_reg_id)
-    }
-
-    // if there is a prenup record
-    if (data.prenup_record_id !== null) {
-      db.run(template, 'prenup_record_id', data.prenup_record_id)
-    }
-  }
+let fields = {
+  members : Object.values(member_fields),
+  address : Object.values(address_fields),
+  accounts : Object.values(account_fields),
+  people : Object.values(person_fields),
+  donations : Object.values(donation_fields),
+  bap_reg : Object.values(bap_reg_fields),
+  wedding_reg : Object.values(wedding_reg_fields),
+  pre_nuptial : Object.values(prenup_record_fields),
+  witness : Object.values(witness_fields),
+  inf_dedication : Object.values(inf_ded_fields),
+  couples : Object.values(couple_fields),
 }
 
 const database = {
+  /**
+   * This function initializes the database given the path of the file.
+   * @param {string} file the path of the file to be opened 
+   */
   initDB: async function (file) {
     // opens the file and verbose prints the statements executed
-    const db = file
+    const db = sqlite3(file , { verbose: console.log })
+
+    // Initialize Knex connection
+    knexClient = knex({
+      client: 'sqlite3',
+      connection: {
+        filename: file
+      },
+      useNullAsDefault: true
+    })
+
 
     /* This statement creates the Baptismal Registry table
        Fields:
@@ -102,7 +80,7 @@ const database = {
         'officiant TEXT' +
         ')'
 
-    /* This statement create the Infant Dedication table
+    /* This statement creates the Infant Dedication table
        Fields:
        dedication_id - primary id
        person_id - an id referencing the person(infant)
@@ -121,8 +99,9 @@ const database = {
         'officiant TEXT,' +
         'FOREIGN KEY(person_id) REFERENCES people(person_id),' +
         'FOREIGN KEY(parents_id) REFERENCES couples(couple_id)' +
-      ')'
-
+      ')' 
+    
+    
     const createWitness =
       'CREATE TABLE IF NOT EXISTS witness (' +
         'witness_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
@@ -232,6 +211,7 @@ const database = {
       'male_id INTEGER NOT NULL' +
       ')'
 
+    // execute all statements
     db.prepare(createBapReg).run()
     db.prepare(createInfDedication).run()
     db.prepare(createWitness).run()
@@ -245,25 +225,50 @@ const database = {
     db.prepare(createPerson).run()
     db.prepare(createAttendance).run()
 
+    // close the connection to the db
     db.close()
   },
 
-  // get data from req
-  // member = {req.body.info}
-  // person = {req.body.name}
-  // db.insertOne(file, db.PEOPLETABLE, person, function(err, res) { member.id = res.id })
-  insertOne: function (file, table, data, callback) {
-    if (table === tables.MEMBERTABLE) {
-      insertMember(data, file, callback)
-    } else if (table === tables.PERSONTABLE) {
-      // insertPerson(data, callback)
+
+  /**
+   * This function inserts the data into a specified table in the database and passes the result to the
+   * callback function
+   * @param {string} table - the table where the data will be added
+   * @param {object} data  - the object containing the values paired to their respective column name
+   * @param {function} callback - the function to be executed after inserting the data
+   */
+  insertOne: function (table, data, callback = null) {
+    
+    // if table is not in database
+    if(!(tableNames.includes(table))) {
+      console.log(table )
+      console.log(tableNames)
+      callback(false)
+    } else {
+      for (let key in data)
+        if (fields[table].includes(key) && // if the key is a valid field
+           (data[key] === null || data[key] === undefined)) // if the value is valid
+          delete data[key]
+
+      knexClient(table)
+      .insert(data) // insert data
+      .then(function (result) {
+        if(callback !== null) // if there is a callback function return id of inserted row
+          callback(result)
+      }).catch(function(err) {
+        console.log(err) 
+        if(callback !== null)
+          callback(false) // pass false to the callback function where an error occurred 
+      })
     }
   },
   /*
-    This table is a constant hashmap containing the constant strings
+    This table is a constant object containing the constant strings
     of the tables
   */
   tables: tables
+
+  // make insert table to make code more reusable
 }
 
 module.exports = database
