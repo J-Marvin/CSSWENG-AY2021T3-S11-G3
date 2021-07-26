@@ -270,7 +270,7 @@ const database = {
     of the tables
   */
   tables: tables,
-  
+
   // make insert table to make code more reusable
   /**
    * This function creates a new table specified by the param object newTable and
@@ -350,7 +350,7 @@ const database = {
    * @param {string} table - refers to the table name where the row will be deleted
    * @param {object} condition - the object containing the WHERE conditions paired to their respective column name
    */
-  deleteOne: function (table, condition) {
+  deleteOne: function (table, condition, callback = null) {
     knexClient(table)
       .del(condition)
       .then(function (result) {
