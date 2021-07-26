@@ -195,14 +195,6 @@ const database = {
         'FOREIGN KEY(member_id) references members(member_id)' +
       ')'
 
-    const createAttendance =
-      'CREATE TABLE IF NOT EXISTS attendance(' +
-        'attendance_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
-        'person_id INTEGER NOT NULL,' +
-        'date TEXT,' +
-        'FOREIGN KEY(person_id) REFERENCES people(person_id)' +
-      ')'
-
     const createCouple =
       'CREATE TABLE IF NOT EXISTS couples(' +
       'couple_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
@@ -222,7 +214,6 @@ const database = {
     db.prepare(createDonationRecord).run()
     db.prepare(createCouple).run()
     db.prepare(createPerson).run()
-    db.prepare(createAttendance).run()
 
     // if the accounts table is empty then insert passwords
     knexClient('accounts').select().then(function (res) {
@@ -309,7 +300,7 @@ const database = {
     }
   },
 
-  find: function(table, query, projection, callback) {
+  find: function (table, query, projection, callback) {
     knexClient(table).select(projection).where(query).then(function (result) {
       callback(result)
     }).catch((err) => {
