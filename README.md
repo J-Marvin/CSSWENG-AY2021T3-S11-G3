@@ -28,3 +28,4 @@
 - electron-builder
 - electron-rebuild
 - nodemon
+- standard
