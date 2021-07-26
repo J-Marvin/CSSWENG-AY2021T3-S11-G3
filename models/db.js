@@ -309,6 +309,16 @@ const database = {
     }
   },
 
+  find: function(table, query, projection, callback) {
+    knexClient.select(projection).where(query).then(function (result) {
+      callback(result)
+    }).catch((err) => {
+      console.log(err)
+      const flag = false
+      callback(flag)
+    })
+  },
+
   /*
     This table is a constant object containing the constant strings
     of the tables
