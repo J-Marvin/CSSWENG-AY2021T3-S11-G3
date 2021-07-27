@@ -198,8 +198,8 @@ const database = {
     const createCouple =
       'CREATE TABLE IF NOT EXISTS couples(' +
       'couple_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
-      'female_id INTEGER NOT NULL,' +
-      'male_id INTEGER NOT NULL' +
+      'FOREIGN KEY(female_id) REFERENCES people(person_id),' +
+      'FOREIGN KEY(male_id) REFERENCES people(person_id)' +
       ')'
 
     // execute all statements
@@ -309,15 +309,15 @@ const database = {
        value: value 
      }
   */
-  find: function (table, query, projection, callback) {
-    knexClient(table).select(projection). .then(function (result) {
-      callback(result)
-    }).catch((err) => {
-      console.log(err)
-      const flag = false
-      callback(flag)
-    })
-  },
+  // find: function (table, query, projection, callback) {
+  //   knexClient(table).select(projection). .then(function (result) {
+  //     callback(result)
+  //   }).catch((err) => {
+  //     console.log(err)
+  //     const flag = false
+  //     callback(flag)
+  //   })
+  // },
 
   /**
    * This method gets all the records of a table
