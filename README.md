@@ -21,6 +21,11 @@
 - dotenv
 - express
 - express-handlebars
+- bcrypt
+- async
+- better-sqlite3
+- sqlite3
+- 
 
 
 #### devDependencies

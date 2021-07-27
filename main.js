@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu } = require('electron')
+const { app, BrowserWindow } = require('electron')
 const dotenv = require('dotenv')
 const path = require('path')
 
@@ -39,12 +39,7 @@ app.on('window-all-closed', () => {
 })
 
 app.on('activate', function () {
-<<<<<<< HEAD
   if (mainWindow === null) {
     createWindow()
-=======
-  if (mainWindow.window === null) {
-    mainWindow.initWindow()
->>>>>>> main
   }
 })

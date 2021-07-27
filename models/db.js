@@ -300,8 +300,33 @@ const database = {
     }
   },
 
+  /* TODO: FIX METHOD 
+     what if query is an arry of objects where each object is 
+     {
+       query: "where, wherein ..."
+       operator: "=", "<" ...
+       field: "col"
+       value: value 
+     }
+  */
   find: function (table, query, projection, callback) {
-    knexClient(table).select(projection).where(query).then(function (result) {
+    knexClient(table).select(projection). .then(function (result) {
+      callback(result)
+    }).catch((err) => {
+      console.log(err)
+      const flag = false
+      callback(flag)
+    })
+  },
+
+  /**
+   * This method gets all the records of a table
+   * @param {String} table this is the name of the table
+   * @param {String} projection the columns/fields to be retrieved
+   * @param {function} callback this is the callback funciton to be called after getting the result
+   */
+  findAll: function (table, projection, callback) {
+    knexClient(table).select(projection).then(function (result) {
       callback(result)
     }).catch((err) => {
       console.log(err)
