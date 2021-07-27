@@ -1,5 +1,4 @@
 const db = require('../models/db.js')
-const personFields = require('../models/person')
 const memberFields = require('../models/members')
 const { Condition, queryTypes } = require('../models/condition')
 

@@ -65,7 +65,6 @@ const database = {
       },
       useNullAsDefault: true
     })
-    
     /* This statement creates the Baptismal Registry table
        Fields:
        reg_id - primary id
@@ -310,82 +309,82 @@ const database = {
        value: value
      }
   */
-  find: function (table, queries = null, projection = '*', callback) {
+  find: function (table, conditions = null, projection = '*', callback) {
     knexClient(table).select(projection).where(function (builder) {
-      if (queries !== null || queries !== undefined) {
-        if (!Array.isArray(queries)) {
-          queries = [queries]
+      if (conditions !== null || conditions !== undefined) {
+        if (!Array.isArray(conditions)) {
+          conditions = [conditions]
         }
-        async.each(queries, function (query, callback) {
-          switch (query.type) {
+        async.each(conditions, function (condition, callback) {
+          switch (condition.type) {
             case 'where':
-              if (query.queryType === 'object') {
-                builder.where(query.query)
-              } else if (query.queryType === 'keyValue') {
-                builder.where(query.query.key, query.query.operator, query.query.value)
+              if (condition.conditionType === 'object') {
+                builder.where(condition.condition)
+              } else if (condition.conditionType === 'keyValue') {
+                builder.where(condition.condition.key, condition.condition.operator, condition.condition.value)
               }
               break
             case 'orWhere':
-              if (query.queryType === 'object') {
-                builder.orWhere(query.query)
-              } else if (query.queryType === 'keyValue') {
-                builder.orWhere(query.query.key, query.query.operator, query.query.value)
+              if (condition.conditionType === 'object') {
+                builder.orWhere(condition.condition)
+              } else if (condition.conditionType === 'keyValue') {
+                builder.orWhere(condition.condition.key, condition.condition.operator, condition.condition.value)
               }
               break
             case 'whereNot':
-              if (query.queryType === 'object') {
-                builder.whereNot(query.query)
-              } else if (query.queryType === 'keyValue') {
-                builder.whereNot(query.query.key, query.query.operator, query.query.value)
+              if (condition.conditionType === 'object') {
+                builder.whereNot(condition.condition)
+              } else if (condition.conditionType === 'keyValue') {
+                builder.whereNot(condition.condition.key, condition.condition.operator, condition.condition.value)
               }
               break
             case 'whereIn':
-              if (query.queryType === 'object') {
-                builder.whereIn(query.query)
-              } else if (query.queryType === 'keyValue') {
-                builder.whereIn(query.query.key, query.query.operator, query.query.value)
+              if (condition.conditionType === 'object') {
+                builder.whereIn(condition.condition)
+              } else if (condition.conditionType === 'keyValue') {
+                builder.whereIn(condition.condition.key, condition.condition.operator, condition.condition.value)
               }
               break
             case 'whereNotNull':
-              if (query.queryType === 'object') {
-                builder.whereNotNull(query.query)
-              } else if (query.queryType === 'keyValue') {
-                builder.whereNotNull(query.query.key, query.query.operator, query.query.value)
+              if (condition.conditionType === 'object') {
+                builder.whereNotNull(condition.condition)
+              } else if (condition.conditionType === 'keyValue') {
+                builder.whereNotNull(condition.condition.key, condition.condition.operator, condition.condition.value)
               }
               break
             case 'whereExists':
-              if (query.queryType === 'object') {
-                builder.whereExists(query.query)
-              } else if (query.queryType === 'keyValue') {
-                builder.whereExists(query.query.key, query.query.operator, query.query.value)
+              if (condition.conditionType === 'object') {
+                builder.whereExists(condition.condition)
+              } else if (condition.conditionType === 'keyValue') {
+                builder.whereExists(condition.condition.key, condition.condition.operator, condition.condition.value)
               }
               break
             case 'whereNotExists':
-              if (query.queryType === 'object') {
-                builder.whereNotExists(query.query)
-              } else if (query.queryType === 'keyValue') {
-                builder.whereNotExists(query.query.key, query.query.operator, query.query.value)
+              if (condition.conditionType === 'object') {
+                builder.whereNotExists(condition.condition)
+              } else if (condition.conditionType === 'keyValue') {
+                builder.whereNotExists(condition.condition.key, condition.condition.operator, condition.condition.value)
               }
               break
             case 'whereBetween':
-              if (query.queryType === 'object') {
-                builder.whereBetween(query.query)
-              } else if (query.queryType === 'keyValue') {
-                builder.whereBetween(query.query.key, query.query.operator, query.query.value)
+              if (condition.conditionType === 'object') {
+                builder.whereBetween(condition.condition)
+              } else if (condition.conditionType === 'keyValue') {
+                builder.whereBetween(condition.condition.key, condition.condition.operator, condition.condition.value)
               }
               break
             case 'whereNotBetween':
-              if (query.queryType === 'object') {
-                builder.whereNotBetween(query.query)
-              } else if (query.queryType === 'keyValue') {
-                builder.whereNotBetween(query.query.key, query.query.operator, query.query.value)
+              if (condition.conditionType === 'object') {
+                builder.whereNotBetween(condition.condition)
+              } else if (condition.conditionType === 'keyValue') {
+                builder.whereNotBetween(condition.condition.key, condition.condition.operator, condition.condition.value)
               }
               break
             case 'whereRaw':
-              if (query.queryType === 'object') {
-                builder.whereRaw(query.query)
-              } else if (query.queryType === 'keyValue') {
-                builder.whereRaw(query.query.key, query.query.operator, query.query.value)
+              if (condition.conditionType === 'object') {
+                builder.whereRaw(condition.condition)
+              } else if (condition.conditionType === 'keyValue') {
+                builder.whereRaw(condition.condition.key, condition.condition.operator, condition.condition.value)
               }
               break
             default:
@@ -487,11 +486,93 @@ const database = {
    * condition, afterwards it passes the callback function
    * @param {string} table - refers to the table name where the data will be updated onto a row
    * @param {object} data - the object containing the values paired to their respective column name
-   * @param {object} condition - the object containing the WHERE conditions paired to their respective column name
+   * @param {object} condition - an array of objects containing the WHERE conditions paired to their respective column name
    */
-  updateOne: function (table, data, condition, callback = null) {
+  updateOne: function (table, data, conditions, callback = null) {
     knexClient(table)
-      .where(condition)
+      .where(function (builder) {
+        if (conditions !== null || conditions !== undefined) {
+          if (!Array.isArray(conditions)) {
+            conditions = [conditions]
+          }
+          async.each(conditions, function (condition, callback) {
+            switch (condition.type) {
+              case 'where':
+                if (condition.conditionType === 'object') {
+                  builder.where(condition.condition)
+                } else if (condition.conditionType === 'keyValue') {
+                  builder.where(condition.condition.key, condition.condition.operator, condition.condition.value)
+                }
+                break
+              case 'orWhere':
+                if (condition.conditionType === 'object') {
+                  builder.orWhere(condition.condition)
+                } else if (condition.conditionType === 'keyValue') {
+                  builder.orWhere(condition.condition.key, condition.condition.operator, condition.condition.value)
+                }
+                break
+              case 'whereNot':
+                if (condition.conditionType === 'object') {
+                  builder.whereNot(condition.condition)
+                } else if (condition.conditionType === 'keyValue') {
+                  builder.whereNot(condition.condition.key, condition.condition.operator, condition.condition.value)
+                }
+                break
+              case 'whereIn':
+                if (condition.conditionType === 'object') {
+                  builder.whereIn(condition.condition)
+                } else if (condition.conditionType === 'keyValue') {
+                  builder.whereIn(condition.condition.key, condition.condition.operator, condition.condition.value)
+                }
+                break
+              case 'whereNotNull':
+                if (condition.conditionType === 'object') {
+                  builder.whereNotNull(condition.condition)
+                } else if (condition.conditionType === 'keyValue') {
+                  builder.whereNotNull(condition.condition.key, condition.condition.operator, condition.condition.value)
+                }
+                break
+              case 'whereExists':
+                if (condition.conditionType === 'object') {
+                  builder.whereExists(condition.condition)
+                } else if (condition.conditionType === 'keyValue') {
+                  builder.whereExists(condition.condition.key, condition.condition.operator, condition.condition.value)
+                }
+                break
+              case 'whereNotExists':
+                if (condition.conditionType === 'object') {
+                  builder.whereNotExists(condition.condition)
+                } else if (condition.conditionType === 'keyValue') {
+                  builder.whereNotExists(condition.condition.key, condition.condition.operator, condition.condition.value)
+                }
+                break
+              case 'whereBetween':
+                if (condition.conditionType === 'object') {
+                  builder.whereBetween(condition.condition)
+                } else if (condition.conditionType === 'keyValue') {
+                  builder.whereBetween(condition.condition.key, condition.condition.operator, condition.condition.value)
+                }
+                break
+              case 'whereNotBetween':
+                if (condition.conditionType === 'object') {
+                  builder.whereNotBetween(condition.condition)
+                } else if (condition.conditionType === 'keyValue') {
+                  builder.whereNotBetween(condition.condition.key, condition.condition.operator, condition.condition.value)
+                }
+                break
+              case 'whereRaw':
+                if (condition.conditionType === 'object') {
+                  builder.whereRaw(condition.condition)
+                } else if (condition.conditionType === 'keyValue') {
+                  builder.whereRaw(condition.condition.key, condition.condition.operator, condition.condition.value)
+                }
+                break
+              default:
+                throw console.error('Unknown query')
+            }
+          })
+        }
+      })
       .update(data)
       .then(function (result) {
         if (callback !== null) { // if there is a callback function return id of inserted row
@@ -507,14 +588,97 @@ const database = {
   },
 
   /**
-   * This function deletes a row in a table specified by the provided condition and passes
+   * This function deletes a row in a table specified by the provided conditions and passes
    * a callback function
    * @param {string} table - refers to the table name where the row will be deleted
-   * @param {object} condition - the object containing the WHERE conditions paired to their respective column name
+   * @param {object} conditions - an array of objects containing the WHERE conditions paired to their respective column name
    */
-  deleteOne: function (table, condition, callback = null) {
+  deleteOne: function (table, conditions, callback = null) {
     knexClient(table)
-      .del(condition)
+      .where(function (builder) {
+        if (conditions !== null || conditions !== undefined) {
+          if (!Array.isArray(conditions)) {
+            conditions = [conditions]
+          }
+          async.each(conditions, function (condition, callback) {
+            switch (condition.type) {
+              case 'where':
+                if (condition.conditionType === 'object') {
+                  builder.where(condition.condition)
+                } else if (condition.conditionType === 'keyValue') {
+                  builder.where(condition.condition.key, condition.condition.operator, condition.condition.value)
+                }
+                break
+              case 'orWhere':
+                if (condition.conditionType === 'object') {
+                  builder.orWhere(condition.condition)
+                } else if (condition.conditionType === 'keyValue') {
+                  builder.orWhere(condition.condition.key, condition.condition.operator, condition.condition.value)
+                }
+                break
+              case 'whereNot':
+                if (condition.conditionType === 'object') {
+                  builder.whereNot(condition.condition)
+                } else if (condition.conditionType === 'keyValue') {
+                  builder.whereNot(condition.condition.key, condition.condition.operator, condition.condition.value)
+                }
+                break
+              case 'whereIn':
+                if (condition.conditionType === 'object') {
+                  builder.whereIn(condition.condition)
+                } else if (condition.conditionType === 'keyValue') {
+                  builder.whereIn(condition.condition.key, condition.condition.operator, condition.condition.value)
+                }
+                break
+              case 'whereNotNull':
+                if (condition.conditionType === 'object') {
+                  builder.whereNotNull(condition.condition)
+                } else if (condition.conditionType === 'keyValue') {
+                  builder.whereNotNull(condition.condition.key, condition.condition.operator, condition.condition.value)
+                }
+                break
+              case 'whereExists':
+                if (condition.conditionType === 'object') {
+                  builder.whereExists(condition.condition)
+                } else if (condition.conditionType === 'keyValue') {
+                  builder.whereExists(condition.condition.key, condition.condition.operator, condition.condition.value)
+                }
+                break
+              case 'whereNotExists':
+                if (condition.conditionType === 'object') {
+                  builder.whereNotExists(condition.condition)
+                } else if (condition.conditionType === 'keyValue') {
+                  builder.whereNotExists(condition.condition.key, condition.condition.operator, condition.condition.value)
+                }
+                break
+              case 'whereBetween':
+                if (condition.conditionType === 'object') {
+                  builder.whereBetween(condition.condition)
+                } else if (condition.conditionType === 'keyValue') {
+                  builder.whereBetween(condition.condition.key, condition.condition.operator, condition.condition.value)
+                }
+                break
+              case 'whereNotBetween':
+                if (condition.conditionType === 'object') {
+                  builder.whereNotBetween(condition.condition)
+                } else if (condition.conditionType === 'keyValue') {
+                  builder.whereNotBetween(condition.condition.key, condition.condition.operator, condition.condition.value)
+                }
+                break
+              case 'whereRaw':
+                if (condition.conditionType === 'object') {
+                  builder.whereRaw(condition.condition)
+                } else if (condition.conditionType === 'keyValue') {
+                  builder.whereRaw(condition.condition.key, condition.condition.operator, condition.condition.value)
+                }
+                break
+              default:
+                throw console.error('Unknown query')
+            }
+          })
+        }
+      })
+      .del()
       .then(function (result) {
         if (callback !== null) { // if there is a callback function return id of inserted row
           callback(result)
