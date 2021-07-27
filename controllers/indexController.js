@@ -1,19 +1,19 @@
 const db = require('../models/db.js')
 const personFields = require('../models/person')
 const memberFields = require('../models/members')
-const { Query, queryTypes } = require('../models/query')
+const { Condition, queryTypes } = require('../models/condition')
 
 const controller = {
   getIndex: function (req, res) {
     const queries = []
-    let query = new Query(queryTypes.where)
+    let query = new Condition(queryTypes.where)
     query.setQueryObject({
       first_name: 'Jonathan'
     })
     queries.push(query)
 
-    query = new Query(queryTypes.where)
-    query.setKeyValue('last_name', 'Lim')
+    query = new Condition(queryTypes.where)
+    query.setKeyValue('last_name', 'TEST')
 
     queries.push(query)
 

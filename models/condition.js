@@ -13,13 +13,13 @@ const queryTypes = {
 
 const types = Object.keys(queryTypes)
 
-function Query (type) {
+function Condition (type) {
   if (types.includes(type)) {
     this.type = type
   }
 }
 
-Query.prototype = {
+Condition.prototype = {
   setQueryObject: function (query) {
     this.query = query
     this.queryType = 'object'
@@ -35,4 +35,4 @@ Query.prototype = {
   }
 }
 
-module.exports = { Query, queryTypes }
+module.exports = { Condition, queryTypes }
