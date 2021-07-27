@@ -1,5 +1,6 @@
 const sqlite3 = require('better-sqlite3')
 const knex = require('knex')
+const async = require('async')
 
 // gettings fields of all tables
 const memberFields = require('./members.js')
@@ -64,7 +65,7 @@ const database = {
       },
       useNullAsDefault: true
     })
-
+    
     /* This statement creates the Baptismal Registry table
        Fields:
        reg_id - primary id
@@ -300,24 +301,106 @@ const database = {
     }
   },
 
-  /* TODO: FIX METHOD 
-     what if query is an arry of objects where each object is 
+  /* TODO: FIX METHOD
+     what if query is an arry of objects where each object is
      {
-       query: "where, wherein ..."
+       type: "where, wherein ..."
        operator: "=", "<" ...
        field: "col"
-       value: value 
+       value: value
      }
   */
-  // find: function (table, query, projection, callback) {
-  //   knexClient(table).select(projection). .then(function (result) {
-  //     callback(result)
-  //   }).catch((err) => {
-  //     console.log(err)
-  //     const flag = false
-  //     callback(flag)
-  //   })
-  // },
+  find: function (table, queries = null, projection = '*', callback) {
+    knexClient(table).select(projection).where(function (builder) {
+      if (queries !== null || queries !== undefined) {
+        if (!Array.isArray(queries)) {
+          queries = [queries]
+        }
+        async.each(queries, function (query, callback) {
+          switch (query.type) {
+            case 'where':
+              if (query.queryType === 'object') {
+                builder.where(query.query)
+              } else if (query.queryType === 'keyValue') {
+                builder.where(query.query.key, query.query.operator, query.query.value)
+              }
+              break
+            case 'orWhere':
+              if (query.queryType === 'object') {
+                builder.orWhere(query.query)
+              } else if (query.queryType === 'keyValue') {
+                builder.orWhere(query.query.key, query.query.operator, query.query.value)
+              }
+              break
+            case 'whereNot':
+              if (query.queryType === 'object') {
+                builder.whereNot(query.query)
+              } else if (query.queryType === 'keyValue') {
+                builder.whereNot(query.query.key, query.query.operator, query.query.value)
+              }
+              break
+            case 'whereIn':
+              if (query.queryType === 'object') {
+                builder.whereIn(query.query)
+              } else if (query.queryType === 'keyValue') {
+                builder.whereIn(query.query.key, query.query.operator, query.query.value)
+              }
+              break
+            case 'whereNotNull':
+              if (query.queryType === 'object') {
+                builder.whereNotNull(query.query)
+              } else if (query.queryType === 'keyValue') {
+                builder.whereNotNull(query.query.key, query.query.operator, query.query.value)
+              }
+              break
+            case 'whereExists':
+              if (query.queryType === 'object') {
+                builder.whereExists(query.query)
+              } else if (query.queryType === 'keyValue') {
+                builder.whereExists(query.query.key, query.query.operator, query.query.value)
+              }
+              break
+            case 'whereNotExists':
+              if (query.queryType === 'object') {
+                builder.whereNotExists(query.query)
+              } else if (query.queryType === 'keyValue') {
+                builder.whereNotExists(query.query.key, query.query.operator, query.query.value)
+              }
+              break
+            case 'whereBetween':
+              if (query.queryType === 'object') {
+                builder.whereBetween(query.query)
+              } else if (query.queryType === 'keyValue') {
+                builder.whereBetween(query.query.key, query.query.operator, query.query.value)
+              }
+              break
+            case 'whereNotBetween':
+              if (query.queryType === 'object') {
+                builder.whereNotBetween(query.query)
+              } else if (query.queryType === 'keyValue') {
+                builder.whereNotBetween(query.query.key, query.query.operator, query.query.value)
+              }
+              break
+            case 'whereRaw':
+              if (query.queryType === 'object') {
+                builder.whereRaw(query.query)
+              } else if (query.queryType === 'keyValue') {
+                builder.whereRaw(query.query.key, query.query.operator, query.query.value)
+              }
+              break
+            default:
+              throw console.error('Unknown query')
+          }
+        })
+      }
+    }).then(function (result) {
+      callback(result)
+    }).catch((err) => {
+      console.log(err)
+      const flag = false
+      callback(flag)
+    })
+  },
 
   /**
    * This method gets all the records of a table
