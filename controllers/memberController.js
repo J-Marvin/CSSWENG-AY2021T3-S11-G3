@@ -2,6 +2,9 @@ const db = require('../models/db.js')
 const personFields = require('../models/person')
 const memberFields = require('../models/members')
 const addressFields = require('../models/address')
+const bapRegFields = require('../models/baptismalRegistry')
+const prenupRecordFields = require('../models/prenupRecord')
+const coupleFields = require('../models/Couple.js')
 
 const memberController = {
   /**
@@ -93,6 +96,50 @@ const memberController = {
     db.updateOne(db.tables.MEMBER_TABLE, condition, function (result) {
       console.log(result)
       // insert res.render() or res.redirect()
+    })
+  },
+  /**
+   * This function inserts a baptismal registry into the BAPTISMAL REGISTRY table.
+   * This baptismal registry belongs to this member.
+   * @param req - the incoming request containing either the query or body
+   * @param res - the result to be sent out after processing the request
+   */
+  insertBaptismal: function (req, res) {
+    const data = {}
+    // include algo for linking this member's bap_reg_id
+    data[bapRegFields.DATE] = req.query.date
+    data[bapRegFields.LOCATION] = req.query.location
+    data[bapRegFields.OFFICIANT] = req.query.officiant
+
+    db.insertOne(db.tables.BAPTISMAL_TABLE, data, function (result) {
+      // insert res.render() or res.redirect()
+    })
+  },
+  /**
+   * This function receives the prenuptial 'record_id' and a member's 'prenup_record_id'
+   * @param req - the incoming request containing containing the member_id
+   * @param res - the result to be sent out after processing the request
+   */
+  linkPrenup: function (req, res) {
+    /*
+    sql query: UPDATE members SET prenup_record_id = record_id
+    WHERE member_id = <some member id>
+    */
+    const recordId = req.query.recordId
+    const memberId = req.query.memberId
+
+    // set up the SET query: SET SET prenup_record_id = record_id
+    // this will look like {prenup_record_id: <some prenup id>} inside db.updateOne
+    const data = {}
+    data[memberFields.PRENUP_RECORD] = recordId
+
+    // set up the WHERE condition: WHERE member_id = <some member id>
+    const condition = {}
+    condition[memberFields.ID] = memberId
+    db.updateOne(db.tables.MEMBER_TABLE, data, condition, function (result) {
+      if (result !== false) {
+        // insert res.render() or res.redirect()
+      }
     })
   }
 }
