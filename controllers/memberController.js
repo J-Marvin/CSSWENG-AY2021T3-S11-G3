@@ -52,7 +52,7 @@ const memberController = {
         // insert to ADDRESS table
         db.insertOne(db.tables.ADDRESS_TABLE, data.address, function (addressId) {
           // update address_id
-          if(addressId) {
+          if (addressId) {
             data.member[memberFields.ADDRESS] = addressId
             // finally insert to MEMBER table
             db.insertOne(db.tables.MEMBER_TABLE, data.member, function (result) {
@@ -60,11 +60,11 @@ const memberController = {
               res.send(result)
             })
           } else {
-            res.send("ERROR")
+            res.send('ERROR')
           }
         })
       } else {
-        res.send("ERROR")
+        res.send('ERROR')
       }
     })
   },
