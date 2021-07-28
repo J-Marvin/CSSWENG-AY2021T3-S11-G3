@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, globalShortcut } = require('electron')
 const dotenv = require('dotenv')
 const path = require('path')
 
@@ -6,32 +6,40 @@ dotenv.config({ path: path.join(__dirname, '.env') })
 
 const port = process.env.PORT
 const hostname = process.env.HOSTNAME
+require('./app.js')
 
-const server = require('./app.js')
+let mainWindow
 
-// This object represents the main window
-const mainWindow = {
-  // This function initializes the browser window and opens the local server
-  initWindow: function () {
-    this.window = new BrowserWindow({
-      width: 800,
-      height: 600,
-      webPreferences: {
-        nodeIntegration: true
-      }
-    })
+function createWindow () {
+  mainWindow = new BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: {
+      nodeIntegration: true
+    }
+  })
 
-    this.window.setMinimumSize(800, 600)
+  mainWindow.setMinimumSize(800, 600)
 
-    this.window.loadURL('http://' + hostname + ':' + port)
-  },
-  // the window object
-  window: null
+  mainWindow.loadURL('http://' + hostname + ':' + port)
+
+  mainWindow.on('closed', () => {
+    mainWindow = null
+  })
+
+  globalShortcut.register('f5', function () {
+    console.log('f5 is pressed')
+    mainWindow.reload()
+  })
+
+  globalShortcut.register('CommandOrControl+R', function () {
+    console.log('CommandOrControl+R is pressed')
+    mainWindow.reload()
+  })
+  console.log(hostname + ' ' + port)
 }
 
-// When the app is ready, initialize the window
-app.on('ready', mainWindow.initWindow)
-
+app.on('ready', createWindow)
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
@@ -39,7 +47,7 @@ app.on('window-all-closed', () => {
 })
 
 app.on('activate', function () {
-  if (mainWindow.window === null) {
-    mainWindow.initWindow()
+  if (mainWindow === null) {
+    createWindow()
   }
 })

@@ -3,6 +3,8 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const exphbs = require('express-handlebars')
 const path = require('path')
+const db = require('./models/db.js')
+
 const app = express()
 const routes = require('./routes/routes.js')
 
@@ -17,6 +19,9 @@ dotenv.config({ path: path.join(__dirname, '.env') })
 
 const port = process.env.PORT
 const hostname = process.env.HOSTNAME
+const file = path.join('database', 'church.db')
+
+db.initDB(file)
 
 app.engine('hbs', hbs.engine)
 app.set('view engine', '.hbs')

@@ -1,15 +1,17 @@
 const express = require('express')
 const path = require('path')
 
-// controllers
-const indexController = require('../controllers/indexController.js')
+const indexController = require('../controllers/indexController')
+const loginController = require('../controllers/loginController')
+const memberController = require('../controllers/memberController')
 
 const app = express()
-
-// Setting the view path here ensures the proper path will be set when the application is built
 app.set('views', path.join(__dirname, '../views'))
 
-// Home page
 app.get('/', indexController.getIndex)
+app.get('/login_page', loginController.getLoginPage)
+app.post('/login', loginController.postLogIn)
+app.get('/add_member', memberController.getAddMemberPage)
+app.post('/add_member', memberController.createMember)
 
 module.exports = app
