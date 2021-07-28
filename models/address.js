@@ -1,6 +1,6 @@
 const addressFields = {
   ID: 'address_id',
-  STREET: 'street',
+  ADDRESS_LINE: 'address_line',
   BRGY: 'barangay',
   CITY: 'city',
   PROVINCE: 'province'

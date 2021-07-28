@@ -154,7 +154,7 @@ const database = {
     const createAddress =
       'CREATE TABLE IF NOT EXISTS address (' +
         'address_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
-        'street TEXT, ' +
+        'address_line TEXT, ' +
         'barangay TEXT, ' +
         'city TEXT, ' +
         'province TEXT' +
@@ -198,6 +198,8 @@ const database = {
     const createCouple =
       'CREATE TABLE IF NOT EXISTS couples(' +
       'couple_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
+      'female_id INTEGER NOT NULL,' +
+      'male_id INTEGER NOT NULL,' +
       'FOREIGN KEY(female_id) REFERENCES people(person_id),' +
       'FOREIGN KEY(male_id) REFERENCES people(person_id)' +
       ')'
@@ -283,20 +285,21 @@ const database = {
           // if the value is valid
           delete data[key]
         }
-        knexClient(table)
-          .insert(data) // insert data
-          .then(function (result) {
-            if (callback !== null) {
-              callback(result) // if there is a callback function return id of inserted row
-            }
-          }).catch(function (err) {
-            console.log(err)
-            if (callback !== null) {
-              const flag = false
-              callback(flag) // pass false to the callback function where an error occurred
-            }
-          })
       }
+
+      knexClient(table)
+        .insert(data) // insert data
+        .then(function (result) {
+          if (callback !== null) {
+            callback(result) // if there is a callback function return id of inserted row
+          }
+        }).catch(function (err) {
+          console.log(err)
+          if (callback !== null) {
+            const flag = false
+            callback(flag) // pass false to the callback function where an error occurred
+          }
+        })
     }
   },
 
