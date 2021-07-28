@@ -5,6 +5,7 @@ const addressFields = require('../models/address')
 const bapRegFields = require('../models/baptismalRegistry')
 const prenupRecordFields = require('../models/prenupRecord')
 const coupleFields = require('../models/Couple.js')
+const { validationResult } = require('express-validator')
 
 const memberController = {
   /**
@@ -22,56 +23,71 @@ const memberController = {
    * @param res - the result to be sent out after processing the request
    */
   createMember: function (req, res) {
-    const data = {
-      person: {},
-      member: {},
-      address: {}
-    }
+    let errors = validationResult(req)
 
-    data.person[personFields.FIRST_NAME] = req.body.first_name
-    data.person[personFields.MID_NAME] = req.body.mid_name
-    data.person[personFields.LAST_NAME] = req.body.last_name
+    if (!errors.isEmpty()) {
+      errors = errors.errors
 
-    data.address[addressFields.ADDRESS_LINE] = req.body.address_line
-    data.address[addressFields.BRGY] = req.body.barangay
-    data.address[addressFields.CITY] = req.body.city
-    data.address[addressFields.PROVINCE] = req.body.PROVINCE
+      console.log(errors)
+      let msg = ''
 
-    data.member[memberFields.AGE] = req.body.age
-    data.member[memberFields.BIRTHDAY] = req.body.birthday
-    data.member[memberFields.OCCUPATION] = req.body.occupation
-    data.member[memberFields.WORKPLACE] = req.body.workplace
-    data.member[memberFields.EMAIL] = req.body.email
-    data.member[memberFields.MOBILE] = req.body.mobile
-    data.member[memberFields.EDUCATIONAL_ATTAINMENT] = req.body.educational_attainment
-    data.member[memberFields.ALMA_MATER] = req.body.alma_mater
-    data.member[memberFields.SKILLS] = req.body.skills
-    data.member[memberFields.DATE] = new Date().toString()
+      errors.forEach((error) => {
+        msg += error.msg + '\n'
+      })
 
-    // insert to PEOPLE table
-    db.insertOne(db.tables.PERSON_TABLE, data.person, function (personId) {
-      // update person_id
-      if (personId) {
-        data.member[memberFields.PERSON] = personId
-
-        // insert to ADDRESS table
-        db.insertOne(db.tables.ADDRESS_TABLE, data.address, function (addressId) {
-          // update address_id
-          if (addressId) {
-            data.member[memberFields.ADDRESS] = addressId
-            // finally insert to MEMBER table
-            db.insertOne(db.tables.MEMBER_TABLE, data.member, function (result) {
-              // insert res.render() or res.redirect()
-              res.send(result)
-            })
-          } else {
-            res.send('ERROR')
-          }
-        })
-      } else {
-        res.send('ERROR')
+      res.send(msg)
+    } else {
+      const data = {
+        person: {},
+        member: {},
+        address: {}
       }
-    })
+
+      data.person[personFields.FIRST_NAME] = req.body.first_name
+      data.person[personFields.MID_NAME] = req.body.mid_name
+      data.person[personFields.LAST_NAME] = req.body.last_name
+
+      data.address[addressFields.ADDRESS_LINE] = req.body.address_line
+      data.address[addressFields.BRGY] = req.body.barangay
+      data.address[addressFields.CITY] = req.body.city
+      data.address[addressFields.PROVINCE] = req.body.PROVINCE
+
+      data.member[memberFields.AGE] = req.body.age
+      data.member[memberFields.BIRTHDAY] = req.body.birthday
+      data.member[memberFields.OCCUPATION] = req.body.occupation
+      data.member[memberFields.WORKPLACE] = req.body.workplace
+      data.member[memberFields.EMAIL] = req.body.email
+      data.member[memberFields.MOBILE] = req.body.mobile
+      data.member[memberFields.EDUCATIONAL_ATTAINMENT] = req.body.educational_attainment
+      data.member[memberFields.ALMA_MATER] = req.body.alma_mater
+      data.member[memberFields.SKILLS] = req.body.skills
+      data.member[memberFields.DATE] = new Date().toString()
+
+      // insert to PEOPLE table
+      db.insertOne(db.tables.PERSON_TABLE, data.person, function (personId) {
+        // update person_id
+        if (personId) {
+          data.member[memberFields.PERSON] = personId
+
+          // insert to ADDRESS table
+          db.insertOne(db.tables.ADDRESS_TABLE, data.address, function (addressId) {
+            // update address_id
+            if (addressId) {
+              data.member[memberFields.ADDRESS] = addressId
+              // finally insert to MEMBER table
+              db.insertOne(db.tables.MEMBER_TABLE, data.member, function (result) {
+                // insert res.render() or res.redirect()
+                res.send(result)
+              })
+            } else {
+              res.send('ERROR')
+            }
+          })
+        } else {
+          res.send('ERROR')
+        }
+      })
+    }
   },
   /**
    * This function updates a row in the members table
