@@ -1,3 +1,5 @@
+// Testing
+
 const { app, BrowserWindow, globalShortcut } = require('electron')
 const dotenv = require('dotenv')
 const path = require('path')
