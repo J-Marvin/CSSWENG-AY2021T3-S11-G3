@@ -266,6 +266,7 @@ const database = {
         'alma_mater TEXT,' +
         'skills TEXT,' +
         'date_created TEXT,' +
+        'sex TEXT,' +
         'FOREIGN KEY(address_id) REFERENCES address(address_id),' +
         'FOREIGN KEY(bap_reg_id) REFERENCES bap_reg(reg_id), ' +
         'FOREIGN KEY(wedding_reg_id) REFERENCES wedding_reg(reg_id),' +
