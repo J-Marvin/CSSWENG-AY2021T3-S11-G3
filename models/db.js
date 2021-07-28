@@ -34,6 +34,21 @@ const tables = {
 }
 const tableNames = Object.values(tables)
 
+const startIds = [
+  { table: 'members', start: 1000000 },
+  { table: 'address', start: 2000000 },
+  { table: 'accounts', start: 0 },
+  { table: 'people', start: 11000000 },
+  { table: 'donations', start: 8000000 },
+  { table: 'bap_reg', start: 3000000 },
+  { table: 'wedding_reg', start: 5000000 },
+  { table: 'pre_nuptial', start: 4000000 },
+  { table: 'witness', start: 6000000 },
+  { table: 'inf_dedication', start: 7000000 },
+  { table: 'couples', start: 10000000 },
+  { table: 'observations', start: 9000000 }
+]
+
 const fields = {
   members: Object.values(memberFields),
   address: Object.values(addressFields),
@@ -184,7 +199,7 @@ const database = {
        date - the date the donation was given
      */
     const createDonationRecord =
-      'CREATE TABLE IF NOT EXISTS donatations (' +
+      'CREATE TABLE IF NOT EXISTS donations (' +
         'donation_record_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,' +
         'member_id INTEGER NOT NULL,' +
         'type TEXT, ' +
@@ -298,6 +313,26 @@ const database = {
        observee_id - the id of the member being observed
        observer_id - the person of the person observing
      */
+    const createObservations =
+      'CREATE TABLE IF NOT EXISTS observations(' +
+      'observation_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
+      'comment TEXT NOT NULL,' +
+      'observee_id INTEGER NOT NULL,' +
+      'observer_id INTEGER NOT NULL,' +
+      'FOREIGN KEY(observee_id) REFERENCES members(member_id),' +
+      'FOREIGN KEY(observer_id) REFERENCES people(person_id)' +
+      ')'
+
+    knexClient('sqlite_sequence').select().then((result) => {
+      startIds.forEach((record) => {
+        if (!result.includes(record.table)) {
+          knexClient('sqlite_sequence').insert({
+            name: record.table,
+            seq: record.start
+          }).catch((err) => { console.log(err) })
+        }
+      })
+    })
 
     // execute all statements
     db.prepare(createBapReg).run()
@@ -311,6 +346,7 @@ const database = {
     db.prepare(createDonationRecord).run()
     db.prepare(createCouple).run()
     db.prepare(createPerson).run()
+    db.prepare(createObservations).run()
 
     // if the accounts table is empty then insert passwords
     knexClient('accounts').select().then(function (res) {
@@ -322,8 +358,6 @@ const database = {
           knexClient('accounts').insert({
             level: 1,
             hashed_password: hash
-          }).then(function (result) {
-            console.log(result)
           }).catch(function (err) {
             console.log(err)
           })
@@ -336,8 +370,6 @@ const database = {
           knexClient('accounts').insert({
             level: 2,
             hashed_password: hash
-          }).then(function (result) {
-            console.log(result)
           }).catch(function (err) {
             console.log(err)
           })
@@ -349,8 +381,6 @@ const database = {
           knexClient('accounts').insert({
             level: 3,
             hashed_password: hash
-          }).then(function (result) {
-            console.log(result)
           }).catch(function (err) {
             console.log(err)
           })
