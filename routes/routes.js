@@ -14,5 +14,7 @@ app.get('/login_page', loginController.getLoginPage)
 app.post('/login', loginController.postLogIn)
 app.get('/add_member', memberController.getAddMemberPage)
 app.post('/add_member', memberController.createMember)
+app.get('/add_prenup', prenupController.getPrenup)
 app.post('/add_prenup', prenupController.createPrenup)
+
 module.exports = app

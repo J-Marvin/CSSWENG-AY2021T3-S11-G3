@@ -4,6 +4,9 @@ const prenupRecordFields = require('../models/prenupRecord')
 const coupleFields = require('../models/Couple.js')
 
 const prenupController = {
+  getPrenup: function (req, res) {
+    res.render('add-prenup-temp')
+  },
   /**
    * This function inserts a new row in the prenuptial table
    * @param req - the incoming request containing either the query or body
@@ -15,37 +18,38 @@ const prenupController = {
       couple: {},
       male: {},
       female: {}
-    } // object that will be passed later on insertOne(prenup)
-    data.prenup[prenupRecordFields.DATE] = req.body.date
-    data.prenup[prenupRecordFields.DATE_OF_WEDDING] = req.body.weddingDate
+    } // object that will be passed later on insert(prenup)
+    data.prenup[prenupRecordFields.DATE] = req.body.current_date
+    data.prenup[prenupRecordFields.DATE_OF_WEDDING] = req.body.wedding_date
 
-    data.male[personFields.FIRST_NAME] = req.body.maleFirst
-    data.male[personFields.MID_NAME] = req.body.maleMid
-    data.male[personFields.LAST_NAME] = req.body.maleLast
+    data.male[personFields.FIRST_NAME] = req.body.groom_first_name
+    data.male[personFields.MID_NAME] = req.body.groom_middle_name
+    data.male[personFields.LAST_NAME] = req.body.groom_last_name
 
-    data.female[personFields.FIRST_NAME] = req.body.femaleFirst
-    data.female[personFields.MID_NAME] = req.body.femaleMid
-    data.female[personFields.LAST_NAME] = req.body.femaleLast
+    data.female[personFields.FIRST_NAME] = req.body.bride_first_name
+    data.female[personFields.MID_NAME] = req.body.bride_middle_name
+    data.female[personFields.LAST_NAME] = req.body.bride_last_name
 
     // insert male name to PERSON_TABLE
-    db.insertOne(db.tables.PERSON_TABLE, data.male, function (maleId) {
+    db.insert(db.tables.PERSON_TABLE, data.male, function (maleId) {
       if (maleId) {
         data.couple[coupleFields.MALE] = maleId
 
         // insert female name to PERSON_TABLE
-        db.insertOne(db.tables.PERSON_TABLE, data.female, function (femaleId) {
+        db.insert(db.tables.PERSON_TABLE, data.female, function (femaleId) {
           if (femaleId) {
             data.couple[coupleFields.FEMALE] = femaleId
 
             // insert the couple to COUPLE_TABLE
-            db.insertOne(db.tables.COUPLE_TABLE, data.couple, function (coupleId) {
+            db.insert(db.tables.COUPLE_TABLE, data.couple, function (coupleId) {
               if (coupleId) {
                 data.prenup[prenupRecordFields.COUPLE] = coupleId
 
                 // finally insert to the prenup table
-                db.insertOne(db.tables.PRENUPTIAL_TABLE, data.prenup, function (result) {
+                db.insert(db.tables.PRENUPTIAL_TABLE, data.prenup, function (result) {
                   if (result !== false) {
                     // insert res.render() or res.redirect()
+                    res.send(result)
                   }
                 })
               } else {
