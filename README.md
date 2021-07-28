@@ -21,6 +21,7 @@
 - [dotenv](https://www.npmjs.com/package/dotenv)
 - [express](https://www.npmjs.com/package/express)
 - [express-handlebars](https://www.npmjs.com/package/express-handlebars)
+- [fs](https://www.npmjs.com/package/fs)
 - [bcrypt](https://www.npmjs.com/package/bcrypt)
 - [async](https://www.npmjs.com/package/async)
 - [better-sqlite3](https://www.npmjs.com/package/better-sqlite3)
