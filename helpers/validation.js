@@ -10,12 +10,22 @@ const validation = {
       check('membership_status', 'Membership status is required').notEmpty(),
       check('birthday', 'Birthday is required').notEmpty().isDate(),
       check('occupation', 'Occupation is required').notEmpty(),
-      check('sex', 'Sex is required').notEmpty(),
+      check('sex').custom((value, req) => {
+        if(validator.isEmpty(value)) {
+          throw new Error('Sex is required')
+        } else {
+          switch(value) {
+            case 'Male':
+            case 'Female':
+              return true
+            default: throw Error('Invalid sex')
+          }
+        }
+      }),
       check('email').custom((value, req) => {
         if (!validator.isEmpty(value) && !validator.isEmail(value)) {
           throw new Error('Invalid email')
         }
-
         return true
       }),
       check('mobile', 'Invalid mobile number').isNumeric()

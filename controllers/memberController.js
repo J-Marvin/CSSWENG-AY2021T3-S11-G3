@@ -32,7 +32,7 @@ const memberController = {
       let msg = ''
 
       errors.forEach((error) => {
-        msg += error.msg + '\n'
+        msg += error.msg + '<br>'
       })
 
       res.send(msg)
