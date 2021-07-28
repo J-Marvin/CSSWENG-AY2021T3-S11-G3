@@ -13,6 +13,9 @@ const queryTypes = {
 
 const types = Object.keys(queryTypes)
 
+/** This blueprint represents a WHERE condition in sqlite
+ *  @param {String} type of where statement based on Knex.js
+*/
 function Condition (type) {
   if (types.includes(type)) {
     this.type = type
@@ -20,18 +23,19 @@ function Condition (type) {
 }
 
 Condition.prototype = {
-  setQueryObject: function (query) {
-    this.query = query
-    this.queryType = 'object'
+  /** */
+  setQueryObject: function (condition) {
+    this.condition = condition
+    this.conditionType = 'object'
   },
 
   setKeyValue: function (key, value, operator = null) {
-    this.query = {
+    this.condition = {
       key: key,
       value: value,
       operator: (operator === null || operator === undefined) ? '=' : operator
     }
-    this.queryType = 'keyValue'
+    this.conditionType = 'keyValue'
   }
 }
 

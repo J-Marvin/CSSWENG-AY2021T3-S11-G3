@@ -8,58 +8,67 @@ const coupleFields = require('../models/Couple.js')
 
 const memberController = {
   /**
+   * This function displays the add member page
+   * @param req - the incoming request containing either the query or body
+   * @param res - the result to be sent out after processing the request
+   */
+  getAddMemberPage: function(req, res) {
+    res.render('add-member-temp')
+  },
+
+  /**
    * This function inserts a new row in the member table
    * @param req - the incoming request containing either the query or body
    * @param res - the result to be sent out after processing the request
    */
   createMember: function (req, res) {
-    const data = {}
-    const temp1 = {} // temp object for inserting into PEOPLE table
-    const temp2 = {} // temp object for inserting into ADDRESS table
-    temp1[personFields.FIRST_NAME] = req.body.firstName// .fieldName
-    temp1[personFields.MID_NAME] = req.body.middleName// .fieldName
-    temp1[personFields.LAST_NAME] = req.body.lastName// .fieldName
+    const data = {
+      person: {},
+      member: {},
+      address: {}
+    }
 
-    data[personFields.FIRST_NAME] = temp1.first_name
-    data[personFields.MID_NAME] = temp1.middle_name
-    data[personFields.LAST_NAME] = temp1.last_name
+    data.person[personFields.FIRST_NAME] = req.body.first_name
+    data.person[personFields.MID_NAME] = req.body.mid_name
+    data.person[personFields.LAST_NAME] = req.body.last_name
+
+    data.address[addressFields.ADDRESS_LINE] = req.body.address_line
+    data.address[addressFields.BRGY] = req.body.barangay
+    data.address[addressFields.CITY] = req.body.city
+    data.address[addressFields.PROVINCE] = req.body.PROVINCE
+
+    data.member[memberFields.AGE] = req.body.age
+    data.member[memberFields.BIRTHDAY] = req.body.birthday
+    data.member[memberFields.OCCUPATION] = req.body.occupation
+    data.member[memberFields.WORKPLACE] = req.body.workplace
+    data.member[memberFields.EMAIL] = req.body.email
+    data.member[memberFields.MOBILE] = req.body.mobile
+    data.member[memberFields.EDUCATIONAL_ATTAINMENT] = req.body.educational_attainment
+    data.member[memberFields.ALMA_MATER] = req.body.alma_mater
 
     // insert to PEOPLE table
-    db.insertOne(db.tables.PERSON_TABLE, temp1, function (personId) {
+    db.insertOne(db.tables.PERSON_TABLE, data.person, function (personId) {
       // update person_id
-      data[memberFields.PERSON] = personId
+      if (personId) {
+        data.member[memberFields.PERSON] = personId
 
-      temp2[addressFields.STREET] = req.body.street// .fieldName
-      temp2[addressFields.BRGY] = req.body.brgy// .fieldName
-      temp2[addressFields.CITY] = req.body.city// .fieldName
-      temp2[addressFields.PROVINCE] = req.body.province// .fieldName
-
-      // insert to ADDRESS table
-      db.insertOne(db.tables.ADDRESS_TABLE, data, function (addressId) {
-        // update address_id
-        data[memberFields.ADDRESS] = addressId
-        data[addressFields.STREET] = temp2.street
-        data[addressFields.BRGY] = temp2.barangay
-        data[addressFields.CITY] = temp2.city
-        data[addressFields.PROVINCE] = temp2.province
-
-        // put all other fields
-        data[memberFields.AGE] = req.body.age // .fieldName
-        data[memberFields.ALMA_MATER] = req.body.address // .fieldName
-        data[memberFields.BIRTHDAY] = req.body.birthday // .fieldName
-        data[memberFields.CIVIL_STATUS] = req.body.civilStatus // .fieldName
-        data[memberFields.EDUCATIONAL_ATTAINMENT] = req.body.educ // .fieldName
-        data[memberFields.EMAIL] = req.body.email // .fieldName
-        data[memberFields.MEMBER_STATUS] = req.body.memberStatus // .fieldName
-        data[memberFields.MOBILE] = req.body.mobile // .fieldName
-        data[memberFields.OCCUPATION] = req.body.occupation // .fieldName
-        data[memberFields.WORKPLACE] = req.body.workplace // .fieldName
-
-        // finally insert to MEMBER table
-        db.insertOne(db.tables.MEMBER_TABLE, data, function (result) {
-          // insert res.render() or res.redirect()
+        // insert to ADDRESS table
+        db.insertOne(db.tables.ADDRESS_TABLE, data.address, function (addressId) {
+          // update address_id
+          if (addressId) {
+            data.member[memberFields.ADDRESS] = addressId
+            // finally insert to MEMBER table
+            db.insertOne(db.tables.MEMBER_TABLE, data.member, function (result) {
+              // insert res.render() or res.redirect()
+              res.send(result)
+            })
+          } else {
+            res.send('ERROR')
+          }
         })
-      })
+      } else {
+        res.send('ERROR')
+      }
     })
   },
   /**
