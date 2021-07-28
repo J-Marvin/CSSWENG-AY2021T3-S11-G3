@@ -9,7 +9,7 @@ const memberController = {
    * @param req - the incoming request containing either the query or body
    * @param res - the result to be sent out after processing the request
    */
-  getAddMemberPage: function(req, res) {
+  getAddMemberPage: function (req, res) {
     res.render('add-member-temp')
   },
 

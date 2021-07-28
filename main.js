@@ -6,8 +6,7 @@ dotenv.config({ path: path.join(__dirname, '.env') })
 
 const port = process.env.PORT
 const hostname = process.env.HOSTNAME
-
-const server = require('./app.js')
+require('./app.js')
 
 let mainWindow
 

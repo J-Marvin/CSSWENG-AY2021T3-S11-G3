@@ -101,6 +101,13 @@ const database = {
         'FOREIGN KEY(parents_id) REFERENCES couples(couple_id)' +
       ')'
 
+    /* This statement creates the Witness table
+       Fields:
+       witness_id - primary id
+       dedication_id - the dedication id of the dedication the witness attended
+       wedding_id - the wedding id of the wedding the witness attended
+       person_id - the id of the witness' personal information
+    */
     const createWitness =
       'CREATE TABLE IF NOT EXISTS witness (' +
         'witness_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
@@ -112,12 +119,24 @@ const database = {
         'FOREIGN KEY(person_id) REFERENCES people(person_id)' +
       ')'
 
+    /* This statement creates the Accounts table
+        Fields:
+        level - the level of access (1 - highest, 3 - lowest)
+        hashed_password - the hashed password
+      */
     const createAccounts =
     'CREATE TABLE IF NOT EXISTS accounts (' +
       'level TEXT NOT NULL PRIMARY KEY,' +
       'hashed_password TEXT' +
       ')'
 
+    /* This statement creates the Prenuptial Registry table
+       Fields:
+       record_id - primary id
+       couple_id - the id of the couple being married
+       date - the date of the record
+       date_of_wedding - the actual date of the wedding
+     */
     const createPreNuptial =
       'CREATE TABLE IF NOT EXISTS pre_nuptial (' +
         'record_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,' +
@@ -127,6 +146,18 @@ const database = {
         'FOREIGN KEY(couple_id) REFERENCES couples(couple_id)' +
       ')'
 
+    /* This statement creates the Wedding Registry table
+       Fields:
+       reg_id - primary id
+       prenup_record_id - the id of the prenuptial record of the wedding
+       bride_parents_id - the id of the parents of the bride
+       groom_parents_id - the id of the parents of the groom
+       date - the date of the wedding
+       location - the location of the wedding
+       solemnizing_officer - the solemnizer of the wedding
+       contract_no - the contract no of the marriage contract
+       contract_img - the image of the wedding certificate
+     */
     const createWeddingReg =
       'CREATE TABLE IF NOT EXISTS wedding_reg (' +
         'reg_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,' +
@@ -141,6 +172,14 @@ const database = {
         'FOREIGN KEY(prenup_record_id) REFERENCES pre_nuptial(record_id)' +
       ')'
 
+    /* This statement creates the Donation Record table
+       Fields:
+       donation_record_id - primary id
+       member_id - the id of the member who gave the donation
+       type - the type of donation
+       amount - the amount of the donation
+       date - the date the donation was given
+     */
     const createDonationRecord =
       'CREATE TABLE IF NOT EXISTS donatations (' +
         'donation_record_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,' +
@@ -151,6 +190,14 @@ const database = {
         'FOREIGN KEY(member_id) REFERENCES members(member_id) ' +
       ')'
 
+    /* This statement creates the Address table
+       Fields:
+       address_id - primary id
+       address_line - the address line
+       barangay - the barangay
+       city - the city
+       province - the province
+    */
     const createAddress =
       'CREATE TABLE IF NOT EXISTS address (' +
         'address_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
@@ -160,6 +207,25 @@ const database = {
         'province TEXT' +
       ')'
 
+    /* This statement creates the Members table
+       Fields:
+       member_id - primary id
+       address_id - the id of the address
+       bap_reg_id - the id of the baptismal registry
+       wedding_reg_id - the id of the wedding registry
+       prenup_record_id - the id of the prenuptial record
+       person_id - the id of the person
+       member_status - the status of the member
+       civil_status - the civil status of the member
+       age - the age of the member
+       birthday - the birthday of the member
+       occupation - the occupation of the member
+       workplace - the workplace of the member
+       email - the email of the member
+       mobile - the mobile of the member
+       educ_attainment - the highest educational attainment of the member
+       alma_mater - the alma mater of the member
+    */
     const createMembers =
       'CREATE TABLE IF NOT EXISTS members (' +
         'member_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,' +
@@ -185,6 +251,14 @@ const database = {
         'FOREIGN KEY(person_id) REFERENCES people(person_id)' +
       ')'
 
+    /* This statement creates the Person table
+       Fields:
+        person_id - the primary id
+        member_id - the id of the member associated with the record
+        first_name - the first name of the person
+        middle_name - the middle name of the person
+        last_name - the last name of the person
+     */
     const createPerson =
       'CREATE TABLE IF NOT EXISTS people(' +
         'person_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
@@ -195,6 +269,12 @@ const database = {
         'FOREIGN KEY(member_id) references members(member_id)' +
       ')'
 
+    /* This statement creates the couple table
+       Fields:
+       couple_id - the primary id
+       female_id - the id of the female in the couple
+       male_id - the id of the male in the couple
+     */
     const createCouple =
       'CREATE TABLE IF NOT EXISTS couples(' +
       'couple_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
@@ -303,15 +383,13 @@ const database = {
     }
   },
 
-  /* TODO: FIX METHOD
-     what if query is an arry of objects where each object is
-     {
-       type: "where, wherein ..."
-       operator: "=", "<" ...
-       field: "col"
-       value: value
-     }
-  */
+  /**
+   * This method finds all the records in a table given some conditions
+   * @param {String} table - the name of the table
+   * @param {Array<Condition>} conditions - an array of objects containing the WHERE conditions paired to their respective column name
+   * @param {String} projection - the columns to be retrieved
+   * @param {function} callback - the callback function
+   */
   find: function (table, conditions = null, projection = '*', callback) {
     knexClient(table).select(projection).where(function (builder) {
       if (conditions !== null || conditions !== undefined) {
@@ -489,7 +567,7 @@ const database = {
    * condition, afterwards it passes the callback function
    * @param {string} table - refers to the table name where the data will be updated onto a row
    * @param {object} data - the object containing the values paired to their respective column name
-   * @param {object} condition - an array of objects containing the WHERE conditions paired to their respective column name
+   * @param {Array<Conditions>} condition - an array of objects containing the WHERE conditions paired to their respective column name
    */
   updateOne: function (table, data, conditions, callback = null) {
     knexClient(table)
@@ -594,7 +672,7 @@ const database = {
    * This function deletes a row in a table specified by the provided conditions and passes
    * a callback function
    * @param {string} table - refers to the table name where the row will be deleted
-   * @param {object} conditions - an array of objects containing the WHERE conditions paired to their respective column name
+   * @param {Array<Condition>} conditions - an array of objects containing the WHERE conditions paired to their respective column name
    */
   deleteOne: function (table, conditions, callback = null) {
     knexClient(table)
