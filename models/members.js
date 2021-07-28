@@ -8,6 +8,7 @@ const memberFields = {
   OCCUPATION: 'occupation',
   WORKPLACE: 'workplace',
   EMAIL: 'email',
+  TELEPHONE: 'telephone',
   MOBILE: 'mobile',
   EDUCATIONAL_ATTAINMENT: 'educ_attainment',
   ALMA_MATER: 'alma_mater',
@@ -16,7 +17,10 @@ const memberFields = {
   WEDDING_REG: 'wedding_reg_id',
   PRENUP_RECORD: 'prenup_record_id',
   SKILLS: 'skills',
-  DATE: 'date_created'
+  DATE: 'date_created',
+  SEX: 'sex',
+  CHURCHES: 'churches',
+  PARENTS: 'parents_id'
 }
 
 module.exports = memberFields

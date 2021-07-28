@@ -35,7 +35,7 @@ const memberController = {
     data.address[addressFields.ADDRESS_LINE] = req.body.address_line
     data.address[addressFields.BRGY] = req.body.barangay
     data.address[addressFields.CITY] = req.body.city
-    data.address[addressFields.PROVINCE] = req.body.PROVINCE
+    data.address[addressFields.PROVINCE] = req.body.province
 
     data.member[memberFields.AGE] = req.body.age
     data.member[memberFields.BIRTHDAY] = req.body.birthday
