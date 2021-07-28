@@ -49,18 +49,18 @@ const memberController = {
     data.member[memberFields.DATE] = new Date().toString()
 
     // insert to PEOPLE table
-    db.insertOne(db.tables.PERSON_TABLE, data.person, function (personId) {
+    db.insert(db.tables.PERSON_TABLE, data.person, function (personId) {
       // update person_id
       if (personId) {
         data.member[memberFields.PERSON] = personId
 
         // insert to ADDRESS table
-        db.insertOne(db.tables.ADDRESS_TABLE, data.address, function (addressId) {
+        db.insert(db.tables.ADDRESS_TABLE, data.address, function (addressId) {
           // update address_id
           if (addressId) {
             data.member[memberFields.ADDRESS] = addressId
             // finally insert to MEMBER table
-            db.insertOne(db.tables.MEMBER_TABLE, data.member, function (result) {
+            db.insert(db.tables.MEMBER_TABLE, data.member, function (result) {
               // insert res.render() or res.redirect()
               res.send(result)
             })
@@ -113,7 +113,7 @@ const memberController = {
     data[bapRegFields.LOCATION] = req.query.location
     data[bapRegFields.OFFICIANT] = req.query.officiant
 
-    db.insertOne(db.tables.BAPTISMAL_TABLE, data, function (result) {
+    db.insert(db.tables.BAPTISMAL_TABLE, data, function (result) {
       // insert res.render() or res.redirect()
     })
   },

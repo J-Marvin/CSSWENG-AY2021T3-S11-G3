@@ -15,7 +15,7 @@ const prenupController = {
       couple: {},
       male: {},
       female: {}
-    } // object that will be passed later on insertOne(prenup)
+    } // object that will be passed later on insert(prenup)
     data.prenup[prenupRecordFields.DATE] = req.body.date
     data.prenup[prenupRecordFields.DATE_OF_WEDDING] = req.body.weddingDate
 
@@ -28,22 +28,22 @@ const prenupController = {
     data.female[personFields.LAST_NAME] = req.body.femaleLast
 
     // insert male name to PERSON_TABLE
-    db.insertOne(db.tables.PERSON_TABLE, data.male, function (maleId) {
+    db.insert(db.tables.PERSON_TABLE, data.male, function (maleId) {
       if (maleId) {
         data.couple[coupleFields.MALE] = maleId
 
         // insert female name to PERSON_TABLE
-        db.insertOne(db.tables.PERSON_TABLE, data.female, function (femaleId) {
+        db.insert(db.tables.PERSON_TABLE, data.female, function (femaleId) {
           if (femaleId) {
             data.couple[coupleFields.FEMALE] = femaleId
 
             // insert the couple to COUPLE_TABLE
-            db.insertOne(db.tables.COUPLE_TABLE, data.couple, function (coupleId) {
+            db.insert(db.tables.COUPLE_TABLE, data.couple, function (coupleId) {
               if (coupleId) {
                 data.prenup[prenupRecordFields.COUPLE] = coupleId
 
                 // finally insert to the prenup table
-                db.insertOne(db.tables.PRENUPTIAL_TABLE, data.prenup, function (result) {
+                db.insert(db.tables.PRENUPTIAL_TABLE, data.prenup, function (result) {
                   if (result !== false) {
                     // insert res.render() or res.redirect()
                   }
