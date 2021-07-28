@@ -240,11 +240,15 @@ const database = {
        occupation - the occupation of the member
        workplace - the workplace of the member
        email - the email of the member
+       telephone - the telephone number of the member
        mobile - the mobile of the member
        educ_attainment - the highest educational attainment of the member
        alma_mater - the alma mater of the member
        skills - the list of skills this member has
        date_created - the date when the profile was created
+       sex - the sex of the member
+       churches - the previous churches the member has attended
+       parents_id - the id of the parents of the member
     */
     const createMembers =
       'CREATE TABLE IF NOT EXISTS members (' +
@@ -261,6 +265,7 @@ const database = {
         'occupation TEXT,' +
         'workplace TEXT,' +
         'email TEXT,' +
+        'telephone TEXT,' +
         'mobile TEXT,' +
         'educ_attainment TEXT,' +
         'alma_mater TEXT,' +

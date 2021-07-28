@@ -8,6 +8,7 @@ const memberFields = {
   OCCUPATION: 'occupation',
   WORKPLACE: 'workplace',
   EMAIL: 'email',
+  TELEPHONE: 'telephone',
   MOBILE: 'mobile',
   EDUCATIONAL_ATTAINMENT: 'educ_attainment',
   ALMA_MATER: 'alma_mater',
