@@ -65,7 +65,7 @@ const database = {
       },
       useNullAsDefault: true
     })
-    
+
     /* This statement creates the Baptismal Registry table
        Fields:
        reg_id - primary id
