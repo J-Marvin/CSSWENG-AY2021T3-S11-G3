@@ -1,6 +1,7 @@
 const sqlite3 = require('better-sqlite3')
 const knex = require('knex')
 const async = require('async')
+const fs = require('fs')
 
 // gettings fields of all tables
 const memberFields = require('./members.js')
@@ -309,8 +310,8 @@ const database = {
     const createCouple =
       'CREATE TABLE IF NOT EXISTS couples(' +
       'couple_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
-      'female_id INTEGER NOT NULL,' +
-      'male_id INTEGER NOT NULL,' +
+      'female_id INTEGER,' +
+      'male_id INTEGER,' +
       'FOREIGN KEY(female_id) REFERENCES people(person_id),' +
       'FOREIGN KEY(male_id) REFERENCES people(person_id)' +
       ')'
@@ -404,20 +405,32 @@ const database = {
    * This function inserts the data into a specified table in the database and passes the result to the
    * callback function
    * @param {string} table - the table where the data will be added
-   * @param {object} data  - the object containing the values paired to their respective column name
+   * @param {object} data  - the object containing the values paired to their respective column name / can also be an array of objects
    * @param {function} callback - the function to be executed after inserting the data
    */
-  insertOne: function (table, data, callback = null) {
+  insert: function (table, data, callback = null) {
     // if table is not in database
     if (!(tableNames.includes(table))) {
       const success = false
       callback(success)
     } else {
-      for (const key in data) {
-        if (fields[table].includes(key) && // if the key is a valid field
-           (data[key] === null || data[key] === undefined)) {
-          // if the value is valid
-          delete data[key]
+      if (Array.isArray(data)) {
+        data.forEach((record) => {
+          for (const key in record) {
+            if (fields[table].includes(key) && // if the key is a valid field
+              (data[key] === null || data[key] === undefined)) {
+              // if the value is valid
+              delete data[key]
+            }
+          }
+        })
+      } else {
+        for (const key in data) {
+          if (fields[table].includes(key) && // if the key is a valid field
+             (data[key] === null || data[key] === undefined)) {
+            // if the value is valid
+            delete data[key]
+          }
         }
       }
 
