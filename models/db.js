@@ -14,6 +14,7 @@ const prenupRecordFields = require('./prenupRecord.js')
 const witnessFields = require('./witness.js')
 const infDedFields = require('./infantDedication.js')
 const coupleFields = require('./Couple.js')
+const observationFields = require('./observation.js')
 
 let knexClient = null
 
@@ -28,7 +29,8 @@ const tables = {
   PRENUPTIAL_TABLE: 'pre_nuptial',
   WITNESS_TABLE: 'witness',
   INFANT_TABLE: 'inf_dedication',
-  COUPLE_TABLE: 'couples'
+  COUPLE_TABLE: 'couples',
+  OBSERVATION_TABLE: 'observations'
 }
 const tableNames = Object.values(tables)
 
@@ -43,7 +45,8 @@ const fields = {
   pre_nuptial: Object.values(prenupRecordFields),
   witness: Object.values(witnessFields),
   inf_dedication: Object.values(infDedFields),
-  couples: Object.values(coupleFields)
+  couples: Object.values(coupleFields),
+  observations: Object.values(observationFields)
 }
 
 const database = {
@@ -225,6 +228,8 @@ const database = {
        mobile - the mobile of the member
        educ_attainment - the highest educational attainment of the member
        alma_mater - the alma mater of the member
+       skills - the list of skills this member has
+       date_created - the date when the profile was created
     */
     const createMembers =
       'CREATE TABLE IF NOT EXISTS members (' +
@@ -244,6 +249,8 @@ const database = {
         'mobile TEXT,' +
         'educ_attainment TEXT,' +
         'alma_mater TEXT,' +
+        'skills TEXT,' +
+        'date_created TEXT,' +
         'FOREIGN KEY(address_id) REFERENCES address(address_id),' +
         'FOREIGN KEY(bap_reg_id) REFERENCES bap_reg(reg_id), ' +
         'FOREIGN KEY(wedding_reg_id) REFERENCES wedding_reg(reg_id),' +
@@ -283,6 +290,14 @@ const database = {
       'FOREIGN KEY(female_id) REFERENCES people(person_id),' +
       'FOREIGN KEY(male_id) REFERENCES people(person_id)' +
       ')'
+
+    /* This statement creates the Observations table
+       Fields:
+       observation_id - the primary id
+       comment - the comment on the member
+       observee_id - the id of the member being observed
+       observer_id - the person of the person observing
+     */
 
     // execute all statements
     db.prepare(createBapReg).run()

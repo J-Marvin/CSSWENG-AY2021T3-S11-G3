@@ -45,6 +45,8 @@ const memberController = {
     data.member[memberFields.MOBILE] = req.body.mobile
     data.member[memberFields.EDUCATIONAL_ATTAINMENT] = req.body.educational_attainment
     data.member[memberFields.ALMA_MATER] = req.body.alma_mater
+    data.member[memberFields.SKILLS] = req.body.skills
+    data.member[memberFields.DATE] = new Date().toString()
 
     // insert to PEOPLE table
     db.insertOne(db.tables.PERSON_TABLE, data.person, function (personId) {
