@@ -17,7 +17,9 @@ const memberFields = {
   PRENUP_RECORD: 'prenup_record_id',
   SKILLS: 'skills',
   DATE: 'date_created',
-  SEX: 'sex'
+  SEX: 'sex',
+  CHURCHES: 'churches',
+  PARENTS: 'parents_id'
 }
 
 module.exports = memberFields

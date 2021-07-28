@@ -267,10 +267,13 @@ const database = {
         'skills TEXT,' +
         'date_created TEXT,' +
         'sex TEXT,' +
+        'churches TEXT,' +
+        'parents_id INTEGER,' +
         'FOREIGN KEY(address_id) REFERENCES address(address_id),' +
         'FOREIGN KEY(bap_reg_id) REFERENCES bap_reg(reg_id), ' +
         'FOREIGN KEY(wedding_reg_id) REFERENCES wedding_reg(reg_id),' +
         'FOREIGN KEY(prenup_record_id) REFERENCES pre_nuptial(record_id),' +
+        'FOREIGN KEY(parents_id) REFERENCES couple(couple_id),' +
         'FOREIGN KEY(person_id) REFERENCES people(person_id)' +
       ')'
 
