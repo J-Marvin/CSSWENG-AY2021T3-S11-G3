@@ -14,7 +14,9 @@ const memberFields = {
   PERSON: 'person_id',
   BAPTISMAL_REG: 'bap_reg_id',
   WEDDING_REG: 'wedding_reg_id',
-  PRENUP_RECORD: 'prenup_record_id'
+  PRENUP_RECORD: 'prenup_record_id',
+  SKILLS: 'skills',
+  DATE: 'date_created'
 }
 
 module.exports = memberFields
