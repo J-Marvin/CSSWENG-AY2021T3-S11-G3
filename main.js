@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, globalShortcut } = require('electron')
 const dotenv = require('dotenv')
 const path = require('path')
 
@@ -28,6 +28,15 @@ function createWindow () {
     mainWindow = null
   })
 
+  globalShortcut.register('f5', function () {
+    console.log('f5 is pressed')
+    mainWindow.reload()
+  })
+
+  globalShortcut.register('CommandOrControl+R', function () {
+    console.log('CommandOrControl+R is pressed')
+    mainWindow.reload()
+  })
   console.log(hostname + ' ' + port)
 }
 
