@@ -16,12 +16,18 @@
 3. run `npm run postinstall` to install necessary dependencies
 4. access the executable at dist/win-unpacked
 
+### Resetting the db
+1. navigate terminal to database folder
+2. run `node restDb.js`
+3. wait for script to finish (The data of the members is printed)
+4. Close the script
+
 #### dependencies
 - [body-parser](https://www.npmjs.com/package/body-parser)
 - [dotenv](https://www.npmjs.com/package/dotenv)
 - [express](https://www.npmjs.com/package/express)
 - [express-handlebars](https://www.npmjs.com/package/express-handlebars)
-- [fs](https://www.npmjs.com/package/fs)
+- [fs-extra](https://www.npmjs.com/package/fs-extra)
 - [bcrypt](https://www.npmjs.com/package/bcrypt)
 - [async](https://www.npmjs.com/package/async)
 - [better-sqlite3](https://www.npmjs.com/package/better-sqlite3)
