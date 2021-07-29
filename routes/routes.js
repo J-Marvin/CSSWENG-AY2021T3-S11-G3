@@ -14,6 +14,7 @@ app.get('/', indexController.getIndex)
 app.get('/login_page', loginController.getLoginPage)
 app.post('/login', loginController.postLogIn)
 app.get('/add_member', memberController.getAddMemberPage)
+app.get('/edit_member/:member_id', memberController.getEditMember)
 app.post('/add_member', validation.addMemberValidation(), memberController.createMember)
 app.post('/add_prenup', prenupController.createPrenup)
 module.exports = app
