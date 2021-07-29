@@ -2,6 +2,10 @@ const { check } = require('express-validator')
 const { default: validator } = require('validator')
 
 const validation = {
+  /**
+   * This function This function validates the add members form if there are no empty fields.
+   * @returns the validation array containing each boolean result
+   */
   addMemberValidation: function () {
     const validation = [
       check('first_name', 'First name is required').notEmpty(),
@@ -32,6 +36,10 @@ const validation = {
     ]
     return validation
   },
+  /**
+   * This function validates the add pre-nuptial form if there are no empty fields.
+   * @returns the validation array containing each boolean result
+   */
   addPrenupValidation: function () {
     const validation = [
       check('bride_first_name', "Bride's first name is required").notEmpty(),
