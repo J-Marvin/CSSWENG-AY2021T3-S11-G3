@@ -10,9 +10,10 @@ const prenupController = {
    * @param res - the result to be sent out after processing the request
    */
    getPrenupPage: function (req, res) {
+    // Add find one populate function here
     res.render('add-prenup-temp')
    },
-   
+
   createPrenup: function (req, res) {
     const data = {
       prenup: {},

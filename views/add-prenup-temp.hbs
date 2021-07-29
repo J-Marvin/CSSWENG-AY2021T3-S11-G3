@@ -40,69 +40,71 @@
 
 <form action="/add_member" method="POST" class="container"> 
 
-  <div id="bride_non_member_div" style="display:none">
-    <table border=1 id="t1">
-      <tr>
-        <td>Bride non member</td>
-      </tr>
-    </table>
-  </div>
+  <input type="checkbox" id="bride_non_member" onclick="display_div_bride('bride_non_member')"> BRIDE NON
+  <input type="checkbox" id="bride_member" onclick="display_div_bride('bride_member')" checked disabled> BRIDE MEM
 
   <div id="bride_member_div" style="display:block">
-    <table border=1 id="t1">
-      <tr>
-        <td>Bride member</td>
-      </tr>
-    </table>
+    <label>Select Bride</label>
+    <select id="input_bride_member" class="form-select">
+      {{#each friends}}
+        <option> {{this.brideNames}} </option>
+      {{/each}}
+    </select>
   </div>
 
-  <div id="groom_non_member_div" style="display:none">
-    <table border=1 id="t1">
-      <tr>
-        <td>Groom non member</td>
-      </tr>
-    </table>
-  </div>
-
-  <div id="groom_member_div" style="display:block">
-    <table border=1 id="t1">
-      <tr>
-        <td>Groom member</td>
-      </tr>
-    </table>
-  </div>
-
-  <form>
-    <input type="checkbox" id="bride_non_member" onclick="display_div_bride('bride_non_member')"> BRIDE NON
-    <input type="checkbox" id="bride_member" onclick="display_div_bride('bride_member')" checked disabled> BRIDE MEM
-    
-    <input type="checkbox" id="groom_non_member" onclick="display_div_groom('groom_non_member')"> GROOM NON
-    <input type="checkbox" id="groom_member" onclick="display_div_groom('groom_member')" checked disabled> GROOM MEM
-  </form>
-
-  <fieldset class="form-group">
+  <fieldset class="form-group" id="bride_non_member_div" style="display:none">
     <legend>Bride</legend>
-    <label for="bride_first_name">First Name</label>
-    <input type="text" id="first_name" name="bride_first_name" class="form-control">
-
-    <label for="bride_mid_name">Middle Name</label>
-    <input type="text" id="mid_name" name="bride_mid_name" class="form-control">
-
-    <label for="bride_last_name">Last Name</label>
-    <input type="text" id="last_name" name="bride_last_name"class="form-control">
+    <div class="div">
+      <div class="row">
+        <div class="col">
+          <label for="bride_first_name">First Name</label>
+          <input type="text" id="first_name" name="bride_first_name" class="form-control">
+        </div>
+        <div class="col">
+          <label for="bride_mid_name">Middle Name</label>
+          <input type="text" id="mid_name" name="bride_mid_name" class="form-control">
+        </div>
+        <div class="col">
+          <label for="bride_last_name">Last Name</label>
+          <input type="text" id="last_name" name="bride_last_name"class="form-control">
+        </div>
+      </div>
+    </div>
   </fieldset>
   
-  <fieldset class="form-group">
+  <input type="checkbox" id="groom_non_member" onclick="display_div_groom('groom_non_member')"> GROOM NON
+  <input type="checkbox" id="groom_member" onclick="display_div_groom('groom_member')" checked disabled> GROOM MEM
+
+  <div id="groom_member_div" style="display:block">
+    <label>Select Groom</label>
+    <select id="input_groom_member" class="form-select">
+      {{#each friends}}
+        <option> {{this.groomNames}} </option>
+      {{/each}}
+    </select>
+  </div>
+  
+  <fieldset class="form-group" id="groom_non_member_div" style="display:none">
     <legend>Groom</legend>
-    <label for="groom_first_name">First Name</label>
-    <input type="text" id="groom_first_name" name="groom_first_name" class="form-control">
-
-    <label for="groom_mid_name">Middle Name</label>
-    <input type="text" id="groom_mid_name" name="groom_mid_name" class="form-control">
-
-    <label for="groom_last_name">Last Name</label>
-    <input type="text" id="groom_last_name" name="groom_last_name"class="form-control">
+    <div class="div">
+      <div class="row">
+        <div class="col">
+          <label for="groom_first_name">First Name</label>
+          <input type="text" id="groom_first_name" name="groom_first_name" class="form-control">
+        </div>
+        <div class="col">
+          <label for="groom_mid_name">Middle Name</label>
+          <input type="text" id="groom_mid_name" name="groom_mid_name" class="form-control">
+        </div>
+        <div class="col">
+          <label for="groom_last_name">Last Name</label>
+          <input type="text" id="groom_last_name" name="groom_last_name"class="form-control">
+        </div>
+      </div>
+    </div>
   </fieldset>
+
+  <br>
 
   <label for="current_date">Current date</label>
   <input type="date" id="current_date" name="current_date" class="form-control">
