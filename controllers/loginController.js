@@ -20,7 +20,9 @@ const loginController = {
         resolve(level)
       })
     }).then((level) => {
-      res.send((level + ''))
+      res.render("index", {
+        Level: level
+      })
     }).catch((err) => {
       if (err) {
         res.send(err.message)

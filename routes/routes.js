@@ -10,9 +10,11 @@ const prenupController = require('../controllers/prenupController')
 const app = express()
 app.set('views', path.join(__dirname, '../views'))
 
-app.get('/', indexController.getIndex)
+app.get('/', loginController.getLoginPage)
 app.get('/login_page', loginController.getLoginPage)
+app.get('/member_main_page', indexController.getMemberMainPage)
 app.get('/add_member', memberController.getAddMemberPage)
+app.get('/forms_main_page', indexController.getFormsMainPage)
 app.get('/add_prenup', prenupController.getPrenupPage)
 app.get('/edit_member/:member_id', memberController.getEditMember)
 

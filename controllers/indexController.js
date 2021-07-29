@@ -25,6 +25,14 @@ const controller = {
     res.render('index')
   },
 
+  getMemberMainPage: function(req, res) {
+    res.render("member-main-page")
+  },
+
+  getFormsMainPage: function(req, res) {
+    res.render("forms-main-page")
+  },
+
   joinSample: function (req, res) {
     const joinTables = [
       {
