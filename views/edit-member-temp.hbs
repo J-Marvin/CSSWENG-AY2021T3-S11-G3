@@ -13,7 +13,25 @@
   
     <label for="last_name">Last Name</label>
     <input type="text" id="last_name" name="last_name" class="form-control" value="{{member.last_name}}">
+
+    <label for="age">Age</label>
+    <input type="text" id="age" name="age" class="form-control" value="{{member.age}}">
+
+    <label for="birthday">Birthday</label>
+    <input type="date" id="birthday" name="birthday" class="form-control" value="{{member.birthday}}">
   
+    <label for="occupation">Occupation</label>
+    <input type="text" id="occupation" name="occupation" class="form-control" value="{{member.occupation}}">
+  
+    <label for="membership_status">Membership Status</label>
+    <input type="text" id="membership_status" name="membership_status" class="form-control" value="{{member.member_status}}">
+
+    <label for="civil_status">Civil Status</label>
+    <input type="text" id="civil_status" name="civil_status" class="form-control" value="{{member.civil_status}}">
+
+    <label for="sex">Sex</label>
+    <input type="text" id="sex" name="sex" class="form-control" value="{{member.sex}}">
+
     <fieldset class="form-group">
       <legend>Address: </legend>
       <label for="adress_line">Address</label>
@@ -26,19 +44,7 @@
       <input type="text" id="province" name="province" class="form-control" value="{{member.province}}">
     </fieldset>
   
-    <label for="membership_status">Membership Status</label>
-    <input type="text" id="membership_status" name="membership_status" class="form-control" value="{{member.member_status}}">
-    <label for="civil_status">Civil Status</label>
-    <input type="text" id="civil_status" name="civil_status" class="form-control" value="{{member.civil_status}}">
-  
-    <label for="age">Age</label>
-    <input type="text" id="age" name="age" class="form-control" value="{{member.age}}">
-  
-    <label for="birthday">birthday YYYY/MM/DD</label>
-    <input type="text" id="birthday" name="birthday" class="form-control" value="{{member.birthday}}">
-  
-    <label for="occupation">Occupation</label>
-    <input type="text" id="occupation" name="occupation" class="form-control" value="{{member.occupation}}">
+
   
     <label for="workplace">Workplace</label>
     <input type="text" id="workplace" name="workplace" class="form-control" value="{{member.workplace}}">
@@ -51,22 +57,26 @@
   
     <label for="mobile">Mobile</label>
     <input type="text" id="mobile" name="mobile" class="form-control" value="{{member.mobile}}">
-  
-    <label for="sex">Sex</label>
-    <input type="text" id="sex" name="sex" class="form-control" value="{{member.sex}}">
-  
-    <label for="skills">skills</label>
-    <input type="textarea" id="skills" name="skills" class="form-control" value="{{member.skills}}">
-  
-    <label for="churches">churches</label>
-    <input type="textarea" id="churches" name="churches" class="form-control" value="{{member.churches}}">
-  
+
     <label for="educational_attainment">Educational Attainment</label>
     <input type="text" id="educational_attainment" name="educational_attainment" class="form-control" value="{{member.educ_attainment}}">
   
     <label for="alma_mater">Alma Mater</label>
     <input type="text" id="alma_mater" name="alma_mater" class="form-control" value="{{member.alma_mater}}">
+
+    <label for="churches">Family Members</label>
+    <input type="textarea" id="family_members" name="family_members" class="form-control" value="{{member.family_members}}">
+
+    <label for="churches">Churches</label>
+    <input type="textarea" id="churches" name="churches" class="form-control" value="{{member.churches}}">
+
+    <label for="skills">Skills</label>
+    <input type="textarea" id="skills" name="skills" class="form-control" value="{{member.skills}}">
   
+    <a href="/add_prenup" id="add_prenup" type="button" class="btn btn-secondary">Add Prenup</a>
+
+    <br>
+
     <button id="submitbtn" type="button" class="btn-primary">Submit</button>
   
   </form>

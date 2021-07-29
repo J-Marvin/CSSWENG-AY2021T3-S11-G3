@@ -89,23 +89,25 @@ const memberController = {
       data.member[memberFields.DATE] = new Date().toString()
 
       // insert to PEOPLE table
-      db.insertOne(db.tables.PERSON_TABLE, data.person, function (personId) {
+      db.insert(db.tables.PERSON_TABLE, data.person, function (personId) {
         // update person_id
         if (personId) {
           data.member[memberFields.PERSON] = personId
 
           // insert to ADDRESS table
-          db.insertOne(db.tables.ADDRESS_TABLE, data.address, function (addressId) {
+          db.insert(db.tables.ADDRESS_TABLE, data.address, function (addressId) {
             // update address_id
             if (addressId) {
               data.member[memberFields.ADDRESS] = addressId
               // finally insert to MEMBER table
-              db.insertOne(db.tables.MEMBER_TABLE, data.member, function (result) {
+              db.insert(db.tables.MEMBER_TABLE, data.member, function (result) {
                 // insert res.render() or res.redirect()
                 const personCondition = new Condition(queryTypes.where)
                 personCondition.setKeyValue(personFields.ID, data.member[memberFields.PERSON])
+                const memberId = result[0]
                 db.updateOne(db.tables.PERSON_TABLE, { member_id: result[0] }, personCondition, function(result) {
-                  res.send(result)
+                  res.redirect("/edit_member/" + memberId)
+
                 })
               })
             } else {
