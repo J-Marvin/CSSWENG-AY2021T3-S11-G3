@@ -85,10 +85,58 @@ const prenupController = {
    * @param res - the result to be sent out after processing the request
    */
   updatePrenup: function (req, res) {
-    const data = req.query.data
-    const condition = req.query.condition
+    // not yet final
+    let condition = null // temp value
+    switch (req.query.condition) {
+      case 'where':
+        condition = new Condition(queryTypes.where)
+        break
+      case 'orWhere':
+        condition = new Condition(queryTypes.orWhere)
+        break
+      case 'whereNot':
+        condition = new Condition(queryTypes.whereNot)
+        break
+      case 'whereIn':
+        condition = new Condition(queryTypes.whereIn)
+        break
+      case 'whereNotNull':
+        condition = new Condition(queryTypes.whereNotNull)
+        break
+      case 'whereExists':
+        condition = new Condition(queryTypes.whereExists)
+        break
+      case 'whereNotExists':
+        condition = new Condition(queryTypes.whereNotExists)
+        break
+      case 'whereBetween':
+        condition = new Condition(queryTypes.whereBetween)
+        break
+      case 'whereNotBetween':
+        condition = new Condition(queryTypes.whereNotBetween)
+        break
+      case 'whereRaw':
+        condition = new Condition(queryTypes.whereRaw)
+        break
+    }
+    // determine what column does WHERE points to
+    const whereDataCol = req.query.whereDataCol
+    const whereData = req.query.whereData
+    switch (whereDataCol) {
+      case 'date_of_wedding':
+        condition.setQueryObject({
+          date_of_wedding: whereData
+        })
+        break
+    }
+    const conditions = []
+    conditions.push(condition)
 
-    db.updateOne(db.tables.MEMBER_TABLE, data, condition, function (result) {
+    const data = {
+      date_of_wedding: '10/29/2021'
+    }
+
+    db.updateOne(db.tables.PRENUPTIAL_TABLE, data, condition, function (result) {
       console.log(result)
       // insert res.render() or res.redirect()
     })
@@ -101,7 +149,7 @@ const prenupController = {
   deletePrenup: function (req, res) {
     const condition = req.query.condition
 
-    db.updateOne(db.tables.MEMBER_TABLE, condition, function (result) {
+    db.updateOne(db.tables.PRENUPTIAL_TABLE, condition, function (result) {
       console.log(result)
       // insert res.render() or res.redirect()
     })
