@@ -15,16 +15,16 @@ const weddingController = {
     // this is a function declaration, scroll down further below
     function addOtherData (data) {
       // insert brideParents to COUPLE
-      db.insertOne(db.tables.COUPLE_TABLE, data.brideParents, function (brideParentsId) {
+      db.insert(db.tables.COUPLE_TABLE, data.brideParents, function (brideParentsId) {
         if (brideParentsId) {
           data.wedding[weddingRegFields.BRIDE_PARENTS] = brideParentsId
 
           // insert groomParents to COUPLE
-          db.insertOne(db.tables.COUPLE_TABLE, data.groomParents, function (groomParentsId) {
+          db.insert(db.tables.COUPLE_TABLE, data.groomParents, function (groomParentsId) {
             if (groomParentsId) {
               data.wedding[weddingRegFields.GROOM_PARENTS] = groomParentsId
               // finally insert data to WEDDING TABLE
-              db.insertOne(db.tables.WEDDING_TABLE, data.wedding, function (result) {
+              db.insert(db.tables.WEDDING_TABLE, data.wedding, function (result) {
               // insert res.render() or res.redirect()
               })
             }
@@ -66,22 +66,22 @@ const weddingController = {
     data.groomFather[personFields.LAST_NAME] = req.body.groomFatherLast
 
     // insert bride's mother
-    db.insertOne(db.tables.PERSON_TABLE, data.brideMother, function (brideMotherId) {
+    db.insert(db.tables.PERSON_TABLE, data.brideMother, function (brideMotherId) {
       if (brideMotherId) {
         data.brideParents[coupleFields.FEMALE] = brideMotherId
 
         // insert bride's father
-        db.insertOne(db.tables.PERSON_TABLE, data.brideFather, function (brideFatherId) {
+        db.insert(db.tables.PERSON_TABLE, data.brideFather, function (brideFatherId) {
           if (brideFatherId) {
             data.brideParents[coupleFields.MALE] = brideFatherId
 
             // insert groom's mother
-            db.insertOne(db.tables.PERSON_TABLE, data.groomMother, function (groomMotherId) {
+            db.insert(db.tables.PERSON_TABLE, data.groomMother, function (groomMotherId) {
               if (groomMotherId) {
                 data.groomParents[coupleFields.FEMALE] = groomMotherId
 
                 // insert groom's father
-                db.insertOne(db.tables.PERSON_TABLE, data.groomFather, function (groomFatherId) {
+                db.insert(db.tables.PERSON_TABLE, data.groomFather, function (groomFatherId) {
                   if (groomFatherId) {
                     data.groomParents[coupleFields.MALE] = groomFatherId
                     addOtherData(data) // call the last stack of inserts
