@@ -3,8 +3,8 @@ const personFields = require('../models/person')
 const memberFields = require('../models/members')
 const addressFields = require('../models/address')
 const bapRegFields = require('../models/baptismalRegistry')
-const prenupRecordFields = require('../models/prenupRecord')
-const coupleFields = require('../models/Couple.js')
+const { validationResult } = require('express-validator')
+const { Condition, queryTypes } = require('../models/condition.js')
 
 const memberController = {
   /**
@@ -16,17 +16,126 @@ const memberController = {
     res.render('add-member-temp')
   },
 
+  getEditMember: function (req, res) {
+    const condition = new Condition(queryTypes.where)
+    const joinTables = [
+      {
+        tableName: db.tables.PERSON_TABLE,
+        sourceCol: db.tables.MEMBER_TABLE + '.' + memberFields.PERSON,
+        destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
+      },
+      {
+        tableName: db.tables.ADDRESS_TABLE,
+        sourceCol: db.tables.MEMBER_TABLE + '.' + memberFields.ADDRESS,
+        destCol: db.tables.ADDRESS_TABLE + '.' + addressFields.ID
+      }
+    ]
+
+    condition.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.ID, parseInt(req.params.member_id))
+    db.find(db.tables.MEMBER_TABLE, condition, joinTables, '*', function (result) {
+      if (result) {
+        console.log(result)
+        res.render('edit-member-temp.hbs', {
+          member: result[0]
+        })
+      }
+    })
+  },
+
   /**
    * This function inserts a new row in the member table
    * @param req - the incoming request containing either the query or body
    * @param res - the result to be sent out after processing the request
    */
   createMember: function (req, res) {
+    let errors = validationResult(req)
+
+    if (!errors.isEmpty()) {
+      errors = errors.errors
+
+      console.log(errors)
+      let msg = ''
+
+      errors.forEach((error) => {
+        msg += error.msg + '<br>'
+      })
+
+      res.send(msg)
+    } else {
+      const data = {
+        person: {},
+        member: {},
+        address: {}
+      }
+
+      data.person[personFields.FIRST_NAME] = req.body.first_name
+      data.person[personFields.MID_NAME] = req.body.mid_name
+      data.person[personFields.LAST_NAME] = req.body.last_name
+
+      data.address[addressFields.ADDRESS_LINE] = req.body.address_line
+      data.address[addressFields.BRGY] = req.body.barangay
+      data.address[addressFields.CITY] = req.body.city
+      data.address[addressFields.PROVINCE] = req.body.PROVINCE
+
+      data.member[memberFields.AGE] = req.body.age
+      data.member[memberFields.BIRTHDAY] = req.body.birthday
+      data.member[memberFields.OCCUPATION] = req.body.occupation
+      data.member[memberFields.WORKPLACE] = req.body.workplace
+      data.member[memberFields.EMAIL] = req.body.email
+      data.member[memberFields.MOBILE] = req.body.mobile
+      data.member[memberFields.EDUCATIONAL_ATTAINMENT] = req.body.educational_attainment
+      data.member[memberFields.ALMA_MATER] = req.body.alma_mater
+      data.member[memberFields.SKILLS] = req.body.skills
+      data.member[memberFields.DATE] = new Date().toString()
+
+      // insert to PEOPLE table
+      db.insertOne(db.tables.PERSON_TABLE, data.person, function (personId) {
+        // update person_id
+        if (personId) {
+          data.member[memberFields.PERSON] = personId
+
+          // insert to ADDRESS table
+          db.insertOne(db.tables.ADDRESS_TABLE, data.address, function (addressId) {
+            // update address_id
+            if (addressId) {
+              data.member[memberFields.ADDRESS] = addressId
+              // finally insert to MEMBER table
+              db.insertOne(db.tables.MEMBER_TABLE, data.member, function (result) {
+                // insert res.render() or res.redirect()
+                const personCondition = new Condition(queryTypes.where)
+                personCondition.setKeyValue(personFields.ID, data.member[memberFields.PERSON])
+                db.updateOne(db.tables.PERSON_TABLE, { member_id: result[0] }, personCondition, function(result) {
+                  res.send(result)
+                })
+              })
+            } else {
+              res.send('ERROR')
+            }
+          })
+        } else {
+          res.send('ERROR')
+        }
+      })
+    }
+  },
+  /**
+   * This function updates a row in the members table
+   * @param req - the incoming request containing either the query or body
+   * @param res - the result to be sent out after processing the request
+   */
+  updateMember: function (req, res) {
     const data = {
       person: {},
-      member: {},
-      address: {}
+      address: {},
+      member: {}
     }
+
+    const addressCondition = new Condition(queryTypes.where)
+    addressCondition.setKeyValue(addressFields.ID, req.body.addressId)
+    const personCondition = new Condition(queryTypes.where)
+    personCondition.setKeyValue(personFields.ID, req.body.personId)
+    const memberCondition = new Condition(queryTypes.where)
+    memberCondition.setKeyValue(memberFields.ID, req.body.memberId)
 
     data.person[personFields.FIRST_NAME] = req.body.first_name
     data.person[personFields.MID_NAME] = req.body.mid_name
@@ -35,7 +144,7 @@ const memberController = {
     data.address[addressFields.ADDRESS_LINE] = req.body.address_line
     data.address[addressFields.BRGY] = req.body.barangay
     data.address[addressFields.CITY] = req.body.city
-    data.address[addressFields.PROVINCE] = req.body.province
+    data.address[addressFields.PROVINCE] = req.body.PROVINCE
 
     data.member[memberFields.AGE] = req.body.age
     data.member[memberFields.BIRTHDAY] = req.body.birthday
@@ -46,45 +155,21 @@ const memberController = {
     data.member[memberFields.EDUCATIONAL_ATTAINMENT] = req.body.educational_attainment
     data.member[memberFields.ALMA_MATER] = req.body.alma_mater
     data.member[memberFields.SKILLS] = req.body.skills
-    data.member[memberFields.DATE] = new Date().toString()
 
-    // insert to PEOPLE table
-    db.insert(db.tables.PERSON_TABLE, data.person, function (personId) {
-      // update person_id
-      if (personId) {
-        data.member[memberFields.PERSON] = personId
-
-        // insert to ADDRESS table
-        db.insert(db.tables.ADDRESS_TABLE, data.address, function (addressId) {
-          // update address_id
-          if (addressId) {
-            data.member[memberFields.ADDRESS] = addressId
-            // finally insert to MEMBER table
-            db.insert(db.tables.MEMBER_TABLE, data.member, function (result) {
-              // insert res.render() or res.redirect()
+    db.updateOne(db.tables.PERSON_TABLE, data.address, addressCondition, function (result) {
+      if (!result) {
+        res.send(false)
+      } else {
+        db.updateOne(db.tables.ADDRESS_TABLE, data.person, personCondition, function (result) {
+          if (!result) {
+            res.send(false)
+          } else {
+            db.updateOne(db.tables.MEMBER_TABLE, data.member, memberCondition, function (result) {
               res.send(result)
             })
-          } else {
-            res.send('ERROR')
           }
         })
-      } else {
-        res.send('ERROR')
       }
-    })
-  },
-  /**
-   * This function updates a row in the members table
-   * @param req - the incoming request containing either the query or body
-   * @param res - the result to be sent out after processing the request
-   */
-  updateMember: function (req, res) {
-    const data = req.query.data
-    const condition = req.query.condition
-
-    db.updateOne(db.tables.MEMBER_TABLE, data, condition, function (result) {
-      console.log(result)
-      // insert res.render() or res.redirect()
     })
   },
   /**
