@@ -6,10 +6,10 @@ const saltRounds = 10
 let knexClient = null
 
 const startIds = [
-  { table: 'members', start: 1000000 },
-  { table: 'address', start: 2000000 },
-  { table: 'accounts', start: 0 },
   { table: 'people', start: 11000000 },
+  { table: 'address', start: 2000000 },
+  { table: 'members', start: 1000000 },
+  { table: 'accounts', start: 0 },
   { table: 'donations', start: 8000000 },
   { table: 'bap_reg', start: 3000000 },
   { table: 'wedding_reg', start: 5000000 },
@@ -173,7 +173,7 @@ function delDatabase () {
   }
 }
 
-function initDatabase () {
+function initDatabase (callback) {
   const db = sqlite('church.db')
 
   // Initialize Knex connection
@@ -433,15 +433,11 @@ function initDatabase () {
     'FOREIGN KEY(observer_id) REFERENCES people(person_id)' +
     ')'
 
-  knexClient('sqlite_sequence').select().then((result) => {
-    startIds.forEach((record) => {
-      if (!result.includes(record.table)) {
-        knexClient('sqlite_sequence').insert({
-          name: record.table,
-          seq: record.start
-        }).catch((err) => { console.log(err) })
-      }
-    })
+  startIds.forEach((record) => {
+    knexClient('sqlite_sequence').insert({
+      name: record.table,
+      seq: record.start
+    }).catch((err) => { console.log(err) })
   })
 
   // execute all statements
@@ -506,11 +502,11 @@ function insertData () {
   data.forEach((record) => {
     knexClient('people').insert(record.person).then((person) => {
       if (person) {
-        record.member.person_id = person
+        record.member.person_id = person[0]
 
         knexClient('address').insert(record.address).then((address) => {
           if (address) {
-            record.member.address_id = address
+            record.member.address_id = address[0]
             knexClient('members').insert(record.member).then((result) => {
               if (result) {
                 console.log('Inserted ' + result)
