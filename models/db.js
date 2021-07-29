@@ -460,36 +460,38 @@ const database = {
    */
   find: function (table, conditions = null, join = null, projection = '*', callback) {
     const tableClient = knexClient(table)
-    if (!Array.isArray(join)) {
-      join = [join]
-    }
+    if (join !== null) {
+      if (!Array.isArray(join)) {
+        join = [join]
+      }
 
-    for (const joinTable of join) {
-      switch (joinTable.type) {
-        case 'innerJoin':
-          tableClient.innerJoin(joinTable.tableName, joinTable.sourceCol, joinTable.destCol)
-          break
-        case 'leftJoin':
-          tableClient.leftJoin(joinTable.tableName, joinTable.sourceCol, joinTable.destCol)
-          break
-        case 'leftOuterJoin':
-          tableClient.leftOuterJoin(joinTable.tableName, joinTable.sourceCol, joinTable.destCol)
-          break
-        case 'rightJoin':
-          tableClient.rightJoin(joinTable.tableName, joinTable.sourceCol, joinTable.destCol)
-          break
-        case 'rightOuterJoin':
-          tableClient.rightOuterJoin(joinTable.tableName, joinTable.sourceCol, joinTable.destCol)
-          break
-        case 'fullOuterJoin':
-          tableClient.fullOuterJoin(joinTable.tableName, joinTable.sourceCol, joinTable.destCol)
-          break
-        case 'crossJoin':
-          tableClient.crossJoin(joinTable.tableName, joinTable.sourceCol, joinTable.destCol)
-          break
-        case 'join':
-        default:
-          tableClient.join(joinTable.tableName, joinTable.sourceCol, joinTable.destCol)
+      for (const joinTable of join) {
+        switch (joinTable.type) {
+          case 'innerJoin':
+            tableClient.innerJoin(joinTable.tableName, joinTable.sourceCol, joinTable.destCol)
+            break
+          case 'leftJoin':
+            tableClient.leftJoin(joinTable.tableName, joinTable.sourceCol, joinTable.destCol)
+            break
+          case 'leftOuterJoin':
+            tableClient.leftOuterJoin(joinTable.tableName, joinTable.sourceCol, joinTable.destCol)
+            break
+          case 'rightJoin':
+            tableClient.rightJoin(joinTable.tableName, joinTable.sourceCol, joinTable.destCol)
+            break
+          case 'rightOuterJoin':
+            tableClient.rightOuterJoin(joinTable.tableName, joinTable.sourceCol, joinTable.destCol)
+            break
+          case 'fullOuterJoin':
+            tableClient.fullOuterJoin(joinTable.tableName, joinTable.sourceCol, joinTable.destCol)
+            break
+          case 'crossJoin':
+            tableClient.crossJoin(joinTable.tableName, joinTable.sourceCol, joinTable.destCol)
+            break
+          case 'join':
+          default:
+            tableClient.join(joinTable.tableName, joinTable.sourceCol, joinTable.destCol)
+        }
       }
     }
 
