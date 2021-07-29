@@ -18,7 +18,7 @@ const controller = {
 
     // queries.push(query)
     console.log(queries)
-    db.find(db.tables.PERSON_TABLE, queries, '*', function (result) {
+    db.find(db.tables.PERSON_TABLE, queries, [], '*', function (result) {
       console.log(result)
     })
 
