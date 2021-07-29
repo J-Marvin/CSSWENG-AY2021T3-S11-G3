@@ -129,7 +129,7 @@ const memberController = {
     data[bapRegFields.LOCATION] = req.query.location
     data[bapRegFields.OFFICIANT] = req.query.officiant
 
-    db.insertOne(db.tables.BAPTISMAL_TABLE, data, function (result) {
+    db.insert(db.tables.BAPTISMAL_TABLE, data, function (result) {
       // insert res.render() or res.redirect()
     })
   },

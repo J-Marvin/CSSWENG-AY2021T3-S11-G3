@@ -1,6 +1,7 @@
 const sqlite3 = require('better-sqlite3')
 const knex = require('knex')
 const async = require('async')
+const fs = require('fs')
 
 // gettings fields of all tables
 const memberFields = require('./members.js')
@@ -33,6 +34,21 @@ const tables = {
   OBSERVATION_TABLE: 'observations'
 }
 const tableNames = Object.values(tables)
+
+const startIds = [
+  { table: 'members', start: 1000000 },
+  { table: 'address', start: 2000000 },
+  { table: 'accounts', start: 0 },
+  { table: 'people', start: 11000000 },
+  { table: 'donations', start: 8000000 },
+  { table: 'bap_reg', start: 3000000 },
+  { table: 'wedding_reg', start: 5000000 },
+  { table: 'pre_nuptial', start: 4000000 },
+  { table: 'witness', start: 6000000 },
+  { table: 'inf_dedication', start: 7000000 },
+  { table: 'couples', start: 10000000 },
+  { table: 'observations', start: 9000000 }
+]
 
 const fields = {
   members: Object.values(memberFields),
@@ -184,7 +200,7 @@ const database = {
        date - the date the donation was given
      */
     const createDonationRecord =
-      'CREATE TABLE IF NOT EXISTS donatations (' +
+      'CREATE TABLE IF NOT EXISTS donations (' +
         'donation_record_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,' +
         'member_id INTEGER NOT NULL,' +
         'type TEXT, ' +
@@ -225,11 +241,15 @@ const database = {
        occupation - the occupation of the member
        workplace - the workplace of the member
        email - the email of the member
+       telephone - the telephone number of the member
        mobile - the mobile of the member
        educ_attainment - the highest educational attainment of the member
        alma_mater - the alma mater of the member
        skills - the list of skills this member has
        date_created - the date when the profile was created
+       sex - the sex of the member
+       churches - the previous churches the member has attended
+       parents_id - the id of the parents of the member
     */
     const createMembers =
       'CREATE TABLE IF NOT EXISTS members (' +
@@ -246,15 +266,20 @@ const database = {
         'occupation TEXT,' +
         'workplace TEXT,' +
         'email TEXT,' +
+        'telephone TEXT,' +
         'mobile TEXT,' +
         'educ_attainment TEXT,' +
         'alma_mater TEXT,' +
         'skills TEXT,' +
         'date_created TEXT,' +
+        'sex TEXT,' +
+        'churches TEXT,' +
+        'parents_id INTEGER,' +
         'FOREIGN KEY(address_id) REFERENCES address(address_id),' +
         'FOREIGN KEY(bap_reg_id) REFERENCES bap_reg(reg_id), ' +
         'FOREIGN KEY(wedding_reg_id) REFERENCES wedding_reg(reg_id),' +
         'FOREIGN KEY(prenup_record_id) REFERENCES pre_nuptial(record_id),' +
+        'FOREIGN KEY(parents_id) REFERENCES couple(couple_id),' +
         'FOREIGN KEY(person_id) REFERENCES people(person_id)' +
       ')'
 
@@ -285,8 +310,8 @@ const database = {
     const createCouple =
       'CREATE TABLE IF NOT EXISTS couples(' +
       'couple_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
-      'female_id INTEGER NOT NULL,' +
-      'male_id INTEGER NOT NULL,' +
+      'female_id INTEGER,' +
+      'male_id INTEGER,' +
       'FOREIGN KEY(female_id) REFERENCES people(person_id),' +
       'FOREIGN KEY(male_id) REFERENCES people(person_id)' +
       ')'
@@ -298,6 +323,26 @@ const database = {
        observee_id - the id of the member being observed
        observer_id - the person of the person observing
      */
+    const createObservations =
+      'CREATE TABLE IF NOT EXISTS observations(' +
+      'observation_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
+      'comment TEXT NOT NULL,' +
+      'observee_id INTEGER NOT NULL,' +
+      'observer_id INTEGER NOT NULL,' +
+      'FOREIGN KEY(observee_id) REFERENCES members(member_id),' +
+      'FOREIGN KEY(observer_id) REFERENCES people(person_id)' +
+      ')'
+
+    knexClient('sqlite_sequence').select().then((result) => {
+      startIds.forEach((record) => {
+        if (!result.includes(record.table)) {
+          knexClient('sqlite_sequence').insert({
+            name: record.table,
+            seq: record.start
+          }).catch((err) => { console.log(err) })
+        }
+      })
+    })
 
     // execute all statements
     db.prepare(createBapReg).run()
@@ -311,6 +356,7 @@ const database = {
     db.prepare(createDonationRecord).run()
     db.prepare(createCouple).run()
     db.prepare(createPerson).run()
+    db.prepare(createObservations).run()
 
     // if the accounts table is empty then insert passwords
     knexClient('accounts').select().then(function (res) {
@@ -322,8 +368,6 @@ const database = {
           knexClient('accounts').insert({
             level: 1,
             hashed_password: hash
-          }).then(function (result) {
-            console.log(result)
           }).catch(function (err) {
             console.log(err)
           })
@@ -336,8 +380,6 @@ const database = {
           knexClient('accounts').insert({
             level: 2,
             hashed_password: hash
-          }).then(function (result) {
-            console.log(result)
           }).catch(function (err) {
             console.log(err)
           })
@@ -349,8 +391,6 @@ const database = {
           knexClient('accounts').insert({
             level: 3,
             hashed_password: hash
-          }).then(function (result) {
-            console.log(result)
           }).catch(function (err) {
             console.log(err)
           })
@@ -365,20 +405,32 @@ const database = {
    * This function inserts the data into a specified table in the database and passes the result to the
    * callback function
    * @param {string} table - the table where the data will be added
-   * @param {object} data  - the object containing the values paired to their respective column name
+   * @param {object} data  - the object containing the values paired to their respective column name / can also be an array of objects
    * @param {function} callback - the function to be executed after inserting the data
    */
-  insertOne: function (table, data, callback = null) {
+  insert: function (table, data, callback = null) {
     // if table is not in database
     if (!(tableNames.includes(table))) {
       const success = false
       callback(success)
     } else {
-      for (const key in data) {
-        if (fields[table].includes(key) && // if the key is a valid field
-           (data[key] === null || data[key] === undefined)) {
-          // if the value is valid
-          delete data[key]
+      if (Array.isArray(data)) {
+        data.forEach((record) => {
+          for (const key in record) {
+            if (fields[table].includes(key) && // if the key is a valid field
+              (data[key] === null || data[key] === undefined)) {
+              // if the value is valid
+              delete data[key]
+            }
+          }
+        })
+      } else {
+        for (const key in data) {
+          if (fields[table].includes(key) && // if the key is a valid field
+             (data[key] === null || data[key] === undefined)) {
+            // if the value is valid
+            delete data[key]
+          }
         }
       }
 
@@ -402,99 +454,136 @@ const database = {
    * This method finds all the records in a table given some conditions
    * @param {String} table - the name of the table
    * @param {Array<Condition>} conditions - an array of objects containing the WHERE conditions paired to their respective column name
+   * @param {Array<Object>} join - an array of objects containing the join conditions
    * @param {String} projection - the columns to be retrieved
    * @param {function} callback - the callback function
    */
-  find: function (table, conditions = null, projection = '*', callback) {
-    knexClient(table).select(projection).where(function (builder) {
-      if (conditions !== null || conditions !== undefined) {
-        if (!Array.isArray(conditions)) {
-          conditions = [conditions]
-        }
-        async.each(conditions, function (condition, callback) {
-          switch (condition.type) {
-            case 'where':
-              if (condition.conditionType === 'object') {
-                builder.where(condition.condition)
-              } else if (condition.conditionType === 'keyValue') {
-                builder.where(condition.condition.key, condition.condition.operator, condition.condition.value)
-              }
-              break
-            case 'orWhere':
-              if (condition.conditionType === 'object') {
-                builder.orWhere(condition.condition)
-              } else if (condition.conditionType === 'keyValue') {
-                builder.orWhere(condition.condition.key, condition.condition.operator, condition.condition.value)
-              }
-              break
-            case 'whereNot':
-              if (condition.conditionType === 'object') {
-                builder.whereNot(condition.condition)
-              } else if (condition.conditionType === 'keyValue') {
-                builder.whereNot(condition.condition.key, condition.condition.operator, condition.condition.value)
-              }
-              break
-            case 'whereIn':
-              if (condition.conditionType === 'object') {
-                builder.whereIn(condition.condition)
-              } else if (condition.conditionType === 'keyValue') {
-                builder.whereIn(condition.condition.key, condition.condition.operator, condition.condition.value)
-              }
-              break
-            case 'whereNotNull':
-              if (condition.conditionType === 'object') {
-                builder.whereNotNull(condition.condition)
-              } else if (condition.conditionType === 'keyValue') {
-                builder.whereNotNull(condition.condition.key, condition.condition.operator, condition.condition.value)
-              }
-              break
-            case 'whereExists':
-              if (condition.conditionType === 'object') {
-                builder.whereExists(condition.condition)
-              } else if (condition.conditionType === 'keyValue') {
-                builder.whereExists(condition.condition.key, condition.condition.operator, condition.condition.value)
-              }
-              break
-            case 'whereNotExists':
-              if (condition.conditionType === 'object') {
-                builder.whereNotExists(condition.condition)
-              } else if (condition.conditionType === 'keyValue') {
-                builder.whereNotExists(condition.condition.key, condition.condition.operator, condition.condition.value)
-              }
-              break
-            case 'whereBetween':
-              if (condition.conditionType === 'object') {
-                builder.whereBetween(condition.condition)
-              } else if (condition.conditionType === 'keyValue') {
-                builder.whereBetween(condition.condition.key, condition.condition.operator, condition.condition.value)
-              }
-              break
-            case 'whereNotBetween':
-              if (condition.conditionType === 'object') {
-                builder.whereNotBetween(condition.condition)
-              } else if (condition.conditionType === 'keyValue') {
-                builder.whereNotBetween(condition.condition.key, condition.condition.operator, condition.condition.value)
-              }
-              break
-            case 'whereRaw':
-              if (condition.conditionType === 'object') {
-                builder.whereRaw(condition.condition)
-              } else if (condition.conditionType === 'keyValue') {
-                builder.whereRaw(condition.condition.key, condition.condition.operator, condition.condition.value)
-              }
-              break
-            default:
-              throw console.error('Unknown query')
-          }
-        })
+  find: function (table, conditions = null, join = null, projection = '*', callback) {
+    const tableClient = knexClient(table)
+    if (!Array.isArray(join)) {
+      join = [join]
+    }
+
+    for (const joinTable of join) {
+      switch (joinTable.type) {
+        case 'innerJoin':
+          tableClient.innerJoin(joinTable.tableName, joinTable.sourceCol, joinTable.destCol)
+          break
+        case 'leftJoin':
+          tableClient.leftJoin(joinTable.tableName, joinTable.sourceCol, joinTable.destCol)
+          break
+        case 'leftOuterJoin':
+          tableClient.leftOuterJoin(joinTable.tableName, joinTable.sourceCol, joinTable.destCol)
+          break
+        case 'rightJoin':
+          tableClient.rightJoin(joinTable.tableName, joinTable.sourceCol, joinTable.destCol)
+          break
+        case 'rightOuterJoin':
+          tableClient.rightOuterJoin(joinTable.tableName, joinTable.sourceCol, joinTable.destCol)
+          break
+        case 'fullOuterJoin':
+          tableClient.fullOuterJoin(joinTable.tableName, joinTable.sourceCol, joinTable.destCol)
+          break
+        case 'crossJoin':
+          tableClient.crossJoin(joinTable.tableName, joinTable.sourceCol, joinTable.destCol)
+          break
+        case 'join':
+        default:
+          tableClient.join(joinTable.tableName, joinTable.sourceCol, joinTable.destCol)
       }
-    }).then(function (result) {
-      callback(result)
-    }).catch((err) => {
-      console.log(err)
-      const flag = false
-      callback(flag)
-    })
+    }
+
+    tableClient
+      .select(projection)
+      .where(function (builder) {
+        if (conditions !== null && conditions !== undefined) {
+          if (!Array.isArray(conditions)) {
+            conditions = [conditions]
+          }
+          async.each(conditions, function (condition, callback) {
+            switch (condition.type) {
+              case 'where':
+                if (condition.conditionType === 'object') {
+                  builder.where(condition.condition)
+                } else if (condition.conditionType === 'keyValue') {
+                  builder.where(condition.condition.key, condition.condition.operator, condition.condition.value)
+                }
+                break
+              case 'orWhere':
+                if (condition.conditionType === 'object') {
+                  builder.orWhere(condition.condition)
+                } else if (condition.conditionType === 'keyValue') {
+                  builder.orWhere(condition.condition.key, condition.condition.operator, condition.condition.value)
+                }
+                break
+              case 'whereNot':
+                if (condition.conditionType === 'object') {
+                  builder.whereNot(condition.condition)
+                } else if (condition.conditionType === 'keyValue') {
+                  builder.whereNot(condition.condition.key, condition.condition.operator, condition.condition.value)
+                }
+                break
+              case 'whereIn':
+                if (condition.conditionType === 'object') {
+                  builder.whereIn(condition.condition)
+                } else if (condition.conditionType === 'keyValue') {
+                  builder.whereIn(condition.condition.key, condition.condition.operator, condition.condition.value)
+                }
+                break
+              case 'whereNotNull':
+                if (condition.conditionType === 'object') {
+                  builder.whereNotNull(condition.condition)
+                } else if (condition.conditionType === 'keyValue') {
+                  builder.whereNotNull(condition.condition.key, condition.condition.operator, condition.condition.value)
+                }
+                break
+              case 'whereExists':
+                if (condition.conditionType === 'object') {
+                  builder.whereExists(condition.condition)
+                } else if (condition.conditionType === 'keyValue') {
+                  builder.whereExists(condition.condition.key, condition.condition.operator, condition.condition.value)
+                }
+                break
+              case 'whereNotExists':
+                if (condition.conditionType === 'object') {
+                  builder.whereNotExists(condition.condition)
+                } else if (condition.conditionType === 'keyValue') {
+                  builder.whereNotExists(condition.condition.key, condition.condition.operator, condition.condition.value)
+                }
+                break
+              case 'whereBetween':
+                if (condition.conditionType === 'object') {
+                  builder.whereBetween(condition.condition)
+                } else if (condition.conditionType === 'keyValue') {
+                  builder.whereBetween(condition.condition.key, condition.condition.operator, condition.condition.value)
+                }
+                break
+              case 'whereNotBetween':
+                if (condition.conditionType === 'object') {
+                  builder.whereNotBetween(condition.condition)
+                } else if (condition.conditionType === 'keyValue') {
+                  builder.whereNotBetween(condition.condition.key, condition.condition.operator, condition.condition.value)
+                }
+                break
+              case 'whereRaw':
+                if (condition.conditionType === 'object') {
+                  builder.whereRaw(condition.condition)
+                } else if (condition.conditionType === 'keyValue') {
+                  builder.whereRaw(condition.condition.key, condition.condition.operator, condition.condition.value)
+                }
+                break
+              default:
+                throw console.error('Unknown query')
+            }
+          })
+        }
+      }).then(function (result) {
+        callback(result)
+      }).catch((err) => {
+        console.log(err)
+        const flag = false
+        callback(flag)
+      })
   },
 
   /**
