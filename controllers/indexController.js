@@ -11,11 +11,11 @@ const controller = {
     })
     queries.push(query)
 
-    query = new Condition(queryTypes.where)
-    query.setKeyValue('last_name', 'TEST')
+    // query = new Condition(queryTypes.where)
+    // query.setKeyValue('last_name', 'TEST')
 
-    queries.push(query)
-
+    // queries.push(query)
+    console.log(queries)
     db.find(db.tables.PERSON_TABLE, queries, '*', function (result) {
       console.log(result)
     })
