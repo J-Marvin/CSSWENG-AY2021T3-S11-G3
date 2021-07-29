@@ -21,6 +21,11 @@
     "url": "https://github.com/J-Marvin/CSSWENG-AY2021T3-S11-G3/issues"
   },
   "homepage": "https://github.com/J-Marvin/CSSWENG-AY2021T3-S11-G3#readme",
+  "standard": {
+    "ignore": [
+      "/public"
+    ]
+  },
   "dependencies": {
     "async": "^3.2.0",
     "bcrypt": "^5.0.1",

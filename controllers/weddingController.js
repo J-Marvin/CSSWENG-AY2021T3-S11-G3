@@ -111,7 +111,7 @@ const weddingController = {
     const data = req.query.data
     const condition = req.query.condition
 
-    db.updateOne(db.tables.MEMBER_TABLE, data, condition, function (result) {
+    db.update(db.tables.MEMBER_TABLE, data, condition, function (result) {
       console.log(result)
       // insert res.render() or res.redirect()
     })
@@ -124,7 +124,7 @@ const weddingController = {
   deleteWedding: function (req, res) {
     const condition = req.query.condition
 
-    db.updateOne(db.tables.MEMBER_TABLE, condition, function (result) {
+    db.update(db.tables.MEMBER_TABLE, condition, function (result) {
       console.log(result)
       // insert res.render() or res.redirect()
     })

@@ -89,22 +89,22 @@ const memberController = {
       data.member[memberFields.DATE] = new Date().toString()
 
       // insert to PEOPLE table
-      db.insertOne(db.tables.PERSON_TABLE, data.person, function (personId) {
+      db.insert(db.tables.PERSON_TABLE, data.person, function (personId) {
         // update person_id
         if (personId) {
           data.member[memberFields.PERSON] = personId
 
           // insert to ADDRESS table
-          db.insertOne(db.tables.ADDRESS_TABLE, data.address, function (addressId) {
+          db.insert(db.tables.ADDRESS_TABLE, data.address, function (addressId) {
             // update address_id
             if (addressId) {
               data.member[memberFields.ADDRESS] = addressId
               // finally insert to MEMBER table
-              db.insertOne(db.tables.MEMBER_TABLE, data.member, function (result) {
+              db.insert(db.tables.MEMBER_TABLE, data.member, function (result) {
                 // insert res.render() or res.redirect()
                 const personCondition = new Condition(queryTypes.where)
                 personCondition.setKeyValue(personFields.ID, data.member[memberFields.PERSON])
-                db.updateOne(db.tables.PERSON_TABLE, { member_id: result[0] }, personCondition, function(result) {
+                db.update(db.tables.PERSON_TABLE, { member_id: result[0] }, personCondition, function (result) {
                   res.send(result)
                 })
               })
@@ -156,15 +156,15 @@ const memberController = {
     data.member[memberFields.ALMA_MATER] = req.body.alma_mater
     data.member[memberFields.SKILLS] = req.body.skills
 
-    db.updateOne(db.tables.PERSON_TABLE, data.address, addressCondition, function (result) {
+    db.update(db.tables.PERSON_TABLE, data.address, addressCondition, function (result) {
       if (!result) {
         res.send(false)
       } else {
-        db.updateOne(db.tables.ADDRESS_TABLE, data.person, personCondition, function (result) {
+        db.update(db.tables.ADDRESS_TABLE, data.person, personCondition, function (result) {
           if (!result) {
             res.send(false)
           } else {
-            db.updateOne(db.tables.MEMBER_TABLE, data.member, memberCondition, function (result) {
+            db.update(db.tables.MEMBER_TABLE, data.member, memberCondition, function (result) {
               res.send(result)
             })
           }
@@ -180,7 +180,7 @@ const memberController = {
   deleteMember: function (req, res) {
     const condition = req.query.condition
 
-    db.updateOne(db.tables.MEMBER_TABLE, condition, function (result) {
+    db.update(db.tables.MEMBER_TABLE, condition, function (result) {
       console.log(result)
       // insert res.render() or res.redirect()
     })
@@ -216,14 +216,14 @@ const memberController = {
     const memberId = req.query.memberId
 
     // set up the SET query: SET SET prenup_record_id = record_id
-    // this will look like {prenup_record_id: <some prenup id>} inside db.updateOne
+    // this will look like {prenup_record_id: <some prenup id>} inside db.update
     const data = {}
     data[memberFields.PRENUP_RECORD] = recordId
 
     // set up the WHERE condition: WHERE member_id = <some member id>
     const condition = {}
     condition[memberFields.ID] = memberId
-    db.updateOne(db.tables.MEMBER_TABLE, data, condition, function (result) {
+    db.update(db.tables.MEMBER_TABLE, data, condition, function (result) {
       if (result !== false) {
         // insert res.render() or res.redirect()
       }

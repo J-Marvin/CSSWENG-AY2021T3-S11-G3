@@ -1,7 +1,6 @@
 const sqlite3 = require('better-sqlite3')
 const knex = require('knex')
 const async = require('async')
-const fs = require('fs')
 
 // gettings fields of all tables
 const memberFields = require('./members.js')
@@ -675,10 +674,10 @@ const database = {
    * @param {object} data - the object containing the values paired to their respective column name
    * @param {Array<Conditions>} condition - an array of objects containing the WHERE conditions paired to their respective column name
    */
-  updateOne: function (table, data, conditions, callback = null) {
+  update: function (table, data, conditions, callback = null) {
     knexClient(table)
       .where(function (builder) {
-        if (conditions !== null || conditions !== undefined) {
+        if (conditions !== null && conditions !== undefined) {
           if (!Array.isArray(conditions)) {
             conditions = [conditions]
           }
@@ -780,10 +779,10 @@ const database = {
    * @param {string} table - refers to the table name where the row will be deleted
    * @param {Array<Condition>} conditions - an array of objects containing the WHERE conditions paired to their respective column name
    */
-  deleteOne: function (table, conditions, callback = null) {
+  delete: function (table, conditions, callback = null) {
     knexClient(table)
       .where(function (builder) {
-        if (conditions !== null || conditions !== undefined) {
+        if (conditions !== null && conditions !== undefined) {
           if (!Array.isArray(conditions)) {
             conditions = [conditions]
           }
