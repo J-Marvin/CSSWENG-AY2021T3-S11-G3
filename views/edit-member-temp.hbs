@@ -5,7 +5,7 @@
   address: <span id="address_id">{{member.address_id}}</span><br>
   person: <span id="person_id">{{member.person_id}}</span><br>
 
-  <form action="/add_member" method="POST" class="container">
+  <form action="/add_member" method="POST" class="container" id="edit-member-form">
     <label for="first_name">First Name</label>
     <input type="text" id="first_name" name="first_name" class="form-control" value="{{member.first_name}}">
   
@@ -89,7 +89,7 @@
 
     <br> <br>
 
-    <button id="submitbtn" type="button" class="btn-primary">Submit</button>
+    <button type="button" id="edit-member" class="btn-primary validate-member">Submit</button>
   
   </form>
 

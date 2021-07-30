@@ -39,6 +39,7 @@ const memberController = {
       if (result) {
         console.log(result)
         res.render('edit-member-temp.hbs', {
+          scripts: ['member-validator'],
           member: result[0]
         })
       }
