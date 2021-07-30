@@ -14,7 +14,9 @@ const memberController = {
    * @param res - the result to be sent out after processing the request
    */
   getAddMemberPage: function (req, res) {
-    res.render('add-member-temp')
+    res.render('add-member-temp', {
+      scripts: ['member-validator']
+    })
   },
 
   getEditMember: function (req, res) {

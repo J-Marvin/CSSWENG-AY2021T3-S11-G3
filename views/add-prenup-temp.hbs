@@ -1,9 +1,50 @@
-<a href="/">Home</a><br>
-<form action="/add_prenup" method="POST" class="container"> 
-  <fieldset class="form-group">
-    <legend>Bride</legend>
-    <label for="bride_first_name">First Name</label>
-    <input type="text" id="first_name" name="bride_first_name" class="form-control">
+{{>navbar}}
+<script>
+
+  function display_div_bride (status) {
+    
+    if(status === "bride_non_member") {
+      document.getElementById("bride_member_div").style.display = "none"
+      document.getElementById("bride_member").checked = false
+      document.getElementById("bride_member").removeAttribute("disabled")
+      document.getElementById("bride_non_member").setAttribute("disabled", "disabled")
+    }
+    else {
+      document.getElementById("bride_non_member_div").style.display = "none"
+      document.getElementById("bride_non_member").checked = false
+      document.getElementById("bride_non_member").removeAttribute("disabled")
+      document.getElementById("bride_member").setAttribute("disabled", "disabled")
+    }
+    document.getElementById(status + "_div").style.display = "block"
+
+  }
+
+  function display_div_groom (status) {
+
+    if(status === "groom_non_member") {
+      document.getElementById("groom_member_div").style.display = "none"
+      document.getElementById("groom_member").checked = false
+      document.getElementById("groom_member").removeAttribute("disabled")
+      document.getElementById("groom_non_member").setAttribute("disabled", "disabled")
+    }
+    else {
+      document.getElementById("groom_non_member_div").style.display = "none"
+      document.getElementById("groom_non_member").checked = false
+      document.getElementById("groom_non_member").removeAttribute("disabled")
+      document.getElementById("groom_member").setAttribute("disabled", "disabled")
+    }
+    document.getElementById(status + "_div").style.display = "block"
+
+  }
+
+</script>
+
+<h1> {{Origin}} </h1>
+
+<form action="/add_member" method="POST" class="container"> 
+
+  <input type="checkbox" id="bride_non_member" onclick="display_div_bride('bride_non_member')"> BRIDE NON
+  <input type="checkbox" id="bride_member" onclick="display_div_bride('bride_member')" checked disabled> BRIDE MEM
 
     <label for="bride_mid_name">Middle Name</label>
     <input type="text" id="mid_name" name="bride_mid_name" class="form-control">
