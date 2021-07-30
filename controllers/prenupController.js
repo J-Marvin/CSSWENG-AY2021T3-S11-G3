@@ -3,7 +3,7 @@ const personFields = require('../models/person')
 const prenupRecordFields = require('../models/prenupRecord')
 const coupleFields = require('../models/Couple.js')
 const { Condition, queryTypes } = require('../models/condition')
-const { validationResult} = require('express-validator')
+const { validationResult } = require('express-validator')
 
 const prenupController = {
   getPrenup: function (req, res) {
@@ -79,63 +79,77 @@ const prenupController = {
       })
     }
   },
+
+  getEditPrenup: function (req, res) {
+    let joinTables = []
+    // boolean variable indicating which partner, male or female
+    const partner = req.query.partner
+    // if male
+    if (partner === true) {
+      joinTables = [
+        {
+          tableName: db.tables.COUPLE_TABLE,
+          sourceCol: db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.COUPLE,
+          destCol: db.tables.COUPLE_TABLE + '.' + coupleFields.ID
+        },
+        {
+          tableName: db.tables.PERSON_TABLE,
+          sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.MALE,
+          destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
+        }
+      ]
+    // else if female
+    } else {
+      joinTables = [
+        {
+          tableName: db.tables.COUPLE_TABLE,
+          sourceCol: db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.COUPLE,
+          destCol: db.tables.COUPLE_TABLE + '.' + coupleFields.ID
+        },
+        {
+          tableName: db.tables.PERSON_TABLE,
+          sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE,
+          destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
+        }
+      ]
+    }
+    const conditions = []
+    const c = new Condition(queryTypes.where)
+    c.setQueryObject({
+      record_id: req.query.id
+    })
+
+    conditions.push(c)
+    /*
+    This is equivalent to
+      SELECT *
+      FROM pre_nuptial
+      JOIN couples ON couples.couple_id = pre_nuptial.couple_id
+      JOIN people ON people.person_id = couples.male_id
+      WHERE record_id = <integer id>;
+    */
+    db.find(db.tables.PRENUPTIAL_TABLE, conditions, joinTables, '*', function (result) {
+      if (result !== false) {
+        console.log(result)
+        // res.send(result)
+        // res.render('', result)
+      } else {
+        console.log('FIND ERROR')
+        res.render('error')
+      }
+    })
+  },
   /**
    * This function updates a row in the prenuptial table
-   * @param req - the incoming request containing either the query or body
+   * @param req - the incoming request containing either the query or body.
+   *              the request should contain a boolean variable `partner`,
+   *              if true indicates the `male` partner will be edited, else
+   *              the `female` partner will be edited
    * @param res - the result to be sent out after processing the request
    */
   updatePrenup: function (req, res) {
-    // not yet final
-    let condition = null // temp value
-    switch (req.query.condition) {
-      case 'where':
-        condition = new Condition(queryTypes.where)
-        break
-      case 'orWhere':
-        condition = new Condition(queryTypes.orWhere)
-        break
-      case 'whereNot':
-        condition = new Condition(queryTypes.whereNot)
-        break
-      case 'whereIn':
-        condition = new Condition(queryTypes.whereIn)
-        break
-      case 'whereNotNull':
-        condition = new Condition(queryTypes.whereNotNull)
-        break
-      case 'whereExists':
-        condition = new Condition(queryTypes.whereExists)
-        break
-      case 'whereNotExists':
-        condition = new Condition(queryTypes.whereNotExists)
-        break
-      case 'whereBetween':
-        condition = new Condition(queryTypes.whereBetween)
-        break
-      case 'whereNotBetween':
-        condition = new Condition(queryTypes.whereNotBetween)
-        break
-      case 'whereRaw':
-        condition = new Condition(queryTypes.whereRaw)
-        break
-    }
-    // determine what column does WHERE points to
-    const whereDataCol = req.query.whereDataCol
-    const whereData = req.query.whereData
-    switch (whereDataCol) {
-      case 'date_of_wedding':
-        condition.setQueryObject({
-          date_of_wedding: whereData
-        })
-        break
-    }
-    const conditions = []
-    conditions.push(condition)
-
-    const data = {
-      date_of_wedding: '10/29/2021'
-    }
-
+    const data = req.query.data
+    const condition = req.query.condition
     db.updateOne(db.tables.PRENUPTIAL_TABLE, data, condition, function (result) {
       console.log(result)
       // insert res.render() or res.redirect()
