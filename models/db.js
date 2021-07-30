@@ -1,20 +1,21 @@
 const sqlite3 = require('better-sqlite3')
 const knex = require('knex')
 const async = require('async')
+const path = require('path')
 
 // gettings fields of all tables
-const memberFields = require('./members.js')
-const addressFields = require('./address.js')
-const accountFields = require('./accounts.js')
-const personFields = require('./Person.js')
-const donationFields = require('./donation.js')
-const bapRegFields = require('./baptismalRegistry.js')
-const weddingRegFields = require('./weddingRegistry.js')
-const prenupRecordFields = require('./prenupRecord.js')
-const witnessFields = require('./witness.js')
-const infDedFields = require('./infantDedication.js')
-const coupleFields = require('./Couple.js')
-const observationFields = require('./observation.js')
+const memberFields = require(path.join(__dirname, './members.js'))
+const addressFields = require(path.join(__dirname, './address.js'))
+const accountFields = require(path.join(__dirname, './accounts.js'))
+const personFields = require(path.join(__dirname, './Person.js'))
+const donationFields = require(path.join(__dirname, './donation.js'))
+const bapRegFields = require(path.join(__dirname, './baptismalRegistry.js'))
+const weddingRegFields = require(path.join(__dirname, './weddingRegistry.js'))
+const prenupRecordFields = require(path.join(__dirname, './prenupRecord.js'))
+const witnessFields = require(path.join(__dirname, './witness.js'))
+const infDedFields = require(path.join(__dirname, './infantDedication.js'))
+const coupleFields = require(path.join(__dirname, './Couple.js'))
+const observationFields = require(path.join(__dirname, './observation.js'))
 
 let knexClient = null
 

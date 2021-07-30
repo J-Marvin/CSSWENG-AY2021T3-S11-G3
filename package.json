@@ -8,7 +8,7 @@
     "dev": "nodemon app.js",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
-    "postinstall": "install-app-deps",
+    "postinstall": "electron-builder install-app-deps",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
