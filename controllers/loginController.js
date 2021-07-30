@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt')
-const db = require('../models/db')
+const path = require('path')
+const db = require(path.join(__dirname, '../models/db'))
 
 const loginController = {
   getLoginPage: function (req, res) {

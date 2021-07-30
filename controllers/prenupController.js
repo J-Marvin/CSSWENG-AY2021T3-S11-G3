@@ -1,7 +1,9 @@
-const db = require('../models/db.js')
-const personFields = require('../models/person')
-const prenupRecordFields = require('../models/prenupRecord')
-const coupleFields = require('../models/Couple.js')
+const path = require('path')
+
+const db = require(path.join(__dirname, '../models/db.js'))
+const personFields = require(path.join(__dirname, '../models/person'))
+const prenupRecordFields = require(path.join(__dirname, '../models/prenupRecord'))
+const coupleFields = require(path.join(__dirname, '../models/Couple.js'))
 
 const prenupController = {
   /**
@@ -75,7 +77,7 @@ const prenupController = {
     const data = req.query.data
     const condition = req.query.condition
 
-    db.updateOne(db.tables.MEMBER_TABLE, data, condition, function (result) {
+    db.update(db.tables.MEMBER_TABLE, data, condition, function (result) {
       console.log(result)
       // insert res.render() or res.redirect()
     })
@@ -88,7 +90,7 @@ const prenupController = {
   deletePrenup: function (req, res) {
     const condition = req.query.condition
 
-    db.updateOne(db.tables.MEMBER_TABLE, condition, function (result) {
+    db.update(db.tables.MEMBER_TABLE, condition, function (result) {
       console.log(result)
       // insert res.render() or res.redirect()
     })
