@@ -1,34 +1,34 @@
 {{>navbar}}
-<form action="/add_member" method="POST" class="container"> 
+<form action="/add_member" method="POST" class="container" id="create-member-form">
   <label for="first_name" >First Name</label>
-  <input type="text" id="first_name" name="first_name" class="form-control" required>
+  <input type="text" id="first_name" name="first_name" class="form-control" >
   
   <label for="mid_name">Middle Name</label>
-  <input type="text" id="mid_name" name="middle_name" class="form-control" required>
+  <input type="text" id="mid_name" name="middle_name" class="form-control" >
 
   <label for="last_name">Last Name</label>
-  <input type="text" id="last_name" name="last_name"class="form-control" required>
+  <input type="text" id="last_name" name="last_name"class="form-control" >
 
   <label for="age">Age</label>
-  <input type="number" id="age" name="age" class="form-control" required>
+  <input type="number" id="age" name="age" class="form-control" >
 
   <label for="birthday">Birthday</label>
-  <input type="date" id="birthday" name="birthday" class="form-control" required>
+  <input type="date" id="birthday" name="birthday" class="form-control" >
 
   <label for="occupation">Occupation</label>
-  <input type="text" id="occupation" name="occupation" class="form-control" required>
+  <input type="text" id="occupation" name="occupation" class="form-control" >
   
   <label for="member_status">Member Status</label>
-  <input type="text" id="membership_status" name="membership_status" class="form-control" required>
+  <input type="text" id="membership_status" name="membership_status" class="form-control" >
 
   <label for="civil_status">Civil Status</label>
-  <select id="civil_status" name="civil_status" class="form-select" required>
+  <select id="civil_status" name="civil_status" class="form-select" >
     <option selected value="Single">Single</option>
     <option value="Married">Married</option>
   </select>
   
   <label for="sex">Sex</label>
-  <select id="sex" name="sex" class="form-select" required>
+  <select id="sex" name="sex" class="form-select" >
     <option selected value="Male">Male</option>
     <option value="Female">Female</option>
   </select>
@@ -37,11 +37,11 @@
   <fieldset>
     <legend>Address: </legend>
     <label for="street">Street</label>
-    <input type="text" id="address_line" name="address_line" class="form-control" required>
+    <input type="text" id="address_line" name="address_line" class="form-control" >
     <label for="barangay">Barangay</label>
     <input type="text" id="barangay" name="barangay"class="form-control">
     <label for="city">City</label>
-    <input type="text" id="city" name="city" class="form-control" required>
+    <input type="text" id="city" name="city" class="form-control" >
     <label for="province">Province</label>
     <input type="text" id="province" name="province" class="form-control">
   </fieldset>
@@ -59,7 +59,7 @@
   <input type="text" id="telephone" name="telephone" class="form-control">
 
   <label for="mobile">Mobile</label>
-  <input type="tel" id="mobile" name="mobile" placeholder="0123-456-7890" pattern="[0-9]{11}" class="form-control" required>
+  <input type="tel" id="mobile" name="mobile" placeholder="01234567890" pattern="[0-9]{11}" class="form-control" >
 
   <label for="educational_attainment">Educational Attainment</label>
   <input type="text" id="educational_attainment" name="educational_attainment" class="form-control">
@@ -78,6 +78,6 @@
   <label for="skills">Skills</label>
   <input type="text" id="skills" name="skills" class="form-control">
 
-  <button type="submit" class="btn-primary">Submit</button>
+  <button type="button" id="create-member" class="btn-primary">Submit</button>
 
 </form>
