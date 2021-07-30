@@ -16,12 +16,14 @@ const memberController = {
    * @param res - the result to be sent out after processing the request
    */
   getAddMemberPage: function (req, res) {
-    res.render('add-member-temp')
+    res.render('add-member-temp', {
+      scripts: ['member-validator']
+    })
   },
 
   getEditMember: function (req, res) {
     const data = {
-      scripts: ['editMember']
+      scripts: ['editMember', 'member-validator']
     }
     const condition = new Condition(queryTypes.where)
     const churchCondition = new Condition(queryTypes.where)
@@ -62,7 +64,7 @@ const memberController = {
               if (result) {
                 data.observations = result
                 console.log(data)
-                res.render('edit-member-temp.hbs', data)
+                res.render('edit-member-temp', data)
               }
             })
           }
