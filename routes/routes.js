@@ -23,4 +23,5 @@ app.get('/add_prenup', prenupController.getPrenupPage)
 app.post('/login', loginController.postLogIn)
 app.post('/add_member', validation.addMemberValidation(), memberController.createMember)
 app.post('/add_prenup', prenupController.createPrenup)
+app.post('/update_member', memberController.postUpdateMember)
 module.exports = app

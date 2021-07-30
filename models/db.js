@@ -328,9 +328,8 @@ const database = {
       'observation_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
       'comment TEXT NOT NULL,' +
       'observee_id INTEGER NOT NULL,' +
-      'observer_id INTEGER NOT NULL,' +
-      'FOREIGN KEY(observee_id) REFERENCES members(member_id),' +
-      'FOREIGN KEY(observer_id) REFERENCES people(person_id)' +
+      'observer TEXT,' +
+      'FOREIGN KEY(observee_id) REFERENCES members(member_id)' +
       ')'
 
     knexClient('sqlite_sequence').select().then((result) => {
