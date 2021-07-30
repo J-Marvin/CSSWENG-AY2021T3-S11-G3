@@ -109,7 +109,7 @@ const memberController = {
                 const personCondition = new Condition(queryTypes.where)
                 personCondition.setKeyValue(personFields.ID, data.member[memberFields.PERSON])
                 const memberId = result[0]
-                db.update(db.tables.PERSON_TABLE, { member_id: result[0] }, personCondition, function(result) {
+                db.update(db.tables.PERSON_TABLE, { member_id: result[0] }, personCondition, function (result) {
                   res.redirect('/edit_member/' + memberId)
                 })
               })
