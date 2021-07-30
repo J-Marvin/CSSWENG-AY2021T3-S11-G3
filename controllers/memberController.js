@@ -108,9 +108,9 @@ const memberController = {
                 // insert res.render() or res.redirect()
                 const personCondition = new Condition(queryTypes.where)
                 personCondition.setKeyValue(personFields.ID, data.member[memberFields.PERSON])
-                db.update(db.tables.PERSON_TABLE, { member_id: result[0] }, personCondition, function (result) {
-                  console.log(result)
-                  res.send(result.toString())
+                const memberId = result[0]
+                db.updateOne(db.tables.PERSON_TABLE, { member_id: result[0] }, personCondition, function(result) {
+                  res.redirect('/edit_member/' + memberId)
                 })
               })
             } else {

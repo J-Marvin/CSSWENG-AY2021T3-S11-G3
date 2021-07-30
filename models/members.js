@@ -21,6 +21,7 @@ const memberFields = {
   SEX: 'sex',
   CHURCHES: 'churches',
   PARENTS: 'parents_id'
+  // Family members
 }
 
 module.exports = memberFields
