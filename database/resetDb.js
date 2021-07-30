@@ -3,25 +3,21 @@ const knex = require('knex')
 const fse = require('fs-extra')
 const bcrypt = require('bcrypt')
 const saltRounds = 10
-const path = require('path')
-const { Condition, queryTypes } = require('../models/condition')
-const personFields = require('../models/Person')
-let knexClient = null
-const file = path.join(__dirname, 'church.db')
 
 const startIds = [
-  { table: 'people', start: 11000000 },
-  { table: 'address', start: 2000000 },
+  { table: 'people', start: 12000000 },
   { table: 'members', start: 1000000 },
+  { table: 'address', start: 2000000 },
   { table: 'accounts', start: 0 },
-  { table: 'donations', start: 8000000 },
   { table: 'bap_reg', start: 3000000 },
-  { table: 'wedding_reg', start: 5000000 },
   { table: 'pre_nuptial', start: 4000000 },
+  { table: 'wedding_reg', start: 5000000 },
   { table: 'witness', start: 6000000 },
   { table: 'inf_dedication', start: 7000000 },
+  { table: 'donations', start: 8000000 },
+  { table: 'observations', start: 9000000 },
   { table: 'couples', start: 10000000 },
-  { table: 'observations', start: 9000000 }
+  { table: 'churches', start: 11000000 }
 ]
 
 const data = [
@@ -33,7 +29,6 @@ const data = [
     },
     address: {
       address_line: 'Apples',
-      barangay: '130',
       city: 'London',
       province: null
     },
@@ -61,7 +56,6 @@ const data = [
     },
     address: {
       address_line: 'Mangoes',
-      barangay: '131',
       city: 'London',
       province: null
     },
@@ -89,7 +83,6 @@ const data = [
     },
     address: {
       address_line: 'Ishimura',
-      barangay: '7',
       city: 'Aegis',
       province: null
     },
@@ -117,7 +110,6 @@ const data = [
     },
     address: {
       address_line: 'Thessia',
-      barangay: '2077',
       city: 'Serrice',
       province: null
     },
@@ -145,7 +137,6 @@ const data = [
     },
     address: {
       address_line: 'Omega',
-      barangay: 'Normandy',
       city: 'Palaven',
       province: null
     },
@@ -166,27 +157,48 @@ const data = [
   }
 ]
 
-function delDatabase () {
-  if (fse.existsSync(file)) {
-    fse.remove(file, (err) => {
-      if (err) {
-        console.log(err)
-      } else {
-        initDatabase()
-        insertData()
-      }
-    })
-  } else {
-    initDatabase()
-    insertData()
-  }
+const resetDb = {
+  /**
+   * This function resets the databse to the dummy data
+   * @param {*} file the path to the file
+   */
+  reset: function (file) {
+    if (fse.existsSync(file)) {
+      fse.remove(file, (err) => {
+        if (err) {
+          console.log(err)
+        } else {
+          initDatabase(file)
+          insertData()
+        }
+      })
+    } else {
+      initDatabase(file)
+      insertData()
+    }
+  },
+
+  initialize: function (file) {
+    if (fse.existsSync(file)) {
+      fse.remove(file, (err) => {
+        if (err) {
+          console.log(err)
+        } else {
+          initDatabase(file)
+        }
+      })
+    } else {
+      initDatabase(file)
+    }
+  },
+  knexClient: null
 }
 
-function initDatabase (callback) {
+function initDatabase (file) {
   const db = sqlite(file)
 
   // Initialize Knex connection
-  knexClient = knex({
+  resetDb.knexClient = knex({
     client: 'sqlite3',
     connection: {
       filename: file
@@ -330,9 +342,11 @@ function initDatabase (callback) {
     'CREATE TABLE IF NOT EXISTS address (' +
     'address_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
     'address_line TEXT, ' +
-    'barangay TEXT, ' +
+    'address_line2 TEXT,' +
     'city TEXT, ' +
-    'province TEXT' +
+    'province TEXT,' +
+    'postal_code TEXT,' +
+    'country TEXT' +
     ')'
 
   /* This statement creates the Members table
@@ -382,7 +396,6 @@ function initDatabase (callback) {
     'skills TEXT,' +
     'date_created TEXT,' +
     'sex TEXT,' +
-    'churches TEXT,' +
     'parents_id INTEGER,' +
     'FOREIGN KEY(address_id) REFERENCES address(address_id),' +
     'FOREIGN KEY(bap_reg_id) REFERENCES bap_reg(reg_id), ' +
@@ -441,8 +454,18 @@ function initDatabase (callback) {
     'FOREIGN KEY(observee_id) REFERENCES members(member_id)' +
     ')'
 
+  const createChurches =
+    'CREATE TABLE IF NOT EXISTS churches(' +
+    'church_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,' +
+    'church_name TEXT NOT NULL, ' +
+    'member_id INTEGER NOT NULL, ' +
+    'address_id INTEGER NOT NULL,' +
+    'FOREIGN KEY(member_id) REFERENCES members(member_id), ' +
+    'FOREIGN KEY(address_id) REFERENCES address(address_id)' +
+    ')'
+
   startIds.forEach((record) => {
-    knexClient('sqlite_sequence').insert({
+    resetDb.knexClient('sqlite_sequence').insert({
       name: record.table,
       seq: record.start
     }).catch((err) => { console.log(err) })
@@ -461,6 +484,7 @@ function initDatabase (callback) {
   db.prepare(createCouple).run()
   db.prepare(createPerson).run()
   db.prepare(createObservations).run()
+  db.prepare(createChurches).run()
 
   // close the connection to the db
   db.close()
@@ -468,13 +492,13 @@ function initDatabase (callback) {
 
 function insertData () {
   // insert accounts
-  knexClient('accounts').select().then(function (res) {
+  resetDb.knexClient('accounts').select().then(function (res) {
     if (res.length === 0) {
       bcrypt.hash('NormandyN7', saltRounds, (err, hash) => {
         if (err) {
           console.log(err)
         }
-        knexClient('accounts').insert({
+        resetDb.knexClient('accounts').insert({
           level: 1,
           hashed_password: hash
         }).catch(function (err) {
@@ -486,7 +510,7 @@ function insertData () {
           console.log(err)
         }
 
-        knexClient('accounts').insert({
+        resetDb.knexClient('accounts').insert({
           level: 2,
           hashed_password: hash
         }).catch(function (err) {
@@ -497,7 +521,7 @@ function insertData () {
         if (err) {
           console.log(err)
         }
-        knexClient('accounts').insert({
+        resetDb.knexClient('accounts').insert({
           level: 3,
           hashed_password: hash
         }).catch(function (err) {
@@ -508,21 +532,20 @@ function insertData () {
   })
 
   data.forEach((record) => {
-    knexClient('people').insert(record.person).then((person) => {
+    resetDb.knexClient('people').insert(record.person).then((person) => {
       if (person) {
         record.member.person_id = person[0]
 
-        knexClient('address').insert(record.address).then((address) => {
+        resetDb.knexClient('address').insert(record.address).then((address) => {
           if (address) {
             record.member.address_id = address[0]
-            knexClient('members').insert(record.member).then((result) => {
+            resetDb.knexClient('members').insert(record.member).then((result) => {
               if (result) {
-                knexClient('people').where('person_id', '=', record.member.person_id).update({
+                resetDb.knexClient('people').where('person_id', '=', record.member.person_id).update({
                   member_id: result[0]
                 }).then((result) => {
                   if (result) {
-                    console.log('Inserted ' + result)
-                    console.log(record.member)
+                    console.log('Filled up database with dummy data')
                   }
                 })
               } else {
@@ -540,5 +563,4 @@ function insertData () {
   })
 }
 
-// delete tables and insert
-delDatabase()
+module.exports = resetDb
