@@ -1,83 +1,81 @@
 {{>navbar}}
-<form action="/add_member" method="POST" class="container"> 
-  <label for="first_name" >First Name</label>
-  <input type="text" id="first_name" name="first_name" class="form-control" required>
-  
-  <label for="mid_name">Middle Name</label>
-  <input type="text" id="mid_name" name="middle_name" class="form-control" required>
+<div>
+  <h1> Add Member </h1>
+  <form action="/add_member" method="POST" class="container">
+    <label for="first_name">First Name</label>
+    <input type="text" id="first_name" name="first_name" class="form-control" >
 
-  <label for="last_name">Last Name</label>
-  <input type="text" id="last_name" name="last_name"class="form-control" required>
+    <label for="mid_name">Middle Name</label>
+    <input type="text" id="mid_name" name="middle_name" class="form-control" >
 
-  <label for="age">Age</label>
-  <input type="number" id="age" name="age" class="form-control" required>
+    <label for="last_name">Last Name</label>
+    <input type="text" id="last_name" name="last_name" class="form-control" >
 
-  <label for="birthday">Birthday</label>
-  <input type="date" id="birthday" name="birthday" class="form-control" required>
+    <label for="age">Age</label>
+    <input type="text" id="age" name="age" class="form-control" >
 
-  <label for="occupation">Occupation</label>
-  <input type="text" id="occupation" name="occupation" class="form-control" required>
-  
-  <label for="member_status">Member Status</label>
-  <input type="text" id="membership_status" name="membership_status" class="form-control" required>
+    <label for="birthday">Birthday</label>
+    <input type="date" id="birthday" name="birthday" class="form-control" >
 
-  <label for="civil_status">Civil Status</label>
-  <select id="civil_status" name="civil_status" class="form-select" required>
-    <option selected value="single">Single</option>
-    <option value="married">Married</option>
-  </select>
-  
-  <label for="sex">Sex</label>
-  <select id="sex" name="sex" class="form-select" required>
-    <option selected value="Male">Male</option>
-    <option value="Female">Female</option>
-  </select>
+    <label for="occupation">Occupation</label>
+    <input type="text" id="occupation" name="occupation" class="form-control" >
 
-  <br>
-  <fieldset>
-    <legend>Address: </legend>
-    <label for="street">Street</label>
-    <input type="text" id="street" name="street" class="form-control" required>
-    <label for="barangay">Barangay</label>
-    <input type="text" id="barangay" name="barangay"class="form-control">
-    <label for="city">City</label>
-    <input type="text" id="city" name="city" class="form-control" required>
-    <label for="province">Province</label>
-    <input type="text" id="province" name="province" class="form-control">
-  </fieldset>
+    <label for="membership_status">Membership Status</label>
+    <input type="text" id="membership_status" name="membership_status" class="form-control"
+      >
 
-  <br>
-  <br>
+    <label for="civil_status">Civil Status</label>
+    <input type="text" id="civil_status" name="civil_status" class="form-control" >
 
-  <label for="workplace">Workplace</label>
-  <input type="text" id="workplace" name="workplace" class="form-control">
+    <label for="sex">Sex</label>
+    <input type="text" id="sex" name="sex" class="form-control" >
 
-  <label for="email">Email</label>
-  <input type="email" id="email" name="email" class="form-control">
+    <fieldset class="form-group">
+      <legend>Address: </legend>
+      <label for="adress_line">Address Line 1</label>
+      <input type="text" id="address_line" name="address_line" class="form-control" >
+      <label for="address_line2">Address Line 2</label>
+      <input type="text" id="address_line2" name="address_line2" class="form-control" >
+      <label for="city">City</label>
+      <input type="text" id="city" name="city" class="form-control" >
+      <label for="province">Province</label>
+      <input type="text" id="province" name="province" class="form-control" >
+      <label for="postal_code">Postal Code</label>
+      <input type="text" id="postal_code" name="postal_code" class="form-control" >
+      <label for="country">Country</label>
+      <input type="text" id="country" name="country" class="form-control" >
+    </fieldset>
 
-  <label for="telephone">Telephone</label>
-  <input type="text" id="telephone" name="telephone" class="form-control">
+    <label for="workplace">Workplace</label>
+    <input type="text" id="workplace" name="workplace" class="form-control" >
 
-  <label for="mobile">Mobile</label>
-  <input type="tel" id="mobile" name="mobile" placeholder="0123-456-7890" pattern="[0-9]{11}" class="form-control" required>
+    <label for="email">Email</label>
+    <input type="text" id="email" name="email" class="form-control" >
 
-  <label for="educational_attainment">Educational Attainment</label>
-  <input type="text" id="educational_attainment" name="educational_attainment" class="form-control">
+    <label for="telephone">Telephone</label>
+    <input type="text" id="telephone" name="telephone" class="form-control" >
 
-  <label for="alma_mater">Alma Mater</label>
-  <input type="text" id="alma_mater" name="alma_mater" class="form-control">
+    <label for="mobile">Mobile</label>
+    <input type="text" id="mobile" name="mobile" class="form-control" >
 
-  {{!-- ADD FIELD FUNCTIONALITY NEEDED --}}
+    <label for="educational_attainment">Educational Attainment</label>
+    <input type="text" id="educational_attainment" name="educational_attainment" class="form-control"
+      >
 
-  <label for="family">Family members</label>
-  <input type="text" id="family" name="family" class="form-control">
+    <label for="alma_mater">Alma Mater</label>
+    <input type="text" id="alma_mater" name="alma_mater" class="form-control" >
 
-  <label for="churches_attended">Churches attended</label>
-  <input type="text" id="churches_attended" name="churches_attended" class="form-control">
+    <label for="churches">Family Members</label>
+    <input type="textarea" id="family_members" name="family_members" class="form-control"
+      >
 
-  <label for="skills">Skills</label>
-  <input type="text" id="skills" name="skills" class="form-control">
+    <label for="skills">Skills</label>
+    <input type="textarea" id="skills" name="skills" class="form-control" >
 
-  <button type="submit" class="btn-primary">Submit</button>
+    <br>
 
-</form>
+    <button id="submitbtn" type="button" class="btn-primary">Submit</button>
+
+  </form>
+
+</div>

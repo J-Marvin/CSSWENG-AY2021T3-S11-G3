@@ -74,9 +74,11 @@ const memberController = {
       data.person[personFields.LAST_NAME] = req.body.last_name
 
       data.address[addressFields.ADDRESS_LINE] = req.body.address_line
-      data.address[addressFields.BRGY] = req.body.barangay
+      data.address[addressFields.ADDRESS_LINE2] = req.body.address_line2
       data.address[addressFields.CITY] = req.body.city
       data.address[addressFields.PROVINCE] = req.body.province
+      data.address[addressFields.POSTAL_CODE] = req.body.postal_code
+      data.address[addressFields.COUNTRY] = req.body.country
 
       data.member[memberFields.AGE] = req.body.age
       data.member[memberFields.BIRTHDAY] = req.body.birthday

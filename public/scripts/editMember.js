@@ -24,7 +24,6 @@ $(document).ready(function () {
       educational_attainment: $('#educational_attainment').val(),
       alma_mater: $('#alma_mater').val(),
       family_members: $('#family_members').val(),
-      churches: $('#churches').val(),
       skills: $('#skills').val(),
       member_id: $('#member_info').attr('data-member'),
       address_id: $('#member_info').attr('data-address'),
