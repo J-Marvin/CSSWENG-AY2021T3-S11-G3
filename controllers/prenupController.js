@@ -11,19 +11,20 @@ const prenupController = {
    * @param req - the incoming request containing either the query or body
    * @param res - the result to be sent out after processing the request
    */
-   getPrenupPage: function (req, res) {
+  getPrenupPage: function (req, res) {
     // Add find one populate function here
-    
-    var member = req.params.member_id
-    if(member === undefined)
+
+    const member = req.params.member_id
+    if (member === undefined) {
       res.render('add-prenup-temp', {
-        Origin: "coming from forms creation"
+        Origin: 'coming from forms creation'
       })
-    else
+    } else {
       res.render('add-prenup-temp', {
-        Origin: "coming from edit member"
+        Origin: 'coming from edit member'
       })
-   },
+    }
+  },
 
   createPrenup: function (req, res) {
     const data = {

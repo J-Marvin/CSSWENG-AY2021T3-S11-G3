@@ -27,21 +27,21 @@ const controller = {
     res.render('index')
   },
 
-  getLogoutPage: function(req, res) {
+  getLogoutPage: function (req, res) {
     res.render('login')
   },
 
-  getMainPage: function(req, res) {
+  getMainPage: function (req, res) {
     res.render('main-page', {
       // Insert session level variable here
     })
   },
 
-  getMemberMainPage: function(req, res) {
+  getMemberMainPage: function (req, res) {
     res.render('member-main-page')
   },
 
-  getFormsMainPage: function(req, res) {
+  getFormsMainPage: function (req, res) {
     res.render('forms-main-page')
   },
 
