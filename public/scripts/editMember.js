@@ -87,8 +87,13 @@ $(document).ready(function () {
   })
 
   $('#saveChurchBtn').click(function() {
+
+    var isValid = true
+    var errors = ''
+    
     const churchFieldset = $('#churchFieldSet')
     const church = {}
+
     church.church_name = $(churchFieldset).find('#church_name').val()
     church.address_line = $(churchFieldset).find('#church_address_line').val()
     church.address_line2 = $(churchFieldset).find('#church_address_line2').val()
@@ -98,19 +103,46 @@ $(document).ready(function () {
     church.country = $(churchFieldset).find('#church_country').val()
     church.member_id = $('#member_info').attr('data-member')
 
-    $.ajax({
-      type: "POST",
-      data: church,
-      url: "/add_church",
-      success: function (result) {
-        $('#churchList').append(result)
-        $('#addChurchModal').modal('hide')
-      }
-    })
+    if(validator.isEmpty($(churchFieldset).find('#church_name').val())) {
+      isValid = false
+      errors = errors + 'pls enter church name\n'
+    }
+
+    if(validator.isEmpty($(churchFieldset).find('#church_address_line').val())) {
+      isValid = false
+      errors = errors + 'pls enter church address\n'
+    }
+
+    if(validator.isEmpty($(churchFieldset).find('#church_city').val())) {
+      isValid = false
+      errors = errors + 'pls enter church city\n'
+    }
+
+    if(validator.isEmpty($(churchFieldset).find('#church_country').val())) {
+      isValid = false
+      errors = errors + 'pls enter church country\n'
+    }
+
+    if(!isValid) {
+      alert(errors)
+    } else {
+      $.ajax({
+        type: "POST",
+        data: church,
+        url: "/add_church",
+        success: function (result) {
+          $('#churchList').append(result)
+          $('#addChurchModal').modal('hide')
+        }
+      })
+    }
   })
 
   $('#saveObservationBtn').click(function() {
-    alert("TEST")
+
+    var isValid = true
+    var errors = ''
+
     const observationFieldset = $('#observationFieldset')
     const observation = {}
 
@@ -118,15 +150,29 @@ $(document).ready(function () {
     observation.comment = $(observationFieldset).find('#comment').val()
     observation.observee = $('#member_info').attr('data-member')
 
-    $.ajax({
-      type: "POST",
-      data: observation,
-      url: "/add_observation",
-      success: function (result) {
-        $('#observationList').append(result)
-        $('#addObservationModal').modal('hide')
-      }
-    })
+    if(validator.isEmpty($(observationFieldset).find('#commenter').val())) {
+      isValid = false
+      errors = errors + 'please provide commenter name\n'
+    }
+    
+    if(validator.isEmpty($(observationFieldset).find('#comment').val())) {
+      isValid = false
+      errors = errors + 'please provide comment\n'
+    }
+
+    if(!isValid) {
+      alert(errors)
+    } else {
+      $.ajax({
+        type: "POST",
+        data: observation,
+        url: "/add_observation",
+        success: function (result) {
+          $('#observationList').append(result)
+          $('#addObservationModal').modal('hide')
+        }
+      })
+    }
   })
 
   $('#addObservationBtn').click(function() {
