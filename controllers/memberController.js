@@ -76,7 +76,7 @@ const memberController = {
       data.address[addressFields.ADDRESS_LINE] = req.body.address_line
       data.address[addressFields.BRGY] = req.body.barangay
       data.address[addressFields.CITY] = req.body.city
-      data.address[addressFields.PROVINCE] = req.body.PROVINCE
+      data.address[addressFields.PROVINCE] = req.body.province
 
       data.member[memberFields.AGE] = req.body.age
       data.member[memberFields.BIRTHDAY] = req.body.birthday
@@ -87,8 +87,10 @@ const memberController = {
       data.member[memberFields.EDUCATIONAL_ATTAINMENT] = req.body.educational_attainment
       data.member[memberFields.ALMA_MATER] = req.body.alma_mater
       data.member[memberFields.SKILLS] = req.body.skills
-      data.member[memberFields.MEMBER_STATUS] = req.body.member_status
-      data.member[memberFields.DATE] = new Date().toString()
+      data.member[memberFields.MEMBER_STATUS] = req.body.membership_status
+      data.member[memberFields.CIVIL_STATUS] = req.body.civil_status
+      data.member[memberFields.SEX] = req.body.sex
+      data.member[memberFields.DATE] = new Date().toISOString()
 
       // insert to PEOPLE table
       db.insert(db.tables.PERSON_TABLE, data.person, function (personId) {
@@ -107,7 +109,8 @@ const memberController = {
                 const personCondition = new Condition(queryTypes.where)
                 personCondition.setKeyValue(personFields.ID, data.member[memberFields.PERSON])
                 db.update(db.tables.PERSON_TABLE, { member_id: result[0] }, personCondition, function (result) {
-                  res.send(result)
+                  console.log(result)
+                  res.send(result.toString())
                 })
               })
             } else {
@@ -146,7 +149,7 @@ const memberController = {
     data.address[addressFields.ADDRESS_LINE] = req.body.address_line
     data.address[addressFields.BRGY] = req.body.barangay
     data.address[addressFields.CITY] = req.body.city
-    data.address[addressFields.PROVINCE] = req.body.PROVINCE
+    data.address[addressFields.PROVINCE] = req.body.province
 
     data.member[memberFields.AGE] = req.body.age
     data.member[memberFields.BIRTHDAY] = req.body.birthday
@@ -157,7 +160,9 @@ const memberController = {
     data.member[memberFields.EDUCATIONAL_ATTAINMENT] = req.body.educational_attainment
     data.member[memberFields.ALMA_MATER] = req.body.alma_mater
     data.member[memberFields.SKILLS] = req.body.skills
-    data.member[memberFields.MEMBER_STATUS] = req.body.member_status
+    data.member[memberFields.MEMBER_STATUS] = req.body.membership_status
+    data.member[memberFields.CIVIL_STATUS] = req.body.civil_status
+    data.member[memberFields.SEX] = req.body.sex
 
     db.update(db.tables.PERSON_TABLE, data.address, addressCondition, function (result) {
       if (!result) {
