@@ -74,13 +74,17 @@
     <br>
     <h3>Churches</h3>
     <div id="churchList"> 
-
+      {{#each churches}}
+      {{>church this}}
+      {{/each}}
     </div>
     <button type="button" class="btn btn-primary" id="addChurchBtn"> Add Church </button>
 
     <h3>Observations</h3>
     <div id="observationList">
-
+      {{#each observations}}
+        {{>observation this}}
+      {{/each}}
     </div>
     <button type="button" class="btn btn-primary" id="addObservationBtn"> Add Observation </button>
 
@@ -137,7 +141,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <fieldset class="observation-field">
+            <fieldset id="observationFieldset" class="observation-field">
               <label>Commenter</label>
               <input type="text" id="commenter" name="commenter" class="form-control">
               <label>Comment</label>
@@ -146,7 +150,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save Observation</button>
+            <button id="saveObservationBtn" type="button" class="btn btn-primary">Save Observation</button>
           </div>
         </div>
       </div>

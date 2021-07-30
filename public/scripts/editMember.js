@@ -98,13 +98,33 @@ $(document).ready(function () {
     church.country = $(churchFieldset).find('#church_country').val()
     church.member_id = $('#member_info').attr('data-member')
 
-    alert(church.church_name)
     $.ajax({
       type: "POST",
       data: church,
       url: "/add_church",
       success: function (result) {
         $('#churchList').append(result)
+        $('#addChurchModal').modal('hide')
+      }
+    })
+  })
+
+  $('#saveObservationBtn').click(function() {
+    alert("TEST")
+    const observationFieldset = $('#observationFieldset')
+    const observation = {}
+
+    observation.observer = $(observationFieldset).find('#commenter').val()
+    observation.comment = $(observationFieldset).find('#comment').val()
+    observation.observee = $('#member_info').attr('data-member')
+
+    $.ajax({
+      type: "POST",
+      data: observation,
+      url: "/add_observation",
+      success: function (result) {
+        $('#observationList').append(result)
+        $('#addObservationModal').modal('hide')
       }
     })
   })
