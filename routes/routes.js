@@ -6,6 +6,7 @@ const indexController = require('../controllers/indexController')
 const loginController = require('../controllers/loginController')
 const memberController = require('../controllers/memberController')
 const prenupController = require('../controllers/prenupController')
+const churchController = require('../controllers/churchController')
 
 const app = express()
 app.set('views', path.join(__dirname, '../views'))
@@ -25,4 +26,5 @@ app.post('/login', loginController.postLogIn)
 app.post('/add_member', validation.addMemberValidation(), memberController.createMember)
 app.post('/add_prenup', prenupController.createPrenup)
 app.post('/update_member', memberController.postUpdateMember)
+app.post('/add_church', churchController.postAddChurch)
 module.exports = app
