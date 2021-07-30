@@ -4,6 +4,7 @@ const personFields = require(path.join(__dirname, '../models/person'))
 const memberFields = require(path.join(__dirname, '../models/members'))
 const addressFields = require(path.join(__dirname, '../models/address'))
 const bapRegFields = require(path.join(__dirname, '../models/baptismalRegistry'))
+const churchFields = require(path.join(__dirname, '../models/church'))
 const { validationResult } = require('express-validator')
 const { Condition, queryTypes } = require(path.join(__dirname, '../models/condition.js'))
 
@@ -18,7 +19,11 @@ const memberController = {
   },
 
   getEditMember: function (req, res) {
+    const data = {
+      scripts: ['editMember']
+    }
     const condition = new Condition(queryTypes.where)
+    const churchCondition = new Condition(queryTypes.where)
     const joinTables = [
       {
         tableName: db.tables.PERSON_TABLE,
@@ -32,12 +37,22 @@ const memberController = {
       }
     ]
 
+    const joinChurchTables = [
+      {
+        tableName: db.tables.ADDRESS_TABLE,
+        sourceCol: db.tables.CHURCH_TABLE + '.' + churchFields.ADDRESS,
+        destCol: db.tables.ADDRESS_TABLE + '.' + addressFields.ID
+      }
+    ]
+
     condition.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.ID, parseInt(req.params.member_id))
+    churchCondition.setKeyValue(churchFields.MEMBER, parseInt(req.params.member_id))
     db.find(db.tables.MEMBER_TABLE, condition, joinTables, '*', function (result) {
       if (result) {
-        res.render('edit-member-temp.hbs', {
-          member: result[0],
-          scripts: ['editMember']
+        data.member = result[0]
+        db.find(db.tables.CHURCH_TABLE, churchCondition, joinChurchTables, '*', function (result) {
+          data.churches = result
+          res.render('edit-member-temp.hbs', data)
         })
       }
     })
@@ -150,9 +165,11 @@ const memberController = {
     data.person[personFields.LAST_NAME] = req.body.last_name
 
     data.address[addressFields.ADDRESS_LINE] = req.body.address_line
-    data.address[addressFields.BRGY] = req.body.barangay
+    data.address[addressFields.ADDRESS_LINE2] = req.body.address_line2
     data.address[addressFields.CITY] = req.body.city
     data.address[addressFields.PROVINCE] = req.body.province
+    data.address[addressFields.POSTAL_CODE] = req.body.postal_code
+    data.address[addressFields.COUNTRY] = req.body.country
 
     data.member[memberFields.AGE] = req.body.age
     data.member[memberFields.BIRTHDAY] = req.body.birthday
@@ -170,6 +187,7 @@ const memberController = {
 
     console.log(data)
     console.log(req.body)
+
     db.update(db.tables.PERSON_TABLE, data.person, personCondition, function (result) {
       if (!result) {
         res.send(false)
@@ -196,6 +214,8 @@ const memberController = {
         })
       }
     })
+
+    res.send(true)
   },
   /**
    * This function deletes a row in the members table

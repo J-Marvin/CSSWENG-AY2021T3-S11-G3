@@ -51,7 +51,7 @@ const fields = {
   inf_dedication: Object.values(infDedFields),
   couples: Object.values(coupleFields),
   observations: Object.values(observationFields),
-  church: Object.values(churchFields)
+  churches: Object.values(churchFields)
 }
 
 const database = {
