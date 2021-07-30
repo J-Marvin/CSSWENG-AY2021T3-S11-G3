@@ -143,7 +143,7 @@ const memberController = {
     memberCondition.setKeyValue(memberFields.ID, req.body.memberId)
 
     data.person[personFields.FIRST_NAME] = req.body.first_name
-    data.person[personFields.MID_NAME] = req.body.mid_name
+    data.person[personFields.MID_NAME] = req.body.middle_name
     data.person[personFields.LAST_NAME] = req.body.last_name
 
     data.address[addressFields.ADDRESS_LINE] = req.body.address_line

@@ -3,7 +3,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const exphbs = require('express-handlebars')
 const path = require('path')
-const db = require('./models/db.js')
+const db = require(path.join(__dirname, './models/db.js'))
 
 const app = express()
 const routes = require('./routes/routes.js')
