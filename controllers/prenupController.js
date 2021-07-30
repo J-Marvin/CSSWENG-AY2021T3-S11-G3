@@ -1,8 +1,10 @@
-const db = require('../models/db.js')
-const personFields = require('../models/person')
-const prenupRecordFields = require('../models/prenupRecord')
-const coupleFields = require('../models/Couple.js')
-const { Condition, queryTypes } = require('../models/condition')
+const path = require('path')
+
+const db = require(path.join(__dirname, '../models/db.js'))
+const personFields = require(path.join(__dirname, '../models/person'))
+const prenupRecordFields = require(path.join(__dirname, '../models/prenupRecord'))
+const coupleFields = require(path.join(__dirname, '../models/Couple.js'))
+const { Condition, queryTypes } = require(path.join(__dirname, '../models/condition'))
 const { validationResult } = require('express-validator')
 
 const prenupController = {
@@ -14,6 +16,11 @@ const prenupController = {
    * @param req - the incoming request containing either the query or body
    * @param res - the result to be sent out after processing the request
    */
+  getPrenupPage: function (req, res) {
+    // Add find one populate function here
+    res.render('add-prenup-temp')
+  },
+
   createPrenup: function (req, res) {
     let errors = validationResult(req)
     if (!errors.isEmpty()) {
@@ -223,7 +230,7 @@ const prenupController = {
   updatePrenup: function (req, res) {
     const data = req.query.data
     const condition = req.query.condition
-    db.updateOne(db.tables.PRENUPTIAL_TABLE, data, condition, function (result) {
+    db.update(db.tables.PRENUPTIAL_TABLE, data, condition, function (result) {
       console.log(result)
       // insert res.render() or res.redirect()
     })
@@ -236,7 +243,7 @@ const prenupController = {
   deletePrenup: function (req, res) {
     const condition = req.query.condition
 
-    db.updateOne(db.tables.PRENUPTIAL_TABLE, condition, function (result) {
+    db.delete(db.tables.PRENUPTIAL_TABLE, condition, function (result) {
       console.log(result)
       // insert res.render() or res.redirect()
     })

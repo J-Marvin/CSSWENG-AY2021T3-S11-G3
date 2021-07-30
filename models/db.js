@@ -1,21 +1,21 @@
 const sqlite3 = require('better-sqlite3')
 const knex = require('knex')
 const async = require('async')
-const fs = require('fs')
+const path = require('path')
 
 // gettings fields of all tables
-const memberFields = require('./members.js')
-const addressFields = require('./address.js')
-const accountFields = require('./accounts.js')
-const personFields = require('./Person.js')
-const donationFields = require('./donation.js')
-const bapRegFields = require('./baptismalRegistry.js')
-const weddingRegFields = require('./weddingRegistry.js')
-const prenupRecordFields = require('./prenupRecord.js')
-const witnessFields = require('./witness.js')
-const infDedFields = require('./infantDedication.js')
-const coupleFields = require('./Couple.js')
-const observationFields = require('./observation.js')
+const memberFields = require(path.join(__dirname, './members.js'))
+const addressFields = require(path.join(__dirname, './address.js'))
+const accountFields = require(path.join(__dirname, './accounts.js'))
+const personFields = require(path.join(__dirname, './Person.js'))
+const donationFields = require(path.join(__dirname, './donation.js'))
+const bapRegFields = require(path.join(__dirname, './baptismalRegistry.js'))
+const weddingRegFields = require(path.join(__dirname, './weddingRegistry.js'))
+const prenupRecordFields = require(path.join(__dirname, './prenupRecord.js'))
+const witnessFields = require(path.join(__dirname, './witness.js'))
+const infDedFields = require(path.join(__dirname, './infantDedication.js'))
+const coupleFields = require(path.join(__dirname, './Couple.js'))
+const observationFields = require(path.join(__dirname, './observation.js'))
 
 let knexClient = null
 
@@ -328,9 +328,8 @@ const database = {
       'observation_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
       'comment TEXT NOT NULL,' +
       'observee_id INTEGER NOT NULL,' +
-      'observer_id INTEGER NOT NULL,' +
-      'FOREIGN KEY(observee_id) REFERENCES members(member_id),' +
-      'FOREIGN KEY(observer_id) REFERENCES people(person_id)' +
+      'observer TEXT,' +
+      'FOREIGN KEY(observee_id) REFERENCES members(member_id)' +
       ')'
 
     knexClient('sqlite_sequence').select().then((result) => {
@@ -675,10 +674,10 @@ const database = {
    * @param {object} data - the object containing the values paired to their respective column name
    * @param {Array<Conditions>} condition - an array of objects containing the WHERE conditions paired to their respective column name
    */
-  updateOne: function (table, data, conditions, callback = null) {
+  update: function (table, data, conditions, callback = null) {
     knexClient(table)
       .where(function (builder) {
-        if (conditions !== null || conditions !== undefined) {
+        if (conditions !== null && conditions !== undefined) {
           if (!Array.isArray(conditions)) {
             conditions = [conditions]
           }
@@ -780,10 +779,10 @@ const database = {
    * @param {string} table - refers to the table name where the row will be deleted
    * @param {Array<Condition>} conditions - an array of objects containing the WHERE conditions paired to their respective column name
    */
-  deleteOne: function (table, conditions, callback = null) {
+  delete: function (table, conditions, callback = null) {
     knexClient(table)
       .where(function (builder) {
-        if (conditions !== null || conditions !== undefined) {
+        if (conditions !== null && conditions !== undefined) {
           if (!Array.isArray(conditions)) {
             conditions = [conditions]
           }

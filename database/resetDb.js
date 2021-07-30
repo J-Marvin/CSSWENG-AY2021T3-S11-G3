@@ -3,7 +3,11 @@ const knex = require('knex')
 const fse = require('fs-extra')
 const bcrypt = require('bcrypt')
 const saltRounds = 10
+const path = require('path')
+const { Condition, queryTypes } = require('../models/condition')
+const personFields = require('../models/Person')
 let knexClient = null
+const file = path.join(__dirname, 'church.db')
 
 const startIds = [
   { table: 'people', start: 11000000 },
@@ -44,7 +48,8 @@ const data = [
       telephone: null,
       mobile: '922',
       educ_attainment: 'College',
-      alma_mater: 'DLSU-Manila'
+      alma_mater: 'DLSU-Manila',
+      sex: 'Male'
     }
   },
 
@@ -71,7 +76,8 @@ const data = [
       telephone: null,
       mobile: '912',
       educ_attainment: 'High School',
-      alma_mater: 'DLSZ'
+      alma_mater: 'DLSZ',
+      sex: 'Male'
     }
   },
 
@@ -98,7 +104,8 @@ const data = [
       telephone: null,
       mobile: '988',
       educ_attainment: 'High School',
-      alma_mater: 'DLSZ'
+      alma_mater: 'DLSZ',
+      sex: 'Male'
     }
   },
 
@@ -125,7 +132,8 @@ const data = [
       telephone: null,
       mobile: '988',
       educ_attainment: 'Doctorate',
-      alma_mater: 'Grissom Academy'
+      alma_mater: 'Grissom Academy',
+      sex: 'Monogendered'
     }
   },
 
@@ -152,14 +160,15 @@ const data = [
       telephone: null,
       mobile: '945',
       educ_attainment: 'College',
-      alma_mater: 'Palaven Academy'
+      alma_mater: 'Palaven Academy',
+      sex: 'Male'
     }
   }
 ]
 
 function delDatabase () {
-  if (fse.existsSync('church.db')) {
-    fse.remove('church.db', (err) => {
+  if (fse.existsSync(file)) {
+    fse.remove(file, (err) => {
       if (err) {
         console.log(err)
       } else {
@@ -174,13 +183,13 @@ function delDatabase () {
 }
 
 function initDatabase (callback) {
-  const db = sqlite('church.db')
+  const db = sqlite(file)
 
   // Initialize Knex connection
   knexClient = knex({
     client: 'sqlite3',
     connection: {
-      filename: 'church.db'
+      filename: file
     },
     useNullAsDefault: true
   })
@@ -428,9 +437,8 @@ function initDatabase (callback) {
     'observation_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
     'comment TEXT NOT NULL,' +
     'observee_id INTEGER NOT NULL,' +
-    'observer_id INTEGER NOT NULL,' +
-    'FOREIGN KEY(observee_id) REFERENCES members(member_id),' +
-    'FOREIGN KEY(observer_id) REFERENCES people(person_id)' +
+    'observer TEXT NOT NULL,' +
+    'FOREIGN KEY(observee_id) REFERENCES members(member_id)' +
     ')'
 
   startIds.forEach((record) => {
@@ -509,8 +517,14 @@ function insertData () {
             record.member.address_id = address[0]
             knexClient('members').insert(record.member).then((result) => {
               if (result) {
-                console.log('Inserted ' + result)
-                console.log(record.member)
+                knexClient('people').where('person_id', '=', record.member.person_id).update({
+                  member_id: result[0]
+                }).then((result) => {
+                  if (result) {
+                    console.log('Inserted ' + result)
+                    console.log(record.member)
+                  }
+                })
               } else {
                 console.log(result)
               }

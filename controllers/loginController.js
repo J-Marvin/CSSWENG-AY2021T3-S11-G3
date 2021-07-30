@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt')
-const db = require('../models/db')
+const path = require('path')
+const db = require(path.join(__dirname, '../models/db'))
 
 const loginController = {
   getLoginPage: function (req, res) {
@@ -20,7 +21,9 @@ const loginController = {
         resolve(level)
       })
     }).then((level) => {
-      res.send((level + ''))
+      res.render('main-page', {
+        Level: level
+      })
     }).catch((err) => {
       if (err) {
         res.send(err.message)

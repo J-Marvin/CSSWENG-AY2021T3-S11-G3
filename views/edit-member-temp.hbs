@@ -1,0 +1,102 @@
+{{>navbar}}
+<div>
+  
+  id: <span id='member_id'>{{member.member_id}}</span> <br>
+  address: <span id="address_id">{{member.address_id}}</span><br>
+  person: <span id="person_id">{{member.person_id}}</span><br>
+  <div id="member_info" style="display: none" data-member="{{member.member_id}}" data-address="{{member.address_id}}" data-person="{{member.person_id}}" ></div>
+  <form action="/add_member" method="POST" class="container">
+    <label for="first_name">First Name</label>
+    <input type="text" id="first_name" name="first_name" class="form-control" value="{{member.first_name}}">
+  
+    <label for="mid_name">Middle Name</label>
+    <input type="text" id="mid_name" name="middle_name" class="form-control" value="{{member.middle_name}}">
+  
+    <label for="last_name">Last Name</label>
+    <input type="text" id="last_name" name="last_name" class="form-control" value="{{member.last_name}}">
+
+    <label for="age">Age</label>
+    <input type="text" id="age" name="age" class="form-control" value="{{member.age}}">
+
+    <label for="birthday">Birthday</label>
+    <input type="date" id="birthday" name="birthday" class="form-control" value="{{member.birthday}}">
+  
+    <label for="occupation">Occupation</label>
+    <input type="text" id="occupation" name="occupation" class="form-control" value="{{member.occupation}}">
+  
+    <label for="membership_status">Membership Status</label>
+    <input type="text" id="membership_status" name="membership_status" class="form-control" value="{{member.member_status}}">
+
+    <label for="civil_status">Civil Status</label>
+    <input type="text" id="civil_status" name="civil_status" class="form-control" value="{{member.civil_status}}">
+
+    <label for="sex">Sex</label>
+    <input type="text" id="sex" name="sex" class="form-control" value="{{member.sex}}">
+
+    <fieldset class="form-group">
+      <legend>Address: </legend>
+      <label for="adress_line">Address</label>
+      <input type="text" id="address_line" name="address_line" class="form-control" value="{{member.address_line}}">
+      <label for="barangay">Barangay</label>
+      <input type="text" id="barangay" name="barangay" class="form-control" value="{{member.barangay}}">
+      <label for="city">City</label>
+      <input type="text" id="city" name="city" class="form-control" value="{{member.city}}">
+      <label for="province">Province</label>
+      <input type="text" id="province" name="province" class="form-control" value="{{member.province}}">
+    </fieldset>
+  
+
+  
+    <label for="workplace">Workplace</label>
+    <input type="text" id="workplace" name="workplace" class="form-control" value="{{member.workplace}}">
+  
+    <label for="email">Email</label>
+    <input type="text" id="email" name="email" class="form-control" value="{{member.email}}">
+  
+    <label for="telephone">Telephone</label>
+    <input type="text" id="telephone" name="telephone" class="form-control" value="{{member.telephone}}">
+  
+    <label for="mobile">Mobile</label>
+    <input type="text" id="mobile" name="mobile" class="form-control" value="{{member.mobile}}">
+
+    <label for="educational_attainment">Educational Attainment</label>
+    <input type="text" id="educational_attainment" name="educational_attainment" class="form-control" value="{{member.educ_attainment}}">
+  
+    <label for="alma_mater">Alma Mater</label>
+    <input type="text" id="alma_mater" name="alma_mater" class="form-control" value="{{member.alma_mater}}">
+
+    <label for="churches">Family Members</label>
+    <input type="textarea" id="family_members" name="family_members" class="form-control" value="{{member.family_members}}">
+
+    <label for="churches">Churches</label>
+    <input type="textarea" id="churches" name="churches" class="form-control" value="{{member.churches}}">
+
+    <label for="skills">Skills</label>
+    <input type="textarea" id="skills" name="skills" class="form-control" value="{{member.skills}}">
+
+    <br>
+
+    <fieldset class="observation-field">
+      <label>Commenter</label>
+      <input type="text" id="commenter" name="commenter" class="form-control">
+      <label>Comment</label>
+      <input type="textarea" id="comment" name="comment" class="form-control">
+    </fieldset>
+    <fieldset class="observation-field">
+      <label>Commenter</label>
+      <input type="text" id="commenter" name="commenter" class="form-control">
+      <label>Comment</label>
+      <input type="textarea" id="comment" name="comment" class="form-control">
+    </fieldset>
+
+    <br>
+  
+    <a href="/add_prenup" id="add_prenup" type="button" class="btn btn-secondary">Add Prenup</a>
+
+    <br> <br>
+
+    <button id="submitbtn" type="button" class="btn-primary">Submit</button>
+  
+  </form>
+
+</div>

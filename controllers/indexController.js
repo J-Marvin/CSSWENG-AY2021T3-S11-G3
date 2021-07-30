@@ -1,10 +1,13 @@
-const db = require('../models/db.js')
-const memberFields = require('../models/members')
-const { Condition, queryTypes } = require('../models/condition')
-const personFields = require('../models/Person.js')
-const addressFields = require('../models/address.js')
+const path = require('path')
+
+const db = require(path.join(__dirname, '../models/db.js'))
+const memberFields = require(path.join(__dirname, '../models/members'))
+const { Condition, queryTypes } = require(path.join(__dirname, '../models/condition'))
+const personFields = require(path.join(__dirname, '../models/Person.js'))
+const addressFields = require(path.join(__dirname, '../models/address.js'))
 const prenupRecordFields = require('../models/prenupRecord')
 const coupleFields = require('../models/couple')
+
 
 const controller = {
   getIndex: function (req, res) {
@@ -71,6 +74,24 @@ const controller = {
     })
 
     res.render('index')
+  },
+
+  getLogoutPage: function (req, res) {
+    res.render('login')
+  },
+
+  getMainPage: function (req, res) {
+    res.render('main-page', {
+      // Insert session level variable here
+    })
+  },
+
+  getMemberMainPage: function (req, res) {
+    res.render('member-main-page')
+  },
+
+  getFormsMainPage: function (req, res) {
+    res.render('forms-main-page')
   },
 
   joinSample: function (req, res) {
