@@ -6,6 +6,7 @@ const addressFields = require(path.join(__dirname, '../models/address'))
 const bapRegFields = require(path.join(__dirname, '../models/baptismalRegistry'))
 const churchFields = require(path.join(__dirname, '../models/church'))
 const { validationResult } = require('express-validator')
+const observationFields = require('../models/observation')
 const { Condition, queryTypes } = require(path.join(__dirname, '../models/condition.js'))
 
 const memberController = {
@@ -24,6 +25,8 @@ const memberController = {
     }
     const condition = new Condition(queryTypes.where)
     const churchCondition = new Condition(queryTypes.where)
+    const observationCondition = new Condition(queryTypes.where)
+
     const joinTables = [
       {
         tableName: db.tables.PERSON_TABLE,
@@ -47,12 +50,22 @@ const memberController = {
 
     condition.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.ID, parseInt(req.params.member_id))
     churchCondition.setKeyValue(churchFields.MEMBER, parseInt(req.params.member_id))
+    observationCondition.setKeyValue(observationFields.OBSERVEE, parseInt(req.params.member_id))
     db.find(db.tables.MEMBER_TABLE, condition, joinTables, '*', function (result) {
       if (result) {
         data.member = result[0]
         db.find(db.tables.CHURCH_TABLE, churchCondition, joinChurchTables, '*', function (result) {
-          data.churches = result
-          res.render('edit-member-temp.hbs', data)
+          if (result) {
+            data.churches = result
+
+            db.find(db.tables.OBSERVATION_TABLE, observationCondition, null, '*', function (result) {
+              if (result) {
+                data.observations = result
+                console.log(data)
+                res.render('edit-member-temp.hbs', data)
+              }
+            })
+          }
         })
       }
     })
