@@ -13,7 +13,16 @@ const prenupController = {
    */
    getPrenupPage: function (req, res) {
     // Add find one populate function here
-    res.render('add-prenup-temp')
+    
+    var member = req.params.member_id
+    if(member === undefined)
+      res.render('add-prenup-temp', {
+        Origin: "coming from forms creation"
+      })
+    else
+      res.render('add-prenup-temp', {
+        Origin: "coming from edit member"
+      })
    },
 
   createPrenup: function (req, res) {

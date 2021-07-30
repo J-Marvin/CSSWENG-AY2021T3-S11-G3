@@ -19,6 +19,7 @@ app.get('/add_member', memberController.getAddMemberPage)
 app.get('/edit_member/:member_id', memberController.getEditMember)
 app.get('/forms_main_page', indexController.getFormsMainPage)
 app.get('/add_prenup', prenupController.getPrenupPage)
+app.get('/edit_member/:member_id/add_prenup', prenupController.getPrenupPage)
 
 app.post('/login', loginController.postLogIn)
 app.post('/add_member', validation.addMemberValidation(), memberController.createMember)
