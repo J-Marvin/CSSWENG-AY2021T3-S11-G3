@@ -1,10 +1,11 @@
-const db = require('../models/db.js')
-const personFields = require('../models/person')
-const memberFields = require('../models/members')
-const addressFields = require('../models/address')
-const bapRegFields = require('../models/baptismalRegistry')
+const path = require('path')
+const db = require(path.join(__dirname, '../models/db.js'))
+const personFields = require(path.join(__dirname, '../models/person'))
+const memberFields = require(path.join(__dirname, '../models/members'))
+const addressFields = require(path.join(__dirname, '../models/address'))
+const bapRegFields = require(path.join(__dirname, '../models/baptismalRegistry'))
 const { validationResult } = require('express-validator')
-const { Condition, queryTypes } = require('../models/condition.js')
+const { Condition, queryTypes } = require(path.join(__dirname, '../models/condition.js'))
 
 const memberController = {
   /**
@@ -86,6 +87,7 @@ const memberController = {
       data.member[memberFields.EDUCATIONAL_ATTAINMENT] = req.body.educational_attainment
       data.member[memberFields.ALMA_MATER] = req.body.alma_mater
       data.member[memberFields.SKILLS] = req.body.skills
+      data.member[memberFields.MEMBER_STATUS] = req.body.member_status
       data.member[memberFields.DATE] = new Date().toString()
 
       // insert to PEOPLE table
@@ -155,6 +157,7 @@ const memberController = {
     data.member[memberFields.EDUCATIONAL_ATTAINMENT] = req.body.educational_attainment
     data.member[memberFields.ALMA_MATER] = req.body.alma_mater
     data.member[memberFields.SKILLS] = req.body.skills
+    data.member[memberFields.MEMBER_STATUS] = req.body.member_status
 
     db.update(db.tables.PERSON_TABLE, data.address, addressCondition, function (result) {
       if (!result) {
