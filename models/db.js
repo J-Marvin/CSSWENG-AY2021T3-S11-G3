@@ -877,6 +877,20 @@ const database = {
           callback(flag) // pass false to the callback function where an error occurred
         }
       })
+  },
+  /**
+   * This function turns off foreign key constraints
+   */
+  pragmaFK: function (flag) {
+    const path = require('path')
+    const file = path.join('database', 'church.db')
+    const db = sqlite3(file)
+    if (flag) {
+      db.pragma('foreign_keys = OFF')
+    } else {
+      db.pragma('foreign_keys = ON')
+    }
+    db.close()
   }
 }
 
