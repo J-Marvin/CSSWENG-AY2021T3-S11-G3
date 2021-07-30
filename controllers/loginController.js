@@ -21,7 +21,7 @@ const loginController = {
         resolve(level)
       })
     }).then((level) => {
-      res.render("main-page", {
+      res.render('main-page', {
         Level: level
       })
     }).catch((err) => {

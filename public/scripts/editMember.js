@@ -23,7 +23,14 @@ $(document).ready(function () {
       alma_mater: $('#alma_mater').val(),
       family_members: $('#family_members').val(),
       churches: $('#churches').val(),
-      
+      skills: $('#skills').val(),
+      commenter: $('#commenter').val(),
+      comment: #('#comment').val()
     }
+
+
+    validate.isEmail($('#email').val())
+
+    
   })
 })

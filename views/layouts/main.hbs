@@ -3,17 +3,14 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
-        {{#each styles}}
-        <link rel="stylesheet" type="text/css" href="/css/{{this}}.css">
-        {{/each}}
-        
-        {{#each scripts}}
-        <script type="text/javascript" src="/js/{{this}}.js"></script>
-        {{/each}}
 
         <title>{{title}}</title>
 
         <base href="/">
+        {{#each styles}}
+        <link rel="stylesheet" type="text/css" href="/css/{{this}}.css">
+        {{/each}}
+        
         {{!-- Bootstrap Library --}}
         <link rel="stylesheet" type="text/css" href="/bootstrap-5.0.2-dist/css/bootstrap.min.css">
 
@@ -27,9 +24,12 @@
         <script src="./bootstrap-5.0.2-dist/js/bootstrap.bundle.min.js">
         </script>
         {{!-- Fontawesome --}}
-        <script src="/your-path-to-fontawesome/js/all.js"></script>
+        <script src="/fontawesome/js/all.js"></script>
         {{!-- JQuery --}}
         <script src="/scripts/jquery-3.6.0.min.js"></script>
-        <script src="/scripts/validate.min.js"></script>
+        <script src="/scripts/validator.min.js"></script>
+        {{#each scripts}}
+        <script type="text/javascript" src="/scripts/{{this}}.js"></script>
+        {{/each}}
     </body>
 </html>
