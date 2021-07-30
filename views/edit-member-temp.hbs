@@ -1,10 +1,7 @@
 {{>navbar}}
 <div>
-  
-  id: <span id='member_id'>{{member.member_id}}</span> <br>
-  address: <span id="address_id">{{member.address_id}}</span><br>
-  person: <span id="person_id">{{member.person_id}}</span><br>
-
+  <h1> Edit Member </h1>
+  <div id="member_info" style="display: none" data-member="{{member.member_id}}" data-address="{{member.address_id}}" data-person="{{member.person_id}}" ></div>
   <form action="/add_member" method="POST" class="container" id="edit-member-form">
     <label for="first_name">First Name</label>
     <input type="text" id="first_name" name="first_name" class="form-control" value="{{member.first_name}}">
@@ -35,17 +32,19 @@
 
     <fieldset class="form-group">
       <legend>Address: </legend>
-      <label for="adress_line">Address</label>
+      <label for="adress_line">Address Line 1</label>
       <input type="text" id="address_line" name="address_line" class="form-control" value="{{member.address_line}}">
-      <label for="barangay">Barangay</label>
-      <input type="text" id="barangay" name="barangay" class="form-control" value="{{member.barangay}}">
+      <label for="address_line2">Address Line 2</label>
+      <input type="text" id="address_line2" name="address_line2" class="form-control" value="{{member.address_line2}}">
       <label for="city">City</label>
       <input type="text" id="city" name="city" class="form-control" value="{{member.city}}">
       <label for="province">Province</label>
       <input type="text" id="province" name="province" class="form-control" value="{{member.province}}">
+      <label for="postal_code">Postal Code</label>
+      <input type="text" id="postal_code" name="postal_code" class="form-control" value="{{member.postal_code}}">
+      <label for="country">Country</label>
+      <input type="text" id="country" name="country" class="form-control" value="{{member.country}}">
     </fieldset>
-  
-
   
     <label for="workplace">Workplace</label>
     <input type="text" id="workplace" name="workplace" class="form-control" value="{{member.workplace}}">
@@ -68,15 +67,39 @@
     <label for="churches">Family Members</label>
     <input type="textarea" id="family_members" name="family_members" class="form-control" value="{{member.family_members}}">
 
-    <label for="churches">Churches</label>
-    <input type="textarea" id="churches" name="churches" class="form-control" value="{{member.churches}}">
 
     <label for="skills">Skills</label>
     <input type="textarea" id="skills" name="skills" class="form-control" value="{{member.skills}}">
 
     <br>
 
-    <fieldset>
+    <fieldset class="form-group church-fieldset">
+      <div style="display:none" data-church="{{church_id}}" data-address="{{church_address}}"></div>
+      <legend>Churches: </legend>
+      <label for="church_name">Name of church</label>
+      <input type="text" id="church_name" name="church_name" class="form-control">
+      <label for="church_adress_line">Address Line 1</label>
+      <input type="text" id="church_address_line" name="church_address_line" class="form-control">
+      <label for="church_address_line2">Address Line 2</label>
+      <input type="text" id="church_address_line2" name="church_address_line2" class="form-control">
+      <label for="church_city">City</label>
+      <input type="text" id="church_city" name="church_city" class="form-control">
+      <label for="church_province">Province</label>
+      <input type="text" id="church_province" name="church_province" class="form-control">
+      <label for="church_postal_code">Postal Code</label>
+      <input type="text" id="church_postal_code" name="church_postal_code" class="form-control">
+      <label for="church_country">Country</label>
+      <input type="text" id="church_country" name="church_country" class="form-control">
+    </fieldset>
+
+    <br>
+    <fieldset class="observation-field">
+      <label>Commenter</label>
+      <input type="text" id="commenter" name="commenter" class="form-control">
+      <label>Comment</label>
+      <input type="textarea" id="comment" name="comment" class="form-control">
+    </fieldset>
+    <fieldset class="observation-field">
       <label>Commenter</label>
       <input type="text" id="commenter" name="commenter" class="form-control">
       <label>Comment</label>

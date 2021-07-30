@@ -19,9 +19,8 @@ const memberFields = {
   SKILLS: 'skills',
   DATE: 'date_created',
   SEX: 'sex',
-  CHURCHES: 'churches',
-  PARENTS: 'parents_id'
-  // Family members
+  PARENTS: 'parents_id',
+  FAMILY: 'family'
 }
 
 module.exports = memberFields

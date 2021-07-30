@@ -37,10 +37,9 @@ const memberController = {
     condition.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.ID, parseInt(req.params.member_id))
     db.find(db.tables.MEMBER_TABLE, condition, joinTables, '*', function (result) {
       if (result) {
-        console.log(result)
         res.render('edit-member-temp.hbs', {
-          scripts: ['member-validator'],
-          member: result[0]
+          member: result[0],
+          scripts: ['editMember', 'member-validator']
         })
       }
     })
@@ -77,9 +76,11 @@ const memberController = {
       data.person[personFields.LAST_NAME] = req.body.last_name
 
       data.address[addressFields.ADDRESS_LINE] = req.body.address_line
-      data.address[addressFields.BRGY] = req.body.barangay
+      data.address[addressFields.ADDRESS_LINE2] = req.body.address_line2
       data.address[addressFields.CITY] = req.body.city
       data.address[addressFields.PROVINCE] = req.body.province
+      data.address[addressFields.POSTAL_CODE] = req.body.postal_code
+      data.address[addressFields.COUNTRY] = req.body.country
 
       data.member[memberFields.AGE] = req.body.age
       data.member[memberFields.BIRTHDAY] = req.body.birthday
@@ -131,19 +132,20 @@ const memberController = {
    * @param req - the incoming request containing either the query or body
    * @param res - the result to be sent out after processing the request
    */
-  updateMember: function (req, res) {
+  postUpdateMember: function (req, res) {
     const data = {
       person: {},
       address: {},
-      member: {}
+      member: {},
+      observations: []
     }
 
     const addressCondition = new Condition(queryTypes.where)
-    addressCondition.setKeyValue(addressFields.ID, req.body.addressId)
+    addressCondition.setKeyValue(addressFields.ID, req.body.address_id)
     const personCondition = new Condition(queryTypes.where)
-    personCondition.setKeyValue(personFields.ID, req.body.personId)
+    personCondition.setKeyValue(personFields.ID, req.body.person_id)
     const memberCondition = new Condition(queryTypes.where)
-    memberCondition.setKeyValue(memberFields.ID, req.body.memberId)
+    memberCondition.setKeyValue(memberFields.ID, req.body.member_id)
 
     data.person[personFields.FIRST_NAME] = req.body.first_name
     data.person[personFields.MID_NAME] = req.body.middle_name
@@ -166,17 +168,31 @@ const memberController = {
     data.member[memberFields.MEMBER_STATUS] = req.body.membership_status
     data.member[memberFields.CIVIL_STATUS] = req.body.civil_status
     data.member[memberFields.SEX] = req.body.sex
+    data.observations = JSON.parse(req.body.observations)
 
-    db.update(db.tables.PERSON_TABLE, data.address, addressCondition, function (result) {
+    console.log(data)
+    console.log(req.body)
+    db.update(db.tables.PERSON_TABLE, data.person, personCondition, function (result) {
       if (!result) {
         res.send(false)
       } else {
-        db.update(db.tables.ADDRESS_TABLE, data.person, personCondition, function (result) {
+        db.update(db.tables.ADDRESS_TABLE, data.address, addressCondition, function (result) {
           if (!result) {
             res.send(false)
           } else {
             db.update(db.tables.MEMBER_TABLE, data.member, memberCondition, function (result) {
-              res.send(result)
+              console.log(result)
+              if (result) {
+                if (data.observations.length > 0) {
+                  db.insert(db.tables.OBSERVATION_TABLE, data.observations, function (result) {
+                    if (result) {
+                      res.send(true)
+                    } else res.send(false)
+                  })
+                } else {
+                  res.send(true)
+                }
+              }
             })
           }
         })
