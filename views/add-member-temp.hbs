@@ -1,83 +1,157 @@
 {{>navbar}}
+
+<style>
+  .error_codes {
+    color: red;
+    font-size: 10pt;
+  }
+</style>
+
 <form action="/add_member" method="POST" class="container" id="create-member-form">
-  <label for="first_name" >First Name</label>
-  <input type="text" id="first_name" name="first_name" class="form-control" >
-  
-  <label for="mid_name">Middle Name</label>
-  <input type="text" id="mid_name" name="middle_name" class="form-control" >
+  <div class="container" style="padding-left: 20%; padding-right: 20%;">
+    <h1 class="my-3"> Add Member </h1>
+    <hr>
+    <div class="row">
+      <legend>Personal Information:</legend>
+      <div class="col">
+        <label for="first_name">First Name</label>
+        <input type="text" id="first_name" name="first_name" class="form-control" >
+        <p id="first_name_error" class="error_codes">  </p>
+      </div>
+      <div class="col">
+        <label for="mid_name">Middle Name</label>
+        <input type="text" id="mid_name" name="middle_name" class="form-control" >
+        <p id="mid_name_error" class="error_codes">  </p>
+      </div>
+      <div class="col">
+        <label for="last_name">Last Name</label>
+        <input type="text" id="last_name" name="last_name" class="form-control" >
+        <p id="last_name_error" class="error_codes">  </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-2">
+        <label for="age">Age</label>
+        <input type="number" id="age" name="age" class="form-control" >
+        <p id="age_error" class="error_codes">  </p>
+      </div>
+      <div class="col-5">
+        <label for="birthday">Birthday</label>
+        <input type="date" id="birthday" name="birthday" class="form-control" >
+        <p id="birthday_error" class="error_codes">  </p>
+      </div>
+      <div class="col-5">
+        <label for="occupation">Occupation</label>
+        <input type="text" id="occupation" name="occupation" class="form-control" >
+        <p id="occupation_error" class="error_codes">  </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label for="membership_status">Membership Status</label>
+        <select id="membership_status" name="membership_status" class="form-select">
+          <option selected> Active </option>
+          <option> Inactive </option>
+        </select>
+        <p id="membership_status_error" class="error_codes">  </p>
+      </div>
+      <div class="col">
+        <label for="civil_status">Civil Status</label>
+        <select id="civil_status" name="civil_status" class="form-select">
+          <option selected> Single </option>
+          <option> Married </option>
+        </select>
+        <p id="civil_status_error" class="error_codes">  </p>
+      </div>
+      <div class="col">
+        <label for="sex">Sex</label>
+        <select id="sex" name="sex" class="form-select">
+          <option selected> Male </option>
+          <option> Female </option>
+        </select>
+        <p id="sex_error" class="error_codes">  </p>
+      </div>
+    </div>
+    <hr>
+    <fieldset class="form-group">
+      <div class="row">
+        <legend>Address:</legend>
+        <div class="col">
+          <label for="adress_line">Address Line 1</label>
+          <input type="text" id="address_line" name="address_line" class="form-control" >
+          <p id="address_line_error" class="error_codes">  </p>
+        </div>
+        <div class="col">
+          <label for="address_line2">Address Line 2</label>
+          <input type="text" id="address_line2" name="address_line2" class="form-control" >
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <label for="city">City</label>
+          <input type="text" id="city" name="city" class="form-control" >
+          <p id="city_error" class="error_codes">  </p>
+        </div>
+        <div class="col">
+          <label for="province">Province</label>
+          <input type="text" id="province" name="province" class="form-control" >
+        </div>
+        <div class="col">
+          <label for="postal_code">Postal Code</label>
+          <input type="text" id="postal_code" name="postal_code" class="form-control" >
+        </div>
+        <div class="col">
+          <label for="country">Country</label>
+          <input type="text" id="country" name="country" class="form-control" >
+          <p id="country_error" class="error_codes">  </p>
+        </div>
+      </div>
+    </fieldset>
+    <hr>
+    <legend>Contacts:</legend>
+    <div class="row">
+      <div class="col">
+        <label for="mobile">Mobile</label>
+        <input type="text" id="mobile" name="mobile" class="form-control">
+        <p id="mobile_error" class="error_codes">  </p>
+      </div>
+      <div class="col">
+        <label for="telephone">Telephone</label>
+        <input type="text" id="telephone" name="telephone" class="form-control" >
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label for="workplace">Workplace</label>
+        <input type="text" id="workplace" name="workplace" class="form-control" >
+      </div>
+      <div class="col">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" class="form-control" >
+        <p id="email_error" class="error_codes">  </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label for="educational_attainment">Educational Attainment</label>
+        <input type="text" id="educational_attainment" name="educational_attainment" class="form-control">
+      </div>
+      <div class="col">
+        <label for="alma_mater">Alma Mater</label>
+        <input type="text" id="alma_mater" name="alma_mater" class="form-control" >
+      </div>
+    </div>
+    <br>
 
-  <label for="last_name">Last Name</label>
-  <input type="text" id="last_name" name="last_name"class="form-control" >
+    <label for="churches">Family Members</label>
+    <input type="textarea" id="family_members" name="family_members" class="form-control">
+    <br>
 
-  <label for="age">Age</label>
-  <input type="number" id="age" name="age" class="form-control" >
+    <label for="skills">Skills</label>
+    <input type="textarea" id="skills" name="skills" class="form-control" >
 
-  <label for="birthday">Birthday</label>
-  <input type="date" id="birthday" name="birthday" class="form-control" >
+    <br>
 
-  <label for="occupation">Occupation</label>
-  <input type="text" id="occupation" name="occupation" class="form-control" >
-  
-  <label for="member_status">Member Status</label>
-  <input type="text" id="membership_status" name="membership_status" class="form-control" >
-
-  <label for="civil_status">Civil Status</label>
-  <select id="civil_status" name="civil_status" class="form-select" >
-    <option selected value="Single">Single</option>
-    <option value="Married">Married</option>
-  </select>
-  
-  <label for="sex">Sex</label>
-  <select id="sex" name="sex" class="form-select" >
-    <option selected value="Male">Male</option>
-    <option value="Female">Female</option>
-  </select>
-
-  <br>
-  <fieldset>
-    <legend>Address: </legend>
-    <label for="street">Street</label>
-    <input type="text" id="address_line" name="address_line" class="form-control" >
-    <label for="barangay">Barangay</label>
-    <input type="text" id="barangay" name="barangay"class="form-control">
-    <label for="city">City</label>
-    <input type="text" id="city" name="city" class="form-control" >
-    <label for="province">Province</label>
-    <input type="text" id="province" name="province" class="form-control">
-  </fieldset>
-
-  <br>
-  <br>
-
-  <label for="workplace">Workplace</label>
-  <input type="text" id="workplace" name="workplace" class="form-control">
-
-  <label for="email">Email</label>
-  <input type="email" id="email" name="email" class="form-control">
-
-  <label for="telephone">Telephone</label>
-  <input type="text" id="telephone" name="telephone" class="form-control">
-
-  <label for="mobile">Mobile</label>
-  <input type="tel" id="mobile" name="mobile" placeholder="01234567890" pattern="[0-9]{11}" class="form-control" >
-
-  <label for="educational_attainment">Educational Attainment</label>
-  <input type="text" id="educational_attainment" name="educational_attainment" class="form-control">
-
-  <label for="alma_mater">Alma Mater</label>
-  <input type="text" id="alma_mater" name="alma_mater" class="form-control">
-
-  {{!-- ADD FIELD FUNCTIONALITY NEEDED --}}
-
-  <label for="family">Family members</label>
-  <input type="text" id="family" name="family" class="form-control">
-
-  <label for="churches_attended">Churches attended</label>
-  <input type="text" id="churches_attended" name="churches_attended" class="form-control">
-
-  <label for="skills">Skills</label>
-  <input type="text" id="skills" name="skills" class="form-control">
-
-  <button type="button" id="create-member" class="btn-primary validate-member">Submit</button>
-
+    <button type="button" id="create-member" class="btn btn-primary">Submit</button>
+  </div>
 </form>

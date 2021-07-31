@@ -36,6 +36,38 @@ const validation = {
     ]
     return validation
   },
+
+  /**
+   * This function validates the church form if there are no empty required fields.
+   * @returns the validation array containing each boolean result
+   */
+  churchValidation: function () {
+    const validation = [
+      check('church_name', 'Church name is required').notEmpty(),
+      check('church_address_line', 'Address is required').notEmpty(),
+      check('church_city', 'City is required').notEmpty(),
+      check('church_province', 'State/Province/Region is required').notEmpty(),
+      check('church_country', 'Country is required').notEmpty()
+    ]
+
+    return validation
+  },
+
+  /**
+   * This function validates the observation form if there are no empty fields.
+   * @returns the validation array containing each boolean result
+   */
+  observationValidation: function () {
+    const validation = [
+      check('observer', 'Observer is required').notEmpty(),
+      check('comment', 'Comment is required').notEmpty(),
+      check('observee', 'Observee is required').notEmpty(),
+      check('observee', 'Invalid member id').isNumeric()
+    ]
+
+    return validation
+  },
+
   /**
    * This function validates the add pre-nuptial form if there are no empty fields.
    * @returns the validation array containing each boolean result

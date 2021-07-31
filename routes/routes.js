@@ -6,6 +6,8 @@ const indexController = require('../controllers/indexController')
 const loginController = require('../controllers/loginController')
 const memberController = require('../controllers/memberController')
 const prenupController = require('../controllers/prenupController')
+const churchController = require('../controllers/churchController')
+const observationController = require('../controllers/observationController')
 
 const app = express()
 app.set('views', path.join(__dirname, '../views'))
@@ -26,5 +28,13 @@ app.post('/login', loginController.postLogIn)
 app.post('/add_member', validation.addMemberValidation(), memberController.createMember)
 app.post('/create_prenup', validation.addPrenupValidation(), prenupController.createPrenup)
 app.post('/create_prenup_member', validation.addMemberPrenupValid(), prenupController.createMemberPrenup)
-app.post('/update_member', memberController.postUpdateMember)
+app.post('/update_member', validation.addMemberValidation(), memberController.postUpdateMember)
+app.post('/add_church', validation.churchValidation(), churchController.postAddChurch)
+app.post('/add_observation', validation.observationValidation(), observationController.postAddObservation)
+
+app.put('/update_observation', validation.observationValidation(), observationController.putUpdateObservation)
+app.put('/update_church', validation.churchValidation(), churchController.putUpdateChurch)
+
+app.delete('/delete_observation', observationController.delObservation)
+app.delete('/delete_church', churchController.delChurch)
 module.exports = app
