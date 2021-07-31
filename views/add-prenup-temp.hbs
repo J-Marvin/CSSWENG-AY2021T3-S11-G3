@@ -1,0 +1,76 @@
+{{>navbar}}
+<script>
+
+  function display_div_bride (status) {
+    
+    if(status === "bride_non_member") {
+      document.getElementById("bride_member_div").style.display = "none"
+      document.getElementById("bride_member").checked = false
+      document.getElementById("bride_member").removeAttribute("disabled")
+      document.getElementById("bride_non_member").setAttribute("disabled", "disabled")
+    }
+    else {
+      document.getElementById("bride_non_member_div").style.display = "none"
+      document.getElementById("bride_non_member").checked = false
+      document.getElementById("bride_non_member").removeAttribute("disabled")
+      document.getElementById("bride_member").setAttribute("disabled", "disabled")
+    }
+    document.getElementById(status + "_div").style.display = "block"
+
+  }
+
+  function display_div_groom (status) {
+
+    if(status === "groom_non_member") {
+      document.getElementById("groom_member_div").style.display = "none"
+      document.getElementById("groom_member").checked = false
+      document.getElementById("groom_member").removeAttribute("disabled")
+      document.getElementById("groom_non_member").setAttribute("disabled", "disabled")
+    }
+    else {
+      document.getElementById("groom_non_member_div").style.display = "none"
+      document.getElementById("groom_non_member").checked = false
+      document.getElementById("groom_non_member").removeAttribute("disabled")
+      document.getElementById("groom_member").setAttribute("disabled", "disabled")
+    }
+    document.getElementById(status + "_div").style.display = "block"
+
+  }
+
+</script>
+
+<h1> {{Origin}} </h1>
+
+<form action="/add_member" method="POST" class="container"> 
+
+  <input type="checkbox" id="bride_non_member" onclick="display_div_bride('bride_non_member')"> BRIDE NON
+  <input type="checkbox" id="bride_member" onclick="display_div_bride('bride_member')" checked disabled> BRIDE MEM
+
+    <label for="bride_mid_name">Middle Name</label>
+    <input type="text" id="mid_name" name="bride_mid_name" class="form-control">
+
+    <label for="bride_last_name">Last Name</label>
+    <input type="text" id="last_name" name="bride_last_name"class="form-control">
+  </fieldset>
+  
+  <fieldset class="form-group">
+    <legend>Groom</legend>
+    <label for="groom_first_name">First Name</label>
+    <input type="text" id="groom_first_name" name="groom_first_name" class="form-control">
+
+    <label for="groom_mid_name">Middle Name</label>
+    <input type="text" id="groom_mid_name" name="groom_mid_name" class="form-control">
+
+    <label for="groom_last_name">Last Name</label>
+    <input type="text" id="groom_last_name" name="groom_last_name"class="form-control">
+  </fieldset>
+
+  <label for="current_date">Current date</label>
+  <input type="text" id="current_date" name="current_date" class="form-control">
+
+  <label for="wedding_date">Wedding date</label>
+  <input type="text" id="wedding_date" name="wedding_date" class="form-control">
+  
+  <button type="submit" class="btn-primary">Submit</button>
+
+</form>

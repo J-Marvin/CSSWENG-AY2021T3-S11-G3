@@ -8,7 +8,7 @@
     "dev": "nodemon app.js",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
-    "postinstall": "install-app-deps",
+    "postinstall": "electron-builder install-app-deps",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,6 +21,11 @@
     "url": "https://github.com/J-Marvin/CSSWENG-AY2021T3-S11-G3/issues"
   },
   "homepage": "https://github.com/J-Marvin/CSSWENG-AY2021T3-S11-G3#readme",
+  "standard": {
+    "ignore": [
+      "/public"
+    ]
+  },
   "dependencies": {
     "async": "^3.2.0",
     "bcrypt": "^5.0.1",
@@ -29,6 +34,8 @@
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-handlebars": "^5.3.2",
+    "express-validator": "^6.12.1",
+    "fs": "0.0.1-security",
     "fs-extra": "^10.0.0",
     "knex": "^0.95.8",
     "sqlite3": "^5.0.2",
