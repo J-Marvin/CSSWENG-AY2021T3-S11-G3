@@ -1,160 +1,233 @@
 {{>navbar}}
-<div>
-  <h1> Edit Member </h1>
-  <div id="member_info" style="display: none" data-member="{{member.member_id}}" data-address="{{member.address_id}}" data-person="{{member.person_id}}" ></div>
-  <form action="/add_member" method="POST" class="container" id="edit-member-form">
-    <label for="first_name">First Name</label>
-    <input type="text" id="first_name" name="first_name" class="form-control" value="{{member.first_name}}">
-  
-    <label for="mid_name">Middle Name</label>
-    <input type="text" id="mid_name" name="middle_name" class="form-control" value="{{member.middle_name}}">
-  
-    <label for="last_name">Last Name</label>
-    <input type="text" id="last_name" name="last_name" class="form-control" value="{{member.last_name}}">
 
-    <label for="age">Age</label>
-    <input type="text" id="age" name="age" class="form-control" value="{{member.age}}">
+<style>
+  .error_codes {
+    color: red;
+    font-size: 10pt;
+  }
+</style>
 
-    <label for="birthday">Birthday</label>
-    <input type="date" id="birthday" name="birthday" class="form-control" value="{{member.birthday}}">
-  
-    <label for="occupation">Occupation</label>
-    <input type="text" id="occupation" name="occupation" class="form-control" value="{{member.occupation}}">
-  
-    <label for="membership_status">Membership Status</label>
-    <input type="text" id="membership_status" name="membership_status" class="form-control" value="{{member.member_status}}">
-
-    <label for="civil_status">Civil Status</label>
-    <input type="text" id="civil_status" name="civil_status" class="form-control" value="{{member.civil_status}}">
-
-    <label for="sex">Sex</label>
-    <input type="text" id="sex" name="sex" class="form-control" value="{{member.sex}}">
-
+<div id="member_info" style="display: none" data-member="{{member.member_id}}" data-address="{{member.address_id}}" data-person="{{member.person_id}}" ></div>
+<form action="/add_member" method="POST" class="container" id="create-member-form">
+  <div class="container" style="padding-left: 20%; padding-right: 20%;">
+    <h1 class="my-3"> Edit Member </h1>
+    <hr>
+    <div class="row">
+      <legend>Personal Information:</legend>
+      <div class="col">
+        <label for="first_name">First Name</label>
+        <input type="text" id="first_name" name="first_name" class="form-control" value="{{member.first_name}}">
+        <p id="first_name_error" class="error_codes">  </p>
+      </div>
+      <div class="col">
+        <label for="mid_name">Middle Name</label>
+        <input type="text" id="mid_name" name="middle_name" class="form-control" value="{{member.middle_name}}">
+      </div>
+      <div class="col">
+        <label for="last_name">Last Name</label>
+        <input type="text" id="last_name" name="last_name" class="form-control" value="{{member.last_name}}">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-2">
+        <label for="age">Age</label>
+        <input type="number" id="age" name="age" class="form-control" value="{{member.age}}">
+      </div>
+      <div class="col-5">
+        <label for="birthday">Birthday</label>
+        <input type="date" id="birthday" name="birthday" class="form-control" value="{{member.birthday}}">
+      </div>
+      <div class="col-5">
+        <label for="occupation">Occupation</label>
+        <input type="text" id="occupation" name="occupation" class="form-control" value="{{member.occupation}}">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label for="membership_status">Membership Status</label>
+        <select id="membership_status" name="membership_status" class="form-select" value="{{member.member_status}}">
+          <option> Active </option>
+          <option> Inactive </option>
+        </select>
+        <p id="membership_status_error" class="error_codes">  </p>
+      </div>
+      <div class="col">
+        <label for="civil_status">Civil Status</label>
+        <select id="civil_status" name="civil_status" class="form-select" value="{{member.civil_status}}">
+          <option> Single </option>
+          <option> Married </option>
+        </select>
+        <p id="civil_status_error" class="error_codes">  </p>
+      </div>
+      <div class="col">
+        <label for="sex">Sex</label>
+        <select id="sex" name="sex" class="form-select" value="{{member.sex}}">
+          <option> Male </option>
+          <option> Female </option>
+        </select>
+        <p id="sex_error" class="error_codes">  </p>
+      </div>
+    </div>
+    <hr>
     <fieldset class="form-group">
-      <legend>Address: </legend>
-      <label for="adress_line">Address Line 1</label>
-      <input type="text" id="address_line" name="address_line" class="form-control" value="{{member.address_line}}">
-      <label for="address_line2">Address Line 2</label>
-      <input type="text" id="address_line2" name="address_line2" class="form-control" value="{{member.address_line2}}">
-      <label for="city">City</label>
-      <input type="text" id="city" name="city" class="form-control" value="{{member.city}}">
-      <label for="province">Province</label>
-      <input type="text" id="province" name="province" class="form-control" value="{{member.province}}">
-      <label for="postal_code">Postal Code</label>
-      <input type="text" id="postal_code" name="postal_code" class="form-control" value="{{member.postal_code}}">
-      <label for="country">Country</label>
-      <input type="text" id="country" name="country" class="form-control" value="{{member.country}}">
+      <div class="row">
+        <legend>Address:</legend>
+        <div class="col">
+          <label for="adress_line">Address Line 1</label>
+          <input type="text" id="address_line" name="address_line" class="form-control" value="{{member.address_line}}">
+        </div>
+        <div class="col">
+          <label for="address_line2">Address Line 2</label>
+          <input type="text" id="address_line2" name="address_line2" class="form-control" value="{{member.address_line2}}">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <label for="city">City</label>
+          <input type="text" id="city" name="city" class="form-control" value="{{member.city}}">
+        </div>
+        <div class="col">
+          <label for="province">Province</label>
+          <input type="text" id="province" name="province" class="form-control" value="{{member.province}}">
+        </div>
+        <div class="col">
+          <label for="postal_code">Postal Code</label>
+          <input type="text" id="postal_code" name="postal_code" class="form-control" value="{{member.postal_code}}">
+        </div>
+        <div class="col">
+          <label for="country">Country</label>
+          <input type="text" id="country" name="country" class="form-control" value="{{member.country}}">
+        </div>
+      </div>
     </fieldset>
-  
-    <label for="workplace">Workplace</label>
-    <input type="text" id="workplace" name="workplace" class="form-control" value="{{member.workplace}}">
-  
-    <label for="email">Email</label>
-    <input type="text" id="email" name="email" class="form-control" value="{{member.email}}">
-  
-    <label for="telephone">Telephone</label>
-    <input type="text" id="telephone" name="telephone" class="form-control" value="{{member.telephone}}">
-  
-    <label for="mobile">Mobile</label>
-    <input type="text" id="mobile" name="mobile" class="form-control" value="{{member.mobile}}">
-
-    <label for="educational_attainment">Educational Attainment</label>
-    <input type="text" id="educational_attainment" name="educational_attainment" class="form-control" value="{{member.educ_attainment}}">
-  
-    <label for="alma_mater">Alma Mater</label>
-    <input type="text" id="alma_mater" name="alma_mater" class="form-control" value="{{member.alma_mater}}">
-
+    <hr>
+    <legend>Contacts:</legend>
+    <div class="row">
+      <div class="col">
+        <label for="mobile">Mobile</label>
+        <input type="text" id="mobile" name="mobile" class="form-control" value="{{member.mobile}}">
+      </div>
+      <div class="col">
+        <label for="telephone">Telephone</label>
+        <input type="text" id="telephone" name="telephone" class="form-control" value="{{member.telephone}}">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label for="workplace">Workplace</label>
+        <input type="text" id="workplace" name="workplace" class="form-control" value="{{member.workplace}}">
+      </div>
+      <div class="col">
+        <label for="email">Email</label>
+        <input type="text" id="email" name="email" class="form-control" value="{{member.email}}">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label for="educational_attainment">Educational Attainment</label>
+        <input type="text" id="educational_attainment" name="educational_attainment" class="form-control" value="{{member.educ_attainment}}">
+      </div>
+      <div class="col">
+        <label for="alma_mater">Alma Mater</label>
+        <input type="text" id="alma_mater" name="alma_mater" class="form-control" value="{{member.alma_mater}}">
+      </div>
+    </div>
+    <br>
     <label for="churches">Family Members</label>
     <input type="textarea" id="family_members" name="family_members" class="form-control" value="{{member.family_members}}">
-
-
+    <br>
     <label for="skills">Skills</label>
     <input type="textarea" id="skills" name="skills" class="form-control" value="{{member.skills}}">
 
-    <br>
-    <h3>Churches</h3>
-    <div id="churchList"> 
-      {{#each churches}}
-      {{>church this}}
-      {{/each}}
+    <div class="row mt-3">
+      <div class="col-2">
+        <button type="button" class="btn btn-primary" id="addChurchBtn"> Add Church </button>
+      </div>
+      <div class="col-3">
+        <button type="button" class="btn btn-primary" id="addObservationBtn"> Add Observation </button>
+      </div>
     </div>
-    <button type="button" class="btn btn-primary" id="addChurchBtn"> Add Church </button>
-
-    <h3>Observations</h3>
-    <div id="observationList">
-      {{#each observations}}
-        {{>observation this}}
-      {{/each}}
+    <div class="row mt-3">
+      <div class="col">
+        <a href="/edit_member/{{member.member_id}}/add_prenup" id="add_prenup" type="button" class="btn btn-secondary">Add Prenup</a>
+      </div>
     </div>
-    <button type="button" class="btn btn-primary" id="addObservationBtn"> Add Observation </button>
+    <div class="row mt-3">
+      <div class="col d-flex justify-content-end">
+         <button type="button" id="edit-member" class="btn btn-primary validate-member">Submit</button>
+      </div>
+    </div>
+  </div>
 
+  <br>
+  <h3>Churches</h3>
+  <div id="churchList"> 
+    {{#each churches}}
+    {{>church this}}
+    {{/each}}
+  </div>
 
-    <br><br>
-  
-    <a href="/edit_member/{{member.member_id}}/add_prenup" id="add_prenup" type="button" class="btn btn-secondary">Add Prenup</a>
+  <h3>Observations</h3>
+  <div id="observationList">
+    {{#each observations}}
+      {{>observation this}}
+    {{/each}}
+  </div>
 
-    <br> <br>
-
-    <button type="button" id="edit-member" class="btn-primary validate-member">Submit</button>
-  
-
-    <div class="modal fade" id="addChurchModal" aria-hidden="true">
-      <div class="modal-dialog  modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Add Church</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <fieldset id="churchFieldSet" class="form-group church-fieldset">
-              <div style="display:none" data-church="{{church_id}}" data-address="{{church_address}}"></div>
-              <legend>Churches: </legend>
-              <label for="church_name">Name of church</label>
-              <input type="text" id="church_name" name="church_name" class="form-control">
-              <label for="church_adress_line">Address Line 1</label>
-              <input type="text" id="church_address_line" name="church_address_line" class="form-control">
-              <label for="church_address_line2">Address Line 2</label>
-              <input type="text" id="church_address_line2" name="church_address_line2" class="form-control">
-              <label for="church_city">City</label>
-              <input type="text" id="church_city" name="church_city" class="form-control">
-              <label for="church_province">Province</label>
-              <input type="text" id="church_province" name="church_province" class="form-control">
-              <label for="church_postal_code">Postal Code</label>
-              <input type="text" id="church_postal_code" name="church_postal_code" class="form-control">
-              <label for="church_country">Country</label>
-              <input type="text" id="church_country" name="church_country" class="form-control">
-            </fieldset>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button id="saveChurchBtn" type="button" class="btn btn-primary">Save Church</button>
-          </div>
+  <div class="modal fade" id="addChurchModal" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Church</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <fieldset id="churchFieldSet" class="form-group church-fieldset">
+            <div style="display:none" data-church="{{church_id}}" data-address="{{church_address}}"></div>
+            <legend>Churches: </legend>
+            <label for="church_name">Name of church</label>
+            <input type="text" id="church_name" name="church_name" class="form-control">
+            <label for="church_adress_line">Address Line 1</label>
+            <input type="text" id="church_address_line" name="church_address_line" class="form-control">
+            <label for="church_address_line2">Address Line 2</label>
+            <input type="text" id="church_address_line2" name="church_address_line2" class="form-control">
+            <label for="church_city">City</label>
+            <input type="text" id="church_city" name="church_city" class="form-control">
+            <label for="church_province">Province</label>
+            <input type="text" id="church_province" name="church_province" class="form-control">
+            <label for="church_postal_code">Postal Code</label>
+            <input type="text" id="church_postal_code" name="church_postal_code" class="form-control">
+            <label for="church_country">Country</label>
+            <input type="text" id="church_country" name="church_country" class="form-control">
+          </fieldset>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button id="saveChurchBtn" type="button" class="btn btn-primary">Save Church</button>
         </div>
       </div>
     </div>
-
-    <div class="modal fade" id="addObservationModal" aria-hidden="true">
-      <div class="modal-dialog  modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Add Observation</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <fieldset id="observationFieldset" class="observation-field">
-              <label>Commenter</label>
-              <input type="text" id="commenter" name="commenter" class="form-control">
-              <label>Comment</label>
-              <input type="textarea" id="comment" name="comment" class="form-control">
-            </fieldset>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button id="saveObservationBtn" type="button" class="btn btn-primary">Save Observation</button>
-          </div>
+  </div>
+  <div class="modal fade" id="addObservationModal" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Observation</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <fieldset id="observationFieldset" class="observation-field">
+            <label>Commenter</label>
+            <input type="text" id="commenter" name="commenter" class="form-control">
+            <label>Comment</label>
+            <input type="textarea" id="comment" name="comment" class="form-control">
+          </fieldset>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button id="saveObservationBtn" type="button" class="btn btn-primary">Save Observation</button>
         </div>
       </div>
     </div>
-  </form>
-
-</div>
+  </div>
+</form>
