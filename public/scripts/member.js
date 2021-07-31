@@ -126,10 +126,6 @@ $(document).ready(function () {
         $('#mobile_error').text('')
     }
 
-    if(isValid) {
-        $('#create-member-form').submit()
-    }
-
     return isValid
   }
 
