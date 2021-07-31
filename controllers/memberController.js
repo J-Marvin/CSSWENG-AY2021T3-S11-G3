@@ -161,11 +161,9 @@ const memberController = {
    */
   postUpdateMember: function (req, res) {
     let errors = validationResult(req)
-    console.log("TEST")
     if (!errors.isEmpty()) {
       errors = errors.errors
 
-      console.log(errors)
       let msg = ''
 
       errors.forEach((error) => {
@@ -212,7 +210,6 @@ const memberController = {
       data.member[memberFields.CIVIL_STATUS] = req.body.civil_status
       data.member[memberFields.SEX] = req.body.sex
 
-      console.log(data)
       db.update(db.tables.PERSON_TABLE, data.person, personCondition, function (result) {
         if (!result) {
           res.send(false)
@@ -222,7 +219,6 @@ const memberController = {
               res.send(false)
             } else {
               db.update(db.tables.MEMBER_TABLE, data.member, memberCondition, function (result) {
-                console.log(result)
                 if (result) {
                   res.send(true)
                 } else {
