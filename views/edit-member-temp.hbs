@@ -149,6 +149,22 @@
     <label for="skills">Skills</label>
     <input type="textarea" id="skills" name="skills" class="form-control" value="{{member.skills}}">
 
+    {{!-- Temp div to list churches and observations--}}
+    <div class="row mt-3">
+      <h4>Churches</h4>
+      <div id="churchList"> {{!-- Please use the same id when replacing the divs--}}
+        {{#each churches}}
+          {{>church this}}
+        {{/each}}
+      </div>
+      <h4>Observations</h4>
+      <div id="observationList">
+        {{#each observations}}
+          {{>observation this}}
+        {{/each}}
+      </div>
+
+    </div>
     <div class="row mt-3">
       <div class="col-2">
         <button type="button" class="btn btn-primary" id="addChurchBtn"> Add Church </button>

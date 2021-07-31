@@ -1,12 +1,10 @@
-const path = require('path')
-
-const db = require(path.join(__dirname, '../models/db.js'))
-const personFields = require(path.join(__dirname, '../models/person'))
-const prenupRecordFields = require(path.join(__dirname, '../models/prenupRecord'))
-const coupleFields = require(path.join(__dirname, '../models/couple'))
-const { Condition, queryTypes } = require(path.join(__dirname, '../models/condition'))
+const db = require('../models/db')
+const personFields = require('../models/person')
+const prenupRecordFields = require('../models/prenupRecord')
+const coupleFields = require('../models/couple')
+const { Condition, queryTypes } = require('../models/condition')
 const { validationResult } = require('express-validator')
-const memberFields = require(path.join(__dirname, '../models/members'))
+const memberFields = require('../models/members')
 
 const prenupController = {
   /**
