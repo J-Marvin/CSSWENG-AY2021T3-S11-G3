@@ -63,7 +63,6 @@ const memberController = {
             db.find(db.tables.OBSERVATION_TABLE, observationCondition, null, '*', function (result) {
               if (result) {
                 data.observations = result
-                console.log(data)
                 res.render('edit-member-temp', data)
               }
             })
@@ -161,76 +160,80 @@ const memberController = {
    * @param res - the result to be sent out after processing the request
    */
   postUpdateMember: function (req, res) {
-    const data = {
-      person: {},
-      address: {},
-      member: {},
-      observations: []
-    }
+    let errors = validationResult(req)
+    console.log(errors)
+    if (!errors.isEmpty()) {
+      errors = errors.errors
 
-    const addressCondition = new Condition(queryTypes.where)
-    addressCondition.setKeyValue(addressFields.ID, req.body.address_id)
-    const personCondition = new Condition(queryTypes.where)
-    personCondition.setKeyValue(personFields.ID, req.body.person_id)
-    const memberCondition = new Condition(queryTypes.where)
-    memberCondition.setKeyValue(memberFields.ID, req.body.member_id)
+      console.log(errors)
+      let msg = ''
 
-    data.person[personFields.FIRST_NAME] = req.body.first_name
-    data.person[personFields.MID_NAME] = req.body.middle_name
-    data.person[personFields.LAST_NAME] = req.body.last_name
+      errors.forEach((error) => {
+        msg += error.msg + '\n'
+      })
 
-    data.address[addressFields.ADDRESS_LINE] = req.body.address_line
-    data.address[addressFields.ADDRESS_LINE2] = req.body.address_line2
-    data.address[addressFields.CITY] = req.body.city
-    data.address[addressFields.PROVINCE] = req.body.province
-    data.address[addressFields.POSTAL_CODE] = req.body.postal_code
-    data.address[addressFields.COUNTRY] = req.body.country
-
-    data.member[memberFields.AGE] = req.body.age
-    data.member[memberFields.BIRTHDAY] = req.body.birthday
-    data.member[memberFields.OCCUPATION] = req.body.occupation
-    data.member[memberFields.WORKPLACE] = req.body.workplace
-    data.member[memberFields.EMAIL] = req.body.email
-    data.member[memberFields.MOBILE] = req.body.mobile
-    data.member[memberFields.EDUCATIONAL_ATTAINMENT] = req.body.educational_attainment
-    data.member[memberFields.ALMA_MATER] = req.body.alma_mater
-    data.member[memberFields.SKILLS] = req.body.skills
-    data.member[memberFields.MEMBER_STATUS] = req.body.membership_status
-    data.member[memberFields.CIVIL_STATUS] = req.body.civil_status
-    data.member[memberFields.SEX] = req.body.sex
-    data.observations = JSON.parse(req.body.observations)
-
-    console.log(data)
-    console.log(req.body)
-
-    db.update(db.tables.PERSON_TABLE, data.person, personCondition, function (result) {
-      if (!result) {
-        res.send(false)
-      } else {
-        db.update(db.tables.ADDRESS_TABLE, data.address, addressCondition, function (result) {
-          if (!result) {
-            res.send(false)
-          } else {
-            db.update(db.tables.MEMBER_TABLE, data.member, memberCondition, function (result) {
-              console.log(result)
-              if (result) {
-                if (data.observations.length > 0) {
-                  db.insert(db.tables.OBSERVATION_TABLE, data.observations, function (result) {
-                    if (result) {
-                      res.send(true)
-                    } else res.send(false)
-                  })
-                } else {
-                  res.send(true)
-                }
-              }
-            })
-          }
-        })
+      res.send(msg)
+    } else {
+      const data = {
+        person: {},
+        address: {},
+        member: {},
+        observations: []
       }
-    })
 
-    res.send(true)
+      const addressCondition = new Condition(queryTypes.where)
+      addressCondition.setKeyValue(addressFields.ID, req.body.address_id)
+      const personCondition = new Condition(queryTypes.where)
+      personCondition.setKeyValue(personFields.ID, req.body.person_id)
+      const memberCondition = new Condition(queryTypes.where)
+      memberCondition.setKeyValue(memberFields.ID, req.body.member_id)
+
+      data.person[personFields.FIRST_NAME] = req.body.first_name
+      data.person[personFields.MID_NAME] = req.body.middle_name
+      data.person[personFields.LAST_NAME] = req.body.last_name
+
+      data.address[addressFields.ADDRESS_LINE] = req.body.address_line
+      data.address[addressFields.ADDRESS_LINE2] = req.body.address_line2
+      data.address[addressFields.CITY] = req.body.city
+      data.address[addressFields.PROVINCE] = req.body.province
+      data.address[addressFields.POSTAL_CODE] = req.body.postal_code
+      data.address[addressFields.COUNTRY] = req.body.country
+
+      data.member[memberFields.AGE] = req.body.age
+      data.member[memberFields.BIRTHDAY] = req.body.birthday
+      data.member[memberFields.OCCUPATION] = req.body.occupation
+      data.member[memberFields.WORKPLACE] = req.body.workplace
+      data.member[memberFields.EMAIL] = req.body.email
+      data.member[memberFields.MOBILE] = req.body.mobile
+      data.member[memberFields.EDUCATIONAL_ATTAINMENT] = req.body.educational_attainment
+      data.member[memberFields.ALMA_MATER] = req.body.alma_mater
+      data.member[memberFields.SKILLS] = req.body.skills
+      data.member[memberFields.MEMBER_STATUS] = req.body.membership_status
+      data.member[memberFields.CIVIL_STATUS] = req.body.civil_status
+      data.member[memberFields.SEX] = req.body.sex
+
+      console.log(data)
+      db.update(db.tables.PERSON_TABLE, data.person, personCondition, function (result) {
+        if (!result) {
+          res.send(false)
+        } else {
+          db.update(db.tables.ADDRESS_TABLE, data.address, addressCondition, function (result) {
+            if (!result) {
+              res.send(false)
+            } else {
+              db.update(db.tables.MEMBER_TABLE, data.member, memberCondition, function (result) {
+                console.log(result)
+                if (result) {
+                  res.send(true)
+                } else {
+                  res.send(false)
+                }
+              })
+            }
+          })
+        }
+      })
+    }
   },
   /**
    * This function deletes a row in the members table

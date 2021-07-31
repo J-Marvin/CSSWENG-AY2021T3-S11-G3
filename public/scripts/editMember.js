@@ -8,44 +8,147 @@ $(document).ready(function () {
   const churchModal = $('#addChurchModal')
   const observationModal = $('#addObservationModal')
 
-  $('#submitbtn').click(function() {
-    
-    const data = {
-      member_id: $('#member_id').text(),
-      first_name: $('#first_name').val(),
-      middle_name: $('#mid_name').val(),
-      last_name: $('#last_name').val(),
-      age: $('#age').val(),
-      birthday: $('#birthday').val(),
-      occupation: $('#occupation').val(),
-      membership_status: $('#membership_status').val(),
-      civil_status: $('#civil_status').val(),
-      sex: $('#sex').val(),
-      address_line: $('#address_line').val(),
-      barangay: $('#barangay').val(),
-      city: $('#city').val(),
-      province: $('#province').val(),
-      workplace: $('#workplace').val(),
-      email: $('#email').val(),
-      telephone: $('#telephone').val(),
-      mobile: $('#mobile').val(),
-      educational_attainment: $('#educational_attainment').val(),
-      alma_mater: $('#alma_mater').val(),
-      family_members: $('#family_members').val(),
-      skills: $('#skills').val(),
-      member_id: $('#member_info').attr('data-member'),
-      address_id: $('#member_info').attr('data-address'),
-      person_id: $('#member_info').attr('data-person')
+  function validateEmail(email) {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    return re.test(String(email).toLowerCase());
+  }
+
+  function validateMobile(number) {
+    const re = /\d{4}\s?-?\d{3}\s?-?\d{4}/
+    return re.test(number);
+  }
+
+  function validateFields() {
+    var isValid = true
+    var errors = ''
+
+    // if(validator.isEmpty($('#first_name').val())) {
+    //     errors = errors + 'pls fill out first name\n'
+    //     isValid = false
+    // }
+
+    // if(validator.isEmpty($('#mid_name').val())) {
+    //     errors = errors + 'pls fill out middle name\n'
+    //     isValid = false
+    // }
+
+    // if(validator.isEmpty($('#last_name').val())) {
+    //     errors = errors + 'pls fill out last name\n'
+    //     isValid = false
+    // }
+
+    // if(validator.isEmpty($('#age').val())) {
+    //     errors = errors + 'pls fill out age\n'
+    //     isValid = false
+    // } else if (validator.isNumeric($('#age').val())) {
+    //     errors = errors + 'age must only consist of numbers\n'
+    //     isValid = false
+    // }
+
+    // if(validator.isEmpty($('#birthday').val())) {
+    //     errors = errors + 'pls fill out birthday\n'
+    //     isValid = false
+    // }
+
+    // if(validator.isEmpty($('#occupation').val())) {
+    //     errors = errors + 'pls fill out occupation\n'
+    //     isValid = false
+    // }
+
+    // if(validator.isEmpty($('#membership_status').val())) {
+    //     errors = errors + 'pls fill out first mem status\n'
+    //     isValid = false
+    // }
+
+    // if(validator.isEmpty($('#civil_status').val())) {
+    //     errors = errors + 'pls fill out civil status\n'
+    //     isValid = false
+    // }
+
+    // if(validator.isEmpty($('#sex').val())) {
+    //     errors = errors + 'pls fill out sex\n'
+    //     isValid = false
+    // }
+
+    // if(validator.isEmpty($('#address_line').val())) {
+    //     errors = errors + 'pls fill out address line\n'
+    //     isValid = false
+    // }
+
+    // if(validator.isEmpty($('#city').val())) {
+    //     errors = errors + 'pls fill out city\n'
+    //     isValid = false
+    // }
+
+    // if(validator.isEmpty($('#workplace').val())) {
+    //     errors = errors + 'pls fill out workplace\n'
+    //     isValid = false
+    // }
+
+    // if(validator.isEmpty($('#email').val())) {
+    //     errors = errors + 'pls fill out email\n'
+    //     isValid = false
+    // } else if (!validateEmail($('#email').val())) {
+    //     errors = errors + 'pls provide valid email\n'
+    //     isValid = false
+    // }
+
+    if (validator.isEmpty($('#mobile').val())) {
+      errors = errors + 'pls fill out mobile\n'
+      isValid = false
+    } else if (!validateMobile($('#mobile').val())) {
+      errors = errors + 'pls provide valid mobile number\n'
+      isValid = false
     }
 
-    $.ajax({
-      type: "POST",
-      data: data,
-      url: "/update_member",
-      success: function(result) {
-        alert(result)
+    if(!isValid)
+      alert(errors)
+
+    return isValid
+  }
+
+  $('#edit-member').click(function() {
+    
+    if (validateFields()) {
+      const data = {
+        member_id: $('#member_id').text(),
+        first_name: $('#first_name').val(),
+        middle_name: $('#mid_name').val(),
+        last_name: $('#last_name').val(),
+        age: $('#age').val(),
+        birthday: $('#birthday').val(),
+        occupation: $('#occupation').val(),
+        membership_status: $('#membership_status').val(),
+        civil_status: $('#civil_status').val(),
+        sex: $('#sex').val(),
+        address_line: $('#address_line').val(),
+        barangay: $('#barangay').val(),
+        city: $('#city').val(),
+        province: $('#province').val(),
+        workplace: $('#workplace').val(),
+        email: $('#email').val(),
+        telephone: $('#telephone').val(),
+        mobile: $('#mobile').val(),
+        educational_attainment: $('#educational_attainment').val(),
+        alma_mater: $('#alma_mater').val(),
+        family_members: $('#family_members').val(),
+        skills: $('#skills').val(),
+        member_id: $('#member_info').attr('data-member'),
+        address_id: $('#member_info').attr('data-address'),
+        person_id: $('#member_info').attr('data-person')
       }
-    })
+        $.ajax({
+          type: "POST",
+          data: data,
+          url: "/update_member",
+          success: function (result) {
+            if (result === true)
+              alert("Changes saved")
+            else alert(result)
+          }
+        })
+
+    } 
     
   })
 
@@ -185,7 +288,6 @@ $(document).ready(function () {
   })
 
   $(document).on('click', '.editChurchBtn', function () {
-    // ADD SPAN IN HBS FILE
     const church_name = $(this).siblings('.church_name').text()
     const address_line = $(this).siblings('.church_address_line').text()
     const address_line2 = $(this).siblings('.church_address_line2').text()
