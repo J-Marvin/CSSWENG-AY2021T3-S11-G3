@@ -25,6 +25,8 @@ app.get('/edit_member/:member_id/add_prenup', prenupController.getPrenupPage)
 
 app.post('/login', loginController.postLogIn)
 app.post('/add_member', validation.addMemberValidation(), memberController.createMember)
+app.post('/create_prenup', validation.addPrenupValidation(), prenupController.createPrenup)
+app.post('/create_prenup_member', validation.addMemberPrenupValid(), prenupController.createMemberPrenup)
 app.post('/update_member', validation.addMemberValidation(), memberController.postUpdateMember)
 app.post('/add_church', validation.churchValidation(), churchController.postAddChurch)
 app.post('/add_observation', validation.observationValidation(), observationController.postAddObservation)
