@@ -18,8 +18,6 @@ app.get('/logout', indexController.getLogoutPage)
 app.get('/login', indexController.getMainPage)
 app.get('/member_main_page', indexController.getMemberMainPage)
 app.get('/add_member', memberController.getAddMemberPage)
-app.get('/add_prenup', prenupController.getPrenup)
-
 app.get('/edit_member/:member_id', memberController.getEditMember)
 app.get('/forms_main_page', indexController.getFormsMainPage)
 app.get('/add_prenup', prenupController.getPrenupPage)
@@ -27,14 +25,16 @@ app.get('/edit_member/:member_id/add_prenup', prenupController.getPrenupPage)
 
 app.post('/login', loginController.postLogIn)
 app.post('/add_member', validation.addMemberValidation(), memberController.createMember)
-app.post('/add_prenup', prenupController.createPrenup)
 app.post('/update_member', validation.addMemberValidation(), memberController.postUpdateMember)
 app.post('/add_church', validation.churchValidation(), churchController.postAddChurch)
 app.post('/add_observation', validation.observationValidation(), observationController.postAddObservation)
+app.post('/create_prenup', validation.addPrenupValidation(), prenupController.createPrenup)
+app.post('/create_prenup_member', validation.addMemberPrenupValid(), prenupController.createMemberPrenup)
 
 app.put('/update_observation', validation.observationValidation(), observationController.putUpdateObservation)
 app.put('/update_church', validation.churchValidation(), churchController.putUpdateChurch)
 
 app.delete('/delete_observation', observationController.delObservation)
 app.delete('/delete_church', churchController.delChurch)
+
 module.exports = app

@@ -1,6 +1,5 @@
 {{>navbar}}
 <script>
-
   function display_div_bride (status) {
     
     if(status === "bride_non_member") {
@@ -8,68 +7,118 @@
       document.getElementById("bride_member").checked = false
       document.getElementById("bride_member").removeAttribute("disabled")
       document.getElementById("bride_non_member").setAttribute("disabled", "disabled")
+      $("#prenup_form").attr('action', '/create_prenup')
+      
     }
     else {
       document.getElementById("bride_non_member_div").style.display = "none"
       document.getElementById("bride_non_member").checked = false
       document.getElementById("bride_non_member").removeAttribute("disabled")
       document.getElementById("bride_member").setAttribute("disabled", "disabled")
+      $("#prenup_form").attr('action', '/create_prenup_member')
     }
     document.getElementById(status + "_div").style.display = "block"
-
   }
-
   function display_div_groom (status) {
-
     if(status === "groom_non_member") {
       document.getElementById("groom_member_div").style.display = "none"
       document.getElementById("groom_member").checked = false
       document.getElementById("groom_member").removeAttribute("disabled")
       document.getElementById("groom_non_member").setAttribute("disabled", "disabled")
+      $("#prenup_form").attr('action', '/create_prenup')
     }
     else {
       document.getElementById("groom_non_member_div").style.display = "none"
       document.getElementById("groom_non_member").checked = false
       document.getElementById("groom_non_member").removeAttribute("disabled")
       document.getElementById("groom_member").setAttribute("disabled", "disabled")
+      $("#prenup_form").attr('action', '/create_prenup_member')
     }
     document.getElementById(status + "_div").style.display = "block"
-
   }
-
 </script>
 
 <h1> {{Origin}} </h1>
 
-<form action="/add_member" method="POST" class="container"> 
+<form id="prenup_form" action="/create_prenup_member" method="POST" class="container"> 
 
   <input type="checkbox" id="bride_non_member" onclick="display_div_bride('bride_non_member')"> BRIDE NON
   <input type="checkbox" id="bride_member" onclick="display_div_bride('bride_member')" checked disabled> BRIDE MEM
 
-    <label for="bride_mid_name">Middle Name</label>
-    <input type="text" id="mid_name" name="bride_mid_name" class="form-control">
+  <div id="bride_member_div" style="display:block">
+    <label>Select Bride</label>
+    <select name="input_bride_member" id="input_bride_member" class="form-select">
+      {{!-- checks if the names length is only 1 (i.e. brideNames.length == 1), function is in helpers/hbsHelper.js--}}
+      {{#if (isLengthOne brideNames.length)}}
+        {{> oneDropdownBride brideNames=brideNames}}
+      {{else}}
+        {{> dropdownBride brideNames=brideNames}}
+      {{/if}}
+    </select>
+  </div>
 
-    <label for="bride_last_name">Last Name</label>
-    <input type="text" id="last_name" name="bride_last_name"class="form-control">
+  <fieldset class="form-group" id="bride_non_member_div" style="display:none">
+    <legend>Bride</legend>
+    <div class="div">
+      <div class="row">
+        <div class="col">
+          <label for="bride_first_name">First Name</label>
+          <input type="text" id="first_name" name="bride_first_name" class="form-control">
+        </div>
+        <div class="col">
+          <label for="bride_mid_name">Middle Name</label>
+          <input type="text" id="mid_name" name="bride_mid_name" class="form-control">
+        </div>
+        <div class="col">
+          <label for="bride_last_name">Last Name</label>
+          <input type="text" id="last_name" name="bride_last_name"class="form-control">
+        </div>
+      </div>
+    </div>
   </fieldset>
   
-  <fieldset class="form-group">
+  <input type="checkbox" id="groom_non_member" onclick="display_div_groom('groom_non_member')"> GROOM NON
+  <input type="checkbox" id="groom_member" onclick="display_div_groom('groom_member')" checked disabled> GROOM MEM
+
+  <div id="groom_member_div" style="display:block">
+    <label>Select Groom</label>
+    <select name="input_groom_member" id="input_groom_member" class="form-select">
+      {{!-- checks if the names length is only 1 (i.e. groomNames.length == 1), function is in helpers/hbsHelper.js--}}
+      {{#if (isLengthOne groomNames.length)}}
+        {{> oneDropdownGroom groomNames=groomNames}}
+      {{else}}
+        {{> dropdownGroom groomNames=groomNames}}
+      {{/if}}
+    </select>
+  </div>
+  
+  <fieldset class="form-group" id="groom_non_member_div" style="display:none">
     <legend>Groom</legend>
-    <label for="groom_first_name">First Name</label>
-    <input type="text" id="groom_first_name" name="groom_first_name" class="form-control">
-
-    <label for="groom_mid_name">Middle Name</label>
-    <input type="text" id="groom_mid_name" name="groom_mid_name" class="form-control">
-
-    <label for="groom_last_name">Last Name</label>
-    <input type="text" id="groom_last_name" name="groom_last_name"class="form-control">
+    <div class="div">
+      <div class="row">
+        <div class="col">
+          <label for="groom_first_name">First Name</label>
+          <input type="text" id="groom_first_name" name="groom_first_name" class="form-control">
+        </div>
+        <div class="col">
+          <label for="groom_mid_name">Middle Name</label>
+          <input type="text" id="groom_mid_name" name="groom_mid_name" class="form-control">
+        </div>
+        <div class="col">
+          <label for="groom_last_name">Last Name</label>
+          <input type="text" id="groom_last_name" name="groom_last_name"class="form-control">
+        </div>
+      </div>
+    </div>
   </fieldset>
 
+  <br>
+
   <label for="current_date">Current date</label>
-  <input type="text" id="current_date" name="current_date" class="form-control">
+  <input type="date" id="current_date" name="current_date" class="form-control">
 
   <label for="wedding_date">Wedding date</label>
-  <input type="text" id="wedding_date" name="wedding_date" class="form-control">
+  <input type="date" id="wedding_date" name="wedding_date" class="form-control">
   
   <button type="submit" class="btn-primary">Submit</button>
 

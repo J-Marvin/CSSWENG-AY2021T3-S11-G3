@@ -25,52 +25,52 @@ const controller = {
     // db.find(db.tables.PERSON_TABLE, queries, [], '*', function (result) {
     //   console.log(result)
     // })
-    let joinTables = []
-    // boolean variable indicating which partner, male or female
-    const partner = false // req.query.partnerBool
-    // if male
-    if (partner === true) {
-      joinTables = [
-        {
-          tableName: db.tables.COUPLE_TABLE,
-          sourceCol: db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.COUPLE,
-          destCol: db.tables.COUPLE_TABLE + '.' + coupleFields.ID
-        },
-        {
-          tableName: db.tables.PERSON_TABLE,
-          sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.MALE,
-          destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
-        }
-      ]
-    // else if female
-    } else {
-      joinTables = [
-        {
-          tableName: db.tables.COUPLE_TABLE,
-          sourceCol: db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.COUPLE,
-          destCol: db.tables.COUPLE_TABLE + '.' + coupleFields.ID
-        },
-        {
-          tableName: db.tables.PERSON_TABLE,
-          sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE,
-          destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
-        }
-      ]
-    }
-    const conditions = []
-    const c = new Condition(queryTypes.where)
-    c.setQueryObject({
-      record_id: 4000001 // req.query.id
-    })
+    // let joinTables = []
+    // // boolean variable indicating which partner, male or female
+    // const partner = false // req.query.partnerBool
+    // // if male
+    // if (partner === true) {
+    //   joinTables = [
+    //     {
+    //       tableName: db.tables.COUPLE_TABLE,
+    //       sourceCol: db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.COUPLE,
+    //       destCol: db.tables.COUPLE_TABLE + '.' + coupleFields.ID
+    //     },
+    //     {
+    //       tableName: db.tables.PERSON_TABLE,
+    //       sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.MALE,
+    //       destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
+    //     }
+    //   ]
+    // // else if female
+    // } else {
+    //   joinTables = [
+    //     {
+    //       tableName: db.tables.COUPLE_TABLE,
+    //       sourceCol: db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.COUPLE,
+    //       destCol: db.tables.COUPLE_TABLE + '.' + coupleFields.ID
+    //     },
+    //     {
+    //       tableName: db.tables.PERSON_TABLE,
+    //       sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE,
+    //       destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
+    //     }
+    //   ]
+    // }
+    // const conditions = []
+    // const c = new Condition(queryTypes.where)
+    // c.setQueryObject({
+    //   record_id: 4000001 // req.query.id
+    // })
 
-    conditions.push(c)
-    db.find(db.tables.PRENUPTIAL_TABLE, conditions, joinTables, '*', function (result) {
-      if (result !== false) {
-        console.log(result)
-        // res.send(result)
-        // res.render('', result)
-      }
-    })
+    // conditions.push(c)
+    // db.find(db.tables.PRENUPTIAL_TABLE, conditions, joinTables, '*', function (result) {
+    //   if (result !== false) {
+    //     console.log(result)
+    //     // res.send(result)
+    //     // res.render('', result)
+    //   }
+    // })
 
     res.render('index')
   },
