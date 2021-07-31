@@ -37,8 +37,6 @@ const churchController = {
     church[churchFields.NAME] = req.body.church_name
     church[churchFields.MEMBER] = req.body.member_id
 
-    console.log(church)
-    console.log(address)
     db.insert(db.tables.ADDRESS_TABLE, address, function (result) {
       if (result) {
         church[churchFields.ADDRESS] = result[0]
@@ -68,6 +66,63 @@ const churchController = {
         res.send(false)
       }
     })
+  },
+
+  delChurch: function (req, res) {
+    const condition = new Condition(queryTypes.where)
+    condition.setKeyValue(churchFields.ID, req.body.church_id)
+    const addressCond = new Condition(queryTypes.where)
+    addressCond.setKeyValue(addressFields.ID, req.body.address_id)
+
+    db.delete(db.tables.CHURCH_TABLE, condition, function (result) {
+      if (result) {
+        db.delete(db.tables.ADDRESS_TABLE, addressCond, function (result) {
+          if (result) {
+            res.send(true)
+          } else {
+            res.send(false)
+          }
+        })
+      } else {
+        res.send(false)
+      }
+    })
+  },
+
+  putUpdateChurch: function (req, res) {
+    const church = {}
+    const address = {}
+
+    const churchCond = new Condition(queryTypes.where)
+    const addressCond = new Condition(queryTypes.where)
+
+    churchCond.setKeyValue(churchFields.ID, req.body.church_id)
+    addressCond.setKeyValue(addressFields.ID, req.body.address_id)
+
+    address[addressFields.ADDRESS_LINE] = req.body.address_line
+    address[addressFields.ADDRESS_LINE2] = req.body.address_line2
+    address[addressFields.CITY] = req.body.city
+    address[addressFields.PROVINCE] = req.body.province
+    address[addressFields.POSTAL_CODE] = req.body.postal_code
+    address[addressFields.COUNTRY] = req.body.country
+
+    church[churchFields.NAME] = req.body.church_name
+
+    db.update(db.tables.CHURCH_TABLE, church, churchCond, function (result) {
+      if (result) {
+        db.update(db.tables.ADDRESS_TABLE, address, addressCond, function (result) {
+          console.log(result)
+          if (result) {
+            res.send(true)
+          } else {
+            res.send(false)
+          }
+        })
+      } else {
+        res.send(false)
+      }
+    })
+
   }
 }
 

@@ -29,4 +29,10 @@ app.post('/add_prenup', prenupController.createPrenup)
 app.post('/update_member', memberController.postUpdateMember)
 app.post('/add_church', churchController.postAddChurch)
 app.post('/add_observation', observationController.postAddObservation)
+
+app.put('/update_observation', observationController.putUpdateObservation)
+app.put('/update_church', churchController.putUpdateChurch)
+
+app.delete('/delete_observation', observationController.delObservation)
+app.delete('/delete_church', churchController.delChurch)
 module.exports = app

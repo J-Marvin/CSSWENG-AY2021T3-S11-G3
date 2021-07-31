@@ -1,5 +1,13 @@
 $(document).ready(function () {
-  
+  let addObservation = false
+  let addChurch = false
+  let editObservationId = null
+  let editChurchId = null
+  let editChurchAddressId = null
+  let parentDiv = null
+  const churchModal = $('#addChurchModal')
+  const observationModal = $('#addObservationModal')
+
   $('#submitbtn').click(function() {
     
     const data = {
@@ -30,45 +38,6 @@ $(document).ready(function () {
       person_id: $('#member_info').attr('data-person')
     }
 
-    const observations = $('.observation-field').toArray()
-    data.observations = []
-    for (const commentField of observations) {
-      const comment_id = $(commentField).attr('data-comment').val()
-      const comment = $(commentField).find('#comment').val()
-      const commenter = $(commentField).find('#commenter').val()
-      if(!validator.isEmpty(comment))
-        data.observations.push({
-          comment: comment, 
-          observer: commenter, 
-          observee_id: data.member_id,
-          comment_id: comment_id
-        })
-    }
-    data.observations = JSON.stringify(data.observations)
-
-    data.churches = []
-
-    const churches = $('.church-fieldset').toArray()
-    data.churches = []
-
-    for(const churchFieldset of churches) {
-      const church = {}
-      church.address = {}
-      church.church_name = $(churchFieldset).find('#church_name').val()
-      church.address.address_line = $(churchFieldset).find('#church_address_line').val()
-      church.address.address_line2 = $(churchFieldset).find('#church_address_line2').val()
-      church.address.city = $(churchFieldset).find('#church_city').val()
-      church.address.province = $(churchFieldset).find('#church_province').val()
-      church.address.postal_code = $(churchFieldset).find('#church_postal_code').val()
-      church.address.country = $(churchFieldset).find('#church_country').val()
-      church.church_id = $(churchFieldset).attr('data-church')
-      church.address_id = $(churchFieldset).attr('data-address')
-      
-      data.churches.push(church)
-    }
-
-    data.churches = JSON.stringify(data.churches)
-
     $.ajax({
       type: "POST",
       data: data,
@@ -81,13 +50,15 @@ $(document).ready(function () {
   })
 
   $('#addChurchBtn').click(function() {
-    const fields = $('#addChurchModal').find('input').val("")
-
-    $('#addChurchModal').modal('show')
+    const fields = $(churchModal).find('input').val("")
+    addChurch = true
+    editChurchId = null
+    parentDiv = null
+    $(churchModal).modal('show')
   })
 
   $('#saveChurchBtn').click(function() {
-    const churchFieldset = $('#churchFieldSet')
+    const churchFieldset = $('#churchFieldset')
     const church = {}
     church.church_name = $(churchFieldset).find('#church_name').val()
     church.address_line = $(churchFieldset).find('#church_address_line').val()
@@ -98,19 +69,42 @@ $(document).ready(function () {
     church.country = $(churchFieldset).find('#church_country').val()
     church.member_id = $('#member_info').attr('data-member')
 
-    $.ajax({
-      type: "POST",
-      data: church,
-      url: "/add_church",
-      success: function (result) {
-        $('#churchList').append(result)
-        $('#addChurchModal').modal('hide')
-      }
-    })
+    if(addChurch) {
+      $.ajax({
+        type: "POST",
+        data: church,
+        url: "/add_church",
+        success: function (result) {
+          $('#churchList').append(result)
+          $(churchModal).modal('hide')
+        }
+      })
+    } else {
+      church.church_id = editChurchId
+      church.address_id = editChurchAddressId
+
+      $.ajax({
+        type: "PUT",
+        data: church,
+        url: "/update_church",
+        success: function (result) {
+          if(result) {
+            $(parentDiv).find('.church_name').text(church.church_name)
+            $(parentDiv).find('.church_address_line').text(church.address_line)
+            $(parentDiv).find('.church_address_line2').text(church.address_line2)
+            $(parentDiv).find('.church_city').text(church.city)
+            $(parentDiv).find('.church_province').text(church.province)
+            $(parentDiv).find('.church_postal_code').text(church.postal_code)
+            $(parentDiv).find('.church_country').text(church.country)
+
+            $(churchModal).modal('hide')
+          }
+        }
+      })
+    }
   })
 
   $('#saveObservationBtn').click(function() {
-    alert("TEST")
     const observationFieldset = $('#observationFieldset')
     const observation = {}
 
@@ -118,25 +112,130 @@ $(document).ready(function () {
     observation.comment = $(observationFieldset).find('#comment').val()
     observation.observee = $('#member_info').attr('data-member')
 
+    if (addObservation) {
+      $.ajax({
+        type: "POST",
+        data: observation,
+        url: "/add_observation",
+        success: function (result) {
+          $('#observationList').append(result)
+          $(observationModal).modal('hide')
+        }
+      })
+    } else {
+      observation.observation_id = editObservationId
+      $.ajax({
+        type: "PUT",
+        data: observation,
+        url: "/update_observation",
+        success: function (result) {
+          if(result) {
+            $(parentDiv).find('.comment').text(observation.comment)
+            $(parentDiv).find('.observer').text(observation.observer)
+            $(observationModal).modal('hide')
+          } else {
+            alert("FAILED")
+          }
+        }
+      })
+    }
+  })
+
+  $('#addObservationBtn').click(function() {
+    const fields = $(observationModal).find('input').val("")
+    addObservation = true
+    editObservationId = null
+    parentDiv = null
+    $(observationModal).modal('show')
+  })
+
+  $(document).on('click', '.editObservationBtn', function () {
+    const comment = $(this).siblings('.comment').text()
+    const observer = $(this).siblings('.observer').text()
+
+    const observationFieldset = $('#observationFieldset')
+
+    editObservationId = $(this).closest('div').attr('data-observation')
+    parentDiv = $(this).closest('div')
+    addObservation = false
+
+    $(observationFieldset).find('#comment').val(comment)
+    $(observationFieldset).find('#commenter').val(observer)
+
+    $(observationModal).modal('show')
+  });
+
+  $(document).on('click', '.delObservationBtn', function () {
+    const data = {}
+    const parent = $(this).closest('div')
+    data.observation_id = $(this).closest('div').attr('data-observation')
     $.ajax({
-      type: "POST",
-      data: observation,
-      url: "/add_observation",
+      type: "DELETE",
+      data: data,
+      url: "/delete_observation",
       success: function (result) {
-        $('#observationList').append(result)
-        $('#addObservationModal').modal('hide')
+        console.log(result)
+        if (result) {
+          parent.remove()
+        } else {
+          alert("FAILED")
+        }
       }
     })
   })
 
-  $('#addObservationBtn').click(function() {
-    const fields = $('#addObservationModal').find('input')
+  $(document).on('click', '.editChurchBtn', function () {
+    // ADD SPAN IN HBS FILE
+    const church_name = $(this).siblings('.church_name').text()
+    const address_line = $(this).siblings('.church_address_line').text()
+    const address_line2 = $(this).siblings('.church_address_line2').text()
+    const city = $(this).siblings('.church_city').text()
+    const province = $(this).siblings('.church_province').text()
+    const country = $(this).siblings('.church_country').text()
+    const postal_code = $(this).siblings('.church_postal_code').text()
 
-    // clear all fields of modal
-    for (field of fields) {
-      $(field).val("")
-    }
+    const churchFieldset = $('#churchFieldset')
 
-    $('#addObservationModal').modal('show')
+    editChurchId = $(this).closest('div').attr('data-church')
+    editChurchAddressId = $(this).closest('p').attr('data-address')
+    parentDiv = $(this).closest('div')
+    addChurch = false
+
+    $(churchFieldset).find('#church_name').val(church_name)
+    $(churchFieldset).find('#church_address_line').val(address_line)
+    $(churchFieldset).find('#church_address_line2').val(address_line2)
+    $(churchFieldset).find('#church_city').val(city)
+    $(churchFieldset).find('#church_province').val(province)
+    $(churchFieldset).find('#church_postal_code').val(postal_code)
+    $(churchFieldset).find('#church_country').val(country)
+
+    $(churchModal).modal('show')
   })
+
+  $(document).on('click', '.delChurchBtn', function () {
+    const data = {}
+    const parent = $(this).closest('div')
+    data.church_id = $(this).closest('div').attr('data-church')
+    data.address_id = $(this).closest('p').attr('data-address')
+
+    alert(data.church_id)
+
+    $.ajax({
+      type: "DELETE",
+      data: data,
+      url: "/delete_church",
+      success: function (result) {
+        console.log(result)
+        if (result) {
+          parent.remove()
+        } else {
+          alert("FAILED")
+        }
+      }
+    })
+  })
+
+  
+
+
 })
