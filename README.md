@@ -17,20 +17,19 @@
 4. access the executable at dist/win-unpacked
 
 ### Resetting the db
-1. navigate terminal to database folder
-2. run `node restDb.js`
-3. wait for script to finish (The data of the members is printed)
-4. Close the script
+1. delete `church.db`
+2. Run app
 
 #### dependencies
+- [async](https://www.npmjs.com/package/async)
+- [bcrypt](https://www.npmjs.com/package/bcrypt)
+- [better-sqlite3](https://www.npmjs.com/package/better-sqlite3)
 - [body-parser](https://www.npmjs.com/package/body-parser)
 - [dotenv](https://www.npmjs.com/package/dotenv)
 - [express](https://www.npmjs.com/package/express)
 - [express-handlebars](https://www.npmjs.com/package/express-handlebars)
+- [express-validator](https://www.npmjs.com/package/express-validator)
 - [fs-extra](https://www.npmjs.com/package/fs-extra)
-- [bcrypt](https://www.npmjs.com/package/bcrypt)
-- [async](https://www.npmjs.com/package/async)
-- [better-sqlite3](https://www.npmjs.com/package/better-sqlite3)
 - [sqlite3](https://www.npmjs.com/package/sqlite3)
 - [knex](https://www.npmjs.com/package/knex)
 - [validator](https://www.npmjs.com/package/validator)
