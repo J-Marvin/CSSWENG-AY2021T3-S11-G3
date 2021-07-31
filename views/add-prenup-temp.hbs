@@ -43,9 +43,13 @@
   <div id="bride_member_div" style="display:block">
     <label>Select Bride</label>
     <select id="input_bride_member" class="form-select">
-      {{#each friends}}
-        <option> {{this.brideNames}} </option>
-      {{/each}}
+      {{!-- checks if the names length is only 1 (i.e. brideNames.length == 1), function is in helpers/hbsHelper.js--}}
+      {{#if (isLengthOne brideNames.length)}}
+        {{> oneDropdownBride brideNames=brideNames}}
+      {{else}}
+      <h1>HERE2</h1>
+        {{> dropdownBride brideNames=brideNames}}
+      {{/if}}
     </select>
   </div>
 
@@ -75,9 +79,12 @@
   <div id="groom_member_div" style="display:block">
     <label>Select Groom</label>
     <select id="input_groom_member" class="form-select">
-      {{#each friends}}
-        <option> {{this.groomNames}} </option>
-      {{/each}}
+      {{!-- checks if the names length is only 1 (i.e. groomNames.length == 1), function is in helpers/hbsHelper.js--}}
+      {{#if (isLengthOne groomNames.length)}}
+        {{> oneDropdownGroom groomNames=groomNames}}
+      {{else}}
+        {{> dropdownGroom groomNames=groomNames}}
+      {{/if}}
     </select>
   </div>
   

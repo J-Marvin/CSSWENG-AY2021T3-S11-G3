@@ -1,5 +1,7 @@
-const hbHelpers = {
-
+const hbsHelpers = {
+  isLengthOne: function (namesLen) {
+    return namesLen === 1
+  }
 }
 
-module.exports(hbHelpers)
+module.exports = hbsHelpers

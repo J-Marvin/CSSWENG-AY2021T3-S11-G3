@@ -3,14 +3,12 @@ const path = require('path')
 const db = require(path.join(__dirname, '../models/db.js'))
 const personFields = require(path.join(__dirname, '../models/person'))
 const prenupRecordFields = require(path.join(__dirname, '../models/prenupRecord'))
-const coupleFields = require(path.join(__dirname, '../models/Couple.js'))
+const coupleFields = require(path.join(__dirname, '../models/couple'))
 const { Condition, queryTypes } = require(path.join(__dirname, '../models/condition'))
 const { validationResult } = require('express-validator')
+const memberFields = require(path.join(__dirname, '../models/members'))
 
 const prenupController = {
-  getPrenup: function (req, res) {
-    res.render('add-prenup-temp')
-  },
   /**
    * This function inserts a new row (non-member) in the prenuptial table
    * @param req - the incoming request containing either the query or body
@@ -18,19 +16,103 @@ const prenupController = {
    */
   getPrenupPage: function (req, res) {
     // Add find one populate function here
-
-    const member = req.params.member_id
-    if (member === undefined) {
-      res.render('add-prenup-temp', {
-        Origin: 'coming from forms creation'
-      })
-    } else {
-      res.render('add-prenup-temp', {
-        Origin: 'coming from edit member'
+    /**
+     * This function selects the member based on member_id and renders this
+     * one member in the dropdown options in add-prenup-temp.hbs
+     */
+    function selectMember (member) {
+      // let brideNames = []
+      // let groomNames = []
+      const conditions3 = new Condition(queryTypes.where)
+      const joinTables3 = [
+        {
+          tableName: db.tables.PERSON_TABLE,
+          sourceCol: db.tables.MEMBER_TABLE + '.' + memberFields.PERSON,
+          destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
+        }
+      ]
+      conditions3.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.ID, member)
+      db.find(db.tables.MEMBER_TABLE, conditions3, joinTables3, '*', function (result) {
+        const brideNames = result
+        const groomNames = result
+        res.render('add-prenup-temp', {
+          Origin: 'coming from edit member',
+          brideNames: brideNames,
+          groomNames: groomNames
+        })
       })
     }
-  },
+    /**
+     * This function selects all the single members and renders all names
+     * in the dropdown option in add-prenup-temp.hbs
+     */
+    function selectAllMembers () {
+      const conditions1 = new Condition(queryTypes.where)
+      const conditions2 = new Condition(queryTypes.where)
 
+      const joinTables1 = [
+        {
+          tableName: db.tables.PERSON_TABLE,
+          sourceCol: db.tables.MEMBER_TABLE + '.' + memberFields.PERSON,
+          destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
+        }
+      ]
+      let brideNames = [
+        {
+          // contain a blank spot
+        }
+      ]
+      let groomNames = [
+        {
+          // contain a blank spot
+        }
+      ]
+      // set the WHERE clause
+      conditions1.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.SEX, 'Female')
+      // conditions.push(conditions1)
+      // conditions1.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.CIVIL_STATUS, 'Single')
+      // conditions.push(conditions1)
+      // get all female members
+      db.find(db.tables.MEMBER_TABLE, conditions1, joinTables1, '*', function (result) {
+        if (result !== null) {
+          brideNames = result
+          // console.log(brideNames)
+          // conditions = []
+
+          // set the WHERE clause
+          conditions2.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.SEX, 'Male')
+          // conditions.push(conditions2)
+          // conditions2.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.CIVIL_STATUS, 'Single')
+
+          // get all male members
+          db.find(db.tables.MEMBER_TABLE, conditions2, joinTables1, '*', function (result) {
+            // console.log(result)
+            if (result !== null) {
+              groomNames = result
+              // console.log(groomNames)
+              res.render('add-prenup-temp', {
+                Origin: 'coming from forms creation',
+                brideNames: brideNames,
+                groomNames: groomNames
+              })
+            }
+          })
+        }
+      })
+    }
+    // function execution starts here
+    const member = req.params.member_id
+    if (member === undefined) {
+      selectAllMembers()
+    } else {
+      selectMember(member)
+    }
+  },
+  /**
+   * This function creates a prenuptial row into the prneuptial table
+   * @param req
+   * @param res
+   */
   createPrenup: function (req, res) {
     let errors = validationResult(req)
     if (!errors.isEmpty()) {
@@ -79,7 +161,7 @@ const prenupController = {
                   db.insert(db.tables.PRENUPTIAL_TABLE, data.prenup, function (result) {
                     if (result !== false) {
                       // insert res.render() or res.redirect()
-                      res.send(result)
+                      res.render('')
                     }
                   })
                 } else {
@@ -98,6 +180,7 @@ const prenupController = {
   },
   /**
    * This function inserts a new row (member) in the prenuptial table
+   * when both partners are members
    * @param req - the incoming request containing either the query or body
    * @param res - the result to be sent out after processing the request
    */
