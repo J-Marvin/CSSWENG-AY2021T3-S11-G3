@@ -237,6 +237,7 @@ const prenupController = {
        * ALGO:
        * INSERT INTO COUPLE TABLE
        * INSERT INTO PRENUPTIAL
+       * UPDATE BOTH PARTNER'S prenuptial_error_id
        */
       data.couple[coupleFields.FEMALE] = bridePersonId
       data.couple[coupleFields.MALE] = groomPersonId
@@ -260,14 +261,16 @@ const prenupController = {
                   db.update(db.tables.MEMBER_TABLE, { prenup_record_id: prenupRecId }, memberCondition, function (result) {
                     if (result !== null) {
                       res.render('forms-main-page')
+                    } else {
+                      res.send('UPDATE MEMBER ID ERROR')
                     }
                   })
                 } else {
-                  res.render('UPDATE MEMBER PRENUPTIAL ERROR')
+                  res.send('UPDATE MEMBER PRENUPTIAL ERROR')
                 }
               })
             } else {
-              res.render('PRENUP ERROR')
+              res.send('PRENUP ERROR')
             }
           })
         } else {
