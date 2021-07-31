@@ -76,7 +76,7 @@ const controller = {
   },
 
   getLogoutPage: function (req, res) {
-    res.render('login')
+    res.redirect('/')
   },
 
   getMainPage: function (req, res) {

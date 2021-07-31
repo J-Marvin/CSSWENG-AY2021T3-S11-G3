@@ -31,6 +31,7 @@ app.post('/add_prenup', prenupController.createPrenup)
 app.post('/update_member', validation.addMemberValidation(), memberController.postUpdateMember)
 app.post('/add_church', validation.churchValidation(), churchController.postAddChurch)
 app.post('/add_observation', validation.observationValidation(), observationController.postAddObservation)
+app.post('/checkCredentials', loginController.checkCredentials)
 
 app.put('/update_observation', validation.observationValidation(), observationController.putUpdateObservation)
 app.put('/update_church', validation.churchValidation(), churchController.putUpdateChurch)
