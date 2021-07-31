@@ -1,13 +1,12 @@
-const path = require('path')
-const db = require(path.join(__dirname, '../models/db.js'))
-const personFields = require(path.join(__dirname, '../models/person'))
-const memberFields = require(path.join(__dirname, '../models/members'))
-const addressFields = require(path.join(__dirname, '../models/address'))
-const bapRegFields = require(path.join(__dirname, '../models/baptismalRegistry'))
-const churchFields = require(path.join(__dirname, '../models/church'))
+const db = require('../models/db.js')
+const personFields = require('../models/person')
+const memberFields = require('../models/members')
+const addressFields = require('../models/address')
+const bapRegFields = require('../models/baptismalRegistry')
+const churchFields = require('../models/church')
 const { validationResult } = require('express-validator')
 const observationFields = require('../models/observation')
-const { Condition, queryTypes } = require(path.join(__dirname, '../models/condition.js'))
+const { Condition, queryTypes } = require('../models/condition.js')
 
 const memberController = {
   /**
@@ -120,6 +119,7 @@ const memberController = {
       data.member[memberFields.SKILLS] = req.body.skills
       data.member[memberFields.MEMBER_STATUS] = req.body.membership_status
       data.member[memberFields.CIVIL_STATUS] = req.body.civil_status
+      data.member[memberFields.FAMILY] = req.body.family_members
       data.member[memberFields.SEX] = req.body.sex
       data.member[memberFields.DATE] = new Date().toISOString()
 
@@ -161,11 +161,9 @@ const memberController = {
    */
   postUpdateMember: function (req, res) {
     let errors = validationResult(req)
-    console.log(errors)
     if (!errors.isEmpty()) {
       errors = errors.errors
 
-      console.log(errors)
       let msg = ''
 
       errors.forEach((error) => {
@@ -177,8 +175,7 @@ const memberController = {
       const data = {
         person: {},
         address: {},
-        member: {},
-        observations: []
+        member: {}
       }
 
       const addressCondition = new Condition(queryTypes.where)
@@ -208,11 +205,11 @@ const memberController = {
       data.member[memberFields.EDUCATIONAL_ATTAINMENT] = req.body.educational_attainment
       data.member[memberFields.ALMA_MATER] = req.body.alma_mater
       data.member[memberFields.SKILLS] = req.body.skills
+      data.member[memberFields.FAMILY] = req.body.family_members
       data.member[memberFields.MEMBER_STATUS] = req.body.membership_status
       data.member[memberFields.CIVIL_STATUS] = req.body.civil_status
       data.member[memberFields.SEX] = req.body.sex
 
-      console.log(data)
       db.update(db.tables.PERSON_TABLE, data.person, personCondition, function (result) {
         if (!result) {
           res.send(false)
@@ -222,7 +219,6 @@ const memberController = {
               res.send(false)
             } else {
               db.update(db.tables.MEMBER_TABLE, data.member, memberCondition, function (result) {
-                console.log(result)
                 if (result) {
                   res.send(true)
                 } else {

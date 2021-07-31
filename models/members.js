@@ -20,7 +20,7 @@ const memberFields = {
   DATE: 'date_created',
   SEX: 'sex',
   PARENTS: 'parents_id',
-  FAMILY: 'family'
+  FAMILY: 'family_members'
 }
 
 module.exports = memberFields

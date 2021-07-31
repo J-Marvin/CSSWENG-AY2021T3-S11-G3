@@ -1,10 +1,9 @@
 const bcrypt = require('bcrypt')
-const path = require('path')
-const db = require(path.join(__dirname, '../models/db'))
+const db = require('../models/db')
 
 const loginController = {
   getLoginPage: function (req, res) {
-    res.render('login')
+    res.render('login', { scripts: ['login'] })
   },
   postLogIn: function (req, res) {
     const password = req.body.password
@@ -35,6 +34,32 @@ const loginController = {
             message: 'Unauthorized access'
           }
         })
+      }
+    }).catch((err) => {
+      if (err) {
+        res.send(err.message)
+      }
+    })
+  },
+  checkCredentials: function (req, res) {
+    const password = req.body.password
+
+    new Promise((resolve, reject) => {
+      db.findAll(db.tables.ACCOUNT_TABLE, '*', async function (result) {
+        let level = 0
+        for (let i = 0; i < result.length && level === 0; i++) {
+          const same = await bcrypt.compare(password, result[i].hashed_password)
+          if (same) {
+            level = result[i].level
+          }
+        }
+        resolve(level)
+      })
+    }).then((level) => {
+      if (level) {
+        res.send(level.toString())
+      } else {
+        res.send(false)
       }
     }).catch((err) => {
       if (err) {

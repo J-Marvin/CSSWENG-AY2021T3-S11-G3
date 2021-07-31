@@ -1,9 +1,6 @@
-const path = require('path')
-
-const observationFields = require(path.join(__dirname, '../models/observation'))
-const db = require(path.join(__dirname, '../models/db'))
-const addressFields = require(path.join(__dirname, '../models/address'))
-const { Condition, queryTypes } = require(path.join(__dirname, '../models/Condition'))
+const observationFields = require('../models/observation')
+const db = require('../models/db')
+const { Condition, queryTypes } = require('../models/condition')
 
 const observationController = {
   postAddObservation: function (req, res) {

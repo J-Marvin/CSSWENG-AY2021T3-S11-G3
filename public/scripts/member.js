@@ -24,6 +24,7 @@ $(document).ready(function () {
     
     if(validator.isEmpty($('#first_name').val())) {
         $('#first_name_error').text('Required')
+        errors += 'First name is required\n'
         isValid = false
     } else {
         $('#first_name_error').text('')
@@ -31,6 +32,7 @@ $(document).ready(function () {
 
     if(validator.isEmpty($('#mid_name').val())) {
         $('#mid_name_error').text('Required')
+        errors += 'Middle name is required\n'
         isValid = false
     } else {
         $('#mid_name_error').text('')
@@ -38,6 +40,7 @@ $(document).ready(function () {
 
     if(validator.isEmpty($('#last_name').val())) {
         $('#last_name_error').text('Required')
+        errors += 'Last name is required\n'
         isValid = false
     } else {
         $('#last_name_error').text('')
@@ -45,15 +48,18 @@ $(document).ready(function () {
 
     if(validator.isEmpty($('#age').val())) {
         $('#age_error').text('Required')
+        errors += 'Age name is required\n'
         isValid = false
     } else if ($('#age').val() < 0) {
         $('#age_error').text('Enter valid age')
+        errors += 'Invalid age\n'
         isValid = false
     } else {
         $('#age_error').text('')
     }
 
     if(validator.isEmpty($('#birthday').val())) {
+        errors += 'Birthday is required\n'
         $('#birthday_error').text('Required')
         isValid = false
     } else {
@@ -61,6 +67,7 @@ $(document).ready(function () {
     }
 
     if(validator.isEmpty($('#occupation').val())) {
+        errors += 'Occupation is required\n'
         $('#occupation_error').text('Required')
         isValid = false
     } else {
@@ -68,6 +75,7 @@ $(document).ready(function () {
     }
 
     if(validator.isEmpty($('#membership_status').val())) {
+        errors += 'Membership status is required\n'
         $('#membership_status_error').text('Required')
         isValid = false
     } else {
@@ -75,6 +83,7 @@ $(document).ready(function () {
     }
 
     if(validator.isEmpty($('#civil_status').val())) {
+        errors += 'Civil status is required\n'
         $('#civil_status_error').text('Required')
         isValid = false
     } else {
@@ -83,6 +92,7 @@ $(document).ready(function () {
 
     if(validator.isEmpty($('#sex').val())) {
         $('#sex_error').text('Required')
+        errors += 'Sex is required\n'
         isValid = false
     } else {
         $('#sex_error').text('')
@@ -90,12 +100,14 @@ $(document).ready(function () {
 
     if(validator.isEmpty($('#address_line').val())) {
         $('#address_line_error').text('Required')
+       errors += 'Address is required\n'
         isValid = false
     } else {
         $('#address_line_error').text('')
     }
 
     if(validator.isEmpty($('#city').val())) {
+        errors += 'Cityis required\n'
         $('#city_error').text('Required')
         isValid = false
     } else {
@@ -104,6 +116,7 @@ $(document).ready(function () {
 
     if(validator.isEmpty($('#country').val())) {
         $('#country_error').text('Required')
+        errors += 'Country is required\n'
         isValid = false
     } else {
         $('#country_error').text('')
@@ -111,6 +124,7 @@ $(document).ready(function () {
 
     if (!validateEmail($('#email').val()) && !validator.isEmpty($('#email').val())) {
         $('#email_error').text('Enter valid email')
+        errors += 'Invalid email\n'
         isValid = false
     } else {
         $('#email_error').text('')
@@ -118,17 +132,17 @@ $(document).ready(function () {
 
     if(validator.isEmpty($('#mobile').val())) {
         $('#mobile_error').text('Required')
+        errors += 'Mobile number is required\n'
         isValid = false
     } else if(!validateMobile($('#mobile').val())) {
         $('#mobile_error').text('Enter valid mobile number')
+        errors += 'Invalid mobile number\n'
         isValid = false
     } else {
         $('#mobile_error').text('')
     }
 
-    if(isValid) {
-        $('#create-member-form').submit()
-    }
+    console.log(errors)
 
     return isValid
   }
@@ -140,7 +154,7 @@ $(document).ready(function () {
   })
 
   $('#edit-member').click(function() {
-    
+
     if (validateFields()) {
       const data = {
         member_id: $('#member_id').text(),
@@ -154,9 +168,11 @@ $(document).ready(function () {
         civil_status: $('#civil_status').val(),
         sex: $('#sex').val(),
         address_line: $('#address_line').val(),
-        barangay: $('#barangay').val(),
+        address_line2: $('#address_line2').val(),
         city: $('#city').val(),
         province: $('#province').val(),
+        postal_code: $('#postal_code').val(),
+        country: $('#country').val(),
         workplace: $('#workplace').val(),
         email: $('#email').val(),
         telephone: $('#telephone').val(),
@@ -169,6 +185,8 @@ $(document).ready(function () {
         address_id: $('#member_info').attr('data-address'),
         person_id: $('#member_info').attr('data-person')
       }
+      
+      console.log("data")
       $.ajax({
         type: "POST",
         data: data,
@@ -176,7 +194,7 @@ $(document).ready(function () {
         success: function (result) {
           if (result === true)
             alert("Changes saved")
-          else alert(result)
+          else alert("Changes not saved")
         }
       })
     } 
@@ -195,7 +213,7 @@ $(document).ready(function () {
     var isValid = true
     var errors = ''
     
-    const churchFieldset = $('#churchFieldSet')
+    const churchFieldset = $('#churchFieldset')
     const church = {}
 
     church.church_name = $(churchFieldset).find('#church_name').val()
@@ -231,6 +249,8 @@ $(document).ready(function () {
       alert(errors)
     } else {
       if(addChurch) {
+
+        console.log(church)
         $.ajax({
           type: "POST",
           data: church,
@@ -396,8 +416,6 @@ $(document).ready(function () {
     const parent = $(this).closest('div')
     data.church_id = $(this).closest('div').attr('data-church')
     data.address_id = $(this).closest('p').attr('data-address')
-
-    alert(data.church_id)
 
     $.ajax({
       type: "DELETE",
