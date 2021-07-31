@@ -161,7 +161,7 @@ const prenupController = {
                   db.insert(db.tables.PRENUPTIAL_TABLE, data.prenup, function (result) {
                     if (result !== false) {
                       // insert res.render() or res.redirect()
-                      res.render('')
+                      res.render('forms-main-page')
                     }
                   })
                 } else {
