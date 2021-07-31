@@ -1,10 +1,8 @@
-const path = require('path')
-
-const db = require(path.join(__dirname, '../models/db.js'))
-const memberFields = require(path.join(__dirname, '../models/members'))
-const { Condition, queryTypes } = require(path.join(__dirname, '../models/condition'))
-const personFields = require(path.join(__dirname, '../models/Person.js'))
-const addressFields = require(path.join(__dirname, '../models/address.js'))
+const db = require('../models/db.js')
+const memberFields = require('../models/members')
+const { Condition, queryTypes } = require('../models/condition')
+const personFields = require('../models/person.js')
+const addressFields = require('../models/address.js')
 const prenupRecordFields = require('../models/prenupRecord')
 const coupleFields = require('../models/couple')
 
@@ -76,7 +74,7 @@ const controller = {
   },
 
   getLogoutPage: function (req, res) {
-    res.render('login')
+    res.redirect('/')
   },
 
   getMainPage: function (req, res) {
