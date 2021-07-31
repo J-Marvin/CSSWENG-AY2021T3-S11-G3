@@ -1,13 +1,12 @@
-const path = require('path')
-const db = require(path.join(__dirname, '../models/db.js'))
-const personFields = require(path.join(__dirname, '../models/person'))
-const memberFields = require(path.join(__dirname, '../models/members'))
-const addressFields = require(path.join(__dirname, '../models/address'))
-const bapRegFields = require(path.join(__dirname, '../models/baptismalRegistry'))
-const churchFields = require(path.join(__dirname, '../models/church'))
+const db = require('../models/db.js')
+const personFields = require('../models/person')
+const memberFields = require('../models/members')
+const addressFields = require('../models/address')
+const bapRegFields = require('../models/baptismalRegistry')
+const churchFields = require('../models/church')
 const { validationResult } = require('express-validator')
 const observationFields = require('../models/observation')
-const { Condition, queryTypes } = require(path.join(__dirname, '../models/condition.js'))
+const { Condition, queryTypes } = require('../models/condition.js')
 
 const memberController = {
   /**

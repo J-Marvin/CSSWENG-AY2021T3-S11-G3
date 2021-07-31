@@ -1,11 +1,11 @@
 /* TO BE CONTINUED NEXT SPRINT */
 const path = require('path')
 
-const db = require(path.join(__dirname, '../models/db.js'))
-const personFields = require(path.join(__dirname, '../models/person'))
-const prenupRecordFields = require(path.join(__dirname, '../models/prenupRecord'))
-const coupleFields = require(path.join(__dirname, '../models/Couple.js'))
-const weddingRegFields = require(path.join(__dirname, '../models/weddingRegistry'))
+const db = require('../models/db.js')
+const personFields = require('../models/person')
+const prenupRecordFields = require('../models/prenupRecord')
+const coupleFields = require('../models/Couple.js')
+const weddingRegFields = require('../models/weddingRegistry')
 
 const weddingController = {
   /**
