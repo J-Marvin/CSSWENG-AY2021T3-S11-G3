@@ -3,7 +3,10 @@ const db = require('../models/db')
 
 const loginController = {
   getLoginPage: function (req, res) {
-    res.render('login', { scripts: ['login'] })
+    res.render('login', {
+      styles: ['login'],
+      scripts: ['login']
+    })
   },
   postLogIn: function (req, res) {
     const password = req.body.password
@@ -22,6 +25,7 @@ const loginController = {
     }).then((level) => {
       if (level) {
         res.render('main-page', {
+          styles: ['mainPage'],
           Level: level
         })
       } else {

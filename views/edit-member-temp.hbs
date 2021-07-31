@@ -1,12 +1,5 @@
 {{>navbar}}
 
-<style>
-  .error_codes {
-    color: red;
-    font-size: 10pt;
-  }
-</style>
-
 <div id="member_info" style="display: none" data-member="{{member.member_id}}" data-address="{{member.address_id}}" data-person="{{member.person_id}}" ></div>
 <form action="/add_member" method="POST" class="container" id="create-member-form">
   <div class="container" style="padding-left: 20%; padding-right: 20%;">

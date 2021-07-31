@@ -1,0 +1,9 @@
+@import url(fonts.css);
+
+#maindiv {
+    min-height: calc(100vh - 56px);
+}
+
+#header {
+    font-family: JuliusSansPro;
+}

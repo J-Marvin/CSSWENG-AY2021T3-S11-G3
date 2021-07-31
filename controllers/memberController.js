@@ -16,12 +16,14 @@ const memberController = {
    */
   getAddMemberPage: function (req, res) {
     res.render('add-member-temp', {
+      styles: ['forms'],
       scripts: ['member']
     })
   },
 
   getEditMember: function (req, res) {
     const data = {
+      styles: ['forms'],
       scripts: ['member']
     }
     const condition = new Condition(queryTypes.where)

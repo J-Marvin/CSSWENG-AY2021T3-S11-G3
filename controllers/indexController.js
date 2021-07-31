@@ -79,7 +79,8 @@ const controller = {
 
   getMainPage: function (req, res) {
     res.render('main-page', {
-      // Insert session level variable here
+      styles: ['mainPage'],
+      scripts: ['']
     })
   },
 

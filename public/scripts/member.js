@@ -205,6 +205,8 @@ $(document).ready(function () {
     addChurch = true
     editChurchId = null
     parentDiv = null
+
+    $(churchModal).find('.error_codes').text('')
     $(churchModal).modal('show')
   })
 
@@ -352,6 +354,8 @@ $(document).ready(function () {
     addObservation = true
     editObservationId = null
     parentDiv = null
+
+    $(observationModal).find('.error_codes').text('')
     $(observationModal).modal('show')
   })
 
@@ -368,6 +372,7 @@ $(document).ready(function () {
     $(observationFieldset).find('#comment').val(comment)
     $(observationFieldset).find('#commenter').val(observer)
 
+    $(observationModal).find('.error_codes').text('')
     $(observationModal).modal('show')
   });
 
@@ -414,6 +419,7 @@ $(document).ready(function () {
     $(churchFieldset).find('#church_postal_code').val(postal_code)
     $(churchFieldset).find('#church_country').val(country)
 
+    $(churchModal).find('.error_codes').text('')
     $(churchModal).modal('show')
   })
 

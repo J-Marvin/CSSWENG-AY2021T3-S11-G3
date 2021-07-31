@@ -1,0 +1,23 @@
+@import url(fonts.css);
+
+body {
+    background-image: url(../images/sky.jpg);
+}
+
+#card {
+    background-color: transparent;
+    max-width: 30em; 
+    border:none;
+}
+
+#header {
+    font-size: 50pt;
+    color: aliceblue;
+    text-align: center;
+    font-family: JuliusSansPro
+}
+
+p {
+    font-family: SourceSansPro;
+    font-size: 15pt;
+}
