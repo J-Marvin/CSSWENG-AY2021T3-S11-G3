@@ -22,24 +22,29 @@
       <div class="col">
         <label for="mid_name">Middle Name</label>
         <input type="text" id="mid_name" name="middle_name" class="form-control" value="{{member.middle_name}}">
+        <p id="mid_name_error" class="error_codes">  </p>
       </div>
       <div class="col">
         <label for="last_name">Last Name</label>
         <input type="text" id="last_name" name="last_name" class="form-control" value="{{member.last_name}}">
+        <p id="last_name_error" class="error_codes">  </p>
       </div>
     </div>
     <div class="row">
       <div class="col-2">
         <label for="age">Age</label>
         <input type="number" id="age" name="age" class="form-control" value="{{member.age}}">
+        <p id="age_error" class="error_codes">  </p>
       </div>
       <div class="col-5">
         <label for="birthday">Birthday</label>
         <input type="date" id="birthday" name="birthday" class="form-control" value="{{member.birthday}}">
+        <p id="birthday_error" class="error_codes">  </p>
       </div>
       <div class="col-5">
         <label for="occupation">Occupation</label>
         <input type="text" id="occupation" name="occupation" class="form-control" value="{{member.occupation}}">
+        <p id="occupation_error" class="error_codes">  </p>
       </div>
     </div>
     <div class="row">
@@ -75,6 +80,7 @@
         <div class="col">
           <label for="adress_line">Address Line 1</label>
           <input type="text" id="address_line" name="address_line" class="form-control" value="{{member.address_line}}">
+          <p id="address_line_error" class="error_codes">  </p>
         </div>
         <div class="col">
           <label for="address_line2">Address Line 2</label>
@@ -85,6 +91,7 @@
         <div class="col">
           <label for="city">City</label>
           <input type="text" id="city" name="city" class="form-control" value="{{member.city}}">
+          <p id="city_error" class="error_codes">  </p>
         </div>
         <div class="col">
           <label for="province">Province</label>
@@ -97,6 +104,7 @@
         <div class="col">
           <label for="country">Country</label>
           <input type="text" id="country" name="country" class="form-control" value="{{member.country}}">
+          <p id="country_error" class="error_codes">  </p>
         </div>
       </div>
     </fieldset>
@@ -106,6 +114,7 @@
       <div class="col">
         <label for="mobile">Mobile</label>
         <input type="text" id="mobile" name="mobile" class="form-control" value="{{member.mobile}}">
+        <p id="mobile_error" class="error_codes">  </p>
       </div>
       <div class="col">
         <label for="telephone">Telephone</label>
@@ -120,6 +129,7 @@
       <div class="col">
         <label for="email">Email</label>
         <input type="text" id="email" name="email" class="form-control" value="{{member.email}}">
+        <p id="email_error" class="error_codes">  </p>
       </div>
     </div>
     <div class="row">
@@ -153,7 +163,7 @@
       </div>
     </div>
     <div class="row mt-3">
-      <div class="col">
+      <div class="col d-flex justify-content-end">
         <button type="button" id="edit-member" class="btn btn-primary">Submit</button>
       </div>
     </div>
@@ -171,18 +181,22 @@
               <legend>Churches: </legend>
               <label for="church_name">Name of church</label>
               <input type="text" id="church_name" name="church_name" class="form-control">
+              <p id="church_name_error" class="error_codes"> </p>
               <label for="church_adress_line">Address Line 1</label>
               <input type="text" id="church_address_line" name="church_address_line" class="form-control">
+              <p id="church_address_line_error" class="error_codes"> </p>
               <label for="church_address_line2">Address Line 2</label>
               <input type="text" id="church_address_line2" name="church_address_line2" class="form-control">
               <label for="church_city">City</label>
               <input type="text" id="church_city" name="church_city" class="form-control">
+              <p id="church_city_error" class="error_codes"> </p>
               <label for="church_province">Province</label>
               <input type="text" id="church_province" name="church_province" class="form-control">
               <label for="church_postal_code">Postal Code</label>
               <input type="text" id="church_postal_code" name="church_postal_code" class="form-control">
               <label for="church_country">Country</label>
               <input type="text" id="church_country" name="church_country" class="form-control">
+              <p id="church_country_error" class="error_codes"> </p>
             </fieldset>
           </div>
           <div class="modal-footer">
@@ -203,8 +217,10 @@
             <fieldset id="observationFieldset" class="observation-field">
               <label>Commenter</label>
               <input type="text" id="commenter" name="commenter" class="form-control">
+              <p id="commenter_error" class="error_codes"> </p>
               <label>Comment</label>
               <input type="textarea" id="comment" name="comment" class="form-control">
+              <p id="comment_error" class="error_codes"> </p>
             </fieldset>
           </div>
           <div class="modal-footer">
