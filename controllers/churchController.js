@@ -122,7 +122,6 @@ const churchController = {
         res.send(false)
       }
     })
-
   }
 }
 

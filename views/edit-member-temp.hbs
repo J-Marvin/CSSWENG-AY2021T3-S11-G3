@@ -152,17 +152,11 @@
         <a href="/edit_member/{{member.member_id}}/add_prenup" id="add_prenup" type="button" class="btn btn-secondary">Add Prenup</a>
       </div>
     </div>
-    <button type="button" class="btn btn-primary" id="addObservationBtn"> Add Observation </button>
-
-
-    <br><br>
-  
-    <a href="/edit_member/{{member.member_id}}/add_prenup" id="add_prenup" type="button" class="btn btn-secondary">Add Prenup</a>
-
-    <br> <br>
-
-    <button type="button" id="edit-member" class="btn-primary validate-member">Submit</button>
-  
+    <div class="row mt-3">
+      <div class="col">
+        <button type="button" id="edit-member" class="btn btn-primary validate-member">Submit</button>
+      </div>
+    </div>
 
     <div class="modal fade" id="addChurchModal" aria-hidden="true">
       <div class="modal-dialog  modal-dialog-centered">
@@ -198,25 +192,25 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="modal fade" id="addObservationModal" aria-hidden="true">
-    <div class="modal-dialog  modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Add Observation</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <fieldset id="observationFieldset" class="observation-field">
-            <label>Commenter</label>
-            <input type="text" id="commenter" name="commenter" class="form-control">
-            <label>Comment</label>
-            <input type="textarea" id="comment" name="comment" class="form-control">
-          </fieldset>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button id="saveObservationBtn" type="button" class="btn btn-primary">Save Observation</button>
+    <div class="modal fade" id="addObservationModal" aria-hidden="true">
+      <div class="modal-dialog  modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Add Observation</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <fieldset id="observationFieldset" class="observation-field">
+              <label>Commenter</label>
+              <input type="text" id="commenter" name="commenter" class="form-control">
+              <label>Comment</label>
+              <input type="textarea" id="comment" name="comment" class="form-control">
+            </fieldset>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button id="saveObservationBtn" type="button" class="btn btn-primary">Save Observation</button>
+          </div>
         </div>
       </div>
     </div>

@@ -8,7 +8,6 @@ const addressFields = require(path.join(__dirname, '../models/address.js'))
 const prenupRecordFields = require('../models/prenupRecord')
 const coupleFields = require('../models/couple')
 
-
 const controller = {
   getIndex: function (req, res) {
     // const queries = []

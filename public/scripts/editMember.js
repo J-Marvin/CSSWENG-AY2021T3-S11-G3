@@ -21,88 +21,114 @@ $(document).ready(function () {
   function validateFields() {
     var isValid = true
     var errors = ''
-
-    // if(validator.isEmpty($('#first_name').val())) {
-    //     errors = errors + 'pls fill out first name\n'
-    //     isValid = false
-    // }
-
-    // if(validator.isEmpty($('#mid_name').val())) {
-    //     errors = errors + 'pls fill out middle name\n'
-    //     isValid = false
-    // }
-
-    // if(validator.isEmpty($('#last_name').val())) {
-    //     errors = errors + 'pls fill out last name\n'
-    //     isValid = false
-    // }
-
-    // if(validator.isEmpty($('#age').val())) {
-    //     errors = errors + 'pls fill out age\n'
-    //     isValid = false
-    // } else if (validator.isNumeric($('#age').val())) {
-    //     errors = errors + 'age must only consist of numbers\n'
-    //     isValid = false
-    // }
-
-    // if(validator.isEmpty($('#birthday').val())) {
-    //     errors = errors + 'pls fill out birthday\n'
-    //     isValid = false
-    // }
-
-    // if(validator.isEmpty($('#occupation').val())) {
-    //     errors = errors + 'pls fill out occupation\n'
-    //     isValid = false
-    // }
-
-    // if(validator.isEmpty($('#membership_status').val())) {
-    //     errors = errors + 'pls fill out first mem status\n'
-    //     isValid = false
-    // }
-
-    // if(validator.isEmpty($('#civil_status').val())) {
-    //     errors = errors + 'pls fill out civil status\n'
-    //     isValid = false
-    // }
-
-    // if(validator.isEmpty($('#sex').val())) {
-    //     errors = errors + 'pls fill out sex\n'
-    //     isValid = false
-    // }
-
-    // if(validator.isEmpty($('#address_line').val())) {
-    //     errors = errors + 'pls fill out address line\n'
-    //     isValid = false
-    // }
-
-    // if(validator.isEmpty($('#city').val())) {
-    //     errors = errors + 'pls fill out city\n'
-    //     isValid = false
-    // }
-
-    // if(validator.isEmpty($('#workplace').val())) {
-    //     errors = errors + 'pls fill out workplace\n'
-    //     isValid = false
-    // }
-
-    // if(validator.isEmpty($('#email').val())) {
-    //     errors = errors + 'pls fill out email\n'
-    //     isValid = false
-    // } else if (!validateEmail($('#email').val())) {
-    //     errors = errors + 'pls provide valid email\n'
-    //     isValid = false
-    // }
-
-    if (validator.isEmpty($('#mobile').val())) {
-      errors = errors + 'pls fill out mobile\n'
-      isValid = false
-    } else if (!validateMobile($('#mobile').val())) {
-      errors = errors + 'pls provide valid mobile number\n'
-      isValid = false
+    
+    if(validator.isEmpty($('#first_name').val())) {
+        $('#first_name_error').text('Required')
+        isValid = false
+    } else {
+        $('#first_name_error').text('')
     }
 
-    if(!isValid)
-      alert(errors)
+    if(validator.isEmpty($('#mid_name').val())) {
+        $('#mid_name_error').text('Required')
+        isValid = false
+    } else {
+        $('#mid_name_error').text('')
+    }
+
+    if(validator.isEmpty($('#last_name').val())) {
+        $('#last_name_error').text('Required')
+        isValid = false
+    } else {
+        $('#last_name_error').text('')
+    }
+
+    if(validator.isEmpty($('#age').val())) {
+        $('#age_error').text('Required')
+        isValid = false
+    } else if ($('#age').val() < 0) {
+        $('#age_error').text('Enter valid age')
+        isValid = false
+    } else {
+        $('#age_error').text('')
+    }
+
+    if(validator.isEmpty($('#birthday').val())) {
+        $('#birthday_error').text('Required')
+        isValid = false
+    } else {
+        $('#birthday_error').text('')
+    }
+
+    if(validator.isEmpty($('#occupation').val())) {
+        $('#occupation_error').text('Required')
+        isValid = false
+    } else {
+        $('#occupation_error').text('')
+    }
+
+    if(validator.isEmpty($('#membership_status').val())) {
+        $('#membership_status_error').text('Required')
+        isValid = false
+    } else {
+        $('#membership_status_error').text('')
+    }
+
+    if(validator.isEmpty($('#civil_status').val())) {
+        $('#civil_status_error').text('Required')
+        isValid = false
+    } else {
+        $('#civil_status_error').text('')
+    }
+
+    if(validator.isEmpty($('#sex').val())) {
+        $('#sex_error').text('Required')
+        isValid = false
+    } else {
+        $('#sex_error').text('')
+    }
+
+    if(validator.isEmpty($('#address_line').val())) {
+        $('#address_line_error').text('Required')
+        isValid = false
+    } else {
+        $('#address_line_error').text('')
+    }
+
+    if(validator.isEmpty($('#city').val())) {
+        $('#city_error').text('Required')
+        isValid = false
+    } else {
+        $('#city_error').text('')
+    }
+
+    if(validator.isEmpty($('#country').val())) {
+        $('#country_error').text('Required')
+        isValid = false
+    } else {
+        $('#country_error').text('')
+    }
+
+    if (!validateEmail($('#email').val()) && !validator.isEmpty($('#email').val())) {
+        $('#email_error').text('Enter valid email')
+        isValid = false
+    } else {
+        $('#email_error').text('')
+    }
+
+    if(validator.isEmpty($('#mobile').val())) {
+        $('#mobile_error').text('Required')
+        isValid = false
+    } else if(!validateMobile($('#mobile').val())) {
+        $('#mobile_error').text('Enter valid mobile number')
+        isValid = false
+    } else {
+        $('#mobile_error').text('')
+    }
+
+    if(isValid) {
+        $('#create-member-form').submit()
+    }
 
     return isValid
   }
@@ -137,19 +163,17 @@ $(document).ready(function () {
         address_id: $('#member_info').attr('data-address'),
         person_id: $('#member_info').attr('data-person')
       }
-        $.ajax({
-          type: "POST",
-          data: data,
-          url: "/update_member",
-          success: function (result) {
-            if (result === true)
-              alert("Changes saved")
-            else alert(result)
-          }
-        })
-
+      $.ajax({
+        type: "POST",
+        data: data,
+        url: "/update_member",
+        success: function (result) {
+          if (result === true)
+            alert("Changes saved")
+          else alert(result)
+        }
+      })
     } 
-    
   })
 
   $('#addChurchBtn').click(function() {
@@ -177,38 +201,62 @@ $(document).ready(function () {
     church.country = $(churchFieldset).find('#church_country').val()
     church.member_id = $('#member_info').attr('data-member')
 
-    if(addChurch) {
-      $.ajax({
-        type: "POST",
-        data: church,
-        url: "/add_church",
-        success: function (result) {
-          $('#churchList').append(result)
-          $(churchModal).modal('hide')
-        }
-      })
+    if(validator.isEmpty($('#church_name').val())) {
+      isValid = false
+      errors = errors + 'pls enter church name\n'
+    }
+
+    if(validator.isEmpty($('#church_address_line').val())) {
+      isValid = false
+      errors = errors + 'pls enter church address\n'
+    }
+
+    if(validator.isEmpty($('#church_city').val())) {
+      isValid = false
+      errors = errors + 'pls enter church city\n'
+    }
+
+    if(validator.isEmpty($('#church_country').val())) {
+      isValid = false
+      errors = errors + 'pls enter church country\n'
+    }
+
+    if(!isValid) {
+      alert(errors)
     } else {
-      church.church_id = editChurchId
-      church.address_id = editChurchAddressId
-
-      $.ajax({
-        type: "PUT",
-        data: church,
-        url: "/update_church",
-        success: function (result) {
-          if(result) {
-            $(parentDiv).find('.church_name').text(church.church_name)
-            $(parentDiv).find('.church_address_line').text(church.address_line)
-            $(parentDiv).find('.church_address_line2').text(church.address_line2)
-            $(parentDiv).find('.church_city').text(church.city)
-            $(parentDiv).find('.church_province').text(church.province)
-            $(parentDiv).find('.church_postal_code').text(church.postal_code)
-            $(parentDiv).find('.church_country').text(church.country)
-
+      if(addChurch) {
+        $.ajax({
+          type: "POST",
+          data: church,
+          url: "/add_church",
+          success: function (result) {
+            $('#churchList').append(result)
             $(churchModal).modal('hide')
           }
-        }
-      })
+        })
+      } else {
+        church.church_id = editChurchId
+        church.address_id = editChurchAddressId
+  
+        $.ajax({
+          type: "PUT",
+          data: church,
+          url: "/update_church",
+          success: function (result) {
+            if(result) {
+              $(parentDiv).find('.church_name').text(church.church_name)
+              $(parentDiv).find('.church_address_line').text(church.address_line)
+              $(parentDiv).find('.church_address_line2').text(church.address_line2)
+              $(parentDiv).find('.church_city').text(church.city)
+              $(parentDiv).find('.church_province').text(church.province)
+              $(parentDiv).find('.church_postal_code').text(church.postal_code)
+              $(parentDiv).find('.church_country').text(church.country)
+  
+              $(churchModal).modal('hide')
+            }
+          }
+        })
+      }
     }
   })
 
@@ -359,8 +407,4 @@ $(document).ready(function () {
       }
     })
   })
-
-  
-
-
 })
