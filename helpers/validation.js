@@ -32,7 +32,11 @@ const validation = {
         }
         return true
       }),
-      check('mobile', 'Invalid mobile number').isNumeric()
+      check('mobile', 'Mobile number is required').notEmpty(),
+      check('address_line', 'Address is required').notEmpty(),
+      check('city', 'City is requirec').notEmpty(),
+      check('country', 'Country is required').notEmpty(),
+      check('province', 'Province/State/Region is required').notEmpty()
     ]
     return validation
   },

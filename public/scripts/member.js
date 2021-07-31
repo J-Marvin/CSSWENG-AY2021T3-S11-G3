@@ -195,7 +195,7 @@ $(document).ready(function () {
     var isValid = true
     var errors = ''
     
-    const churchFieldset = $('#churchFieldSet')
+    const churchFieldset = $('#churchFieldset')
     const church = {}
 
     church.church_name = $(churchFieldset).find('#church_name').val()
@@ -231,6 +231,8 @@ $(document).ready(function () {
       alert(errors)
     } else {
       if(addChurch) {
+
+        console.log(church)
         $.ajax({
           type: "POST",
           data: church,
