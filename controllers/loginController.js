@@ -21,9 +21,21 @@ const loginController = {
         resolve(level)
       })
     }).then((level) => {
-      res.render('main-page', {
-        Level: level
-      })
+      if (level) {
+        res.render('main-page', {
+          Level: level
+        })
+      } else {
+        res.status(401)
+        res.render('error', {
+          title: '401 Unauthorized Access',
+          css: ['global', 'error'],
+          status: {
+            code: '401',
+            message: 'Unauthorized access'
+          }
+        })
+      }
     }).catch((err) => {
       if (err) {
         res.send(err.message)

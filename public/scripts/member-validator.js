@@ -6,7 +6,7 @@ $(document).ready(function() {
     }
 
     function validateMobile(number) {
-        const re = /\d{4}\s?-?\d{3}\s?-?\d{4}/
+        const re = /^\d{4}\s?-?\d{3}\s?-?\d{4}$/
         return re.test(number);
     }
 
