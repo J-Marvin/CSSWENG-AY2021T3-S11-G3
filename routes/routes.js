@@ -18,6 +18,8 @@ app.get('/logout', indexController.getLogoutPage)
 app.get('/login', indexController.getMainPage)
 app.get('/member_main_page', indexController.getMemberMainPage)
 app.get('/add_member', memberController.getAddMemberPage)
+app.get('/add_prenup', prenupController.getPrenup)
+
 app.get('/edit_member/:member_id', memberController.getEditMember)
 app.get('/forms_main_page', indexController.getFormsMainPage)
 app.get('/add_prenup', prenupController.getPrenupPage)
