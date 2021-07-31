@@ -17,13 +17,13 @@ const memberController = {
    */
   getAddMemberPage: function (req, res) {
     res.render('add-member-temp', {
-      scripts: ['member-validator']
+      scripts: ['editmember']
     })
   },
 
   getEditMember: function (req, res) {
     const data = {
-      scripts: ['editMember', 'member-validator']
+      scripts: ['editMember']
     }
     const condition = new Condition(queryTypes.where)
     const churchCondition = new Condition(queryTypes.where)

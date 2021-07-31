@@ -133,6 +133,12 @@ $(document).ready(function () {
     return isValid
   }
 
+  $('#create-member').click(function() {
+    if(validateFields()) {
+      $('#create-member-form').submit()
+    }
+  })
+
   $('#edit-member').click(function() {
     
     if (validateFields()) {
