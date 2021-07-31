@@ -15,88 +15,110 @@ $(document).ready(function() {
         var errors = ''
         
         if(validator.isEmpty($('#first_name').val())) {
-            errors = errors + 'pls fill out first name\n'
+            $('#first_name_error').text('Required')
             isValid = false
+        } else {
+            $('#first_name_error').text('')
         }
 
         if(validator.isEmpty($('#mid_name').val())) {
-            errors = errors + 'pls fill out middle name\n'
+            $('#mid_name_error').text('Required')
             isValid = false
+        } else {
+            $('#mid_name_error').text('')
         }
 
         if(validator.isEmpty($('#last_name').val())) {
-            errors = errors + 'pls fill out last name\n'
+            $('#last_name_error').text('Required')
             isValid = false
+        } else {
+            $('#last_name_error').text('')
         }
 
         if(validator.isEmpty($('#age').val())) {
-            errors = errors + 'pls fill out age\n'
+            $('#age_error').text('Required')
             isValid = false
-        } else if (validator.isNumeric($('#age').val())) {
-            errors = errors + 'age must only consist of numbers\n'
+        } else if ($('#age').val() < 0) {
+            $('#age_error').text('Enter valid age')
             isValid = false
+        } else {
+            $('#age_error').text('')
         }
 
         if(validator.isEmpty($('#birthday').val())) {
-            errors = errors + 'pls fill out birthday\n'
+            $('#birthday_error').text('Required')
             isValid = false
+        } else {
+            $('#birthday_error').text('')
         }
 
         if(validator.isEmpty($('#occupation').val())) {
-            errors = errors + 'pls fill out occupation\n'
+            $('#occupation_error').text('Required')
             isValid = false
+        } else {
+            $('#occupation_error').text('')
         }
 
         if(validator.isEmpty($('#membership_status').val())) {
-            errors = errors + 'pls fill out first mem status\n'
+            $('#membership_status_error').text('Required')
             isValid = false
+        } else {
+            $('#membership_status_error').text('')
         }
 
         if(validator.isEmpty($('#civil_status').val())) {
-            errors = errors + 'pls fill out civil status\n'
+            $('#civil_status_error').text('Required')
             isValid = false
+        } else {
+            $('#civil_status_error').text('')
         }
 
         if(validator.isEmpty($('#sex').val())) {
-            errors = errors + 'pls fill out sex\n'
+            $('#sex_error').text('Required')
             isValid = false
+        } else {
+            $('#sex_error').text('')
         }
 
         if(validator.isEmpty($('#address_line').val())) {
-            errors = errors + 'pls fill out address line\n'
+            $('#address_line_error').text('Required')
             isValid = false
+        } else {
+            $('#address_line_error').text('')
         }
 
         if(validator.isEmpty($('#city').val())) {
-            errors = errors + 'pls fill out city\n'
+            $('#city_error').text('Required')
             isValid = false
+        } else {
+            $('#city_error').text('')
         }
 
-        if(validator.isEmpty($('#workplace').val())) {
-            errors = errors + 'pls fill out workplace\n'
+        if(validator.isEmpty($('#country').val())) {
+            $('#country_error').text('Required')
             isValid = false
+        } else {
+            $('#country_error').text('')
         }
 
-        if(validator.isEmpty($('#email').val())) {
-            errors = errors + 'pls fill out email\n'
+        if (!validateEmail($('#email').val()) && !validator.isEmpty($('#email').val())) {
+            $('#email_error').text('Enter valid email')
             isValid = false
-        } else if (!validateEmail($('#email').val())) {
-            errors = errors + 'pls provide valid email\n'
-            isValid = false
+        } else {
+            $('#email_error').text('')
         }
 
         if(validator.isEmpty($('#mobile').val())) {
-            errors = errors + 'pls fill out mobile\n'
+            $('#mobile_error').text('Required')
             isValid = false
         } else if(!validateMobile($('#mobile').val())) {
-            errors = errors + 'pls provide valid mobile number\n'
+            $('#mobile_error').text('Enter valid mobile number')
             isValid = false
+        } else {
+            $('#mobile_error').text('')
         }
 
-        if(!isValid) {
-            alert(errors)
-        } else {
-            alert('Success')
+        if(isValid) {
             $('#create-member-form').submit()
         }
     })
