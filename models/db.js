@@ -1,6 +1,7 @@
 const knex = require('knex')
 const async = require('async')
 const fse = require('fs-extra')
+const sqlite3 = require('better-sqlite3')
 
 // gettings fields of all tables
 const memberFields = require('./members.js')
