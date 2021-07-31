@@ -93,6 +93,32 @@ const validation = {
       check('wedding_date', 'Wedding date is required').notEmpty().isDate()
     ]
     return validation
+  },
+  /*
+  app.post('/addPrenupBrideNonMember', validation.addPrenupBrideNonMember(), prenupController.createPrenupBrideNonMember)
+  app.post('/addPrenupGroomNonMember', validation.addPrenupGroomNonMember(), prenupController.createPrenupGroomNonMember)
+  */
+  addPrenupBrideNonMember: function () {
+    const validation = [
+      check('bride_first_name', "Bride's member and name is required").notEmpty(),
+      check('bride_mid_name', "Bride's middle name is required").notEmpty(),
+      check('bride_last_name', "Bride's last name is required").notEmpty(),
+      check('input_groom_member', "Groom's member and name is required"),
+      check('current_date', 'Current date is required').notEmpty().isDate(),
+      check('wedding_date', 'Wedding date is required').notEmpty().isDate()
+    ]
+    return validation
+  },
+  addPrenupGroomNonMember: function () {
+    const validation = [
+      check('groom_first_name', "Groom's member and name is required").notEmpty(),
+      check('groom_mid_name', "Groom's middle name is required").notEmpty(),
+      check('groom_last_name', "Groom's last name is required").notEmpty(),
+      check('input_bride_member', "Bride's member and name is required"),
+      check('current_date', 'Current date is required').notEmpty().isDate(),
+      check('wedding_date', 'Wedding date is required').notEmpty().isDate()
+    ]
+    return validation
   }
 }
 
