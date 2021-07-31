@@ -201,53 +201,77 @@ const prenupController = {
     } else {
       const data = {
         prenup: {},
-        couple: {},
-        male: {},
-        female: {}
+        couple: {}
       } // object that will be passed later on insert(prenup)
-      data.prenup[prenupRecordFields.DATE] = req.body.current_date
-      data.prenup[prenupRecordFields.DATE_OF_WEDDING] = req.body.wedding_date
+      // these two variables contains <member_id>, <first_name>, <middle_name>, <last_name>
+      // INDICES
+      const MEMBER_ID = 0
+      const PERSON_ID = 1
+      const FIRST = 2
+      const MIDDLE = 3
+      const LAST = 4
 
-      data.male[personFields.FIRST_NAME] = req.body.groom_first_name
-      data.male[personFields.MID_NAME] = req.body.groom_mid_name
-      data.male[personFields.LAST_NAME] = req.body.groom_last_name
+      const bride = req.body.input_bride_member
+      const groom = req.body.input_groom_member
+      const date = req.body.current_date
+      const weddingDate = req.body.wedding_date
 
-      data.female[personFields.FIRST_NAME] = req.body.bride_first_name
-      data.female[personFields.MID_NAME] = req.body.bride_mid_name
-      data.female[personFields.LAST_NAME] = req.body.bride_last_name
+      const brideInfo = bride.split(', ')
+      const groomInfo = groom.split(', ')
 
-      // insert male name to PERSON_TABLE
-      db.insert(db.tables.PERSON_TABLE, data.male, function (maleId) {
-        if (maleId) {
-          data.couple[coupleFields.MALE] = maleId
+      const brideMemberId = brideInfo[MEMBER_ID]
+      const bridePersonId = brideInfo[PERSON_ID]
+      const brideFirst = brideInfo[FIRST]
+      const brideMid = brideInfo[MIDDLE]
+      const brideLast = brideInfo[LAST]
 
-          // insert female name to PERSON_TABLE
-          db.insert(db.tables.PERSON_TABLE, data.female, function (femaleId) {
-            if (femaleId) {
-              data.couple[coupleFields.FEMALE] = femaleId
+      const groomMemberId = groomInfo[MEMBER_ID]
+      const groomPersonId = groomInfo[PERSON_ID]
+      const groomFirst = groomInfo[FIRST]
+      const groomMid = groomInfo[MIDDLE]
+      const groomLast = groomInfo[LAST]
 
-              // insert the couple to COUPLE_TABLE
-              db.insert(db.tables.COUPLE_TABLE, data.couple, function (coupleId) {
-                if (coupleId) {
-                  data.prenup[prenupRecordFields.COUPLE] = coupleId
+      data.prenup[prenupRecordFields.DATE] = date
+      data.prenup[prenupRecordFields.DATE_OF_WEDDING] = weddingDate
+      /**
+       * ALGO:
+       * INSERT INTO COUPLE TABLE
+       * INSERT INTO PRENUPTIAL
+       */
+      data.couple[coupleFields.FEMALE] = bridePersonId
+      data.couple[coupleFields.MALE] = groomPersonId
 
-                  // finally insert to the prenup table
-                  db.insert(db.tables.PRENUPTIAL_TABLE, data.prenup, function (result) {
-                    if (result !== false) {
-                      // insert res.render() or res.redirect()
-                      res.send(result)
+      // insert to couple table and callback returns the inserted couple_id
+      db.insert(db.tables.COUPLE_TABLE, data.couple, function (coupleId) {
+        if (coupleId !== null) {
+          data.prenup[prenupRecordFields.COUPLE] = coupleId
+
+          // insert to prenuptial table and callback returns the inserted prenuptial record_id
+          db.insert(db.tables.PRENUPTIAL_TABLE, data.prenup, function (prenupRecId) {
+            if (prenupRecId !== null) {
+              const memberCondition = new Condition(queryTypes.where)
+              memberCondition.setKeyValue(memberFields.ID, brideMemberId)
+
+              // finally update prenuptial_id of the bride in MEMBERS table
+              db.update(db.tables.MEMBER_TABLE, { prenup_record_id: prenupRecId }, memberCondition, function (result) {
+                if (result !== null) {
+                  // finally update prenuptial_id of the groom in MEMBERS table
+                  memberCondition.setKeyValue(memberFields.ID, groomMemberId)
+                  db.update(db.tables.MEMBER_TABLE, { prenup_record_id: prenupRecId }, memberCondition, function (result) {
+                    if (result !== null) {
+                      res.render('forms-main-page')
                     }
                   })
                 } else {
-                  res.send('COUPLE ID ERROR')
+                  res.render('UPDATE MEMBER PRENUPTIAL ERROR')
                 }
               })
             } else {
-              res.send('FEMALE ID ERROR')
+              res.render('PRENUP ERROR')
             }
           })
         } else {
-          res.send('MALE ID ERROR')
+          res.send('COUPLE ID ERROR')
         }
       })
     }

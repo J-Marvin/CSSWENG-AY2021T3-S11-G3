@@ -52,6 +52,15 @@ const validation = {
       check('wedding_date', 'Wedding date is required').notEmpty().isDate()
     ]
     return validation
+  },
+  addMemberPrenupValid: function () {
+    const validation = [
+      check('input_bride_member', "Bride's member and name is required").notEmpty(),
+      check('input_groom_member', "Groom's member and name is required"),
+      check('current_date', 'Current date is required').notEmpty().isDate(),
+      check('wedding_date', 'Wedding date is required').notEmpty().isDate()
+    ]
+    return validation
   }
 }
 

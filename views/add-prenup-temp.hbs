@@ -7,12 +7,15 @@
       document.getElementById("bride_member").checked = false
       document.getElementById("bride_member").removeAttribute("disabled")
       document.getElementById("bride_non_member").setAttribute("disabled", "disabled")
+      $("#prenup_form").attr('action', '/create_prenup')
+      
     }
     else {
       document.getElementById("bride_non_member_div").style.display = "none"
       document.getElementById("bride_non_member").checked = false
       document.getElementById("bride_non_member").removeAttribute("disabled")
       document.getElementById("bride_member").setAttribute("disabled", "disabled")
+      $("#prenup_form").attr('action', '/create_prenup_member')
     }
     document.getElementById(status + "_div").style.display = "block"
   }
@@ -22,12 +25,14 @@
       document.getElementById("groom_member").checked = false
       document.getElementById("groom_member").removeAttribute("disabled")
       document.getElementById("groom_non_member").setAttribute("disabled", "disabled")
+      $("#prenup_form").attr('action', '/create_prenup')
     }
     else {
       document.getElementById("groom_non_member_div").style.display = "none"
       document.getElementById("groom_non_member").checked = false
       document.getElementById("groom_non_member").removeAttribute("disabled")
       document.getElementById("groom_member").setAttribute("disabled", "disabled")
+      $("#prenup_form").attr('action', '/create_prenup_member')
     }
     document.getElementById(status + "_div").style.display = "block"
   }
@@ -35,19 +40,18 @@
 
 <h1> {{Origin}} </h1>
 
-<form action="/create_prenup" method="POST" class="container"> 
+<form id="prenup_form" action="/create_prenup_member" method="POST" class="container"> 
 
   <input type="checkbox" id="bride_non_member" onclick="display_div_bride('bride_non_member')"> BRIDE NON
   <input type="checkbox" id="bride_member" onclick="display_div_bride('bride_member')" checked disabled> BRIDE MEM
 
   <div id="bride_member_div" style="display:block">
     <label>Select Bride</label>
-    <select id="input_bride_member" class="form-select">
+    <select name="input_bride_member" id="input_bride_member" class="form-select">
       {{!-- checks if the names length is only 1 (i.e. brideNames.length == 1), function is in helpers/hbsHelper.js--}}
       {{#if (isLengthOne brideNames.length)}}
         {{> oneDropdownBride brideNames=brideNames}}
       {{else}}
-      <h1>HERE2</h1>
         {{> dropdownBride brideNames=brideNames}}
       {{/if}}
     </select>
@@ -78,7 +82,7 @@
 
   <div id="groom_member_div" style="display:block">
     <label>Select Groom</label>
-    <select id="input_groom_member" class="form-select">
+    <select name="input_groom_member" id="input_groom_member" class="form-select">
       {{!-- checks if the names length is only 1 (i.e. groomNames.length == 1), function is in helpers/hbsHelper.js--}}
       {{#if (isLengthOne groomNames.length)}}
         {{> oneDropdownGroom groomNames=groomNames}}
