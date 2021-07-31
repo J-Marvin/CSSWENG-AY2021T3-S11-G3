@@ -27,6 +27,38 @@ const observationController = {
         })
       }
     })
+  },
+
+  putUpdateObservation: function (req, res) {
+    const data = {}
+    const condition = new Condition(queryTypes.where)
+    condition.setKeyValue(observationFields.ID, req.body.observation_id)
+
+    data[observationFields.OBSERVER] = req.body.observer
+    data[observationFields.OBSERVEE] = req.body.observee
+    data[observationFields.COMMENT] = req.body.comment
+    console.log(req.body.observation_id)
+    console.log(data)
+    db.update(db.tables.OBSERVATION_TABLE, data, condition, function (result) {
+      if (result) {
+        res.send(true)
+      } else {
+        res.send(false)
+      }
+    })
+  },
+
+  delObservation: function (req, res) {
+    const condition = new Condition(queryTypes.where)
+    condition.setKeyValue(observationFields.ID, req.body.observation_id)
+
+    db.delete(db.tables.OBSERVATION_TABLE, condition, function (result) {
+      if (result) {
+        res.send(true)
+      } else {
+        res.send(false)
+      }
+    })
   }
 }
 

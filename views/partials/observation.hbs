@@ -1,6 +1,7 @@
-<div class='observation' data-observation="this.observation_id">
+<div class='observation' data-observation="{{this.observation_id}}">
   <p>
-    Observer: {{this.observer}} <br>
-    Comment: {{this.comment}}
+    Observer: <span class="observer">{{this.observer}}</span> <br>
+    Comment: <span class="comment">{{this.comment}}</span>
+    <button type="button" class="fas fa-trash delObservationBtn"></button> <button type="button"class="fas fa-edit editObservationBtn"></button>
   </p>
 </div>

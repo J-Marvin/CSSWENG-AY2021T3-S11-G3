@@ -2,6 +2,10 @@ const { check } = require('express-validator')
 const { default: validator } = require('validator')
 
 const validation = {
+  /**
+   * This function This function validates the add members form if there are no empty fields.
+   * @returns the validation array containing each boolean result
+   */
   addMemberValidation: function () {
     const validation = [
       check('first_name', 'First name is required').notEmpty(),
@@ -29,6 +33,55 @@ const validation = {
         return true
       }),
       check('mobile', 'Invalid mobile number').isNumeric()
+    ]
+    return validation
+  },
+
+  /**
+   * This function validates the church form if there are no empty required fields.
+   * @returns the validation array containing each boolean result
+   */
+  churchValidation: function () {
+    const validation = [
+      check('church_name', 'Church name is required').notEmpty(),
+      check('church_address_line', 'Address is required').notEmpty(),
+      check('church_city', 'City is required').notEmpty(),
+      check('church_province', 'State/Province/Region is required').notEmpty(),
+      check('church_country', 'Country is required').notEmpty()
+    ]
+
+    return validation
+  },
+
+  /**
+   * This function validates the observation form if there are no empty fields.
+   * @returns the validation array containing each boolean result
+   */
+  observationValidation: function () {
+    const validation = [
+      check('observer', 'Observer is required').notEmpty(),
+      check('comment', 'Comment is required').notEmpty(),
+      check('observee', 'Observee is required').notEmpty(),
+      check('observee', 'Invalid member id').isNumeric()
+    ]
+
+    return validation
+  },
+
+  /**
+   * This function validates the add pre-nuptial form if there are no empty fields.
+   * @returns the validation array containing each boolean result
+   */
+  addPrenupValidation: function () {
+    const validation = [
+      check('bride_first_name', "Bride's first name is required").notEmpty(),
+      check('bride_mid_name', "Bride's middle name is required").notEmpty(),
+      check('bride_last_name', "Bride's last name is required").notEmpty(),
+      check('groom_first_name', "Groom's first name is required").notEmpty(),
+      check('groom_mid_name', "Groom's middle name is required").notEmpty(),
+      check('groom_last_name', "Groom's last name is required").notEmpty(),
+      check('current_date', 'Current date is required').notEmpty().isDate(),
+      check('wedding_date', 'Wedding date is required').notEmpty().isDate()
     ]
     return validation
   }

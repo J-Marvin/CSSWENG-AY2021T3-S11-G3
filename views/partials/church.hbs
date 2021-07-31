@@ -1,12 +1,13 @@
-<div class="church" data-church={{this.church_id}} style="border: 1px">
-<h4>Church Name: {{this.church_name}}</h4><br>
+<div class="church" data-church="{{this.church_id}}" style="border: 1px">
 <p data-address="{{this.address_id}}">
-  Address Line 1: {{this.address_line}}<br>
-  Address Line 2: {{this.address_line2}}<br>
-  City: {{this.city}}<br>
-  Province: {{this.province}}<br>
-  Postal Code: {{this.postal_code}}<br>
-  Country: {{this.country}}
+  Church Name: <span class="church_name"> {{this.church_name}} </span><br>
+  Address Line 1: <span class="church_address_line">{{this.address_line}} </span><br>
+  Address Line 2: <span class="church_address_line2">{{this.address_line2}} </span><br>
+  City: <span class="church_city">{{this.city}} </span><br>
+  Province: <span class="church_province">{{this.province}} </span><br>
+  Postal Code: <span class="church_postal_code">{{this.postal_code}} </span><br>
+  Country: <span class="church_country">{{this.country}} </span><br>
+ <button type="button" class="fas fa-trash delChurchBtn"></button> <button type="button" class="fas fa-edit editChurchBtn"></button>
 </p>
 
 </div>

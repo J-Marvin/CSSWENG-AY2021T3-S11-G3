@@ -152,58 +152,49 @@
         <a href="/edit_member/{{member.member_id}}/add_prenup" id="add_prenup" type="button" class="btn btn-secondary">Add Prenup</a>
       </div>
     </div>
-    <div class="row mt-3">
-      <div class="col d-flex justify-content-end">
-         <button type="button" id="edit-member" class="btn btn-primary validate-member">Submit</button>
-      </div>
-    </div>
-  </div>
+    <button type="button" class="btn btn-primary" id="addObservationBtn"> Add Observation </button>
 
-  <br>
-  <h3>Churches</h3>
-  <div id="churchList"> 
-    {{#each churches}}
-    {{>church this}}
-    {{/each}}
-  </div>
 
-  <h3>Observations</h3>
-  <div id="observationList">
-    {{#each observations}}
-      {{>observation this}}
-    {{/each}}
-  </div>
+    <br><br>
+  
+    <a href="/edit_member/{{member.member_id}}/add_prenup" id="add_prenup" type="button" class="btn btn-secondary">Add Prenup</a>
 
-  <div class="modal fade" id="addChurchModal" aria-hidden="true">
-    <div class="modal-dialog  modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Add Church</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <fieldset id="churchFieldSet" class="form-group church-fieldset">
-            <div style="display:none" data-church="{{church_id}}" data-address="{{church_address}}"></div>
-            <legend>Churches: </legend>
-            <label for="church_name">Name of church</label>
-            <input type="text" id="church_name" name="church_name" class="form-control">
-            <label for="church_adress_line">Address Line 1</label>
-            <input type="text" id="church_address_line" name="church_address_line" class="form-control">
-            <label for="church_address_line2">Address Line 2</label>
-            <input type="text" id="church_address_line2" name="church_address_line2" class="form-control">
-            <label for="church_city">City</label>
-            <input type="text" id="church_city" name="church_city" class="form-control">
-            <label for="church_province">Province</label>
-            <input type="text" id="church_province" name="church_province" class="form-control">
-            <label for="church_postal_code">Postal Code</label>
-            <input type="text" id="church_postal_code" name="church_postal_code" class="form-control">
-            <label for="church_country">Country</label>
-            <input type="text" id="church_country" name="church_country" class="form-control">
-          </fieldset>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button id="saveChurchBtn" type="button" class="btn btn-primary">Save Church</button>
+    <br> <br>
+
+    <button type="button" id="edit-member" class="btn-primary validate-member">Submit</button>
+  
+
+    <div class="modal fade" id="addChurchModal" aria-hidden="true">
+      <div class="modal-dialog  modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Add Church</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <fieldset id="churchFieldset" class="form-group church-fieldset">
+              <div style="display:none" data-church="{{church_id}}" data-address="{{church_address}}"></div>
+              <legend>Churches: </legend>
+              <label for="church_name">Name of church</label>
+              <input type="text" id="church_name" name="church_name" class="form-control">
+              <label for="church_adress_line">Address Line 1</label>
+              <input type="text" id="church_address_line" name="church_address_line" class="form-control">
+              <label for="church_address_line2">Address Line 2</label>
+              <input type="text" id="church_address_line2" name="church_address_line2" class="form-control">
+              <label for="church_city">City</label>
+              <input type="text" id="church_city" name="church_city" class="form-control">
+              <label for="church_province">Province</label>
+              <input type="text" id="church_province" name="church_province" class="form-control">
+              <label for="church_postal_code">Postal Code</label>
+              <input type="text" id="church_postal_code" name="church_postal_code" class="form-control">
+              <label for="church_country">Country</label>
+              <input type="text" id="church_country" name="church_country" class="form-control">
+            </fieldset>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button id="saveChurchBtn" type="button" class="btn btn-primary">Save Church</button>
+          </div>
         </div>
       </div>
     </div>

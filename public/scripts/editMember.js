@@ -1,89 +1,163 @@
 $(document).ready(function () {
-  
-  $('#submitbtn').click(function() {
+  let addObservation = false
+  let addChurch = false
+  let editObservationId = null
+  let editChurchId = null
+  let editChurchAddressId = null
+  let parentDiv = null
+  const churchModal = $('#addChurchModal')
+  const observationModal = $('#addObservationModal')
+
+  function validateEmail(email) {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    return re.test(String(email).toLowerCase());
+  }
+
+  function validateMobile(number) {
+    const re = /\d{4}\s?-?\d{3}\s?-?\d{4}/
+    return re.test(number);
+  }
+
+  function validateFields() {
+    var isValid = true
+    var errors = ''
+
+    // if(validator.isEmpty($('#first_name').val())) {
+    //     errors = errors + 'pls fill out first name\n'
+    //     isValid = false
+    // }
+
+    // if(validator.isEmpty($('#mid_name').val())) {
+    //     errors = errors + 'pls fill out middle name\n'
+    //     isValid = false
+    // }
+
+    // if(validator.isEmpty($('#last_name').val())) {
+    //     errors = errors + 'pls fill out last name\n'
+    //     isValid = false
+    // }
+
+    // if(validator.isEmpty($('#age').val())) {
+    //     errors = errors + 'pls fill out age\n'
+    //     isValid = false
+    // } else if (validator.isNumeric($('#age').val())) {
+    //     errors = errors + 'age must only consist of numbers\n'
+    //     isValid = false
+    // }
+
+    // if(validator.isEmpty($('#birthday').val())) {
+    //     errors = errors + 'pls fill out birthday\n'
+    //     isValid = false
+    // }
+
+    // if(validator.isEmpty($('#occupation').val())) {
+    //     errors = errors + 'pls fill out occupation\n'
+    //     isValid = false
+    // }
+
+    // if(validator.isEmpty($('#membership_status').val())) {
+    //     errors = errors + 'pls fill out first mem status\n'
+    //     isValid = false
+    // }
+
+    // if(validator.isEmpty($('#civil_status').val())) {
+    //     errors = errors + 'pls fill out civil status\n'
+    //     isValid = false
+    // }
+
+    // if(validator.isEmpty($('#sex').val())) {
+    //     errors = errors + 'pls fill out sex\n'
+    //     isValid = false
+    // }
+
+    // if(validator.isEmpty($('#address_line').val())) {
+    //     errors = errors + 'pls fill out address line\n'
+    //     isValid = false
+    // }
+
+    // if(validator.isEmpty($('#city').val())) {
+    //     errors = errors + 'pls fill out city\n'
+    //     isValid = false
+    // }
+
+    // if(validator.isEmpty($('#workplace').val())) {
+    //     errors = errors + 'pls fill out workplace\n'
+    //     isValid = false
+    // }
+
+    // if(validator.isEmpty($('#email').val())) {
+    //     errors = errors + 'pls fill out email\n'
+    //     isValid = false
+    // } else if (!validateEmail($('#email').val())) {
+    //     errors = errors + 'pls provide valid email\n'
+    //     isValid = false
+    // }
+
+    if (validator.isEmpty($('#mobile').val())) {
+      errors = errors + 'pls fill out mobile\n'
+      isValid = false
+    } else if (!validateMobile($('#mobile').val())) {
+      errors = errors + 'pls provide valid mobile number\n'
+      isValid = false
+    }
+
+    if(!isValid)
+      alert(errors)
+
+    return isValid
+  }
+
+  $('#edit-member').click(function() {
     
-    const data = {
-      member_id: $('#member_id').text(),
-      first_name: $('#first_name').val(),
-      middle_name: $('#mid_name').val(),
-      last_name: $('#last_name').val(),
-      age: $('#age').val(),
-      birthday: $('#birthday').val(),
-      occupation: $('#occupation').val(),
-      membership_status: $('#membership_status').val(),
-      civil_status: $('#civil_status').val(),
-      sex: $('#sex').val(),
-      address_line: $('#address_line').val(),
-      barangay: $('#barangay').val(),
-      city: $('#city').val(),
-      province: $('#province').val(),
-      workplace: $('#workplace').val(),
-      email: $('#email').val(),
-      telephone: $('#telephone').val(),
-      mobile: $('#mobile').val(),
-      educational_attainment: $('#educational_attainment').val(),
-      alma_mater: $('#alma_mater').val(),
-      family_members: $('#family_members').val(),
-      skills: $('#skills').val(),
-      member_id: $('#member_info').attr('data-member'),
-      address_id: $('#member_info').attr('data-address'),
-      person_id: $('#member_info').attr('data-person')
-    }
-
-    const observations = $('.observation-field').toArray()
-    data.observations = []
-    for (const commentField of observations) {
-      const comment_id = $(commentField).attr('data-comment').val()
-      const comment = $(commentField).find('#comment').val()
-      const commenter = $(commentField).find('#commenter').val()
-      if(!validator.isEmpty(comment))
-        data.observations.push({
-          comment: comment, 
-          observer: commenter, 
-          observee_id: data.member_id,
-          comment_id: comment_id
-        })
-    }
-    data.observations = JSON.stringify(data.observations)
-
-    data.churches = []
-
-    const churches = $('.church-fieldset').toArray()
-    data.churches = []
-
-    for(const churchFieldset of churches) {
-      const church = {}
-      church.address = {}
-      church.church_name = $(churchFieldset).find('#church_name').val()
-      church.address.address_line = $(churchFieldset).find('#church_address_line').val()
-      church.address.address_line2 = $(churchFieldset).find('#church_address_line2').val()
-      church.address.city = $(churchFieldset).find('#church_city').val()
-      church.address.province = $(churchFieldset).find('#church_province').val()
-      church.address.postal_code = $(churchFieldset).find('#church_postal_code').val()
-      church.address.country = $(churchFieldset).find('#church_country').val()
-      church.church_id = $(churchFieldset).attr('data-church')
-      church.address_id = $(churchFieldset).attr('data-address')
-      
-      data.churches.push(church)
-    }
-
-    data.churches = JSON.stringify(data.churches)
-
-    $.ajax({
-      type: "POST",
-      data: data,
-      url: "/update_member",
-      success: function(result) {
-        alert(result)
+    if (validateFields()) {
+      const data = {
+        member_id: $('#member_id').text(),
+        first_name: $('#first_name').val(),
+        middle_name: $('#mid_name').val(),
+        last_name: $('#last_name').val(),
+        age: $('#age').val(),
+        birthday: $('#birthday').val(),
+        occupation: $('#occupation').val(),
+        membership_status: $('#membership_status').val(),
+        civil_status: $('#civil_status').val(),
+        sex: $('#sex').val(),
+        address_line: $('#address_line').val(),
+        barangay: $('#barangay').val(),
+        city: $('#city').val(),
+        province: $('#province').val(),
+        workplace: $('#workplace').val(),
+        email: $('#email').val(),
+        telephone: $('#telephone').val(),
+        mobile: $('#mobile').val(),
+        educational_attainment: $('#educational_attainment').val(),
+        alma_mater: $('#alma_mater').val(),
+        family_members: $('#family_members').val(),
+        skills: $('#skills').val(),
+        member_id: $('#member_info').attr('data-member'),
+        address_id: $('#member_info').attr('data-address'),
+        person_id: $('#member_info').attr('data-person')
       }
-    })
+        $.ajax({
+          type: "POST",
+          data: data,
+          url: "/update_member",
+          success: function (result) {
+            if (result === true)
+              alert("Changes saved")
+            else alert(result)
+          }
+        })
+
+    } 
     
   })
 
   $('#addChurchBtn').click(function() {
-    const fields = $('#addChurchModal').find('input').val("")
-
-    $('#addChurchModal').modal('show')
+    const fields = $(churchModal).find('input').val("")
+    addChurch = true
+    editChurchId = null
+    parentDiv = null
+    $(churchModal).modal('show')
   })
 
   $('#saveChurchBtn').click(function() {
@@ -103,36 +177,36 @@ $(document).ready(function () {
     church.country = $(churchFieldset).find('#church_country').val()
     church.member_id = $('#member_info').attr('data-member')
 
-    if(validator.isEmpty($(churchFieldset).find('#church_name').val())) {
-      isValid = false
-      errors = errors + 'pls enter church name\n'
-    }
-
-    if(validator.isEmpty($(churchFieldset).find('#church_address_line').val())) {
-      isValid = false
-      errors = errors + 'pls enter church address\n'
-    }
-
-    if(validator.isEmpty($(churchFieldset).find('#church_city').val())) {
-      isValid = false
-      errors = errors + 'pls enter church city\n'
-    }
-
-    if(validator.isEmpty($(churchFieldset).find('#church_country').val())) {
-      isValid = false
-      errors = errors + 'pls enter church country\n'
-    }
-
-    if(!isValid) {
-      alert(errors)
-    } else {
+    if(addChurch) {
       $.ajax({
         type: "POST",
         data: church,
         url: "/add_church",
         success: function (result) {
           $('#churchList').append(result)
-          $('#addChurchModal').modal('hide')
+          $(churchModal).modal('hide')
+        }
+      })
+    } else {
+      church.church_id = editChurchId
+      church.address_id = editChurchAddressId
+
+      $.ajax({
+        type: "PUT",
+        data: church,
+        url: "/update_church",
+        success: function (result) {
+          if(result) {
+            $(parentDiv).find('.church_name').text(church.church_name)
+            $(parentDiv).find('.church_address_line').text(church.address_line)
+            $(parentDiv).find('.church_address_line2').text(church.address_line2)
+            $(parentDiv).find('.church_city').text(church.city)
+            $(parentDiv).find('.church_province').text(church.province)
+            $(parentDiv).find('.church_postal_code').text(church.postal_code)
+            $(parentDiv).find('.church_country').text(church.country)
+
+            $(churchModal).modal('hide')
+          }
         }
       })
     }
@@ -163,26 +237,130 @@ $(document).ready(function () {
     if(!isValid) {
       alert(errors)
     } else {
-      $.ajax({
-        type: "POST",
-        data: observation,
-        url: "/add_observation",
-        success: function (result) {
-          $('#observationList').append(result)
-          $('#addObservationModal').modal('hide')
+        if (addObservation) {
+          $.ajax({
+            type: "POST",
+            data: observation,
+            url: "/add_observation",
+            success: function (result) {
+              $('#observationList').append(result)
+              $(observationModal).modal('hide')
+            }
+          })
+        } else {
+          observation.observation_id = editObservationId
+          $.ajax({
+            type: "PUT",
+            data: observation,
+            url: "/update_observation",
+            success: function (result) {
+              if(result) {
+                $(parentDiv).find('.comment').text(observation.comment)
+                $(parentDiv).find('.observer').text(observation.observer)
+                $(observationModal).modal('hide')
+              } else {
+                alert("FAILED")
+              }
+            }
+          })
         }
-      })
-    }
+      }
   })
 
   $('#addObservationBtn').click(function() {
-    const fields = $('#addObservationModal').find('input')
-
-    // clear all fields of modal
-    for (field of fields) {
-      $(field).val("")
-    }
-
-    $('#addObservationModal').modal('show')
+    const fields = $(observationModal).find('input').val("")
+    addObservation = true
+    editObservationId = null
+    parentDiv = null
+    $(observationModal).modal('show')
   })
+
+  $(document).on('click', '.editObservationBtn', function () {
+    const comment = $(this).siblings('.comment').text()
+    const observer = $(this).siblings('.observer').text()
+
+    const observationFieldset = $('#observationFieldset')
+
+    editObservationId = $(this).closest('div').attr('data-observation')
+    parentDiv = $(this).closest('div')
+    addObservation = false
+
+    $(observationFieldset).find('#comment').val(comment)
+    $(observationFieldset).find('#commenter').val(observer)
+
+    $(observationModal).modal('show')
+  });
+
+  $(document).on('click', '.delObservationBtn', function () {
+    const data = {}
+    const parent = $(this).closest('div')
+    data.observation_id = $(this).closest('div').attr('data-observation')
+    $.ajax({
+      type: "DELETE",
+      data: data,
+      url: "/delete_observation",
+      success: function (result) {
+        console.log(result)
+        if (result) {
+          parent.remove()
+        } else {
+          alert("FAILED")
+        }
+      }
+    })
+  })
+
+  $(document).on('click', '.editChurchBtn', function () {
+    const church_name = $(this).siblings('.church_name').text()
+    const address_line = $(this).siblings('.church_address_line').text()
+    const address_line2 = $(this).siblings('.church_address_line2').text()
+    const city = $(this).siblings('.church_city').text()
+    const province = $(this).siblings('.church_province').text()
+    const country = $(this).siblings('.church_country').text()
+    const postal_code = $(this).siblings('.church_postal_code').text()
+
+    const churchFieldset = $('#churchFieldset')
+
+    editChurchId = $(this).closest('div').attr('data-church')
+    editChurchAddressId = $(this).closest('p').attr('data-address')
+    parentDiv = $(this).closest('div')
+    addChurch = false
+
+    $(churchFieldset).find('#church_name').val(church_name)
+    $(churchFieldset).find('#church_address_line').val(address_line)
+    $(churchFieldset).find('#church_address_line2').val(address_line2)
+    $(churchFieldset).find('#church_city').val(city)
+    $(churchFieldset).find('#church_province').val(province)
+    $(churchFieldset).find('#church_postal_code').val(postal_code)
+    $(churchFieldset).find('#church_country').val(country)
+
+    $(churchModal).modal('show')
+  })
+
+  $(document).on('click', '.delChurchBtn', function () {
+    const data = {}
+    const parent = $(this).closest('div')
+    data.church_id = $(this).closest('div').attr('data-church')
+    data.address_id = $(this).closest('p').attr('data-address')
+
+    alert(data.church_id)
+
+    $.ajax({
+      type: "DELETE",
+      data: data,
+      url: "/delete_church",
+      success: function (result) {
+        console.log(result)
+        if (result) {
+          parent.remove()
+        } else {
+          alert("FAILED")
+        }
+      }
+    })
+  })
+
+  
+
+
 })

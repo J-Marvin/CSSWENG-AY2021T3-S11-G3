@@ -4,6 +4,7 @@ const bodyParser = require('body-parser')
 const exphbs = require('express-handlebars')
 const path = require('path')
 const db = require(path.join(__dirname, './models/db.js'))
+const hbsHelpers = require('./helpers/hbsHelper')
 
 const app = express()
 const routes = require('./routes/routes.js')
@@ -12,7 +13,8 @@ const hbs = exphbs.create({
   defaultLayout: 'main',
   extname: '.hbs',
   layoutsDir: path.join(__dirname, 'views/layouts'),
-  partialsDir: path.join(__dirname, 'views/partials')
+  partialsDir: path.join(__dirname, 'views/partials'),
+  helpers: hbsHelpers
 })
 
 dotenv.config({ path: path.join(__dirname, '.env') })
