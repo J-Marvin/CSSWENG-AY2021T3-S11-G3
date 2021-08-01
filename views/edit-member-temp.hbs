@@ -45,17 +45,15 @@
     <div class="row">
       <div class="col">
         <label for="membership_status">Membership Status</label>
-        <select id="membership_status" name="membership_status" class="form-select" value="{{member.member_status}}">
-          <option> Active </option>
-          <option> Inactive </option>
+        <select id="membership_status" name="membership_status" class="form-select">
+          {{{memberStatusSelection member.member_status}}}
         </select>
         <p id="membership_status_error" class="error_codes">  </p>
       </div>
       <div class="col">
         <label for="civil_status">Civil Status</label>
-        <select id="civil_status" name="civil_status" class="form-select" value="{{member.civil_status}}">
-          <option> Single </option>
-          <option> Married </option>
+        <select id="civil_status" name="civil_status" class="form-select">
+          {{{civilStatusSelection member.civil_status}}}
         </select>
         <p id="civil_status_error" class="error_codes">  </p>
       </div>
