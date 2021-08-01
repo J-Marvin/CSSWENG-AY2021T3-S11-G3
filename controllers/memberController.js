@@ -21,54 +21,66 @@ const memberController = {
   },
 
   getEditMember: function (req, res) {
-    const data = {
-      scripts: ['member']
+    if (req.session.fromCreate || req.session.level === 3) {
+      const data = {
+        scripts: ['member']
+      }
+      const condition = new Condition(queryTypes.where)
+      const churchCondition = new Condition(queryTypes.where)
+      const observationCondition = new Condition(queryTypes.where)
+
+      const joinTables = [
+        {
+          tableName: db.tables.PERSON_TABLE,
+          sourceCol: db.tables.MEMBER_TABLE + '.' + memberFields.PERSON,
+          destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
+        },
+        {
+          tableName: db.tables.ADDRESS_TABLE,
+          sourceCol: db.tables.MEMBER_TABLE + '.' + memberFields.ADDRESS,
+          destCol: db.tables.ADDRESS_TABLE + '.' + addressFields.ID
+        }
+      ]
+
+      const joinChurchTables = [
+        {
+          tableName: db.tables.ADDRESS_TABLE,
+          sourceCol: db.tables.CHURCH_TABLE + '.' + churchFields.ADDRESS,
+          destCol: db.tables.ADDRESS_TABLE + '.' + addressFields.ID
+        }
+      ]
+
+      condition.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.ID, parseInt(req.params.member_id))
+      churchCondition.setKeyValue(churchFields.MEMBER, parseInt(req.params.member_id))
+      observationCondition.setKeyValue(observationFields.OBSERVEE, parseInt(req.params.member_id))
+      db.find(db.tables.MEMBER_TABLE, condition, joinTables, '*', function (result) {
+        if (result) {
+          data.member = result[0]
+          db.find(db.tables.CHURCH_TABLE, churchCondition, joinChurchTables, '*', function (result) {
+            if (result) {
+              data.churches = result
+
+              db.find(db.tables.OBSERVATION_TABLE, observationCondition, null, '*', function (result) {
+                if (result) {
+                  data.observations = result
+                  res.render('edit-member-temp', data)
+                }
+              })
+            }
+          })
+        }
+      })
+    } else {
+      res.status(401)
+      res.render('error', {
+        title: '401 Unauthorized Access',
+        css: ['global', 'error'],
+        status: {
+          code: '401',
+          message: 'Unauthorized access'
+        }
+      })
     }
-    const condition = new Condition(queryTypes.where)
-    const churchCondition = new Condition(queryTypes.where)
-    const observationCondition = new Condition(queryTypes.where)
-
-    const joinTables = [
-      {
-        tableName: db.tables.PERSON_TABLE,
-        sourceCol: db.tables.MEMBER_TABLE + '.' + memberFields.PERSON,
-        destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
-      },
-      {
-        tableName: db.tables.ADDRESS_TABLE,
-        sourceCol: db.tables.MEMBER_TABLE + '.' + memberFields.ADDRESS,
-        destCol: db.tables.ADDRESS_TABLE + '.' + addressFields.ID
-      }
-    ]
-
-    const joinChurchTables = [
-      {
-        tableName: db.tables.ADDRESS_TABLE,
-        sourceCol: db.tables.CHURCH_TABLE + '.' + churchFields.ADDRESS,
-        destCol: db.tables.ADDRESS_TABLE + '.' + addressFields.ID
-      }
-    ]
-
-    condition.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.ID, parseInt(req.params.member_id))
-    churchCondition.setKeyValue(churchFields.MEMBER, parseInt(req.params.member_id))
-    observationCondition.setKeyValue(observationFields.OBSERVEE, parseInt(req.params.member_id))
-    db.find(db.tables.MEMBER_TABLE, condition, joinTables, '*', function (result) {
-      if (result) {
-        data.member = result[0]
-        db.find(db.tables.CHURCH_TABLE, churchCondition, joinChurchTables, '*', function (result) {
-          if (result) {
-            data.churches = result
-
-            db.find(db.tables.OBSERVATION_TABLE, observationCondition, null, '*', function (result) {
-              if (result) {
-                data.observations = result
-                res.render('edit-member-temp', data)
-              }
-            })
-          }
-        })
-      }
-    })
   },
 
   /**
@@ -79,79 +91,79 @@ const memberController = {
   createMember: function (req, res) {
     let errors = validationResult(req)
 
-    if (!errors.isEmpty()) {
-      errors = errors.errors
-
-      console.log(errors)
-      let msg = ''
-
-      errors.forEach((error) => {
-        msg += error.msg + '<br>'
-      })
-
-      res.send(msg)
-    } else {
-      const data = {
-        person: {},
-        member: {},
-        address: {}
-      }
-
-      data.person[personFields.FIRST_NAME] = req.body.first_name
-      data.person[personFields.MID_NAME] = req.body.middle_name
-      data.person[personFields.LAST_NAME] = req.body.last_name
-
-      data.address[addressFields.ADDRESS_LINE] = req.body.address_line
-      data.address[addressFields.ADDRESS_LINE2] = req.body.address_line2
-      data.address[addressFields.CITY] = req.body.city
-      data.address[addressFields.PROVINCE] = req.body.province
-      data.address[addressFields.POSTAL_CODE] = req.body.postal_code
-      data.address[addressFields.COUNTRY] = req.body.country
-
-      data.member[memberFields.AGE] = req.body.age
-      data.member[memberFields.BIRTHDAY] = req.body.birthday
-      data.member[memberFields.OCCUPATION] = req.body.occupation
-      data.member[memberFields.WORKPLACE] = req.body.workplace
-      data.member[memberFields.EMAIL] = req.body.email
-      data.member[memberFields.MOBILE] = req.body.mobile
-      data.member[memberFields.EDUCATIONAL_ATTAINMENT] = req.body.educational_attainment
-      data.member[memberFields.ALMA_MATER] = req.body.alma_mater
-      data.member[memberFields.SKILLS] = req.body.skills
-      data.member[memberFields.MEMBER_STATUS] = req.body.membership_status
-      data.member[memberFields.CIVIL_STATUS] = req.body.civil_status
-      data.member[memberFields.FAMILY] = req.body.family_members
-      data.member[memberFields.SEX] = req.body.sex
-      data.member[memberFields.DATE] = new Date().toISOString()
-
-      // insert to PEOPLE table
-      db.insert(db.tables.PERSON_TABLE, data.person, function (personId) {
-        // update person_id
-        if (personId) {
-          data.member[memberFields.PERSON] = personId
-
-          // insert to ADDRESS table
-          db.insert(db.tables.ADDRESS_TABLE, data.address, function (addressId) {
-            // update address_id
-            if (addressId) {
-              data.member[memberFields.ADDRESS] = addressId
-              // finally insert to MEMBER table
-              db.insert(db.tables.MEMBER_TABLE, data.member, function (result) {
-                // insert res.render() or res.redirect()
-                const personCondition = new Condition(queryTypes.where)
-                personCondition.setKeyValue(personFields.ID, data.member[memberFields.PERSON])
-                const memberId = result[0]
-                db.update(db.tables.PERSON_TABLE, { member_id: result[0] }, personCondition, function (result) {
-                  res.redirect('/edit_member/' + memberId)
-                })
-              })
-            } else {
-              res.send('ERROR')
-            }
-          })
-        } else {
-          res.send('ERROR')
+    if (req.session.level === null || req.session.level === undefined) {
+      if (!errors.isEmpty()) {
+        errors = errors.errors
+        console.log(errors)
+        let msg = ''
+        errors.forEach((error) => {
+          msg += error.msg + '<br>'
+        })
+        res.send(msg)
+      } else {
+        const data = {
+          person: {},
+          member: {},
+          address: {}
         }
-      })
+
+        data.person[personFields.FIRST_NAME] = req.body.first_name
+        data.person[personFields.MID_NAME] = req.body.middle_name
+        data.person[personFields.LAST_NAME] = req.body.last_name
+
+        data.address[addressFields.ADDRESS_LINE] = req.body.address_line
+        data.address[addressFields.ADDRESS_LINE2] = req.body.address_line2
+        data.address[addressFields.CITY] = req.body.city
+        data.address[addressFields.PROVINCE] = req.body.province
+        data.address[addressFields.POSTAL_CODE] = req.body.postal_code
+        data.address[addressFields.COUNTRY] = req.body.country
+
+        data.member[memberFields.AGE] = req.body.age
+        data.member[memberFields.BIRTHDAY] = req.body.birthday
+        data.member[memberFields.OCCUPATION] = req.body.occupation
+        data.member[memberFields.WORKPLACE] = req.body.workplace
+        data.member[memberFields.EMAIL] = req.body.email
+        data.member[memberFields.MOBILE] = req.body.mobile
+        data.member[memberFields.EDUCATIONAL_ATTAINMENT] = req.body.educational_attainment
+        data.member[memberFields.ALMA_MATER] = req.body.alma_mater
+        data.member[memberFields.SKILLS] = req.body.skills
+        data.member[memberFields.MEMBER_STATUS] = req.body.membership_status
+        data.member[memberFields.CIVIL_STATUS] = req.body.civil_status
+        data.member[memberFields.FAMILY] = req.body.family_members
+        data.member[memberFields.SEX] = req.body.sex
+        data.member[memberFields.DATE] = new Date().toISOString()
+
+        // insert to PEOPLE table
+        db.insert(db.tables.PERSON_TABLE, data.person, function (personId) {
+          // update person_id
+          if (personId) {
+            data.member[memberFields.PERSON] = personId
+
+            // insert to ADDRESS table
+            db.insert(db.tables.ADDRESS_TABLE, data.address, function (addressId) {
+              // update address_id
+              if (addressId) {
+                data.member[memberFields.ADDRESS] = addressId
+                // finally insert to MEMBER table
+                db.insert(db.tables.MEMBER_TABLE, data.member, function (result) {
+                  // insert res.render() or res.redirect()
+                  const personCondition = new Condition(queryTypes.where)
+                  personCondition.setKeyValue(personFields.ID, data.member[memberFields.PERSON])
+                  const memberId = result[0]
+                  db.update(db.tables.PERSON_TABLE, { member_id: result[0] }, personCondition, function (result) {
+                    req.session.fromCreate = true
+                    res.redirect('/edit_member/' + memberId)
+                  })
+                })
+              } else {
+                res.send('ERROR')
+              }
+            })
+          } else {
+            res.send('ERROR')
+          }
+        })
+      }
     }
   },
   /**

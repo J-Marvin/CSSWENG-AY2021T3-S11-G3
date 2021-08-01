@@ -21,6 +21,9 @@ const loginController = {
       })
     }).then((level) => {
       if (level) {
+        req.session.level = level
+
+        console.log(req.session)
         res.render('main-page', {
           Level: level
         })

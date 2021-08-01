@@ -36,7 +36,7 @@ const data = [
       member_status: 'active',
       civil_status: 'single',
       age: 25,
-      birthday: new Date(1996, 2, 3).toISOString(),
+      birthday: new Date(1996, 1, 3).toISOString(),
       occupation: 'IT',
       workplace: 'Quezon City',
       email: 'jonathan@gmail.com',
@@ -63,7 +63,7 @@ const data = [
       member_status: 'active',
       civil_status: 'married',
       age: 54,
-      birthday: new Date(1966, 9, 27).toISOString(),
+      birthday: new Date(1966, 8, 27).toISOString(),
       occupation: 'Engineer',
       workplace: 'Manila',
       email: 'joseph@gmail.com',
@@ -90,7 +90,7 @@ const data = [
       member_status: 'active',
       civil_status: 'single',
       age: '19',
-      birthday: new Date(2001, 12, 5).toISOString(),
+      birthday: new Date(2001, 11, 5).toISOString(),
       occupation: 'Student',
       workplace: 'DLSU',
       email: 'isaac_clarke@gmail.com',
@@ -117,7 +117,7 @@ const data = [
       member_status: 'active',
       civil_status: 'single',
       age: 25,
-      birthday: new Date(1996, 1, 7).toISOString(),
+      birthday: new Date(1996, 0, 7).toISOString(),
       occupation: 'Researcher',
       workplace: 'Therum',
       email: 'liara_broker@gmail.com',
@@ -144,7 +144,7 @@ const data = [
       member_status: 'inactive',
       civil_status: 'single',
       age: 25,
-      birthday: new Date(1996, 3, 6).toISOString(),
+      birthday: new Date(1996, 2, 6).toISOString(),
       occupation: 'Investigator',
       workplace: 'Citadel',
       email: 'garrus@csec.com',
@@ -452,7 +452,7 @@ function initDatabase (file) {
     'comment TEXT NOT NULL,' +
     'observee_id INTEGER NOT NULL,' +
     'observer TEXT NOT NULL,' +
-    'data TEXT NOT NULL,' +
+    'date TEXT NOT NULL,' +
     'FOREIGN KEY(observee_id) REFERENCES members(member_id)' +
     ')'
 
