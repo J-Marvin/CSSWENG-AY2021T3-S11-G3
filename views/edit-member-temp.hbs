@@ -61,9 +61,8 @@
       </div>
       <div class="col">
         <label for="sex">Sex</label>
-        <select id="sex" name="sex" class="form-select" value="{{member.sex}}">
-          <option> Male </option>
-          <option> Female </option>
+        <select id="sex" name="sex" class="form-select">
+          {{{sexSelection member.sex}}}
         </select>
         <p id="sex_error" class="error_codes">  </p>
       </div>
