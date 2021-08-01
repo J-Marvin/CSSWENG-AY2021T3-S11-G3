@@ -452,6 +452,7 @@ function initDatabase (file) {
     'comment TEXT NOT NULL,' +
     'observee_id INTEGER NOT NULL,' +
     'observer TEXT NOT NULL,' +
+    'data TEXT NOT NULL,' +
     'FOREIGN KEY(observee_id) REFERENCES members(member_id)' +
     ')'
 

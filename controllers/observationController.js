@@ -9,6 +9,7 @@ const observationController = {
     data[observationFields.OBSERVER] = req.body.observer
     data[observationFields.OBSERVEE] = req.body.observee
     data[observationFields.COMMENT] = req.body.comment
+    data[observationFields.DATE] = new Date().toISOString()
 
     console.log(data)
     db.insert(db.tables.OBSERVATION_TABLE, data, function (result) {
