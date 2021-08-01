@@ -6,6 +6,13 @@ const hbHelpers = {
   },
   isLengthOne: function (namesLen) {
     return namesLen === 1
+  },
+  sexSelection: function (gender) {
+    if (gender === 'Male') {
+      return '<option selected>Male</option> <option>Female</option>'
+    } else {
+      return '<option>Male</option> <option selected>Female</option>'
+    }
   }
 
 }
