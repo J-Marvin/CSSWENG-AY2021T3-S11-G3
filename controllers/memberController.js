@@ -21,7 +21,7 @@ const memberController = {
   },
 
   getEditMember: function (req, res) {
-    if (req.session.fromCreate || req.session.level === 3) {
+    if (req.session.editMemberId === req.params.member_id || parseInt(req.session.level) === 3) {
       const data = {
         scripts: ['member']
       }
@@ -91,7 +91,7 @@ const memberController = {
   createMember: function (req, res) {
     let errors = validationResult(req)
 
-    if (req.session.level === null || req.session.level === undefined) {
+    if (req.session.level !== null && req.session.level !== undefined) {
       if (!errors.isEmpty()) {
         errors = errors.errors
         console.log(errors)
@@ -151,7 +151,7 @@ const memberController = {
                   personCondition.setKeyValue(personFields.ID, data.member[memberFields.PERSON])
                   const memberId = result[0]
                   db.update(db.tables.PERSON_TABLE, { member_id: result[0] }, personCondition, function (result) {
-                    req.session.fromCreate = true
+                    req.session.editMemberId = memberId
                     res.redirect('/edit_member/' + memberId)
                   })
                 })
@@ -164,6 +164,16 @@ const memberController = {
           }
         })
       }
+    } else {
+      res.status(401)
+      res.render('error', {
+        title: '401 Unauthorized Access',
+        css: ['global', 'error'],
+        status: {
+          code: '401',
+          message: 'Unauthorized access'
+        }
+      })
     }
   },
   /**

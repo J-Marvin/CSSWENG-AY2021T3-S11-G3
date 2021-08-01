@@ -7,6 +7,7 @@ const db = require(path.join(__dirname, './models/db.js'))
 const hbsHelpers = require('./helpers/hbsHelper')
 const session = require('express-session')
 const MemoryStore = require('memorystore')(session)
+const nocache = require('nocache')
 
 const app = express()
 const routes = require('./routes/routes.js')
@@ -39,6 +40,7 @@ app.use(session({
   resave: false,
   secret: 'christian-church'
 }))
+app.use(nocache())
 
 app.use('/', routes)
 

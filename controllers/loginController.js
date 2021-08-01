@@ -5,6 +5,7 @@ const loginController = {
   getLoginPage: function (req, res) {
     res.render('login', { scripts: ['login'] })
   },
+
   postLogIn: function (req, res) {
     const password = req.body.password
 
@@ -44,6 +45,7 @@ const loginController = {
       }
     })
   },
+
   checkCredentials: function (req, res) {
     const password = req.body.password
 
@@ -69,7 +71,18 @@ const loginController = {
         res.send(err.message)
       }
     })
-  }
+  },
+
+  getLogout: function (req, res) {
+    req.session.destroy((err) => {
+      if (err) {
+        console.log(err)
+        req.redirect('/')
+      } else {
+        req.redirect('/')
+      }
+    })
+  },
 }
 
 module.exports = loginController
