@@ -15,7 +15,15 @@ $(document).ready(function () {
 
   function validateMobile(number) {
     const re = /\d{4}\s?-?\d{3}\s?-?\d{4}/
-    return re.test(number);
+    const reCountry = /^([+]\d{2,3})?\d{10}$/
+    return re.test(number) || reCountry.test(number) || validator.isNumeric(number)
+  }
+
+  function validateTelephone(number) {
+    const regex = /^([+])?[0-9]+$/
+    const localRegex = /^([(]\d{2,3}[)]){0,1}(\d{3}[-]\d{4}|\d{7})$/
+
+    return regex.test(number) || localRegex.test(number) || validator.isNumeric(number) || validator.isEmpty(number)
   }
 
   function validateFields() {
@@ -46,23 +54,16 @@ $(document).ready(function () {
         $('#last_name_error').text('')
     }
 
-    if(validator.isEmpty($('#age').val())) {
-        $('#age_error').text('Required')
-        errors += 'Age name is required\n'
-        isValid = false
-    } else if ($('#age').val() < 0) {
-        $('#age_error').text('Enter valid age')
-        errors += 'Invalid age\n'
-        isValid = false
-    } else {
-        $('#age_error').text('')
-    }
-
     if(validator.isEmpty($('#birthday').val())) {
-        errors += 'Birthday is required\n'
-        $('#birthday_error').text('Required')
-        isValid = false
-    } else {
+      errors += 'Birthday is required\n'
+      $('#birthday_error').text('Required')
+      isValid = false
+    } else if (new Date($('#birthday').val()) > new Date()) {
+      errors += 'Birthday is required\n'
+      $('#birthday_error').text('Invalid date')
+      isValid = false
+    }
+    else {
         $('#birthday_error').text('')
     }
 
@@ -122,7 +123,7 @@ $(document).ready(function () {
         $('#country_error').text('')
     }
 
-    if (!validateEmail($('#email').val()) && !validator.isEmpty($('#email').val())) {
+    if (!validator.isEmail($('#email').val()) && !validator.isEmpty($('#email').val())) {
         $('#email_error').text('Enter valid email')
         errors += 'Invalid email\n'
         isValid = false
@@ -130,16 +131,20 @@ $(document).ready(function () {
         $('#email_error').text('')
     }
 
-    if(validator.isEmpty($('#mobile').val())) {
-        $('#mobile_error').text('Required')
-        errors += 'Mobile number is required\n'
-        isValid = false
-    } else if(!validateMobile($('#mobile').val())) {
+    if(!validateMobile($('#mobile').val())) {
         $('#mobile_error').text('Enter valid mobile number')
         errors += 'Invalid mobile number\n'
         isValid = false
     } else {
         $('#mobile_error').text('')
+    }
+
+    if(!validateTelephone($('#telephone').val())) {
+      $('#telephone_error').text('Enter valid telephone number')
+      errors += 'Invalid telephone number\n'
+      isValid = false
+    } else {
+      $('#telephone_error').text('')
     }
 
     console.log(errors)

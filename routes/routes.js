@@ -14,7 +14,7 @@ app.set('views', path.join(__dirname, '../views'))
 
 app.get('/', loginController.getLoginPage)
 app.get('/login_page', loginController.getLoginPage)
-app.get('/logout', indexController.getLogoutPage)
+app.get('/logout', loginController.getLogout)
 app.get('/login', indexController.getMainPage)
 app.get('/member_main_page', indexController.getMemberMainPage)
 app.get('/add_member', memberController.getAddMemberPage)

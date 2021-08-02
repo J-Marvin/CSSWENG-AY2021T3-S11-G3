@@ -5,6 +5,7 @@ const loginController = {
   getLoginPage: function (req, res) {
     res.render('login', { scripts: ['login'] })
   },
+
   postLogIn: function (req, res) {
     const password = req.body.password
 
@@ -21,6 +22,9 @@ const loginController = {
       })
     }).then((level) => {
       if (level) {
+        req.session.level = level
+
+        console.log(req.session)
         res.render('main-page', {
           Level: level
         })
@@ -41,6 +45,7 @@ const loginController = {
       }
     })
   },
+
   checkCredentials: function (req, res) {
     const password = req.body.password
 
@@ -64,6 +69,17 @@ const loginController = {
     }).catch((err) => {
       if (err) {
         res.send(err.message)
+      }
+    })
+  },
+
+  getLogout: function (req, res) {
+    req.session.destroy((err) => {
+      if (err) {
+        console.log(err)
+        res.redirect('/')
+      } else {
+        res.redirect('/')
       }
     })
   }

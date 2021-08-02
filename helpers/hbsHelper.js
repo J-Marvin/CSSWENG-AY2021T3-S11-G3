@@ -2,7 +2,12 @@ const hbHelpers = {
   date: function (date) {
     date = new Date(date)
 
-    return date.getFullYear() + '-' + (date.getMonth()).toString().padStart(2, 0) + '-' + date.getDate().toString().padStart(2, 0)
+    return date.getFullYear() + '-' + (date.getMonth() + 1).toString().padStart(2, 0) + '-' + date.getDate().toString().padStart(2, 0)
+  },
+  dateView: function (date) {
+    date = new Date(date)
+
+    return (date.getMonth() + 1).toString().padStart(2, 0) + '/' + date.getDate().toString().padStart(2, 0) + '/' + date.getFullYear()
   },
   isLengthOne: function (namesLen) {
     return namesLen === 1
@@ -21,7 +26,7 @@ const hbHelpers = {
       return '<option>Single</option> <option selected>Married</option>'
     }
   },
-  memberStatusSelection: function(memberStatus) {
+  memberStatusSelection: function (memberStatus) {
     if (memberStatus === 'Active') {
       return '<option selected>Active</option> <option>Inactive</option>'
     } else {

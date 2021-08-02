@@ -5,6 +5,9 @@ const exphbs = require('express-handlebars')
 const path = require('path')
 const db = require(path.join(__dirname, './models/db.js'))
 const hbsHelpers = require('./helpers/hbsHelper')
+const session = require('express-session')
+const MemoryStore = require('memorystore')(session)
+const nocache = require('nocache')
 
 const app = express()
 const routes = require('./routes/routes.js')
@@ -29,6 +32,16 @@ app.engine('hbs', hbs.engine)
 app.set('view engine', '.hbs')
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.static(path.join(__dirname, '/public')))
+app.use(session({
+  cookie: { maxAge: 86400000 }, // 1 day
+  store: new MemoryStore({
+    checkPeriod: 86400000
+  }),
+  saveUninitialized: true,
+  resave: false,
+  secret: 'christian-church'
+}))
+app.use(nocache())
 
 app.use('/', routes)
 
