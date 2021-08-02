@@ -3,7 +3,6 @@ const memberFields = {
   ADDRESS: 'address_id',
   MEMBER_STATUS: 'member_status',
   CIVIL_STATUS: 'civil_status',
-  AGE: 'age',
   BIRTHDAY: 'birthday',
   OCCUPATION: 'occupation',
   WORKPLACE: 'workplace',

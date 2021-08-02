@@ -37,6 +37,7 @@ app.use(session({
   store: new MemoryStore({
     checkPeriod: 86400000
   }),
+  saveUninitialized: true,
   resave: false,
   secret: 'christian-church'
 }))

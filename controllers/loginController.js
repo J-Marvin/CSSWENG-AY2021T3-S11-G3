@@ -77,12 +77,12 @@ const loginController = {
     req.session.destroy((err) => {
       if (err) {
         console.log(err)
-        req.redirect('/')
+        res.redirect('/')
       } else {
-        req.redirect('/')
+        res.redirect('/')
       }
     })
-  },
+  }
 }
 
 module.exports = loginController

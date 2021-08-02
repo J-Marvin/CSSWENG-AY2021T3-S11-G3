@@ -118,7 +118,6 @@ const memberController = {
         data.address[addressFields.POSTAL_CODE] = req.body.postal_code
         data.address[addressFields.COUNTRY] = req.body.country
 
-        data.member[memberFields.AGE] = req.body.age
         data.member[memberFields.BIRTHDAY] = req.body.birthday
         data.member[memberFields.OCCUPATION] = req.body.occupation
         data.member[memberFields.WORKPLACE] = req.body.workplace
@@ -219,7 +218,6 @@ const memberController = {
       data.address[addressFields.POSTAL_CODE] = req.body.postal_code
       data.address[addressFields.COUNTRY] = req.body.country
 
-      data.member[memberFields.AGE] = req.body.age
       data.member[memberFields.BIRTHDAY] = req.body.birthday
       data.member[memberFields.OCCUPATION] = req.body.occupation
       data.member[memberFields.WORKPLACE] = req.body.workplace

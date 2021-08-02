@@ -384,7 +384,6 @@ function initDatabase (file) {
     'person_id INTEGER NOT NULL,' +
     'member_status TEXT,' +
     'civil_status TEXT,' +
-    'age INTEGER,' +
     'birthday TEXT,' +
     'occupation TEXT,' +
     'workplace TEXT,' +
