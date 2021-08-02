@@ -159,8 +159,17 @@ const prenupController = {
                   // finally insert to the prenup table
                   db.insert(db.tables.PRENUPTIAL_TABLE, data.prenup, function (result) {
                     if (result !== false) {
-                      // insert res.render() or res.redirect()
-                      res.render('forms-main-page')
+                      // render the success page along with the newly added prenup record
+                      res.render('prenup-success', {
+                        brideFirst: data.female[personFields.FIRST_NAME],
+                        brideMid: data.female[personFields.MID_NAME],
+                        brideLast: data.female[personFields.LAST_NAME],
+                        groomFirst: data.male[personFields.FIRST_NAME],
+                        groomMid: data.male[personFields.MID_NAME],
+                        groomLast: data.male[personFields.LAST_NAME],
+                        currentDate: data.prenup[prenupRecordFields.DATE],
+                        weddingDate: data.prenup[prenupRecordFields.DATE_OF_WEDDING]
+                      })
                     }
                   })
                 } else {
@@ -200,15 +209,16 @@ const prenupController = {
     } else {
       const data = {
         prenup: {},
-        couple: {}
+        couple: {},
+        result: {}
       } // object that will be passed later on insert(prenup)
       // these two variables contains <member_id>, <first_name>, <middle_name>, <last_name>
       // INDICES
       const MEMBER_ID = 0
       const PERSON_ID = 1
-      // const FIRST = 2
-      // const MIDDLE = 3
-      // const LAST = 4
+      const FIRST = 2
+      const MIDDLE = 3
+      const LAST = 4
 
       const bride = req.body.input_bride_member
       const groom = req.body.input_groom_member
@@ -220,15 +230,18 @@ const prenupController = {
 
       const brideMemberId = brideInfo[MEMBER_ID]
       const bridePersonId = brideInfo[PERSON_ID]
-      // const brideFirst = brideInfo[FIRST]
-      // const brideMid = brideInfo[MIDDLE]
-      // const brideLast = brideInfo[LAST]
+      data.result.brideFirst = brideInfo[FIRST]
+      data.result.brideMid = brideInfo[MIDDLE]
+      data.result.brideLast = brideInfo[LAST]
 
       const groomMemberId = groomInfo[MEMBER_ID]
       const groomPersonId = groomInfo[PERSON_ID]
-      // const groomFirst = groomInfo[FIRST]
-      // const groomMid = groomInfo[MIDDLE]
-      // const groomLast = groomInfo[LAST]
+      data.result.groomFirst = groomInfo[FIRST]
+      data.result.groomMid = groomInfo[MIDDLE]
+      data.result.groomLast = groomInfo[LAST]
+
+      data.result.currentDate = date
+      data.result.weddingDate = weddingDate
 
       data.prenup[prenupRecordFields.DATE] = date
       data.prenup[prenupRecordFields.DATE_OF_WEDDING] = weddingDate
@@ -259,7 +272,8 @@ const prenupController = {
                   memberCondition.setKeyValue(memberFields.ID, groomMemberId)
                   db.update(db.tables.MEMBER_TABLE, { prenup_record_id: prenupRecId }, memberCondition, function (result) {
                     if (result !== null) {
-                      res.render('forms-main-page')
+                      // render the success page along with the newly added prenup record
+                      res.render('prenup-success', data.result)
                     } else {
                       res.send('UPDATE MEMBER ID ERROR')
                     }
@@ -309,15 +323,15 @@ const prenupController = {
     // INDICES
     const MEMBER_ID = 0
     const PERSON_ID = 1
-    // const FIRST = 2
-    // const MIDDLE = 3
-    // const LAST = 4
+    const FIRST = 2
+    const MIDDLE = 3
+    const LAST = 4
 
     const groomMemberId = groomInfo[MEMBER_ID]
     const groomPersonId = groomInfo[PERSON_ID]
-    // const brideFirst = brideInfo[FIRST]
-    // const brideMid = brideInfo[MIDDLE]
-    // const brideLast = brideInfo[LAST]
+    const groomFirst = groomInfo[FIRST]
+    const groomMid = groomInfo[MIDDLE]
+    const groomLast = groomInfo[LAST]
 
     const date = req.body.current_date
     const weddingDate = req.body.wedding_date
@@ -354,7 +368,17 @@ const prenupController = {
                 memberCondition.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.PRENUP_RECORD, groomMemberId)
                 db.update(db.tables.MEMBER_TABLE, { prenup_record_id: prenupRecId }, memberCondition, function (result) {
                   if (result !== null) {
-                    res.render('forms-main-page') // or change to success page
+                    // render the success page along with the newly added prenup record
+                    res.render('prenup-success', {
+                      brideFirst: brideFirst,
+                      brideMid: brideMid,
+                      brideLast: brideLast,
+                      groomFirst: groomFirst,
+                      groomMid: groomMid,
+                      groomLast: groomLast,
+                      currentDate: date,
+                      weddingDate: weddingDate
+                    })
                   } else {
                     res.send('UPDATE PRENUP ERROR')
                   }
@@ -403,12 +427,15 @@ const prenupController = {
     // INDICES
     const MEMBER_ID = 0
     const PERSON_ID = 1
-    // const FIRST = 2
-    // const MIDDLE = 3
-    // const LAST = 4
+    const FIRST = 2
+    const MIDDLE = 3
+    const LAST = 4
 
     const brideMemberId = brideInfo[MEMBER_ID]
     const bridePersonId = brideInfo[PERSON_ID]
+    const brideFirst = brideInfo[FIRST]
+    const brideMid = brideInfo[MIDDLE]
+    const brideLast = brideInfo[LAST]
 
     const date = req.body.current_date
     const weddingDate = req.body.wedding_date
@@ -445,7 +472,17 @@ const prenupController = {
                 memberCondition.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.ID, brideMemberId)
                 db.update(db.tables.MEMBER_TABLE, { prenup_record_id: prenupRecId }, memberCondition, function (result) {
                   if (result !== null) {
-                    res.render('forms-main-page') // or change to success page
+                    // render the success page along with the newly added prenup record
+                    res.render('prenup-success', {
+                      brideFirst: brideFirst,
+                      brideMid: brideMid,
+                      brideLast: brideLast,
+                      groomFirst: groomFirst,
+                      groomMid: groomMid,
+                      groomLast: groomLast,
+                      currentDate: date,
+                      weddingDate: weddingDate
+                    })
                   } else {
                     res.send('UPDATE PRENUP ERROR')
                   }
