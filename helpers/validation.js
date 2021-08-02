@@ -32,11 +32,32 @@ const validation = {
         }
         return true
       }),
-      check('mobile', 'Mobile number is required').notEmpty(),
+      check('mobile').custom((value, req) => {
+        const regex = /^([+]\d{2,3})?\d{10}$/
+
+        if (validator.isEmpty(value) ||
+            validator.isNumeric(value) ||
+            regex.test(value)) {
+          return true
+        } else {
+          throw new Error('Invalid mobile number')
+        }
+      }),
+      check('telephone').custom((value, req) => {
+        const regex = /^([+][0-9]*)?/
+        const localRegex = /^([(]\d{2,3}[)]){0,1}(\d{3}[-]\d{4}|\d{7})$/
+        if (validator.isEmpty(value) ||
+           validator.isNumeric(value) ||
+           regex.test(value) ||
+           localRegex.test(value)) {
+          return true
+        } else {
+          throw new Error('Invalid telephone number')
+        }
+      }),
       check('address_line', 'Address is required').notEmpty(),
-      check('city', 'City is requirec').notEmpty(),
-      check('country', 'Country is required').notEmpty(),
-      check('province', 'Province/State/Region is required').notEmpty()
+      check('city', 'City is required').notEmpty(),
+      check('country', 'Country is required').notEmpty()
     ]
     return validation
   },

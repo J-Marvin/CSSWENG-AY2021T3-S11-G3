@@ -26,7 +26,7 @@ const hbHelpers = {
       return '<option>Single</option> <option selected>Married</option>'
     }
   },
-  memberStatusSelection: function(memberStatus) {
+  memberStatusSelection: function (memberStatus) {
     if (memberStatus === 'Active') {
       return '<option selected>Active</option> <option>Inactive</option>'
     } else {
