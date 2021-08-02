@@ -16,7 +16,14 @@ $(document).ready(function () {
   function validateMobile(number) {
     const re = /\d{4}\s?-?\d{3}\s?-?\d{4}/
     const reCountry = /^([+]\d{2,3})?\d{10}$/
-    return re.test(number) || reCountry.test(number) || validator.isNumeric(number);
+    return re.test(number) || reCountry.test(number) || validator.isNumeric(number)
+  }
+
+  function validateTelephone(number) {
+    const regex = /^([+])?[0-9]+$/
+    const localRegex = /^([(]\d{2,3}[)]){0,1}(\d{3}[-]\d{4}|\d{7})$/
+
+    return regex.test(number) || localRegex.test(number) || validator.isNumeric(number) || validator.isEmpty(number)
   }
 
   function validateFields() {
@@ -130,6 +137,14 @@ $(document).ready(function () {
         isValid = false
     } else {
         $('#mobile_error').text('')
+    }
+
+    if(!validateTelephone($('#telephone').val())) {
+      $('#telephone_error').text('Enter valid telephone number')
+      errors += 'Invalid telephone number\n'
+      isValid = false
+    } else {
+      $('#telephone_error').text('')
     }
 
     console.log(errors)
