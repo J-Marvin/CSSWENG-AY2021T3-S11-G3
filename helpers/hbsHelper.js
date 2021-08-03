@@ -32,6 +32,11 @@ const hbHelpers = {
     } else {
       return '<option>Active</option> <option selected>Inactive</option>'
     }
+  },
+  isLevelNA: function (level) {
+    if (level === 'N/A' || level === undefined || level === null) {
+      return true
+    }
   }
 
 }

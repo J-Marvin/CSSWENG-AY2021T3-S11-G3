@@ -45,6 +45,18 @@ app.use(nocache())
 
 app.use('/', routes)
 
+// if route is not defined in the server, render an error message
+app.use(function (req, res) {
+  res.render('error', {
+    css: ['global', 'error'],
+    status: {
+      code: '404',
+      message: 'Not Found'
+    },
+    Level: 'N/A'
+  })
+})
+
 app.listen(port, hostname, function () {
   console.log('Server running at:')
   console.log('http://' + hostname + ':' + port)
