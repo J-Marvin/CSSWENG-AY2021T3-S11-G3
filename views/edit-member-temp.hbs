@@ -136,20 +136,23 @@
     <input type="textarea" id="skills" name="skills" class="form-control" value="{{member.skills}}">
 
     {{!-- Temp div to list churches and observations--}}
-    <div class="row mt-3">
-      <h4>Churches</h4>
-      <div id="churchList"> {{!-- Please use the same id when replacing the divs--}}
-        {{#each churches}}
-          {{>church this}}
-        {{/each}}
-      </div>
-      <h4>Observations</h4>
-      <div id="observationList">
-        {{#each observations}}
-          {{>observation this}}
-        {{/each}}
-      </div>
-
+     <div class="row mt-3 mb-5">
+        <div class="col">
+            <u> Churches </u>
+            <div id="churchList"> {{!-- Please use the same id when replacing the divs--}}
+                {{#each churches}}
+                {{>church this}}
+                {{/each}}
+            </div>
+        </div>
+        <div class="col">
+            <u> Observations  </u>
+            <div id="observationList">
+            {{#each observations}}
+                {{>observation this}}
+            {{/each}}
+            </div>
+        </div>
     </div>
     <div class="row mt-3">
       <div class="col-2">
@@ -157,11 +160,6 @@
       </div>
       <div class="col-3">
         <button type="button" class="btn btn-primary" id="addObservationBtn"> Add Observation </button>
-      </div>
-    </div>
-    <div class="row mt-3">
-      <div class="col">
-        <a href="/edit_member/{{member.member_id}}/add_prenup" id="add_prenup" type="button" class="btn btn-secondary">Add Prenup</a>
       </div>
     </div>
     <div class="row mt-3">

@@ -35,6 +35,7 @@ const controller = {
 
     db.find(db.tables.MEMBER_TABLE, null, joinTables, '*', function (result) {
       res.render('member-main-page', {
+        styles: ['lists'],
         members: result
       })
     })

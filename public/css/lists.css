@@ -1,0 +1,14 @@
+.tile {
+    border: 1px;
+    border-color: black;
+    border-style: solid;
+}
+
+.variables {
+    text-align: center;
+    margin-bottom: -0.01rem;
+}
+
+.row {
+    --bs-gutter-x: 0rem;
+}
