@@ -7,6 +7,7 @@ const churchFields = require('../models/church')
 const { validationResult } = require('express-validator')
 const observationFields = require('../models/observation')
 const { Condition, queryTypes } = require('../models/condition.js')
+const moment = require('moment')
 
 const memberController = {
   /**
@@ -63,6 +64,75 @@ const memberController = {
               db.find(db.tables.OBSERVATION_TABLE, observationCondition, null, '*', function (result) {
                 if (result) {
                   data.observations = result
+                  res.render('edit-member-temp', data)
+                }
+              })
+            }
+          })
+        }
+      })
+    } else {
+      res.status(401)
+      res.render('error', {
+        title: '401 Unauthorized Access',
+        css: ['global', 'error'],
+        status: {
+          code: '401',
+          message: 'Unauthorized access'
+        }
+      })
+    }
+  },
+
+  getViewMember: function (req, res) {
+    if (req.session.editMemberId === req.params.member_id || parseInt(req.session.level) === 3) {
+      const data = {
+      }
+      const condition = new Condition(queryTypes.where)
+      const churchCondition = new Condition(queryTypes.where)
+      const observationCondition = new Condition(queryTypes.where)
+
+      const joinTables = [
+        {
+          tableName: db.tables.PERSON_TABLE,
+          sourceCol: db.tables.MEMBER_TABLE + '.' + memberFields.PERSON,
+          destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
+        },
+        {
+          tableName: db.tables.ADDRESS_TABLE,
+          sourceCol: db.tables.MEMBER_TABLE + '.' + memberFields.ADDRESS,
+          destCol: db.tables.ADDRESS_TABLE + '.' + addressFields.ID
+        }
+      ]
+
+      const joinChurchTables = [
+        {
+          tableName: db.tables.ADDRESS_TABLE,
+          sourceCol: db.tables.CHURCH_TABLE + '.' + churchFields.ADDRESS,
+          destCol: db.tables.ADDRESS_TABLE + '.' + addressFields.ID
+        }
+      ]
+
+      condition.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.ID, parseInt(req.params.member_id))
+      churchCondition.setKeyValue(churchFields.MEMBER, parseInt(req.params.member_id))
+      observationCondition.setKeyValue(observationFields.OBSERVEE, parseInt(req.params.member_id))
+      db.find(db.tables.MEMBER_TABLE, condition, joinTables, '*', function (result) {
+        if (result) {
+          data.member = result[0]
+          db.find(db.tables.CHURCH_TABLE, churchCondition, joinChurchTables, '*', function (result) {
+            if (result) {
+              data.churches = result
+
+              db.find(db.tables.OBSERVATION_TABLE, observationCondition, null, '*', function (result) {
+                if (result) {
+                  data.observations = result
+                  data.member.age = new Date(data.member.birthday)
+                  const today = moment()
+                  const b = moment(data.member.birthday)
+                  data.member.age = moment.duration(today.diff(b)).years()
+                  console.log(data.member.age)
+
+                  // change toview-member
                   res.render('edit-member-temp', data)
                 }
               })

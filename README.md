@@ -30,6 +30,7 @@
 - [express-handlebars](https://www.npmjs.com/package/express-handlebars)
 - [express-validator](https://www.npmjs.com/package/express-validator)
 - [fs-extra](https://www.npmjs.com/package/fs-extra)
+- [moment](https://www.npmjs.com/package/moment)
 - [sqlite3](https://www.npmjs.com/package/sqlite3)
 - [knex](https://www.npmjs.com/package/knex)
 - [validator](https://www.npmjs.com/package/validator)

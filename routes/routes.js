@@ -20,6 +20,7 @@ app.get('/member_main_page', indexController.getMemberMainPage)
 app.get('/add_member', memberController.getAddMemberPage)
 
 app.get('/edit_member/:member_id', memberController.getEditMember)
+app.get('/member/:member_id', memberController.getViewMember)
 app.get('/forms_main_page', indexController.getFormsMainPage)
 app.get('/add_prenup', prenupController.getPrenupPage)
 app.get('/edit_member/:member_id/add_prenup', prenupController.getPrenupPage)
