@@ -210,6 +210,8 @@ $(document).ready(function () {
     addChurch = true
     editChurchId = null
     parentDiv = null
+
+    $(churchModal).find('.error_codes').text('')
     $(churchModal).modal('show')
   })
 
@@ -233,25 +235,29 @@ $(document).ready(function () {
     if(validator.isEmpty($('#church_name').val())) {
       isValid = false
       errors = errors + 'pls enter church name\n'
+      $('#church_name_error').text('Enter church name')
     }
 
     if(validator.isEmpty($('#church_address_line').val())) {
       isValid = false
       errors = errors + 'pls enter church address\n'
+      $('#church_address_line_error').text('Enter address')
     }
 
     if(validator.isEmpty($('#church_city').val())) {
       isValid = false
       errors = errors + 'pls enter church city\n'
+      $('#church_city_error').text('Enter city')
     }
 
     if(validator.isEmpty($('#church_country').val())) {
       isValid = false
       errors = errors + 'pls enter church country\n'
+      $('#church_country_error').text('Enter country')
     }
 
     if(!isValid) {
-      alert(errors)
+      //alert(errors)
     } else {
       if(addChurch) {
 
@@ -306,15 +312,17 @@ $(document).ready(function () {
     if(validator.isEmpty($(observationFieldset).find('#commenter').val())) {
       isValid = false
       errors = errors + 'please provide commenter name\n'
+      $('#commenter_error').text('Enter commenter')
     }
     
     if(validator.isEmpty($(observationFieldset).find('#comment').val())) {
       isValid = false
       errors = errors + 'please provide comment\n'
+      $('#comment_error').text('Enter comment')
     }
 
     if(!isValid) {
-      alert(errors)
+      //alert(errors)
     } else {
         if (addObservation) {
           $.ajax({
@@ -351,6 +359,8 @@ $(document).ready(function () {
     addObservation = true
     editObservationId = null
     parentDiv = null
+
+    $(observationModal).find('.error_codes').text('')
     $(observationModal).modal('show')
   })
 
@@ -367,6 +377,7 @@ $(document).ready(function () {
     $(observationFieldset).find('#comment').val(comment)
     $(observationFieldset).find('#commenter').val(observer)
 
+    $(observationModal).find('.error_codes').text('')
     $(observationModal).modal('show')
   });
 
@@ -413,6 +424,7 @@ $(document).ready(function () {
     $(churchFieldset).find('#church_postal_code').val(postal_code)
     $(churchFieldset).find('#church_country').val(country)
 
+    $(churchModal).find('.error_codes').text('')
     $(churchModal).modal('show')
   })
 

@@ -17,6 +17,7 @@ const memberController = {
    */
   getAddMemberPage: function (req, res) {
     res.render('add-member-temp', {
+      styles: ['forms'],
       scripts: ['member']
     })
   },
@@ -24,6 +25,7 @@ const memberController = {
   getEditMember: function (req, res) {
     if (req.session.editMemberId === req.params.member_id || parseInt(req.session.level) === 3) {
       const data = {
+        styles: ['forms'],
         scripts: ['member']
       }
       const condition = new Condition(queryTypes.where)

@@ -18,7 +18,6 @@ app.get('/logout', loginController.getLogout)
 app.get('/login', indexController.getMainPage)
 app.get('/member_main_page', indexController.getMemberMainPage)
 app.get('/add_member', memberController.getAddMemberPage)
-
 app.get('/edit_member/:member_id', memberController.getEditMember)
 app.get('/member/:member_id', memberController.getViewMember)
 app.get('/forms_main_page', indexController.getFormsMainPage)
@@ -43,4 +42,5 @@ app.put('/update_church', validation.churchValidation(), churchController.putUpd
 
 app.delete('/delete_observation', observationController.delObservation)
 app.delete('/delete_church', churchController.delChurch)
+
 module.exports = app

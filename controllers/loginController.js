@@ -3,7 +3,10 @@ const db = require('../models/db')
 
 const loginController = {
   getLoginPage: function (req, res) {
-    res.render('login', { scripts: ['login'] })
+    res.render('login', {
+      styles: ['login'],
+      scripts: ['login']
+    })
   },
 
   postLogIn: function (req, res) {
@@ -26,6 +29,7 @@ const loginController = {
 
         console.log(req.session)
         res.render('main-page', {
+          styles: ['mainPage'],
           Level: level
         })
       } else {

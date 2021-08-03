@@ -13,7 +13,9 @@ const controller = {
 
   getMainPage: function (req, res) {
     res.render('main-page', {
-      level: req.session.level
+      level: req.session.level,
+      styles: ['mainPage'],
+      scripts: ['']
     })
   },
 

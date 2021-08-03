@@ -13,7 +13,6 @@ const prenupController = {
    * @param res - the result to be sent out after processing the request
    */
   getPrenupPage: function (req, res) {
-    // Add find one populate function here
     /**
      * This function selects the member based on member_id and renders this
      * one member in the dropdown options in add-prenup-temp.hbs
@@ -34,6 +33,8 @@ const prenupController = {
         const brideNames = result
         const groomNames = result
         res.render('add-prenup-temp', {
+          scripts: ['addPrenup'],
+          styles: ['forms'],
           Origin: 'coming from edit member',
           brideNames: brideNames,
           groomNames: groomNames
@@ -89,6 +90,8 @@ const prenupController = {
               groomNames = result
               // console.log(groomNames)
               res.render('add-prenup-temp', {
+                styles: ['forms'],
+                scripts: ['addPrenup'],
                 Origin: 'coming from forms creation',
                 brideNames: brideNames,
                 groomNames: groomNames
