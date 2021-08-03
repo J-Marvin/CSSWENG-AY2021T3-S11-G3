@@ -35,7 +35,6 @@ const data = [
     member: {
       member_status: 'active',
       civil_status: 'single',
-      age: 25,
       birthday: new Date(1996, 1, 3).toISOString(),
       occupation: 'IT',
       workplace: 'Quezon City',
@@ -89,7 +88,6 @@ const data = [
     member: {
       member_status: 'active',
       civil_status: 'single',
-      age: '19',
       birthday: new Date(2001, 11, 5).toISOString(),
       occupation: 'Student',
       workplace: 'DLSU',
@@ -116,7 +114,6 @@ const data = [
     member: {
       member_status: 'active',
       civil_status: 'single',
-      age: 25,
       birthday: new Date(1996, 0, 7).toISOString(),
       occupation: 'Researcher',
       workplace: 'Therum',
@@ -143,7 +140,6 @@ const data = [
     member: {
       member_status: 'inactive',
       civil_status: 'single',
-      age: 25,
       birthday: new Date(1996, 2, 6).toISOString(),
       occupation: 'Investigator',
       workplace: 'Citadel',
