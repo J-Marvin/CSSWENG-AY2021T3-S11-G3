@@ -124,7 +124,6 @@ const memberController = {
           db.find(db.tables.CHURCH_TABLE, churchCondition, joinChurchTables, '*', function (result) {
             if (result) {
               data.churches = result
-
               db.find(db.tables.OBSERVATION_TABLE, observationCondition, null, '*', function (result) {
                 if (result) {
                   data.observations = result
@@ -132,10 +131,9 @@ const memberController = {
                   const today = moment()
                   const b = moment(data.member.birthday)
                   data.member.age = moment.duration(today.diff(b)).years()
-                  console.log(data.member.age)
-
-                  // change toview-member
-                  res.render('edit-member-temp', data)
+                  data.styles = ['view']
+                  data.scripts = ['removeButtons']
+                  res.render('view-member', data)
                 }
               })
             }
@@ -224,7 +222,7 @@ const memberController = {
                   const memberId = result[0]
                   db.update(db.tables.PERSON_TABLE, { member_id: result[0] }, personCondition, function (result) {
                     req.session.editMemberId = memberId
-                    res.redirect('/edit_member/' + memberId)
+                    res.redirect('/member/' + memberId)
                   })
                 })
               } else {

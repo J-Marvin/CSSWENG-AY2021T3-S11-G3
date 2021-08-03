@@ -198,7 +198,8 @@ $(document).ready(function () {
         url: "/update_member",
         success: function (result) {
           if (result === true)
-            alert("Changes saved")
+            //location.href('/member/' + data.member_id)
+            window.location = '/member/' + data.member_id
           else alert("Changes not saved")
         }
       })
