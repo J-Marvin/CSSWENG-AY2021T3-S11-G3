@@ -16,7 +16,7 @@ $(document).ready(function () {
   function validateMobile(number) {
     const re = /\d{4}\s?-?\d{3}\s?-?\d{4}/
     const reCountry = /^([+]\d{2,3})?\d{10}$/
-    return re.test(number) || reCountry.test(number) || validator.isNumeric(number)
+    return re.test(number) || reCountry.test(number) || validator.isNumeric(number) || validator.isEmpty(number)
   }
 
   function validateTelephone(number) {
