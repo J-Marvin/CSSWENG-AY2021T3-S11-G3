@@ -3,8 +3,8 @@ const memberFields = require('../models/members')
 const { Condition, queryTypes } = require('../models/condition')
 const personFields = require('../models/person.js')
 const addressFields = require('../models/address.js')
-const prenupRecordFields = require('../models/prenupRecord')
-const coupleFields = require('../models/couple')
+// const prenupRecordFields = require('../models/prenupRecord')
+// const coupleFields = require('../models/couple')
 
 const controller = {
   getIndex: function (req, res) {
@@ -20,7 +20,24 @@ const controller = {
   },
 
   getMemberMainPage: function (req, res) {
-    res.render('member-main-page')
+    const joinTables = [
+      {
+        tableName: db.tables.PERSON_TABLE,
+        sourceCol: db.tables.MEMBER_TABLE + '.' + memberFields.PERSON,
+        destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
+      },
+      {
+        tableName: db.tables.ADDRESS_TABLE,
+        sourceCol: db.tables.MEMBER_TABLE + '.' + memberFields.ADDRESS,
+        destCol: db.tables.ADDRESS_TABLE + '.' + addressFields.ID
+      }
+    ]
+
+    db.find(db.tables.MEMBER_TABLE, null, joinTables, '*', function (result) {
+      res.render('member-main-page', {
+        members: result
+      })
+    })
   },
 
   getFormsMainPage: function (req, res) {
