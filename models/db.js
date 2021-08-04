@@ -199,52 +199,38 @@ const database = {
                 }
                 break
               case 'whereIn':
-                if (condition.conditionType === 'object') {
-                  builder.whereIn(condition.condition)
-                } else if (condition.conditionType === 'keyValue') {
-                  builder.whereIn(condition.condition.key, condition.condition.operator, condition.condition.value)
+                if (condition.conditionType === 'array') {
+                  builder.whereIn(condition.field, condition.data)
+                }
+                break
+              case 'whereNotIn':
+                if (condition.conditionType === 'array') {
+                  builder.whereNotIn(condition.field, condition.data)
+                }
+                break
+              case 'whereNull':
+                if (condition.conditionType === 'field') {
+                  builder.whereNull(condition.field)
                 }
                 break
               case 'whereNotNull':
-                if (condition.conditionType === 'object') {
-                  builder.whereNotNull(condition.condition)
-                } else if (condition.conditionType === 'keyValue') {
-                  builder.whereNotNull(condition.condition.key, condition.condition.operator, condition.condition.value)
-                }
-                break
-              case 'whereExists':
-                if (condition.conditionType === 'object') {
-                  builder.whereExists(condition.condition)
-                } else if (condition.conditionType === 'keyValue') {
-                  builder.whereExists(condition.condition.key, condition.condition.operator, condition.condition.value)
-                }
-                break
-              case 'whereNotExists':
-                if (condition.conditionType === 'object') {
-                  builder.whereNotExists(condition.condition)
-                } else if (condition.conditionType === 'keyValue') {
-                  builder.whereNotExists(condition.condition.key, condition.condition.operator, condition.condition.value)
+                if (condition.conditionType === 'field') {
+                  builder.whereNotNull(condition.field)
                 }
                 break
               case 'whereBetween':
-                if (condition.conditionType === 'object') {
-                  builder.whereBetween(condition.condition)
-                } else if (condition.conditionType === 'keyValue') {
-                  builder.whereBetween(condition.condition.key, condition.condition.operator, condition.condition.value)
+                if (condition.conditionType === 'range') {
+                  builder.whereBetween(condition.condition.field, [condition.condition.lowerBound, condition.condition.upperBound])
                 }
                 break
               case 'whereNotBetween':
-                if (condition.conditionType === 'object') {
-                  builder.whereNotBetween(condition.condition)
-                } else if (condition.conditionType === 'keyValue') {
-                  builder.whereNotBetween(condition.condition.key, condition.condition.operator, condition.condition.value)
+                if (condition.conditionType === 'range') {
+                  builder.whereNotBetween(condition.condition.field, [condition.condition.lowerBound, condition.condition.upperBound])
                 }
                 break
               case 'whereRaw':
-                if (condition.conditionType === 'object') {
-                  builder.whereRaw(condition.condition)
-                } else if (condition.conditionType === 'keyValue') {
-                  builder.whereRaw(condition.condition.key, condition.condition.operator, condition.condition.value)
+                if (condition.conditionType === 'query') {
+                  builder.whereRaw(condition.query, condition.bindings)
                 }
                 break
               default:
@@ -283,7 +269,6 @@ const database = {
   */
   tables: tables,
 
-  // make insert table to make code more reusable
   /**
    * This function creates a new table specified by the param object newTable and
    * passes a callback function after execution
@@ -379,52 +364,38 @@ const database = {
                 }
                 break
               case 'whereIn':
-                if (condition.conditionType === 'object') {
-                  builder.whereIn(condition.condition)
-                } else if (condition.conditionType === 'keyValue') {
-                  builder.whereIn(condition.condition.key, condition.condition.operator, condition.condition.value)
+                if (condition.conditionType === 'array') {
+                  builder.whereIn(condition.field, condition.data)
+                }
+                break
+              case 'whereNotIn':
+                if (condition.conditionType === 'array') {
+                  builder.whereNotIn(condition.field, condition.data)
+                }
+                break
+              case 'whereNull':
+                if (condition.conditionType === 'field') {
+                  builder.whereNull(condition.field)
                 }
                 break
               case 'whereNotNull':
-                if (condition.conditionType === 'object') {
-                  builder.whereNotNull(condition.condition)
-                } else if (condition.conditionType === 'keyValue') {
-                  builder.whereNotNull(condition.condition.key, condition.condition.operator, condition.condition.value)
-                }
-                break
-              case 'whereExists':
-                if (condition.conditionType === 'object') {
-                  builder.whereExists(condition.condition)
-                } else if (condition.conditionType === 'keyValue') {
-                  builder.whereExists(condition.condition.key, condition.condition.operator, condition.condition.value)
-                }
-                break
-              case 'whereNotExists':
-                if (condition.conditionType === 'object') {
-                  builder.whereNotExists(condition.condition)
-                } else if (condition.conditionType === 'keyValue') {
-                  builder.whereNotExists(condition.condition.key, condition.condition.operator, condition.condition.value)
+                if (condition.conditionType === 'field') {
+                  builder.whereNotNull(condition.field)
                 }
                 break
               case 'whereBetween':
-                if (condition.conditionType === 'object') {
-                  builder.whereBetween(condition.condition)
-                } else if (condition.conditionType === 'keyValue') {
-                  builder.whereBetween(condition.condition.key, condition.condition.operator, condition.condition.value)
+                if (condition.conditionType === 'range') {
+                  builder.whereBetween(condition.condition.field, [condition.condition.lowerBound, condition.condition.upperBound])
                 }
                 break
               case 'whereNotBetween':
-                if (condition.conditionType === 'object') {
-                  builder.whereNotBetween(condition.condition)
-                } else if (condition.conditionType === 'keyValue') {
-                  builder.whereNotBetween(condition.condition.key, condition.condition.operator, condition.condition.value)
+                if (condition.conditionType === 'range') {
+                  builder.whereNotBetween(condition.condition.field, [condition.condition.lowerBound, condition.condition.upperBound])
                 }
                 break
               case 'whereRaw':
-                if (condition.conditionType === 'object') {
-                  builder.whereRaw(condition.condition)
-                } else if (condition.conditionType === 'keyValue') {
-                  builder.whereRaw(condition.condition.key, condition.condition.operator, condition.condition.value)
+                if (condition.conditionType === 'query') {
+                  builder.whereRaw(condition.query, condition.bindings)
                 }
                 break
               default:
@@ -484,52 +455,38 @@ const database = {
                 }
                 break
               case 'whereIn':
-                if (condition.conditionType === 'object') {
-                  builder.whereIn(condition.condition)
-                } else if (condition.conditionType === 'keyValue') {
-                  builder.whereIn(condition.condition.key, condition.condition.operator, condition.condition.value)
+                if (condition.conditionType === 'array') {
+                  builder.whereIn(condition.field, condition.data)
+                }
+                break
+              case 'whereNotIn':
+                if (condition.conditionType === 'array') {
+                  builder.whereNotIn(condition.field, condition.data)
+                }
+                break
+              case 'whereNull':
+                if (condition.conditionType === 'field') {
+                  builder.whereNull(condition.field)
                 }
                 break
               case 'whereNotNull':
-                if (condition.conditionType === 'object') {
-                  builder.whereNotNull(condition.condition)
-                } else if (condition.conditionType === 'keyValue') {
-                  builder.whereNotNull(condition.condition.key, condition.condition.operator, condition.condition.value)
-                }
-                break
-              case 'whereExists':
-                if (condition.conditionType === 'object') {
-                  builder.whereExists(condition.condition)
-                } else if (condition.conditionType === 'keyValue') {
-                  builder.whereExists(condition.condition.key, condition.condition.operator, condition.condition.value)
-                }
-                break
-              case 'whereNotExists':
-                if (condition.conditionType === 'object') {
-                  builder.whereNotExists(condition.condition)
-                } else if (condition.conditionType === 'keyValue') {
-                  builder.whereNotExists(condition.condition.key, condition.condition.operator, condition.condition.value)
+                if (condition.conditionType === 'field') {
+                  builder.whereNotNull(condition.field)
                 }
                 break
               case 'whereBetween':
-                if (condition.conditionType === 'object') {
-                  builder.whereBetween(condition.condition)
-                } else if (condition.conditionType === 'keyValue') {
-                  builder.whereBetween(condition.condition.key, condition.condition.operator, condition.condition.value)
+                if (condition.conditionType === 'range') {
+                  builder.whereBetween(condition.condition.field, [condition.condition.lowerBound, condition.condition.upperBound])
                 }
                 break
               case 'whereNotBetween':
-                if (condition.conditionType === 'object') {
-                  builder.whereNotBetween(condition.condition)
-                } else if (condition.conditionType === 'keyValue') {
-                  builder.whereNotBetween(condition.condition.key, condition.condition.operator, condition.condition.value)
+                if (condition.conditionType === 'range') {
+                  builder.whereNotBetween(condition.condition.field, [condition.condition.lowerBound, condition.condition.upperBound])
                 }
                 break
               case 'whereRaw':
-                if (condition.conditionType === 'object') {
-                  builder.whereRaw(condition.condition)
-                } else if (condition.conditionType === 'keyValue') {
-                  builder.whereRaw(condition.condition.key, condition.condition.operator, condition.condition.value)
+                if (condition.conditionType === 'query') {
+                  builder.whereRaw(condition.query, condition.bindings)
                 }
                 break
               default:

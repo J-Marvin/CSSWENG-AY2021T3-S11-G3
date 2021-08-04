@@ -3,9 +3,11 @@ const queryTypes = {
   orWhere: 'orWhere',
   whereNot: 'whereNot',
   whereIn: 'whereIn',
+  whereNotIn: 'whereNotIn',
+  whereNull: 'whereNull',
   whereNotNull: 'whereNotNull',
-  whereExists: 'whereExists',
-  whereNotExists: 'whereNotExists',
+  // whereExists: 'whereExists',
+  // whereNotExists: 'whereNotExists',
   whereBetween: 'whereBetween',
   whereNotBetween: 'whereNotBetween',
   whereRaw: 'whereRaw'
@@ -23,12 +25,21 @@ function Condition (type) {
 }
 
 Condition.prototype = {
-  /** */
+  /**
+  * This function sets the condition for where, whereNot
+  * @param {Object} condition - the object containing the fields and their corresponding values
+  */
   setQueryObject: function (condition) {
     this.condition = condition
     this.conditionType = 'object'
   },
 
+  /**
+  * This function sets the condition for where, whereNot, orWhere
+  * @param {String} key - the field/column name
+  * @param {*} value - the corresponding value
+  * @param {*} operator = the operator to be used. Default is '='
+  */
   setKeyValue: function (key, value, operator = null) {
     this.condition = {
       key: key,
@@ -36,6 +47,52 @@ Condition.prototype = {
       operator: (operator === null || operator === undefined) ? '=' : operator
     }
     this.conditionType = 'keyValue'
+  },
+
+  /**
+   * This function sets the condition for whereIn, whereNotIn
+   * @param {String} field - the field/column name
+   * @param {Array} data - the array of values
+   */
+  setArray: function (field, data) {
+    this.conditionType = 'array'
+    this.field = field
+    this.data = data
+  },
+
+  /**
+   * This function sets the condition for whereBetween, whereNotBetween
+   * @param {String} field - the field/column name
+   * @param {*} lowerBound - the lowerBound of the range
+   * @param {*} upperBound - the upperBound of the range
+   */
+  setRange: function (field, lowerBound, upperBound) {
+    this.conditionType = 'range'
+    this.condition = {
+      field: field,
+      lowerBound: lowerBound,
+      upperBound: upperBound
+    }
+  },
+
+  /**
+   * This function sets the condition for whereNull and whereNotNull
+   * @param {String} field - the field/column name
+   */
+  setField: function (field) {
+    this.conditionType = 'field'
+    this.field = field
+  },
+
+  /**
+   * This function sets the statement to be executed
+   * @param {String} statement - the sql statement to be executed
+   * @param {Array} bindings - the bindings to the placeholders
+   */
+  setQuery: function (query, bindings = []) {
+    this.conditionType = 'query'
+    this.query = query
+    this.bindings = bindings
   }
 }
 
