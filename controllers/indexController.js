@@ -1,6 +1,5 @@
 const db = require('../models/db.js')
 const memberFields = require('../models/members')
-const { Condition, queryTypes } = require('../models/condition')
 const personFields = require('../models/person.js')
 const addressFields = require('../models/address.js')
 // const prenupRecordFields = require('../models/prenupRecord')
@@ -13,13 +12,13 @@ const controller = {
       level: req.session.level,
       styles: ['mainPage'],
       scripts: [''],
-      canSee: !(parseInt(req.session.level) === 1)
+      canSee: !(parseInt(req.session.level) === 1 || parseInt(req.session.level) === 2)
     })
   },
   getMemberMainPage: function (req, res) {
     const level = req.session.level
     req.session.editMemberId = null
-    if (level === undefined || level === null || parseInt(level) === 1) {
+    if (level === undefined || level === null || parseInt(level) === 1 || parseInt(level) === 2) {
       res.status(401)
       res.render('error', {
         title: '401 Unauthorized Access',
@@ -50,7 +49,7 @@ const controller = {
 
         res.render('member-main-page', {
           styles: ['lists'],
-          members: result,
+          members: result
         })
       })
     }
