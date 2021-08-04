@@ -20,16 +20,16 @@ const hbHelpers = {
     }
   },
   civilStatusSelection: function (civilStatus) {
-    if (civilStatus === 'Single') {
+    if (civilStatus.toLowerCase() === 'single') {
       return '<option selected>Single</option> <option>Married</option> <option>Others</option>'
-    } else if (civilStatus === 'Married') {
+    } else if (civilStatus.toLowerCase() === 'Married') {
       return '<option>Single</option> <option selected>Married</option> <option>Others</option>'
     } else {
       return '<option>Single</option> <option>Married</option> <option Selected>Others</option>'
     }
   },
   otherCivilStatus: function (civilStatus) {
-    if (civilStatus !== 'Single' && civilStatus !== 'Married') {
+    if (civilStatus.toLowerCase() !== 'single' && civilStatus.toLowerCase() !== 'married') {
       return civilStatus
     } else {
       return ''
