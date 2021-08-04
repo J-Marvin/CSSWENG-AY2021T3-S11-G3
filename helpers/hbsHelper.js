@@ -28,8 +28,15 @@ const hbHelpers = {
       return '<option>Single</option> <option>Married</option> <option Selected>Others</option>'
     }
   },
+  otherCivilStatus: function (civilStatus) {
+    if (civilStatus !== 'Single' && civilStatus !== 'Married') {
+      return civilStatus
+    } else {
+      return ''
+    }
+  },
   memberStatusSelection: function (memberStatus) {
-    if (memberStatus === 'Active') {
+    if (memberStatus === 'active') {
       return '<option selected>Active</option> <option>Inactive</option>'
     } else {
       return '<option>Active</option> <option selected>Inactive</option>'
