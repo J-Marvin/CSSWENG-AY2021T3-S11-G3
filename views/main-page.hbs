@@ -21,7 +21,7 @@
 <div id="maindiv" class="container maindiv d-flex justify-content-center align-items-center">
   <div class="row">
     <div class="col mx-5">
-      <a href="/member_main_page"><button style="min-width: max-content;"><p class="p-2" style="font-size: 50pt;"> Add Member </p></button></a>
+      <a href="{{#if canSee}}/member_main_page{{else}}/add_member{{/if}}"><button style="min-width: max-content;"><p class="p-2" style="font-size: 50pt;"> {{#if canSee}}Members{{else}}Add Member{{/if}} </p></button></a>
     </div>
     <div class="col mx-5">
       <a href="/forms_main_page"><button style="min-width: max-content;"><p class="p-2" style="font-size: 50pt;"> Add Form </p></button></a>

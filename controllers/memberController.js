@@ -16,6 +16,7 @@ const memberController = {
    * @param res - the result to be sent out after processing the request
    */
   getAddMemberPage: function (req, res) {
+    req.session.editMemberId = null
     res.render('add-member-temp', {
       styles: ['forms'],
       scripts: ['member']
@@ -23,7 +24,7 @@ const memberController = {
   },
 
   getEditMember: function (req, res) {
-    if (req.session.editMemberId === req.params.member_id || parseInt(req.session.level) === 3) {
+    if (req.session.editMemberId === parseInt(req.params.member_id) || parseInt(req.session.level) === 3) {
       const data = {
         styles: ['forms'],
         scripts: ['member']
@@ -87,7 +88,7 @@ const memberController = {
   },
 
   getViewMember: function (req, res) {
-    if (req.session.editMemberId === req.params.member_id || parseInt(req.session.level) === 3) {
+    if (parseInt(req.session.editMemberId) === parseInt(req.params.member_id) || parseInt(req.session.level) === 3) {
       const data = {
       }
       const condition = new Condition(queryTypes.where)
@@ -164,7 +165,6 @@ const memberController = {
     if (req.session.level !== null && req.session.level !== undefined) {
       if (!errors.isEmpty()) {
         errors = errors.errors
-        console.log(errors)
         let msg = ''
         errors.forEach((error) => {
           msg += error.msg + '<br>'
