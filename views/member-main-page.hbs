@@ -36,45 +36,49 @@
   </div>
   <div class="row">
       <div class="row mt-3" style="--bs-gutter-x: 0rem;">
-        <div class="col-1 tile">
+        <div class="col-{{#if canSee}}1{{else}}2{{/if}} tile">
           <p class="variables"> Member ID </p>
         </div>
-        <div class="col-2 tile">
+        <div class="col-{{#if canSee}}2{{else}}10{{/if}} tile">
           <p class="variables"> Name </p>
         </div>
-        <div class="col-1 tile">
-          <p class="variables"> Birth Date </p>
-        </div>
-        <div class="col-2 tile">
-          <p class="variables"> Contact Number </p>
-        </div>
-        <div class="col tile">
-          <p class="variables"> Email Address </p>
-        </div>
-        <div class="col tile">
-          <p class="variables"> Address </p>
-        </div>
+        {{#if canSee}}
+          <div class="col-1 tile">
+            <p class="variables"> Birth Date </p>
+          </div>
+          <div class="col-2 tile">
+            <p class="variables"> Contact Number </p>
+          </div>
+          <div class="col tile">
+            <p class="variables"> Email Address </p>
+          </div>
+          <div class="col tile">
+            <p class="variables"> Address </p>
+          </div>
+          {{/if}}
       </div>
       {{#each members}}
         <div class="row" style="--bs-gutter-x: 0rem;">
-          <div class="col-1 tile">
+          <div class="col-{{#if canSee}}1{{else}}2{{/if}} tile">
             <p class="variables"> {{this.member_id}} </p>
           </div>
-            <div class="col-2 tile">
-                <a href="/member/{{this.member_id}}"> <p class="variables"> {{this.first_name}} {{this.last_name}} </p> </a>
+          <div class="col-{{#if canSee}}2{{else}}10{{/if}} tile">
+              <a href="/member/{{this.member_id}}"> <p class="variables"> {{this.first_name}} {{this.last_name}} </p> </a>
+          </div>
+          {{#if canSee}}
+            <div class="col-1 tile">
+              <p class="variables"> {{dateView this.birthday}} </p>
             </div>
-          <div class="col-1 tile">
-            <p class="variables"> {{dateView this.birthday}} </p>
-          </div>
-          <div class="col-2 tile">
-            <p class="variables"> {{this.mobile}} </p>
-          </div>
-          <div class="col tile">
-            <p class="variables"> {{this.email}} </p>
-          </div>
-          <div class="col tile">
-            <p class="variables"> {{this.address}} </p>
-          </div>
+            <div class="col-2 tile">
+              <p class="variables"> {{this.mobile}} </p>
+            </div>
+            <div class="col tile">
+              <p class="variables"> {{this.email}} </p>
+            </div>
+            <div class="col tile">
+              <p class="variables"> {{this.address}} </p>
+            </div>
+          {{/if}}
         </div>
       {{/each}}
   </div>
