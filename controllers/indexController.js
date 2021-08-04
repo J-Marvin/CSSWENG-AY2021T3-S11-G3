@@ -19,7 +19,6 @@ const controller = {
   getMemberMainPage: function (req, res) {
     const level = req.session.level
     req.session.editMemberId = null
-    console.log(req.session.level)
     if (level === undefined || level === null || parseInt(level) === 1) {
       res.status(401)
       res.render('error', {
