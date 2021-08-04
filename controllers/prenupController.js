@@ -8,7 +8,97 @@ const memberFields = require('../models/members')
 
 const prenupController = {
   /**
-   * This function inserts a new row (non-member) in the prenuptial table
+   * This function renders the view of a specific prenuptial record
+   * @param req - the incoming request containing either the query or body
+   * @param res - the result to be sent out after processing the request
+   */
+  getViewPrenup: function (req, res) {
+    const prenupId = req.params.prenup_id
+    if (parseInt(req.session.prenupId) === parseInt(prenupId) || parseInt(req.session.level) >= 2) {
+      /*
+      tables needed: PRENUPTIAL_TABLE, COUPLE_TABLE, PEOPLE_TABLE
+      SQL:
+      SELECT *
+      FROM pre_nuptial
+      JOIN couples ON couples.couple_id = pre_nuptial.couple_id
+      JOIN people ON people.person_id = couples.female_id
+      */
+      let data = {} // the prenuptial details to be rendered
+      // female id
+      const joinTables1 = [
+        {
+          tableName: db.tables.COUPLE_TABLE,
+          sourceCol: db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.COUPLE,
+          destCol: db.tables.COUPLE_TABLE + '.' + coupleFields.ID
+        },
+        {
+          tableName: db.tables.PERSON_TABLE,
+          sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE,
+          destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
+        }
+      ]
+      // male id
+      const joinTables2 = [
+        {
+          tableName: db.tables.COUPLE_TABLE,
+          sourceCol: db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.COUPLE,
+          destCol: db.tables.COUPLE_TABLE + '.' + coupleFields.ID
+        },
+        {
+          tableName: db.tables.PERSON_TABLE,
+          sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.MALE,
+          destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
+        }
+      ]
+
+      const cond = new Condition(queryTypes.where)
+      cond.setKeyValue(db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.ID, prenupId)
+      // get female first
+      db.find(db.tables.PRENUPTIAL_TABLE, cond, joinTables1, '*', function (result) {
+        if (result !== null) {
+          const brideInfo = result
+          console.log(brideInfo)
+
+          // next get the male
+          db.find(db.tables.PRENUPTIAL_TABLE, cond, joinTables2, '*', function (result) {
+            if (result !== null) {
+              const groomInfo = result
+              console.log(groomInfo)
+
+              // initialize render data
+              data = {
+                brideFirst: brideInfo[0][personFields.FIRST_NAME],
+                brideMid: brideInfo[0][personFields.MID_NAME],
+                brideLast: brideInfo[0][personFields.LAST_NAME],
+                brideMemberId: brideInfo[0][personFields.MEMBER],
+                bridePersonId: brideInfo[0][personFields.ID],
+                groomFirst: groomInfo[0][personFields.FIRST_NAME],
+                groomMid: groomInfo[0][personFields.MID_NAME],
+                groomLast: groomInfo[0][personFields.LAST_NAME],
+                groomMemberId: groomInfo[0][personFields.MEMBER],
+                groomPersonId: groomInfo[0][personFields.ID],
+                date: groomInfo[0][prenupRecordFields.DATE],
+                weddingDate: groomInfo[0][prenupRecordFields.DATE_OF_WEDDING]
+              }
+              res.render('', data) // add the hbs to render
+            }
+          })
+        }
+      })
+    } else {
+      res.status(401)
+      res.render('error', {
+        title: '401 Unauthorized Access',
+        css: ['global', 'error'],
+        status: {
+          code: '401',
+          message: 'Unauthorized access'
+        }
+      })
+    }
+  },
+  /**
+   * This function gets all prenuptial details and renders the add prenuptial page
    * @param req - the incoming request containing either the query or body
    * @param res - the result to be sent out after processing the request
    */
@@ -625,7 +715,7 @@ const prenupController = {
    *              the `female` partner will be edited
    * @param res - the result to be sent out after processing the request
    */
-  updatePrenup: function (req, res) {
+  postUpdatePrenup: function (req, res) {
     const data = req.query.data
     const condition = req.query.condition
     db.update(db.tables.PRENUPTIAL_TABLE, data, condition, function (result) {
