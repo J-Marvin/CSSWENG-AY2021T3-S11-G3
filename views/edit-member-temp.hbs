@@ -50,7 +50,7 @@
         </select>
         <p id="civil_status_error" class="error_codes">  </p>
       </div>
-      <div class="col">
+      <div class="col" style="display: {{{otherColDisplay member.civil_status}}};">
         <label for="civil_status">If others, specify</label>
         <input type="text" id="civil_status_others" name="civil_status_others" class="form-control" value="{{{otherCivilStatus member.civil_status}}}">
         <p id="civil_status_others_error" class="error_codes" > </p>
