@@ -39,9 +39,17 @@ const prenupController = {
           console.log('groomNames: ' + groomNames)
 
           // find all bride members
-          cond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.SEX, 'Female')
+          // cond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.SEX, 'Female')
+          cond.setQueryObject(
+            {
+              sex: 'Female',
+              civil_status: 'Single'
+            }
+          )
+          const cond2 = new Condition(queryTypes.whereNull)
+          cond2.setField(db.tables.MEMBER_TABLE + '.' + memberFields.PRENUP_RECORD)
 
-          db.find(db.tables.MEMBER_TABLE, cond, joinTables3, '*', function (result) {
+          db.find(db.tables.MEMBER_TABLE, [cond, cond2], joinTables3, '*', function (result) {
             if (result !== null) {
               const brideNames = result
               console.log('brideNames: ' + brideNames)
@@ -60,9 +68,17 @@ const prenupController = {
           const brideNames = result
           console.log('brideNames: ' + brideNames)
           // find all groom members
-          cond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.SEX, 'Male')
+          // cond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.SEX, 'Male')
+          cond.setQueryObject(
+            {
+              sex: 'Male',
+              civil_status: 'Single'
+            }
+          )
+          const cond2 = new Condition(queryTypes.whereNull)
+          cond2.setField(db.tables.MEMBER_TABLE + '.' + memberFields.PRENUP_RECORD)
 
-          db.find(db.tables.MEMBER_TABLE, cond, joinTables3, '*', function (result) {
+          db.find(db.tables.MEMBER_TABLE, [cond, cond2], joinTables3, '*', function (result) {
             if (result !== null) {
               const groomNames = result
               console.log('groomNames: ' + groomNames)
@@ -83,8 +99,10 @@ const prenupController = {
      * in the dropdown option in add-prenup-temp.hbs
      */
     function selectAllMembers () {
-      const conditions1 = new Condition(queryTypes.where)
-      const conditions2 = new Condition(queryTypes.where)
+      const cond1 = new Condition(queryTypes.where)
+      const cond2 = new Condition(queryTypes.whereNull)
+      const cond3 = new Condition(queryTypes.where)
+      const cond4 = new Condition(queryTypes.whereNull)
 
       const joinTables1 = [
         {
@@ -96,24 +114,31 @@ const prenupController = {
       let brideNames = []
       let groomNames = []
       // set the WHERE clause
-      conditions1.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.SEX, 'Female')
-      // conditions.push(conditions1)
-      // conditions1.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.CIVIL_STATUS, 'Single')
-      // conditions.push(conditions1)
+      cond1.setQueryObject(
+        {
+          sex: 'Female',
+          civil_status: 'Single'
+        }
+      )
+      cond2.setField(db.members.PRENUP_RECORD)
       // get all female members
-      db.find(db.tables.MEMBER_TABLE, conditions1, joinTables1, '*', function (result) {
+      db.find(db.tables.MEMBER_TABLE, [cond1, cond2], joinTables1, '*', function (result) {
         if (result !== null) {
           brideNames = result
           console.log(brideNames)
           // conditions = []
 
           // set the WHERE clause
-          conditions2.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.SEX, 'Male')
-          // conditions.push(conditions2)
-          // conditions2.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.CIVIL_STATUS, 'Single')
+          cond3.setQueryObject(
+            {
+              sex: 'Male',
+              civil_status: 'Single'
+            }
+          )
+          cond4.setField(db.members.PRENUP_RECORD)
 
           // get all male members
-          db.find(db.tables.MEMBER_TABLE, conditions2, joinTables1, '*', function (result) {
+          db.find(db.tables.MEMBER_TABLE, [cond3, cond4], joinTables1, '*', function (result) {
             // console.log(result)
             if (result !== null) {
               groomNames = result
