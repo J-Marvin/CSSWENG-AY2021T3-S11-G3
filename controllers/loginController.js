@@ -3,6 +3,7 @@ const db = require('../models/db')
 
 const loginController = {
   getLoginPage: function (req, res) {
+    req.session.editMemberId = null
     res.render('login', {
       styles: ['login'],
       scripts: ['login']
@@ -26,12 +27,7 @@ const loginController = {
     }).then((level) => {
       if (level) {
         req.session.level = level
-
-        console.log(req.session)
-        res.render('main-page', {
-          styles: ['mainPage'],
-          Level: level
-        })
+        res.redirect('/main_page')
       } else {
         res.status(401)
         res.render('error', {
