@@ -134,7 +134,7 @@ const memberController = {
                   data.member.age = moment.duration(today.diff(b)).years()
                   data.styles = ['view']
                   data.scripts = ['removeButtons']
-                  data.canSee = (parseInt(req.session.level) === 3)
+                  data.canSee = (parseInt(req.session.level) === 3) || req.session.editMemberId !== null
                   res.render('view-member', data)
                 }
               })
