@@ -28,17 +28,54 @@ const prenupController = {
           destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
         }
       ]
+      // find the row record of this member
       conditions3.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.ID, member)
       db.find(db.tables.MEMBER_TABLE, conditions3, joinTables3, '*', function (result) {
-        const brideNames = result
-        const groomNames = result
-        res.render('add-prenup-temp', {
-          scripts: ['addPrenup'],
-          styles: ['forms'],
-          Origin: 'coming from edit member',
-          brideNames: brideNames,
-          groomNames: groomNames
-        })
+        const memberInfo = result
+        const cond = new Condition(queryTypes.where) // setup the where condition
+        // check if member is male
+        if (memberInfo[0][memberFields.SEX] === 'Male') {
+          const groomNames = result
+          console.log('groomNames: ' + groomNames)
+
+          // find all bride members
+          cond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.SEX, 'Female')
+
+          db.find(db.tables.MEMBER_TABLE, cond, joinTables3, '*', function (result) {
+            if (result !== null) {
+              const brideNames = result
+              console.log('brideNames: ' + brideNames)
+              res.render('add-prenup-temp', {
+                scripts: ['addPrenup'],
+                styles: ['forms'],
+                Origin: 'coming from edit member',
+                brideNames: brideNames,
+                groomNames: groomNames
+              })
+            }
+          })
+
+        // if the member is a female
+        } else {
+          const brideNames = result
+          console.log('brideNames: ' + brideNames)
+          // find all groom members
+          cond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.SEX, 'Male')
+
+          db.find(db.tables.MEMBER_TABLE, cond, joinTables3, '*', function (result) {
+            if (result !== null) {
+              const groomNames = result
+              console.log('groomNames: ' + groomNames)
+              res.render('add-prenup-temp', {
+                scripts: ['addPrenup'],
+                styles: ['forms'],
+                Origin: 'coming from edit member',
+                brideNames: brideNames,
+                groomNames: groomNames
+              })
+            }
+          })
+        } // end of else
       })
     }
     /**
@@ -56,16 +93,8 @@ const prenupController = {
           destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
         }
       ]
-      let brideNames = [
-        {
-          // contain a blank spot
-        }
-      ]
-      let groomNames = [
-        {
-          // contain a blank spot
-        }
-      ]
+      let brideNames = []
+      let groomNames = []
       // set the WHERE clause
       conditions1.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.SEX, 'Female')
       // conditions.push(conditions1)
@@ -75,7 +104,7 @@ const prenupController = {
       db.find(db.tables.MEMBER_TABLE, conditions1, joinTables1, '*', function (result) {
         if (result !== null) {
           brideNames = result
-          // console.log(brideNames)
+          console.log(brideNames)
           // conditions = []
 
           // set the WHERE clause
@@ -88,7 +117,8 @@ const prenupController = {
             // console.log(result)
             if (result !== null) {
               groomNames = result
-              // console.log(groomNames)
+              groomNames.unshift({}) // add a blank spot in the first index
+              console.log(groomNames)
               res.render('add-prenup-temp', {
                 styles: ['forms'],
                 scripts: ['addPrenup'],
