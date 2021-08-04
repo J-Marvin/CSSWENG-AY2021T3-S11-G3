@@ -63,7 +63,6 @@ const data = [
     member: {
       member_status: 'Active',
       civil_status: 'Married',
-      age: 54,
       birthday: new Date(1966, 8, 27).toISOString(),
       occupation: 'Engineer',
       workplace: 'Manila',
