@@ -158,6 +158,14 @@ $(document).ready(function () {
     return isValid
   }
 
+  $('#civil_status').on('change', function() {
+    const status = $('#civil_status').val()
+    if(status === 'Single' || status === 'Married') {
+      $('#civil_status_others').parent().hide()
+    } else {
+      $('#civil_status_others').parent().show()
+    }
+  })
   $('#create-member').click(function() {
     if(validateFields()) {
       $('#create-member-form').submit()

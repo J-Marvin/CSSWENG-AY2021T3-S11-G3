@@ -199,7 +199,6 @@ const memberController = {
         data.member[memberFields.ALMA_MATER] = req.body.alma_mater
         data.member[memberFields.SKILLS] = req.body.skills
         data.member[memberFields.MEMBER_STATUS] = req.body.membership_status
-        data.member[memberFields.CIVIL_STATUS] = req.body.civil_status
         data.member[memberFields.FAMILY] = req.body.family_members
         data.member[memberFields.SEX] = req.body.sex
         data.member[memberFields.DATE] = new Date().toISOString()

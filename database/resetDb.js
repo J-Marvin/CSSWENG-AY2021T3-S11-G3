@@ -34,8 +34,8 @@ const data = [
       country: 'United Kingdom'
     },
     member: {
-      member_status: 'active',
-      civil_status: 'single',
+      member_status: 'Active',
+      civil_status: 'Single',
       birthday: new Date(1996, 1, 3).toISOString(),
       occupation: 'IT',
       workplace: 'Quezon City',
@@ -61,8 +61,8 @@ const data = [
       country: 'Canada'
     },
     member: {
-      member_status: 'active',
-      civil_status: 'married',
+      member_status: 'Active',
+      civil_status: 'Married',
       age: 54,
       birthday: new Date(1966, 8, 27).toISOString(),
       occupation: 'Engineer',
@@ -89,8 +89,8 @@ const data = [
       country: 'USA'
     },
     member: {
-      member_status: 'active',
-      civil_status: 'single',
+      member_status: 'Active',
+      civil_status: 'Single',
       birthday: new Date(2001, 11, 5).toISOString(),
       occupation: 'Student',
       workplace: 'DLSU',
@@ -116,8 +116,8 @@ const data = [
       country: 'Protean'
     },
     member: {
-      member_status: 'active',
-      civil_status: 'single',
+      member_status: 'Active',
+      civil_status: 'Single',
       birthday: new Date(1996, 0, 7).toISOString(),
       occupation: 'Researcher',
       workplace: 'Therum',
@@ -143,8 +143,8 @@ const data = [
       country: 'Turian'
     },
     member: {
-      member_status: 'inactive',
-      civil_status: 'single',
+      member_status: 'inActive',
+      civil_status: 'Single',
       birthday: new Date(1996, 2, 6).toISOString(),
       occupation: 'Investigator',
       workplace: 'Citadel',
