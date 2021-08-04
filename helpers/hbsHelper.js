@@ -22,7 +22,7 @@ const hbHelpers = {
   civilStatusSelection: function (civilStatus) {
     if (civilStatus.toLowerCase() === 'single') {
       return '<option selected>Single</option> <option>Married</option> <option>Others</option>'
-    } else if (civilStatus.toLowerCase() === 'Married') {
+    } else if (civilStatus.toLowerCase() === 'married') {
       return '<option>Single</option> <option selected>Married</option> <option>Others</option>'
     } else {
       return '<option>Single</option> <option>Married</option> <option Selected>Others</option>'
@@ -35,8 +35,15 @@ const hbHelpers = {
       return ''
     }
   },
+  otherColDisplay: function (civilStatus) {
+    if (civilStatus.toLowerCase() !== 'single' && civilStatus.toLowerCase() !== 'married') {
+      return 'block'
+    } else {
+      return 'none'
+    }
+  },
   memberStatusSelection: function (memberStatus) {
-    if (memberStatus === 'active') {
+    if (memberStatus.toLowerCase() === 'active') {
       return '<option selected>Active</option> <option>Inactive</option>'
     } else {
       return '<option>Active</option> <option selected>Inactive</option>'
