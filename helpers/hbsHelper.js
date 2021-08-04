@@ -20,7 +20,7 @@ const hbHelpers = {
     }
   },
   civilStatusSelection: function (civilStatus) {
-    if (civilStatus === 'Single') {
+    if (civilStatus === 'single') {
       return '<option selected>Single</option> <option>Married</option> <option>Others</option>'
     } else if (civilStatus === 'Married') {
       return '<option>Single</option> <option selected>Married</option> <option>Others</option>'
@@ -29,7 +29,7 @@ const hbHelpers = {
     }
   },
   memberStatusSelection: function (memberStatus) {
-    if (memberStatus === 'Active') {
+    if (memberStatus === 'active') {
       return '<option selected>Active</option> <option>Inactive</option>'
     } else {
       return '<option>Active</option> <option selected>Inactive</option>'
