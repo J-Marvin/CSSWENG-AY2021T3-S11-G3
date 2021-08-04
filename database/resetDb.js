@@ -30,7 +30,8 @@ const data = [
     address: {
       address_line: 'Apples',
       city: 'London',
-      province: null
+      province: null,
+      country: 'United Kingdom'
     },
     member: {
       member_status: 'active',
@@ -55,8 +56,9 @@ const data = [
     },
     address: {
       address_line: 'Mangoes',
-      city: 'London',
-      province: null
+      city: 'Ottawa',
+      province: null,
+      country: 'Canada'
     },
     member: {
       member_status: 'active',
@@ -83,7 +85,8 @@ const data = [
     address: {
       address_line: 'Ishimura',
       city: 'Aegis',
-      province: null
+      province: null,
+      country: 'USA'
     },
     member: {
       member_status: 'active',
@@ -109,7 +112,8 @@ const data = [
     address: {
       address_line: 'Thessia',
       city: 'Serrice',
-      province: null
+      province: null,
+      country: 'Protean'
     },
     member: {
       member_status: 'active',
@@ -122,7 +126,7 @@ const data = [
       mobile: '988',
       educ_attainment: 'Doctorate',
       alma_mater: 'Grissom Academy',
-      sex: 'Monogendered'
+      sex: 'Female'
     }
   },
 
@@ -135,7 +139,8 @@ const data = [
     address: {
       address_line: 'Omega',
       city: 'Palaven',
-      province: null
+      province: null,
+      country: 'Turian'
     },
     member: {
       member_status: 'inactive',

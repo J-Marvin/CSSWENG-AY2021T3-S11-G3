@@ -1,21 +1,70 @@
 $(document).ready(function () {
-  // $('.btn-primary').click(function () {
-  //   // if disabled, it is checked
-  //   if ($('.container').is(':disabled')) {
-  //     $('#form_id').attr('action', '/create_prenup')
-  //   } else { // else prenup will be made to a member
-  //     $('.container').attr('action', '/create_prenup_member')
-  //   }
-  // })
-  // function checkBoxes () {
-  //   // if checkbox for bride member is clicked/checked, change the form action
-  //   if ($('#bride_member').is(':disabled') && $('#groom_member').is(':disabled')) {
-  //     $('#prenup_form').attr('action', '/create_prenup_member') // both partners are members
-  //   } else {
-  //     $('#prenup_form').attr('action', '/create_member') // both partners are non-members
-  //   }
-  // }
-  // checkBoxes()
+  $('#bride_first_name').blur(function () {
+    // if error message is empty
+    if (validator.isEmpty($('#bride_info_error').val())) {
+      $('#bride_info_error').text('')
+    }
+  })
+  
+  $('#bride_mid_name').blur(function () {
+    // if error message is empty
+    if (validator.isEmpty($('#bride_info_error').val())) {
+      $('#bride_info_error').text('')
+    }
+  })
+
+  $('#bride_last_name').blur(function () {
+    // if error message is empty
+    if (validator.isEmpty($('#bride_info_error').val())) {
+      $('#bride_info_error').text('')
+    }
+  })
+
+  $('#groom_first_name').blur(function () {
+    // if error message is empty
+    if (validator.isEmpty($('#groom_info_error').val())) {
+      $('#groom_info_error').text('')
+    }
+  })
+  
+  $('#groom_mid_name').blur(function () {
+    // if error message is empty
+    if (validator.isEmpty($('#groom_info_error').val())) {
+      $('#groom_info_error').text('')
+    }
+  })
+
+  $('#groom_last_name').blur(function () {
+    // if error message is empty
+    if (validator.isEmpty($('#groom_info_error').val())) {
+      $('#groom_info_error').text('')
+    }
+  })
+
+  $('#current_date_error').blur(function () {
+    if (validator.isEmpty($('#current_date_error').val())) {
+      $('#current_date_error').text('')
+    }
+  })
+
+  $('#wedding_date_error').blur(function () {
+    if (validator.isEmpty($('#wedding_date_error').val())) {
+      $('#wedding_date_error').text('')
+    }
+  })
+
+  $('#input_bride_member').blur(function () {
+    if (!$('#input_bride_member').val()) {
+      $('#bride_info_error').text('')
+    }
+  })
+
+  $('#input_groom_member').blur(function () {
+    if (!$('#input_groom_member').val()) {
+      $('#groom_info_error').text('')
+    }
+  })
+
 
   $('#create-prenup').click(function() {
     var isValid = true
