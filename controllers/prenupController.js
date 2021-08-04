@@ -512,7 +512,7 @@ const prenupController = {
               if (prenupRecId !== null) {
                 // set the WHERE clause: WHERE members.prenup_record_id
                 const memberCondition = new Condition(queryTypes.where)
-                memberCondition.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.PRENUP_RECORD, groomMemberId)
+                memberCondition.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.ID, groomMemberId)
                 db.update(db.tables.MEMBER_TABLE, { prenup_record_id: prenupRecId }, memberCondition, function (result) {
                   if (result !== null) {
                     // render the success page along with the newly added prenup record

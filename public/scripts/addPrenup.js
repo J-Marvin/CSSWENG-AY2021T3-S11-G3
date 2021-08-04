@@ -108,4 +108,10 @@ $(document).ready(function () {
       $('#prenup_form').submit()
     }
   })
+
+  function initDate() {
+    let date = new Date().toISOString()
+    document.getElementById('current_date').defaultValue = date.slice(0,10)
+  }
+  initDate()
 })
