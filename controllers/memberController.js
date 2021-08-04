@@ -204,6 +204,12 @@ const memberController = {
         data.member[memberFields.SEX] = req.body.sex
         data.member[memberFields.DATE] = new Date().toISOString()
 
+        if (req.body.civil_status !== 'Others') {
+          data.member[memberFields.CIVIL_STATUS] = req.body.civil_status
+        } else {
+          data.member[memberFields.CIVIL_STATUS] = req.body.civil_status_others
+        }
+
         // insert to PEOPLE table
         db.insert(db.tables.PERSON_TABLE, data.person, function (personId) {
           // update person_id

@@ -88,7 +88,13 @@ $(document).ready(function () {
         $('#civil_status_error').text('Required')
         isValid = false
     } else {
-        $('#civil_status_error').text('')
+      $('#civil_status_error').text('')
+      if($('#civil_status').val() === 'Others' && validator.isEmpty($('#civil_status_others').val())) {
+          $('#civil_status_others_error').text('Required')
+          isValid = false
+        } else {
+          $('#civil_status_others_error').text('')
+        }
     }
 
     if(validator.isEmpty($('#sex').val())) {
@@ -160,6 +166,14 @@ $(document).ready(function () {
 
   $('#edit-member').click(function() {
 
+    var civil_status
+
+    if($('#civil_status').val() !== 'Others') {
+      civil_status = $('#civil_status').val()
+    } else {
+      civil_status = $('#civil_status_others').val()
+    }
+
     if (validateFields()) {
       const data = {
         member_id: $('#member_id').text(),
@@ -170,7 +184,7 @@ $(document).ready(function () {
         birthday: $('#birthday').val(),
         occupation: $('#occupation').val(),
         membership_status: $('#membership_status').val(),
-        civil_status: $('#civil_status').val(),
+        civil_status: civil_status,
         sex: $('#sex').val(),
         address_line: $('#address_line').val(),
         address_line2: $('#address_line2').val(),
