@@ -120,7 +120,7 @@ const prenupController = {
           civil_status: 'Single'
         }
       )
-      cond2.setField(db.members.PRENUP_RECORD)
+      cond2.setField(db.tables.MEMBER_TABLE + '.' + memberFields.PRENUP_RECORD)
       // get all female members
       db.find(db.tables.MEMBER_TABLE, [cond1, cond2], joinTables1, '*', function (result) {
         if (result !== null) {
@@ -135,14 +135,13 @@ const prenupController = {
               civil_status: 'Single'
             }
           )
-          cond4.setField(db.members.PRENUP_RECORD)
+          cond4.setField(db.tables.MEMBER_TABLE + '.' + memberFields.PRENUP_RECORD)
 
           // get all male members
           db.find(db.tables.MEMBER_TABLE, [cond3, cond4], joinTables1, '*', function (result) {
             // console.log(result)
             if (result !== null) {
               groomNames = result
-              groomNames.unshift({}) // add a blank spot in the first index
               console.log(groomNames)
               res.render('add-prenup-temp', {
                 styles: ['forms'],
