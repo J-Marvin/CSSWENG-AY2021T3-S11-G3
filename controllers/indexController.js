@@ -12,13 +12,13 @@ const controller = {
       level: req.session.level,
       styles: ['mainPage'],
       scripts: [''],
-      canSee: !(parseInt(req.session.level) === 1 || parseInt(req.session.level) === 2)
+      canSee: !(parseInt(req.session.level) === 1)
     })
   },
   getMemberMainPage: function (req, res) {
     const level = req.session.level
     req.session.editMemberId = null
-    if (level === undefined || level === null || parseInt(level) === 1 || parseInt(level) === 2) {
+    if (level === undefined || level === null || parseInt(level) === 1) {
       res.status(401)
       res.render('error', {
         title: '401 Unauthorized Access',
@@ -49,7 +49,8 @@ const controller = {
 
         res.render('member-main-page', {
           styles: ['lists'],
-          members: result
+          members: result,
+          canSee: parseInt(req.session.level) === 3
         })
       })
     }

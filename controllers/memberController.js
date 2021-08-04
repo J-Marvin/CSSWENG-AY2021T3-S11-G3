@@ -88,7 +88,7 @@ const memberController = {
   },
 
   getViewMember: function (req, res) {
-    if (parseInt(req.session.editMemberId) === parseInt(req.params.member_id) || parseInt(req.session.level) === 3) {
+    if (parseInt(req.session.editMemberId) === parseInt(req.params.member_id) || parseInt(req.session.level) >= 2) {
       const data = {
       }
       const condition = new Condition(queryTypes.where)
@@ -134,6 +134,7 @@ const memberController = {
                   data.member.age = moment.duration(today.diff(b)).years()
                   data.styles = ['view']
                   data.scripts = ['removeButtons']
+                  data.canSee = (parseInt(req.session.level) === 3)
                   res.render('view-member', data)
                 }
               })
