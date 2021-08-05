@@ -44,9 +44,11 @@ const hbHelpers = {
   },
   memberStatusSelection: function (memberStatus) {
     if (memberStatus.toLowerCase() === 'active') {
-      return '<option selected>Active</option> <option>Inactive</option>'
+      return '<option selected>Active</option> <option>Inactive</option> <option>Deceased</option>'
+    } else if (memberStatus.toLowerCase() === 'inactive') {
+      return '<option>Active</option> <option selected>Inactive</option> <option>Deceased</option>'
     } else {
-      return '<option>Active</option> <option selected>Inactive</option>'
+      return '<option>Active</option> <option>Inactive</option> <option selected>Deceased</option>'
     }
   },
   isLevelNA: function (level) {

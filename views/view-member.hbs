@@ -42,7 +42,7 @@
         <p>{{member.first_name}}</p>
       </div>
       <div class="col">
-        <u for="mid_name">Middle Name</u>
+        <u for="mid_name">Middle Initial</u>
         <p>{{member.middle_name}}</p>
       </div>
       <div class="col">
@@ -141,7 +141,7 @@
           <p> {{member.educ_attainment}} </p>
         </div>
         <div class="col">
-          <u for="alma_mater">Alma Mater</u>
+          <u for="alma_mater">Last School Attended</u>
           <p> {{member.alma_mater}} </p>
         </div>
       </div>
@@ -180,7 +180,13 @@
 
     <div class="row my-3">
       <div class="col">
-        <a href="/edit_member/{{member.member_id}}/add_prenup" id="add_prenup" type="button" class="btn btn-secondary">Add Prenup</a>
+        {{#if member.prenup_record_id}}
+          <a href="/view_prenup/{{member.prenup_record_id}}" id="view_prenup" type="button" class="btn btn-secondary">View
+            Prenup</a>
+        {{else}}
+          <a href="/edit_member/{{member.member_id}}/add_prenup" id="add_prenup" type="button" class="btn btn-secondary">Add
+            Prenup</a>
+        {{/if}}
       </div>
     </div>
     <a href="/edit_member/{{member.member_id}}"> <button class="btn btn-secondary mb-4">Edit Member</button> </a>
