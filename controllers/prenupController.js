@@ -647,18 +647,31 @@ const prenupController = {
       }
     })
   },
-
+  /**
+   * This function renders the edit prenup form page supplying the text fields with
+   * details from the existing
+   * @param req - the incoming request containing either the query or body
+   * @param res - the result to be sent out after processing the request
+   */
   getEditPrenup: function (req, res) {
-    let joinTables = []
-    // boolean variable indicating which partner, male or female
-    const partner = req.query.partner
-    // if male
-    if (partner === true) {
-      joinTables = [
+    const prenupId = req.params.prenup_id
+    if (parseInt(req.session.level) === 3 && parseInt(req.session.editPrenupId === parseInt(prenupId))) {
+      /*
+      SELECT *
+      FROM pre_nuptial
+      JOIN couples ON pre_nuptial.couple_id = couples.couple_id
+      JOIN people ON couples.male_id = people.person_id
+      WHERE pre_nuptial.record_id = <some record id>
+      */
+      const data = {
+        styles: ['forms']
+      }
+      // join table for the groom
+      const joinTables1 = [
         {
           tableName: db.tables.COUPLE_TABLE,
           sourceCol: db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.COUPLE,
-          destCol: db.tables.COUPLE_TABLE + '.' + coupleFields.ID
+          destCol: db.tables.COUPLE_TABLE + '.' + coupleFields.MALE
         },
         {
           tableName: db.tables.PERSON_TABLE,
@@ -666,46 +679,44 @@ const prenupController = {
           destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
         }
       ]
-    // else if female
-    } else {
-      joinTables = [
+      // join table for the bride
+      const joinTables2 = [
         {
           tableName: db.tables.COUPLE_TABLE,
           sourceCol: db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.COUPLE,
-          destCol: db.tables.COUPLE_TABLE + '.' + coupleFields.ID
+          destCol: db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE
         },
         {
           tableName: db.tables.PERSON_TABLE,
-          sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE,
+          sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.MALE,
           destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
         }
       ]
+      const cond = new Condition(queryTypes.where)
+      cond.setKeyValue(db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.ID, prenupId)
+      // find the groom
+      db.find(db.tables.PRENUPTIAL_TABLE, cond, joinTables1, '*', function (result) {
+        if (result !== null) {
+          data.groom = result[0]
+          db.createTable.find(db.tables.PRENUPTIAL_TABLE, cond, joinTables2, function (result) {
+            if (result !== null) {
+              data.bride = result[0]
+              res.render('', data) // insert hbs to render
+            }
+          })
+        }
+      })
+    } else {
+      res.status(401)
+      res.render('error', {
+        title: '401 Unauthorized Access',
+        css: ['global', 'error'],
+        status: {
+          code: '401',
+          message: 'Unauthorized access'
+        }
+      })
     }
-    const conditions = []
-    const c = new Condition(queryTypes.where)
-    c.setQueryObject({
-      record_id: req.query.id
-    })
-
-    conditions.push(c)
-    /*
-    This is equivalent to
-      SELECT *
-      FROM pre_nuptial
-      JOIN couples ON couples.couple_id = pre_nuptial.couple_id
-      JOIN people ON people.person_id = couples.male_id
-      WHERE record_id = <integer id>;
-    */
-    db.find(db.tables.PRENUPTIAL_TABLE, conditions, joinTables, '*', function (result) {
-      if (result !== false) {
-        console.log(result)
-        // res.send(result)
-        // res.render('', result)
-      } else {
-        console.log('FIND ERROR')
-        res.render('error')
-      }
-    })
   },
   /**
    * This function updates a row in the prenuptial table
