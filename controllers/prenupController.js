@@ -668,8 +668,8 @@ const prenupController = {
    */
   getEditPrenup: function (req, res) {
     const prenupId = req.params.prenup_id
-    // if (parseInt(req.session.level) === 3 && parseInt(req.session.editPrenupId === parseInt(prenupId))) {
-    if (parseInt(req.session.level) === 3) { // For testing purposes
+    if (parseInt(req.session.level) === 3 || parseInt(req.session.editPrenupId === parseInt(prenupId))) {
+    // if (parseInt(req.session.level) === 3) { // For testing purposes
       /*
       SELECT *
       FROM pre_nuptial
@@ -679,14 +679,16 @@ const prenupController = {
       */
       const data = {
         scripts: ['addPrenup'],
-        styles: ['forms']
+        styles: ['forms'],
+        bride: {},
+        groom: {}
       }
       // join table for the groom
       const joinTables1 = [
         {
           tableName: db.tables.COUPLE_TABLE,
           sourceCol: db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.COUPLE,
-          destCol: db.tables.COUPLE_TABLE + '.' + coupleFields.MALE
+          destCol: db.tables.COUPLE_TABLE + '.' + coupleFields.ID
         },
         {
           tableName: db.tables.PERSON_TABLE,
@@ -699,11 +701,11 @@ const prenupController = {
         {
           tableName: db.tables.COUPLE_TABLE,
           sourceCol: db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.COUPLE,
-          destCol: db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE
+          destCol: db.tables.COUPLE_TABLE + '.' + coupleFields.ID
         },
         {
           tableName: db.tables.PERSON_TABLE,
-          sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.MALE,
+          sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE,
           destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
         }
       ]
@@ -712,13 +714,11 @@ const prenupController = {
       // find the groom
       db.find(db.tables.PRENUPTIAL_TABLE, cond, joinTables1, '*', function (result) {
         if (result !== null) {
-          console.log(result)
           data.groom = result[0]
-          db.find(db.tables.PRENUPTIAL_TABLE, cond, joinTables2, function (result) {
+          db.find(db.tables.PRENUPTIAL_TABLE, cond, joinTables2, '*', function (result) {
             if (result !== null) {
-              console.log(result)
               data.bride = result[0]
-              res.render('edit-prenup', data) // insert hbs to render
+              res.render('edit-prenup', data)
             }
           })
         }
