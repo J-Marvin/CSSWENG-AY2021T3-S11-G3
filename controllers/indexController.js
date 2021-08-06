@@ -2,8 +2,8 @@ const db = require('../models/db.js')
 const memberFields = require('../models/members')
 const personFields = require('../models/person.js')
 const addressFields = require('../models/address.js')
-// const prenupRecordFields = require('../models/prenupRecord')
-// const coupleFields = require('../models/couple')
+const prenupRecordFields = require('../models/prenupRecord')
+const coupleFields = require('../models/couple')
 
 const controller = {
   getMainPage: function (req, res) {
@@ -57,7 +57,41 @@ const controller = {
   },
 
   getFormsMainPage: function (req, res) {
-    res.render('forms-main-page')
+    const level = req.session.level
+
+    if (level === undefined || level === null || parseInt(level) === 1) {
+      res.status(401)
+      res.render('error', {
+        title: '401 Unauthorized Access',
+        css: ['global', 'error'],
+        status: {
+          code: '401',
+          message: 'Unauthorized access'
+        }
+      })
+    } else {
+      const joinTables = [
+        {
+          tableName: db.tables.PRENUPTIAL_TABLE,
+          sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.ID,
+          destCol: db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.COUPLE
+        }
+      ]
+
+      db.find(db.tables.COUPLE_TABLE, null, joinTables, '*', function (result) {
+        console.log(result)
+
+        result.forEach(function (form) {
+          form.groom = form[coupleFields.MALE]
+          form.bride = form[coupleFields.FEMALE]
+        })
+
+        res.render('forms-main-page', {
+          styles: ['lists'],
+          prenup: result
+        })
+      })
+    }
   }
 }
 
