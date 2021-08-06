@@ -37,10 +37,10 @@ app.post('/create_prenup_member', validation.addMemberPrenupValid(), prenupContr
 app.post('/addPrenupBrideNonMember', validation.addPrenupBrideNonMember(), prenupController.createPrenupBrideNonMember)
 app.post('/addPrenupGroomNonMember', validation.addPrenupGroomNonMember(), prenupController.createPrenupGroomNonMember)
 
-// app.post('/postUpdatePrenupMember') ADD UPDATE PRENUP ROUTES HERE
-// app.post('/postUpdatePrenupNonMember') ADD UPDATE PRENUP ROUTES HERE
-// app.post('/postUpdatePrenupBrideMember') ADD UPDATE PRENUP ROUTES HERE
-// app.post('/postUpdatePrenupGroomMember') ADD UPDATE PRENUP ROUTES HERE
+app.post('/postUpdatePrenupMember', prenupController.postUpdatePrenupMember)
+app.post('/postUpdatePrenupNonMember', prenupController.postUpdatePrenupNonMember)
+app.post('/postUpdatePrenupBrideMember', prenupController.postUpdatePrenupBrideMember)
+app.post('/postUpdatePrenupGroomMember', prenupController.postUpdatePrenupGroomMember)
 
 app.post('/update_member', validation.addMemberValidation(), memberController.postUpdateMember)
 app.post('/add_church', validation.churchValidation(), churchController.postAddChurch)

@@ -82,6 +82,7 @@ const prenupController = {
                 date: groomInfo[0][prenupRecordFields.DATE],
                 weddingDate: groomInfo[0][prenupRecordFields.DATE_OF_WEDDING]
               }
+              req.session.editPrenupId = prenupId
               res.render('view-prenup', data)
             }
           })
@@ -667,7 +668,8 @@ const prenupController = {
    */
   getEditPrenup: function (req, res) {
     const prenupId = req.params.prenup_id
-    if (parseInt(req.session.level) === 3 && parseInt(req.session.editPrenupId === parseInt(prenupId))) {
+    console.log(prenupId)
+    if (parseInt(req.session.level) === 3 || parseInt(req.session.editPrenupId === parseInt(prenupId))) {
       /*
       SELECT *
       FROM pre_nuptial
@@ -709,11 +711,13 @@ const prenupController = {
       // find the groom
       db.find(db.tables.PRENUPTIAL_TABLE, cond, joinTables1, '*', function (result) {
         if (result !== null) {
+          console.log(result)
           data.groom = result[0]
-          db.createTable.find(db.tables.PRENUPTIAL_TABLE, cond, joinTables2, function (result) {
+          db.find(db.tables.PRENUPTIAL_TABLE, cond, joinTables2, function (result) {
             if (result !== null) {
+              console.log(result)
               data.bride = result[0]
-              res.render('', data) // insert hbs to render
+              res.render('edit-prenup', data) // insert hbs to render
             }
           })
         }
@@ -731,14 +735,55 @@ const prenupController = {
     }
   },
   /**
-   * This function updates a row in the prenuptial table
+   * This function updates a row in the prenuptial table given that
+   * both partners are members.
    * @param req - the incoming request containing either the query or body.
    *              the request should contain a boolean variable `partner`,
    *              if true indicates the `male` partner will be edited, else
    *              the `female` partner will be edited
    * @param res - the result to be sent out after processing the request
    */
-  postUpdatePrenup: function (req, res) {
+  postUpdatePrenupMember: function (req, res) {
+    /*
+      This is innermost function declaration for updating new couple's prenuptial id
+      "this couple takes over this prenuptial record"
+    */
+    function changeBothPartners (groom, bride, coupleId, prenupId) {
+      const groomCond = new Condition(queryTypes.where)
+      groomCond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.ID, groom.member_id)
+      const brideCond = new Condition(queryTypes.where)
+      brideCond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.ID, bride.member_id)
+      // set couple male_id = null
+      const coupleCond = new Condition(queryTypes.where)
+      coupleCond.setKeyValue(db.tables.COUPLE_TABLE + '.' + coupleFields.ID, coupleId)
+      db.update(db.tables.COUPLE_TABLE, { male_id: null }, coupleCond, function (result) {
+        if (result !== null) {
+          // set couple female_id = null
+          db.update(db.tables.COUPLE_TABLE, { female_id: null }, coupleCond, function (result) {
+            // update new groom's prenup_record_id
+            db.update(db.tables.MEMBER_TABLE, { prenup_record_id: prenupId }, groomCond, function (result) {
+              if (result !== null) {
+                // update the new member bride's prenup_record_id
+                db.update(db.tables.MEMBER_TABLE, { prenup_record_id: prenupId }, brideCond, function (result) {
+                  if (result !== null) {
+                    // update new couple table male_id and female_id
+                    db.update(db.tables.COUPLE_TABLE, { male_id: groom.person_id }, coupleCond, function (result) {})
+                    db.update(db.tables.COUPLE_TABLE, { female_id: bride.person_id }, coupleCond, function (result) {})
+                  }
+                })
+              } else {
+                console.log("update groom's prenup_record_id = prenupId error")
+                res.send(false)
+              }
+            })
+          })
+        } else {
+          console.log('set couple male_id = null')
+          res.send(false)
+        }
+      })
+    }
+    // starts here
     let errors = validationResult(req)
     if (!errors.isEmpty()) {
       errors = errors.errors
@@ -750,12 +795,475 @@ const prenupController = {
       })
       res.send(msg)
     } else {
-      const data = {}
-      db.update(db.tables.PRENUPTIAL_TABLE, data, condition, function (result) {
-        console.log(result)
-        // insert res.render() or res.redirect()
+      const data = {
+        groom: {},
+        bride: {}
+      }
+      // old data groom
+      const oldgroomMemberId = req.body.oldgroomMemberId
+      // const oldgroomPersonId = req.body.oldgroomPersonId // male_id
+      // const oldgroomFirst = req.body.oldgroomFirst
+      // const oldgroomMiddle = req.body.oldgroomMiddle
+      // const oldgroomLast = req.body.oldgroomLast
+
+      // old data bride
+      const oldbrideMemberId = req.body.oldbrideMemberId
+      // const oldbridePersonId = req.body.oldbridePersonId // female_id
+      // const bridebrideFirst = req.body.oldbrideFirst
+      // const bridebrideMiddle = req.body.oldbrideMiddle
+      // const bridebrideLast = req.body.oldbrideLast
+
+      // new data groom
+      const newgroomMemberId = req.body.newgroomMemberId
+      const newgroomPersonId = req.body.newgroomPersonId // male_id
+      // const newgroomFirst = req.body.newgroomFirst
+      // const newgroomMiddle = req.body.newgroomMiddle
+      // const newgroomLast = req.body.newgroomLast
+
+      // new data bride
+      const newbrideMemberId = req.body.newbrideMemberId
+      const newbridePersonId = req.body.newbridePersonId // female_id
+      // const newbridebrideFirst = req.body.newbrideFirst
+      // const newbridebrideMiddle = req.body.newbrideMiddle
+      // const newbridebrideLast = req.body.newbrideLast
+
+      data.groom[memberFields.ID] = newgroomMemberId
+      data.groom[memberFields.PERSON] = newgroomPersonId
+      data.bride[memberFields.ID] = newbrideMemberId
+      data.bride[memberFields.PERSON] = newbridePersonId
+
+      const coupleId = req.body.coupleId
+      const prenupId = req.body.prenupId
+      const weddingDate = req.body.wedding_date
+
+      const prenupCond = new Condition(queryTypes.where)
+      prenupCond.setKeyValue(db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.DATE_OF_WEDDING, prenupId)
+
+      if (oldbrideMemberId === newbrideMemberId) {
+        // bride retain
+        // REMOVAL: set oldgroom's prenup_record_id = null
+        const oldgroomPrenupCond = new Condition(queryTypes.where)
+        oldgroomPrenupCond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.ID, oldgroomMemberId)
+        // update prenuptial wedding date
+        db.update(db.tables.PRENUPTIAL_TABLE, { date_of_wedding: weddingDate }, prenupCond, function (result) {
+          db.update(db.tables.MEMBER_TABLE, { prenup_record_id: null }, oldgroomPrenupCond, function (result) {
+            if (result !== null) {
+              // set new groom's prenup id
+              const newgroomPrenupCond = new Condition(queryTypes.where)
+              newgroomPrenupCond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.ID, newgroomMemberId)
+              db.update(db.tables.MEMBER_TABLE, { prenup_record_id: prenupId }, newgroomPrenupCond, function (result) {
+                if (result !== null) {
+                  // set the male_id in couples table
+                  const coupleCond = new Condition(queryTypes.where)
+                  coupleCond.setKeyValue(db.tables.COUPLE_TABLE + '.' + coupleFields.ID, coupleId)
+                  // set male_id = null
+                  db.update(db.tables.COUPLE_TABLE, { male_id: null }, coupleCond, function (result) {
+                    if (result !== null) {
+                      // set new male_id
+                      db.update(db.tables.COUPLE_TABLE, { male_id: newgroomPersonId }, coupleCond, function (result) {
+                        req.session.editPrenupId = prenupId
+                        res.send(true)
+                      })
+                    }
+                  })
+                } else {
+                  console.log('new groom update prenup_record_id error')
+                  res.send(false)
+                }
+              })
+            } else {
+              console.log('old groom update prenup_record_id to null error')
+              res.send(false)
+            }
+          })
+        })
+      } else if (oldgroomMemberId === newbrideMemberId) {
+        // groom retain
+        // REMOVAL: set oldbride's prenup_record_id = null
+        const oldbridePrenupCond = new Condition(queryTypes.where)
+        oldbridePrenupCond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.ID, oldbrideMemberId)
+        // update prenuptial wedding date
+        db.update(db.tables.PRENUPTIAL_TABLE, { date_of_wedding: weddingDate }, prenupCond, function (result) {
+          db.update(db.tables.MEMBER_TABLE, { prenup_record_id: null }, oldbridePrenupCond, function (result) {
+            if (result !== null) {
+              // set new bride's prenup id
+              const newbridePrenupCond = new Condition(queryTypes.where)
+              newbridePrenupCond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.ID, newbrideMemberId)
+              db.update(db.tables.MEMBER_TABLE, { prenup_record_id: prenupId }, newbridePrenupCond, function (result) {
+                if (result !== null) {
+                  // set the female_id in couples table
+                  const coupleCond = new Condition(queryTypes.where)
+                  coupleCond.setKeyValue(db.tables.COUPLE_TABLE + '.' + coupleFields.ID, coupleId)
+                  // set female_id = null
+                  db.update(db.tables.COUPLE_TABLE, { female_id: null }, coupleCond, function (result) {
+                    if (result !== null) {
+                      // set new female_id
+                      db.update(db.tables.COUPLE_TABLE, { female_id: newbridePersonId }, coupleCond, function (result) {
+                        if (result !== null) {
+                          req.session.editPrenupId = prenupId
+                          res.send(true)
+                        } else {
+                          console.log('update couple female_id to new female_id error')
+                          res.send(false)
+                        }
+                      })
+                    } else {
+                      console.log('update couple female_id to new female_id error')
+                      res.send(false)
+                    }
+                  })
+                } else {
+                  console.log('new groom update prenup_record_id error')
+                  res.send(false)
+                }
+              })
+            } else {
+              console.log('old groom update prenup_record_id to null error')
+              res.send(false)
+            }
+          })
+        })
+      } else { // if both bride and groom are really changed in this prenup record
+        // REMOVAL: set oldbride's prenup_record_id = null and set oldgroom's prenup_record_id = null
+        const groomCond = new Condition(queryTypes.where)
+        groomCond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.ID, oldgroomMemberId)
+        // update prenuptial wedding date
+        db.update(db.tables.PRENUPTIAL_TABLE, { date_of_wedding: weddingDate }, prenupCond, function (result) {
+          // set oldgroom's prenup_record_id = null
+          db.update(db.tables.MEMBER_TABLE, { prenup_record_id: null }, groomCond, function (result) {
+            if (result !== null) {
+              const brideCond = new Condition(queryTypes.where)
+              brideCond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.ID, oldbrideMemberId)
+              // set oldbride's prenup_record_id = null
+              db.update(db.tables.MEMBER_TABLE, { prenup_record_id: null }, brideCond, function (result) {
+                if (result !== null) {
+                  changeBothPartners(data.groom, data.bride, coupleId, prenupId) // refer to uppermost function declaration
+                } else {
+                  console.log("set oldbride's prenup_record_id = null")
+                  res.send(false)
+                }
+              })
+            } else {
+              console.log("set oldgroom's prenup_record_id = null error")
+              res.send(false)
+            }
+          })
+        })
+      } // end of inner else
+    } // end of outer else
+  },
+  /**
+   * This function updates a row in the prenuptial table given that
+   * both partners are non-members.
+   * @param req - the incoming request containing either the query or body.
+   *              the request should contain a boolean variable `partner`,
+   *              if true indicates the `male` partner will be edited, else
+   *              the `female` partner will be edited
+   * @param res - the result to be sent out after processing the request
+   */
+  postUpdatePrenupNonMember: function (req, res) {
+    let errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      errors = errors.errors
+
+      console.log(errors)
+      let msg = ''
+      errors.forEach((error) => {
+        msg += error.msg + '<br>'
+      })
+      res.send(msg)
+    } else {
+      const data = {
+        male: {},
+        female: {}
+      }
+      // new data groom
+      // const newgroomMemberId = req.body.newgroomMemberId
+      // const newgroomPersonId = req.body.newgroomPersonId // male_id
+      const newgroomFirst = req.body.newgroomFirst
+      const newgroomMiddle = req.body.newgroomMiddle
+      const newgroomLast = req.body.newgroomLast
+
+      // new data bride
+      // const newbrideMemberId = req.body.newbrideMemberId
+      // const newbridePersonId = req.body.newbridePersonId // female_id
+      const newbridebrideFirst = req.body.newbrideFirst
+      const newbridebrideMiddle = req.body.newbrideMiddle
+      const newbridebrideLast = req.body.newbrideLast
+
+      const coupleId = req.body.coupleId
+      const prenupId = req.body.prenupId
+      const coupleCond = new Condition(queryTypes.where)
+      coupleCond.setKeyValue(db.tables.COUPLE_TABLE + '.' + coupleFields.ID, coupleId)
+
+      data.prenup[prenupRecordFields.DATE_OF_WEDDING] = req.body.wedding_date
+
+      data.male[personFields.FIRST_NAME] = req.body.newgroomFirst
+      data.male[personFields.MID_NAME] = req.body.newgroomMiddle
+      data.male[personFields.LAST_NAME] = req.body.newgroomLast
+
+      data.female[personFields.FIRST_NAME] = req.body.newbrideFirst
+      data.female[personFields.MID_NAME] = req.body.newbrideMiddle
+      data.female[personFields.LAST_NAME] = req.body.newbrideLast
+
+      const weddingDate = req.body.wedding_date
+      const prenupCond = new Condition(queryTypes.where)
+      prenupCond.setKeyValue(db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.DATE_OF_WEDDING, prenupId)
+
+      // update prenuptial wedding date
+      db.update(db.tables.PRENUPTIAL_TABLE, { date_of_wedding: weddingDate }, prenupCond, function (result) {
+        // insert non-member groom to PEOPLE
+        db.insert(db.tables.PERSON_TABLE, data.male, function (maleId) {
+          if (maleId !== null) {
+            // insert non-member bride to PEOPLE
+            db.insert(db.tables.PERSON_TABLE, data.female, function (femaleId) {
+              if (femaleId !== null) {
+                // set couple male_id = null
+                db.update(db.tables.COUPLE, { male_id: null }, coupleCond, function (result) {
+                  if (result !== null) {
+                    // set couple female_id = null
+                    db.update(db.tables.COUPLE, { female_id: null }, coupleCond, function (result) {
+                      if (result !== null) {
+                        // update couple male_id to new male_id
+                        db.update(db.tables.COUPLE, { male_id: maleId }, coupleCond, function (result) {
+                          if (result !== null) {
+                            // update couple female_id to new female_id
+                            db.update(db.tables.COUPLE, { female_id: femaleId }, coupleCond, function (result) {
+                              if (result !== null) {
+                                res.send(true)
+                              } else {
+                                console.log('update couple female_id to new female_id')
+                                res.send(false)
+                              }
+                            })
+                          } else {
+                            console.log('update couple male_id to new male_id error')
+                            res.send(false)
+                          }
+                        })
+                      } else {
+                        console.log('set couple female_id = null error')
+                        res.send(false)
+                      }
+                    })
+                  } else {
+                    console.log('set couple male_id = null error')
+                    res.send(false)
+                  }
+                })
+              } else {
+                console.log('insert non-member bride to PEOPLE error')
+                res.send(false)
+              }
+            })
+          } else {
+            console.log('insert non-member groom to PEOPLE error')
+            res.send(false)
+          }
+        })
       })
     }
+  },
+  /**
+   * This function updates a row in the prenuptial table given that
+   * the bride is a member and the groom is not.
+   * @param req - the incoming request containing either the query or body.
+   *              the request should contain a boolean variable `partner`,
+   *              if true indicates the `male` partner will be edited, else
+   *              the `female` partner will be edited
+   * @param res - the result to be sent out after processing the request
+   */
+  postUpdatePrenupBrideMember: function (req, res) {
+    let errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      errors = errors.errors
+
+      console.log(errors)
+      let msg = ''
+      errors.forEach((error) => {
+        msg += error.msg + '<br>'
+      })
+      res.send(msg)
+    } else {
+      const data = {
+        male: {}
+      }
+      // old data groom
+      const oldgroomMemberId = req.body.oldgroomMemberId
+      // const oldgroomPersonId = req.body.oldgroomPersonId // male_id
+      // const oldgroomFirst = req.body.oldgroomFirst
+      // const oldgroomMiddle = req.body.oldgroomMiddle
+      // const oldgroomLast = req.body.oldgroomLast
+
+      // old data bride
+      const oldbrideMemberId = req.body.oldbrideMemberId
+      // const oldbridePersonId = req.body.oldbridePersonId // female_id
+      // const bridebrideFirst = req.body.oldbrideFirst
+      // const bridebrideMiddle = req.body.oldbrideMiddle
+      // const bridebrideLast = req.body.oldbrideLast
+
+      // new data groom
+      const newgroomFirst = req.body.newgroomFirst
+      const newgroomMiddle = req.body.newgroomMiddle
+      const newgroomLast = req.body.newgroomLast
+      data.male[personFields.FIRST_NAME] = newgroomFirst
+      data.male[personFields.MID_NAME] = newgroomMiddle
+      data.male[personFields.LAST_NAME] = newgroomLast
+
+      // new data bride
+      const newbrideMemberId = req.body.newbrideMemberId
+
+      const coupleId = req.body.coupleId
+      const prenupId = req.body.prenupId
+      const weddingDate = req.body.wedding_date
+
+      const prenupCond = new Condition(queryTypes.where)
+      prenupCond.setKeyValue(db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.DATE_OF_WEDDING, prenupId)
+
+      if (oldbrideMemberId === newbrideMemberId) {
+        // bride retain
+        // set oldgroom prenup_record_id = null
+        const oldgroomPrenupCond = new Condition(queryTypes.where)
+        oldgroomPrenupCond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.ID, oldgroomMemberId)
+        // update prenuptial wedding date
+        db.update(db.tables.PRENUPTIAL_TABLE, { date_of_wedding: weddingDate }, prenupCond, function (result) {
+          db.update(db.tables.MEMBER_TABLE, { prenup_record_id: null }, oldgroomPrenupCond, function (result) {
+            if (result !== null) {
+              // set couple male_id = null
+              const coupleCond = new Condition(queryTypes.where)
+              coupleCond.setKeyValue(db.tables.COUPLE_TABLE + '.' + coupleFields.ID, coupleId)
+              db.update(db.tables.COUPLE_TABLE, { male_id: null }, coupleCond, function (result) {
+                if (result !== null) {
+                  // insert non-member groom
+                  db.insert(db.tables.PERSON_TABLE, data.male, function (maleId) {
+                    if (maleId !== null) {
+                      // update couple new male_id
+                      db.update(db.tables.COUPLE_TABLE, { male_id: maleId }, coupleCond, function (result) {
+                        if (result !== null) {
+                          res.send(true) // done
+                        } else {
+                          console.log('update couple new male_id error')
+                          res.send(false)
+                        }
+                      })
+                    } else {
+                      console.log('insert non-member groom error')
+                      res.send(false)
+                    }
+                  })
+                } else {
+                  console.log('update couple male_id = null error')
+                  res.send(false)
+                }
+              })
+            } else {
+              console.log('update oldgroom prenup_record_id = null error')
+              res.send(false)
+            }
+          })
+        })
+      }
+    } // end of else
+  },
+  /**
+   * This function updates a row in the prenuptial table given that
+   * the groom is a member and the bride is not.
+   * @param req - the incoming request containing either the query or body.
+   *              the request should contain a boolean variable `partner`,
+   *              if true indicates the `male` partner will be edited, else
+   *              the `female` partner will be edited
+   * @param res - the result to be sent out after processing the request
+   */
+  postUpdatePrenupGroomMember: function (req, res) {
+    let errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      errors = errors.errors
+
+      console.log(errors)
+      let msg = ''
+      errors.forEach((error) => {
+        msg += error.msg + '<br>'
+      })
+      res.send(msg)
+    } else {
+      const data = {
+        female: {}
+      }
+      // old data groom
+      const oldgroomMemberId = req.body.oldgroomMemberId
+      // const oldgroomPersonId = req.body.oldgroomPersonId // male_id
+      // const oldgroomFirst = req.body.oldgroomFirst
+      // const oldgroomMiddle = req.body.oldgroomMiddle
+      // const oldgroomLast = req.body.oldgroomLast
+
+      // old data bride
+      const oldbrideMemberId = req.body.oldbrideMemberId
+      // const oldbridePersonId = req.body.oldbridePersonId // female_id
+      // const bridebrideFirst = req.body.oldbrideFirst
+      // const bridebrideMiddle = req.body.oldbrideMiddle
+      // const bridebrideLast = req.body.oldbrideLast
+
+      // new data bride
+      const newbrideFirst = req.body.newbrideFirst
+      const newbrideMiddle = req.body.newbrideMiddle
+      const newbrideLast = req.body.newbrideLast
+      data.female[personFields.FIRST_NAME] = newbrideFirst
+      data.female[personFields.MID_NAME] = newbrideMiddle
+      data.female[personFields.LAST_NAME] = newbrideLast
+
+      // new data bride
+      const newgroomMemberId = req.body.newgroomMemberId
+
+      const coupleId = req.body.coupleId
+      const prenupId = req.body.prenupId
+      const weddingDate = req.body.wedding_date
+      const prenupCond = new Condition(queryTypes.where)
+      prenupCond.setKeyValue(db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.DATE_OF_WEDDING, prenupId)
+
+      if (oldgroomMemberId === newgroomMemberId) {
+        // groom retain
+        // set oldbride prenup_record_id = null
+        const oldbridePrenupCond = new Condition(queryTypes.where)
+        oldbridePrenupCond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.ID, oldbrideMemberId)
+        // update prenuptial wedding date
+        db.update(db.tables.PRENUPTIAL_TABLE, { date_of_wedding: weddingDate }, prenupCond, function (result) {
+          db.update(db.tables.MEMBER_TABLE, { prenup_record_id: null }, oldbridePrenupCond, function (result) {
+            if (result !== null) {
+              // set couple female_id = null
+              const coupleCond = new Condition(queryTypes.where)
+              coupleCond.setKeyValue(db.tables.COUPLE_TABLE + '.' + coupleFields.ID, coupleId)
+              db.update(db.tables.COUPLE_TABLE, { female_id: null }, coupleCond, function (result) {
+                if (result !== null) {
+                  // insert non-member bride
+                  db.insert(db.tables.PERSON_TABLE, data.female, function (femaleId) {
+                    if (femaleId !== null) {
+                      // update couple new male_id
+                      db.update(db.tables.COUPLE_TABLE, { female_id: femaleId }, coupleCond, function (result) {
+                        if (result !== null) {
+                          res.send(true) // done
+                        } else {
+                          console.log('update couple new female_id error')
+                          res.send(false)
+                        }
+                      })
+                    } else {
+                      console.log('insert non-member bride error')
+                      res.send(false)
+                    }
+                  })
+                } else {
+                  console.log('update couple female_id = null error')
+                  res.send(false)
+                }
+              })
+            } else {
+              console.log('update oldbride prenup_record_id = null error')
+              res.send(false)
+            }
+          })
+        })
+      }
+    } // end of else
   },
   /**
    * This function deletes a row in the prenuptial table
