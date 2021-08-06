@@ -9,6 +9,12 @@ const hbHelpers = {
 
     return (date.getMonth() + 1).toString().padStart(2, 0) + '/' + date.getDate().toString().padStart(2, 0) + '/' + date.getFullYear()
   },
+  dateString: function (date) {
+    date = new Date(date)
+    const strDate = date.toDateString()
+
+    return strDate.slice(4, strDate.length)
+  },
   isLengthOne: function (namesLen) {
     return namesLen === 1
   },

@@ -68,6 +68,7 @@ const prenupController = {
               // initialize render data
               data = {
                 canSee: (parseInt(req.session.editPrenupId) === parseInt(prenupId)) || (parseInt(req.session.level) >= 2),
+                prenupId: prenupId,
                 brideFirst: brideInfo[0][personFields.FIRST_NAME],
                 brideMid: brideInfo[0][personFields.MID_NAME],
                 brideLast: brideInfo[0][personFields.LAST_NAME],
@@ -81,7 +82,7 @@ const prenupController = {
                 date: groomInfo[0][prenupRecordFields.DATE],
                 weddingDate: groomInfo[0][prenupRecordFields.DATE_OF_WEDDING]
               }
-              res.render('', data) // add the hbs to render
+              res.render('view-prenup', data)
             }
           })
         }
