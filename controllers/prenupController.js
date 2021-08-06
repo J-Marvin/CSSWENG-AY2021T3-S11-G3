@@ -14,7 +14,7 @@ const prenupController = {
    */
   getViewPrenup: function (req, res) {
     const prenupId = req.params.prenup_id
-    if (parseInt(req.session.prenupId) === parseInt(prenupId) || parseInt(req.session.level) >= 2) {
+    if (parseInt(req.session.editPrenupId) === parseInt(prenupId) || parseInt(req.session.level) >= 2) {
       /*
       tables needed: PRENUPTIAL_TABLE, COUPLE_TABLE, PEOPLE_TABLE
       SQL:
@@ -67,6 +67,8 @@ const prenupController = {
 
               // initialize render data
               data = {
+                canSee: (parseInt(req.session.editPrenupId) === parseInt(prenupId)) || (parseInt(req.session.level) >= 2),
+                prenupId: prenupId,
                 brideFirst: brideInfo[0][personFields.FIRST_NAME],
                 brideMid: brideInfo[0][personFields.MID_NAME],
                 brideLast: brideInfo[0][personFields.LAST_NAME],
@@ -80,7 +82,7 @@ const prenupController = {
                 date: groomInfo[0][prenupRecordFields.DATE],
                 weddingDate: groomInfo[0][prenupRecordFields.DATE_OF_WEDDING]
               }
-              res.render('', data) // add the hbs to render
+              res.render('view-prenup', data)
             }
           })
         }
@@ -143,12 +145,15 @@ const prenupController = {
             if (result !== null) {
               const brideNames = result
               console.log('brideNames: ' + brideNames)
+              req.session.editPrenupId = null
+              req.session.editMemberId = member
               res.render('add-prenup-temp', {
                 scripts: ['addPrenup'],
                 styles: ['forms'],
                 Origin: 'coming from edit member',
                 brideNames: brideNames,
-                groomNames: groomNames
+                groomNames: groomNames,
+                lockGroomNonMember: true
               })
             }
           })
@@ -172,12 +177,15 @@ const prenupController = {
             if (result !== null) {
               const groomNames = result
               console.log('groomNames: ' + groomNames)
+              req.session.editPrenupId = null
+              req.session.editMemberId = member
               res.render('add-prenup-temp', {
                 scripts: ['addPrenup'],
                 styles: ['forms'],
                 Origin: 'coming from edit member',
                 brideNames: brideNames,
-                groomNames: groomNames
+                groomNames: groomNames,
+                lockBrideNonMember: true
               })
             }
           })
@@ -233,6 +241,7 @@ const prenupController = {
             if (result !== null) {
               groomNames = result
               console.log(groomNames)
+              req.session.editPrenupId = null
               res.render('add-prenup-temp', {
                 styles: ['forms'],
                 scripts: ['addPrenup'],
@@ -306,8 +315,11 @@ const prenupController = {
                   // finally insert to the prenup table
                   db.insert(db.tables.PRENUPTIAL_TABLE, data.prenup, function (result) {
                     if (result !== false) {
+                      console.log(result)
+                      req.session.editPrenupId = result[0]
                       // render the success page along with the newly added prenup record
                       res.render('prenup-success', {
+                        css: ['global'],
                         brideFirst: data.female[personFields.FIRST_NAME],
                         brideMid: data.female[personFields.MID_NAME],
                         brideLast: data.female[personFields.LAST_NAME],
@@ -647,18 +659,31 @@ const prenupController = {
       }
     })
   },
-
+  /**
+   * This function renders the edit prenup form page supplying the text fields with
+   * details from the existing
+   * @param req - the incoming request containing either the query or body
+   * @param res - the result to be sent out after processing the request
+   */
   getEditPrenup: function (req, res) {
-    let joinTables = []
-    // boolean variable indicating which partner, male or female
-    const partner = req.query.partner
-    // if male
-    if (partner === true) {
-      joinTables = [
+    const prenupId = req.params.prenup_id
+    if (parseInt(req.session.level) === 3 && parseInt(req.session.editPrenupId === parseInt(prenupId))) {
+      /*
+      SELECT *
+      FROM pre_nuptial
+      JOIN couples ON pre_nuptial.couple_id = couples.couple_id
+      JOIN people ON couples.male_id = people.person_id
+      WHERE pre_nuptial.record_id = <some record id>
+      */
+      const data = {
+        styles: ['forms']
+      }
+      // join table for the groom
+      const joinTables1 = [
         {
           tableName: db.tables.COUPLE_TABLE,
           sourceCol: db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.COUPLE,
-          destCol: db.tables.COUPLE_TABLE + '.' + coupleFields.ID
+          destCol: db.tables.COUPLE_TABLE + '.' + coupleFields.MALE
         },
         {
           tableName: db.tables.PERSON_TABLE,
@@ -666,46 +691,44 @@ const prenupController = {
           destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
         }
       ]
-    // else if female
-    } else {
-      joinTables = [
+      // join table for the bride
+      const joinTables2 = [
         {
           tableName: db.tables.COUPLE_TABLE,
           sourceCol: db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.COUPLE,
-          destCol: db.tables.COUPLE_TABLE + '.' + coupleFields.ID
+          destCol: db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE
         },
         {
           tableName: db.tables.PERSON_TABLE,
-          sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE,
+          sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.MALE,
           destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
         }
       ]
+      const cond = new Condition(queryTypes.where)
+      cond.setKeyValue(db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.ID, prenupId)
+      // find the groom
+      db.find(db.tables.PRENUPTIAL_TABLE, cond, joinTables1, '*', function (result) {
+        if (result !== null) {
+          data.groom = result[0]
+          db.createTable.find(db.tables.PRENUPTIAL_TABLE, cond, joinTables2, function (result) {
+            if (result !== null) {
+              data.bride = result[0]
+              res.render('', data) // insert hbs to render
+            }
+          })
+        }
+      })
+    } else {
+      res.status(401)
+      res.render('error', {
+        title: '401 Unauthorized Access',
+        css: ['global', 'error'],
+        status: {
+          code: '401',
+          message: 'Unauthorized access'
+        }
+      })
     }
-    const conditions = []
-    const c = new Condition(queryTypes.where)
-    c.setQueryObject({
-      record_id: req.query.id
-    })
-
-    conditions.push(c)
-    /*
-    This is equivalent to
-      SELECT *
-      FROM pre_nuptial
-      JOIN couples ON couples.couple_id = pre_nuptial.couple_id
-      JOIN people ON people.person_id = couples.male_id
-      WHERE record_id = <integer id>;
-    */
-    db.find(db.tables.PRENUPTIAL_TABLE, conditions, joinTables, '*', function (result) {
-      if (result !== false) {
-        console.log(result)
-        // res.send(result)
-        // res.render('', result)
-      } else {
-        console.log('FIND ERROR')
-        res.render('error')
-      }
-    })
   },
   /**
    * This function updates a row in the prenuptial table
@@ -716,12 +739,23 @@ const prenupController = {
    * @param res - the result to be sent out after processing the request
    */
   postUpdatePrenup: function (req, res) {
-    const data = req.query.data
-    const condition = req.query.condition
-    db.update(db.tables.PRENUPTIAL_TABLE, data, condition, function (result) {
-      console.log(result)
-      // insert res.render() or res.redirect()
-    })
+    let errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      errors = errors.errors
+
+      console.log(errors)
+      let msg = ''
+      errors.forEach((error) => {
+        msg += error.msg + '<br>'
+      })
+      res.send(msg)
+    } else {
+      const data = {}
+      db.update(db.tables.PRENUPTIAL_TABLE, data, condition, function (result) {
+        console.log(result)
+        // insert res.render() or res.redirect()
+      })
+    }
   },
   /**
    * This function deletes a row in the prenuptial table
