@@ -14,7 +14,7 @@ const prenupController = {
    */
   getViewPrenup: function (req, res) {
     const prenupId = req.params.prenup_id
-    if (parseInt(req.session.prenupId) === parseInt(prenupId) || parseInt(req.session.level) >= 2) {
+    if (parseInt(req.session.editPrenupId) === parseInt(prenupId) || parseInt(req.session.level) >= 2) {
       /*
       tables needed: PRENUPTIAL_TABLE, COUPLE_TABLE, PEOPLE_TABLE
       SQL:
@@ -67,6 +67,7 @@ const prenupController = {
 
               // initialize render data
               data = {
+                canSee: (parseInt(req.session.editPrenupId) === parseInt(prenupId)) || (parseInt(req.session.level) >= 2),
                 brideFirst: brideInfo[0][personFields.FIRST_NAME],
                 brideMid: brideInfo[0][personFields.MID_NAME],
                 brideLast: brideInfo[0][personFields.LAST_NAME],
@@ -143,12 +144,15 @@ const prenupController = {
             if (result !== null) {
               const brideNames = result
               console.log('brideNames: ' + brideNames)
+              req.session.editPrenupId = null
+              req.session.editMemberId = member
               res.render('add-prenup-temp', {
                 scripts: ['addPrenup'],
                 styles: ['forms'],
                 Origin: 'coming from edit member',
                 brideNames: brideNames,
-                groomNames: groomNames
+                groomNames: groomNames,
+                lockGroomNonMember: true
               })
             }
           })
@@ -172,12 +176,15 @@ const prenupController = {
             if (result !== null) {
               const groomNames = result
               console.log('groomNames: ' + groomNames)
+              req.session.editPrenupId = null
+              req.session.editMemberId = member
               res.render('add-prenup-temp', {
                 scripts: ['addPrenup'],
                 styles: ['forms'],
                 Origin: 'coming from edit member',
                 brideNames: brideNames,
-                groomNames: groomNames
+                groomNames: groomNames,
+                lockBrideNonMember: true
               })
             }
           })
@@ -233,6 +240,7 @@ const prenupController = {
             if (result !== null) {
               groomNames = result
               console.log(groomNames)
+              req.session.editPrenupId = null
               res.render('add-prenup-temp', {
                 styles: ['forms'],
                 scripts: ['addPrenup'],
@@ -306,8 +314,11 @@ const prenupController = {
                   // finally insert to the prenup table
                   db.insert(db.tables.PRENUPTIAL_TABLE, data.prenup, function (result) {
                     if (result !== false) {
+                      console.log(result)
+                      req.session.editPrenupId = result[0]
                       // render the success page along with the newly added prenup record
                       res.render('prenup-success', {
+                        css: ['global'],
                         brideFirst: data.female[personFields.FIRST_NAME],
                         brideMid: data.female[personFields.MID_NAME],
                         brideLast: data.female[personFields.LAST_NAME],
@@ -727,12 +738,23 @@ const prenupController = {
    * @param res - the result to be sent out after processing the request
    */
   postUpdatePrenup: function (req, res) {
-    const data = req.query.data
-    const condition = req.query.condition
-    db.update(db.tables.PRENUPTIAL_TABLE, data, condition, function (result) {
-      console.log(result)
-      // insert res.render() or res.redirect()
-    })
+    let errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      errors = errors.errors
+
+      console.log(errors)
+      let msg = ''
+      errors.forEach((error) => {
+        msg += error.msg + '<br>'
+      })
+      res.send(msg)
+    } else {
+      const data = {}
+      db.update(db.tables.PRENUPTIAL_TABLE, data, condition, function (result) {
+        console.log(result)
+        // insert res.render() or res.redirect()
+      })
+    }
   },
   /**
    * This function deletes a row in the prenuptial table

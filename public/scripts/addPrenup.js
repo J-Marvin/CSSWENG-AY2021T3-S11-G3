@@ -41,13 +41,13 @@ $(document).ready(function () {
     }
   })
 
-  $('#current_date_error').blur(function () {
+  $('#current_date').blur(function () {
     if (validator.isEmpty($('#current_date_error').val())) {
       $('#current_date_error').text('')
     }
   })
 
-  $('#wedding_date_error').blur(function () {
+  $('#wedding_date').blur(function () {
     if (validator.isEmpty($('#wedding_date_error').val())) {
       $('#wedding_date_error').text('')
     }
@@ -99,6 +99,13 @@ $(document).ready(function () {
     if(validator.isEmpty($('#wedding_date').val())) {
       isValid = false
       $('#wedding_date_error').text('Select a date')
+    } else {
+      $('#wedding_date_error').text('')
+    }
+
+    if ($('#wedding_date').val() < $('#current_date').val()) {
+      isValid = false
+      $('#wedding_date_error').text('Wedding date should not be earlier than current date')
     } else {
       $('#wedding_date_error').text('')
     }
