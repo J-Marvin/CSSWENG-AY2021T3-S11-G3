@@ -4,6 +4,7 @@ const personFields = require('../models/person.js')
 const addressFields = require('../models/address.js')
 const prenupRecordFields = require('../models/prenupRecord')
 const coupleFields = require('../models/couple')
+const { PERSON } = require('../models/members')
 
 const controller = {
   getMainPage: function (req, res) {
@@ -75,16 +76,32 @@ const controller = {
           tableName: db.tables.PRENUPTIAL_TABLE,
           sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.ID,
           destCol: db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.COUPLE
+        },
+        {
+          tableName: { bride: db.tables.PERSON_TABLE},
+          sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE,
+          destCol: 'bride.' + personFields.ID
+        },
+        {
+          tableName: { groom: db.tables.PERSON_TABLE},
+          sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.MALE,
+          destCol: 'groom.' + personFields.ID
         }
       ]
 
-      db.find(db.tables.COUPLE_TABLE, null, joinTables, '*', function (result) {
-        console.log(result)
+      const columns = [
+        db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.ID,
+        db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.DATE_OF_WEDDING,
+        'bride.' + personFields.FIRST_NAME + ' as bride_first_name',
+        'bride.' + personFields.MID_NAME + ' as bride_mid_name',
+        'bride.' + personFields.LAST_NAME + ' as bride_last_name',
+        'groom.' + personFields.FIRST_NAME + ' as groom_first_name',
+        'groom.' + personFields.MID_NAME + ' as groom_mid_name',
+        'groom.' + personFields.LAST_NAME + ' as groom_last_name'
+      ]
 
-        result.forEach(function (form) {
-          form.groom = form[coupleFields.MALE]
-          form.bride = form[coupleFields.FEMALE]
-        })
+      db.find(db.tables.COUPLE_TABLE, null, joinTables, columns, function (result) {
+        console.log(result)
 
         res.render('forms-main-page', {
           styles: ['lists'],
