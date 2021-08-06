@@ -27,6 +27,7 @@ app.get('/forms_main_page', indexController.getFormsMainPage)
 app.get('/add_prenup', prenupController.getPrenupPage)
 app.get('/edit_member/:member_id/add_prenup', prenupController.getPrenupPage)
 app.get('/view_prenup/:prenup_id', prenupController.getViewPrenup)
+app.get('/edit_prenup/:prenup_id', prenupController.getEditPrenup)
 
 app.post('/login', loginController.postLogIn)
 app.post('/add_member', validation.addMemberValidation(), memberController.createMember)
@@ -35,6 +36,11 @@ app.post('/create_prenup', validation.addPrenupValidation(), prenupController.cr
 app.post('/create_prenup_member', validation.addMemberPrenupValid(), prenupController.createMemberPrenup)
 app.post('/addPrenupBrideNonMember', validation.addPrenupBrideNonMember(), prenupController.createPrenupBrideNonMember)
 app.post('/addPrenupGroomNonMember', validation.addPrenupGroomNonMember(), prenupController.createPrenupGroomNonMember)
+
+app.post('/postUpdatePrenupMember', prenupController.postUpdatePrenupMember)
+app.post('/postUpdatePrenupNonMember', prenupController.postUpdatePrenupNonMember)
+app.post('/postUpdatePrenupBrideMember', prenupController.postUpdatePrenupBrideMember)
+app.post('/postUpdatePrenupGroomMember', prenupController.postUpdatePrenupGroomMember)
 
 app.post('/update_member', validation.addMemberValidation(), memberController.postUpdateMember)
 app.post('/add_church', validation.churchValidation(), churchController.postAddChurch)

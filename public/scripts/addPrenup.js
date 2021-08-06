@@ -119,6 +119,29 @@ $(document).ready(function () {
     }
   })
 
+  $('#edit-prenup').click(function () {
+    if (validateFields()) {
+      const data = {
+        member_id: $('#member_info').attr('data-member'),
+        address_id: $('#member_info').attr('data-address'),
+        person_id: $('#member_info').attr('data-person')
+      }
+      
+      console.log("data")
+      $.ajax({
+        type: "POST",
+        data: data,
+        url: "/",
+        success: function (result) {
+          if (result === true)
+            //location.href('/member/' + data.member_id)
+            window.location = '/view_prenup/' + data.prenup_record_id
+          else alert("Changes not saved")
+        }
+      })
+    }
+  })
+
   function initDate() {
     let date = new Date().toISOString()
     document.getElementById('current_date').defaultValue = date.slice(0,10)

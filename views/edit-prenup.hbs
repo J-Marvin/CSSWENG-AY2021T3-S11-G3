@@ -36,7 +36,7 @@
     }
     document.getElementById(status + "_div").style.display = "block"
   }
-  function checkMemberBoxesAndDate () {
+  function checkMemberBoxes() {
     /*
       Checks if checkbox bride_non_member is checked by user AND 
       checkbox groom_non_member is NOT checked, then change the 
@@ -49,11 +49,6 @@
     
     } else if ($('#bride_non_member').is(':checked') !== true && $('#groom_non_member').is(':checked')) {
       $('#prenup_form').attr('action', '/addPrenupGroomNonMember')
-    }
-
-    // check if current date is empty
-    if (!$('#current_date').val()) {
-      $('#current_date').val(new Date().toISOString().slice(0,10))
     }
   }
 </script>
@@ -76,6 +71,7 @@
         <div id="bride_member_div" style="display:block">
           <label>Select Bride</label>
           <select name="input_bride_member" id="input_bride_member" class="form-select">
+            <option></option>
             {{!-- checks if the names length is only 1 (i.e. brideNames.length == 1), function is in helpers/hbsHelper.js--}}
             {{#if (isLengthOne brideNames.length)}}
               {{> oneDropdownBride brideNames=brideNames}}
@@ -149,11 +145,6 @@
     </div>
     <div class="row">
       <div class="col">
-        <label for="current_date">Current Date</label>
-        <input type="date" id="current_date" name="current_date" class="form-control">
-        <p id="current_date_error" class="error_codes"> </p>
-      </div>
-      <div class="col">
         <label for="wedding_date">Planned Wedding Date</label>
         <input type="date" id="wedding_date" name="wedding_date" class="form-control">
         <p id="wedding_date_error" class="error_codes"> </p>
@@ -174,7 +165,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button id="create-prenup" type="button" class="btn btn-primary confirmationModalBtn" onclick="checkMemberBoxesAndDate()">Submit</button>
+          <button id="edit-prenup" type="button" class="btn btn-primary confirmationModalBtn" onclick="checkMemberBoxes()">Submit</button>
         </div>
       </div>
     </div>
