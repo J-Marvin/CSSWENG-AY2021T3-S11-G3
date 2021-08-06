@@ -4,7 +4,6 @@ const personFields = require('../models/person.js')
 const addressFields = require('../models/address.js')
 const prenupRecordFields = require('../models/prenupRecord')
 const coupleFields = require('../models/couple')
-const { PERSON } = require('../models/members')
 
 const controller = {
   getMainPage: function (req, res) {
@@ -78,12 +77,12 @@ const controller = {
           destCol: db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.COUPLE
         },
         {
-          tableName: { bride: db.tables.PERSON_TABLE},
+          tableName: { bride: db.tables.PERSON_TABLE },
           sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE,
           destCol: 'bride.' + personFields.ID
         },
         {
-          tableName: { groom: db.tables.PERSON_TABLE},
+          tableName: { groom: db.tables.PERSON_TABLE },
           sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.MALE,
           destCol: 'groom.' + personFields.ID
         }
