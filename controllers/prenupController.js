@@ -668,8 +668,8 @@ const prenupController = {
    */
   getEditPrenup: function (req, res) {
     const prenupId = req.params.prenup_id
-    console.log(prenupId)
-    if (parseInt(req.session.level) === 3 || parseInt(req.session.editPrenupId === parseInt(prenupId))) {
+    // if (parseInt(req.session.level) === 3 && parseInt(req.session.editPrenupId === parseInt(prenupId))) {
+    if (parseInt(req.session.level) === 3) { // For testing purposes
       /*
       SELECT *
       FROM pre_nuptial
@@ -678,6 +678,7 @@ const prenupController = {
       WHERE pre_nuptial.record_id = <some record id>
       */
       const data = {
+        scripts: ['addPrenup'],
         styles: ['forms']
       }
       // join table for the groom
