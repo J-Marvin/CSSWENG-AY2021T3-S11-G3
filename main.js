@@ -36,6 +36,9 @@ function createWindow () {
     console.log('CommandOrControl+R is pressed')
     mainWindow.reload()
   })
+
+  // mainWindow.removeMenu()
+
   console.log(hostname + ' ' + port)
 }
 
