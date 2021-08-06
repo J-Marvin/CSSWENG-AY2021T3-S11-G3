@@ -667,7 +667,8 @@ const prenupController = {
    */
   getEditPrenup: function (req, res) {
     const prenupId = req.params.prenup_id
-    if (parseInt(req.session.level) === 3 && parseInt(req.session.editPrenupId === parseInt(prenupId))) {
+    // if (parseInt(req.session.level) === 3 && parseInt(req.session.editPrenupId === parseInt(prenupId))) {
+    if (parseInt(req.session.level) === 3) { // For testing purposes
       /*
       SELECT *
       FROM pre_nuptial
@@ -676,6 +677,7 @@ const prenupController = {
       WHERE pre_nuptial.record_id = <some record id>
       */
       const data = {
+        scripts: ['addPrenup'],
         styles: ['forms']
       }
       // join table for the groom
@@ -710,10 +712,10 @@ const prenupController = {
       db.find(db.tables.PRENUPTIAL_TABLE, cond, joinTables1, '*', function (result) {
         if (result !== null) {
           data.groom = result[0]
-          db.createTable.find(db.tables.PRENUPTIAL_TABLE, cond, joinTables2, function (result) {
+          db.find(db.tables.PRENUPTIAL_TABLE, cond, joinTables2, function (result) {
             if (result !== null) {
               data.bride = result[0]
-              res.render('', data) // insert hbs to render
+              res.render('edit-prenup', data) // insert hbs to render
             }
           })
         }

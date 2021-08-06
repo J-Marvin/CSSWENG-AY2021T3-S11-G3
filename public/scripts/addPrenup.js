@@ -65,6 +65,9 @@ $(document).ready(function () {
     }
   })
 
+  $('.confirmationModalBtn').click(function () {
+    $('#confirmationModal').modal('hide');
+  })
 
   $('#create-prenup').click(function() {
     var isValid = true
