@@ -15,5 +15,11 @@
 
 .buttonText {
     font-family: SourceSansPro;
+    font-weight: 600;
     margin: 0;
+}
+
+.mainBtns {
+    color: black !important;
+    text-decoration: none !important;
 }

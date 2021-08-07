@@ -160,7 +160,7 @@
               </div>
               <div class="col-12">
                 <label for="groom_last_name">Last Name</label>
-                <input type="text" id="groom_last_name" name="groom_last_name"class="form-control">
+                <input type="text" id="groom_last_name" name="groom_last_name" class="form-control">
               </div>
             </div>
           </div>
@@ -171,7 +171,7 @@
     <div class="row">
       <div class="col">
         <label>Date Added</label>
-        <p>{{dateString bride.date}}</p>
+        <input type="text" value="{{dateView bride.date}}" class="form-control" disabled>
       </div>
       <div class="col">
         <label for="wedding_date">Planned Wedding Date</label>
@@ -179,9 +179,13 @@
         <p id="wedding_date_error" class="error_codes"> </p>
       </div>
     </div>
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmationModal">
-        Save Changes
-      </button>
+    <div class="row">
+      <div class="col d-flex justify-content-end">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmationModal">
+          Save Changes
+        </button>
+      </div>
+    </div>
   </div>
 
     <!-- Modal -->

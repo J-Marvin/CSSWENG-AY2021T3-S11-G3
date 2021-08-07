@@ -34,8 +34,8 @@
       <a href="/add_prenup"><i style="width: 3em; height: 3em; color:black;" class="far fa-plus-square"></i></a>
     </div>
   </div>
-  <div class="row">
-      <div class="row mt-3" style="--bs-gutter-x: 0rem;">
+  <div class="row listrow">
+      <div class="row mt-3 toprow" style="--bs-gutter-x: 0rem;">
         <div class="col-2 tile">
           <p class="variables"> Prenup ID </p>
         </div>
@@ -50,9 +50,10 @@
         </div>          
       </div>
       {{#each prenup}}
-        <div class="row" style="--bs-gutter-x: 0rem;">
+      <a class="memberlink" href="/view_prenup/{{this.record_id}}">
+        <div class="row indivmember" style="--bs-gutter-x: 0rem;">
           <div class="col-2 tile">
-            <a href="/view_prenup/{{this.record_id}}"><p class="variables"> {{this.record_id}} </p></a>
+            <p class="variables"> {{this.record_id}} </p>
           </div>
           <div class="col-4 tile">
               <p class="variables"> {{this.groom_first_name}} {{this.groom_mid_name}}. {{this.groom_last_name}} </p>
@@ -64,6 +65,7 @@
             <p class="variables"> {{dateView this.date_of_wedding}} </p>
           </div>
         </div>
+      </a>
      {{/each}}
   </div>
 </div>

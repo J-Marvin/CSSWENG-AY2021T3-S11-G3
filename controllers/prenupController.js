@@ -83,6 +83,7 @@ const prenupController = {
                 weddingDate: groomInfo[0][prenupRecordFields.DATE_OF_WEDDING]
               }
               req.session.editPrenupId = prenupId
+              data.styles = ['view']
               res.render('view-prenup', data)
             }
           })
@@ -319,17 +320,18 @@ const prenupController = {
                       console.log(result)
                       req.session.editPrenupId = result[0]
                       // render the success page along with the newly added prenup record
-                      res.render('prenup-success', {
-                        css: ['global'],
-                        brideFirst: data.female[personFields.FIRST_NAME],
-                        brideMid: data.female[personFields.MID_NAME],
-                        brideLast: data.female[personFields.LAST_NAME],
-                        groomFirst: data.male[personFields.FIRST_NAME],
-                        groomMid: data.male[personFields.MID_NAME],
-                        groomLast: data.male[personFields.LAST_NAME],
-                        currentDate: data.prenup[prenupRecordFields.DATE],
-                        weddingDate: data.prenup[prenupRecordFields.DATE_OF_WEDDING]
-                      })
+                      // res.render('prenup-success', {
+                      //   css: ['global'],
+                      //   brideFirst: data.female[personFields.FIRST_NAME],
+                      //   brideMid: data.female[personFields.MID_NAME],
+                      //   brideLast: data.female[personFields.LAST_NAME],
+                      //   groomFirst: data.male[personFields.FIRST_NAME],
+                      //   groomMid: data.male[personFields.MID_NAME],
+                      //   groomLast: data.male[personFields.LAST_NAME],
+                      //   currentDate: data.prenup[prenupRecordFields.DATE],
+                      //   weddingDate: data.prenup[prenupRecordFields.DATE_OF_WEDDING]
+                      // })
+                      res.redirect('/forms_main_page')
                     }
                   })
                 } else {
@@ -433,7 +435,7 @@ const prenupController = {
                   db.update(db.tables.MEMBER_TABLE, { prenup_record_id: prenupRecId }, memberCondition, function (result) {
                     if (result !== null) {
                       // render the success page along with the newly added prenup record
-                      res.render('prenup-success', data.result)
+                      res.redirect('/forms_main_page')
                     } else {
                       res.send('UPDATE MEMBER ID ERROR')
                     }
@@ -529,16 +531,17 @@ const prenupController = {
                 db.update(db.tables.MEMBER_TABLE, { prenup_record_id: prenupRecId }, memberCondition, function (result) {
                   if (result !== null) {
                     // render the success page along with the newly added prenup record
-                    res.render('prenup-success', {
-                      brideFirst: brideFirst,
-                      brideMid: brideMid,
-                      brideLast: brideLast,
-                      groomFirst: groomFirst,
-                      groomMid: groomMid,
-                      groomLast: groomLast,
-                      currentDate: date,
-                      weddingDate: weddingDate
-                    })
+                    // res.render('prenup-success', {
+                    //   brideFirst: brideFirst,
+                    //   brideMid: brideMid,
+                    //   brideLast: brideLast,
+                    //   groomFirst: groomFirst,
+                    //   groomMid: groomMid,
+                    //   groomLast: groomLast,
+                    //   currentDate: date,
+                    //   weddingDate: weddingDate
+                    // })
+                    res.redirect('/forms_main_page')
                   } else {
                     res.send('UPDATE PRENUP ERROR')
                   }
@@ -633,16 +636,17 @@ const prenupController = {
                 db.update(db.tables.MEMBER_TABLE, { prenup_record_id: prenupRecId }, memberCondition, function (result) {
                   if (result !== null) {
                     // render the success page along with the newly added prenup record
-                    res.render('prenup-success', {
-                      brideFirst: brideFirst,
-                      brideMid: brideMid,
-                      brideLast: brideLast,
-                      groomFirst: groomFirst,
-                      groomMid: groomMid,
-                      groomLast: groomLast,
-                      currentDate: date,
-                      weddingDate: weddingDate
-                    })
+                    // res.render('prenup-success', {
+                    //   brideFirst: brideFirst,
+                    //   brideMid: brideMid,
+                    //   brideLast: brideLast,
+                    //   groomFirst: groomFirst,
+                    //   groomMid: groomMid,
+                    //   groomLast: groomLast,
+                    //   currentDate: date,
+                    //   weddingDate: weddingDate
+                    // })
+                    res.redirect('/forms_main_page')
                   } else {
                     res.send('UPDATE PRENUP ERROR')
                   }

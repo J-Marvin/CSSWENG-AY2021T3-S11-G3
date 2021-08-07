@@ -23,7 +23,19 @@ body {
     position: fixed;
     top: 20;
     left: 20;
-    mix-blend-mode: multiply;
+    /* mix-blend-mode: multiply; */
+}
+
+.logoText {
+    font-family: Helvetica;
+    font-size: 24pt;
+    color: aliceblue;
+    text-shadow: 2px 2px 5px #000000;
+    position: fixed;
+    top: 40;
+    left: 160;
+    width: 10em;
+    line-height: 1.2;
 }
 
 p {

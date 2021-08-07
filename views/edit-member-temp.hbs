@@ -6,7 +6,6 @@
     <h1 class="my-3"> Edit Member </h1>
     <hr>
     <div class="row">
-      <legend>Personal Information:</legend>
       <div class="col">
         <label for="first_name">First Name</label>
         <input type="text" id="first_name" name="first_name" class="form-control" value="{{member.first_name}}">
@@ -64,42 +63,6 @@
       </div>
     </div>
     <hr>
-    <fieldset class="form-group">
-      <div class="row">
-        <legend>Address:</legend>
-        <div class="col">
-          <label for="adress_line">Address Line 1</label>
-          <input type="text" id="address_line" name="address_line" class="form-control" value="{{member.address_line}}">
-          <p id="address_line_error" class="error_codes">  </p>
-        </div>
-        <div class="col">
-          <label for="address_line2">Address Line 2</label>
-          <input type="text" id="address_line2" name="address_line2" class="form-control" value="{{member.address_line2}}">
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <label for="city">City</label>
-          <input type="text" id="city" name="city" class="form-control" value="{{member.city}}">
-          <p id="city_error" class="error_codes">  </p>
-        </div>
-        <div class="col">
-          <label for="province">Province / State / Region</label>
-          <input type="text" id="province" name="province" class="form-control" value="{{member.province}}">
-        </div>
-        <div class="col">
-          <label for="postal_code">Postal Code</label>
-          <input type="text" id="postal_code" name="postal_code" class="form-control" value="{{member.postal_code}}">
-        </div>
-        <div class="col">
-          <label for="country">Country</label>
-          <input type="text" id="country" name="country" class="form-control" value="{{member.country}}">
-          <p id="country_error" class="error_codes">  </p>
-        </div>
-      </div>
-    </fieldset>
-    <hr>
-    <legend>Contacts:</legend>
     <div class="row">
       <div class="col">
         <label for="mobile">Mobile</label>
@@ -139,6 +102,41 @@
     <br>
     <label for="skills">Skills</label>
     <input type="textarea" id="skills" name="skills" class="form-control" value="{{member.skills}}">
+    <hr>
+    <fieldset class="form-group">
+      <div class="row">
+        <div class="col">
+          <label for="adress_line">Address Line 1</label>
+          <input type="text" id="address_line" name="address_line" class="form-control" value="{{member.address_line}}">
+          <p id="address_line_error" class="error_codes">  </p>
+        </div>
+        <div class="col">
+          <label for="address_line2">Address Line 2</label>
+          <input type="text" id="address_line2" name="address_line2" class="form-control" value="{{member.address_line2}}">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <label for="city">City</label>
+          <input type="text" id="city" name="city" class="form-control" value="{{member.city}}">
+          <p id="city_error" class="error_codes">  </p>
+        </div>
+        <div class="col">
+          <label for="province">Province / State / Region</label>
+          <input type="text" id="province" name="province" class="form-control" value="{{member.province}}">
+        </div>
+        <div class="col">
+          <label for="postal_code">Postal Code</label>
+          <input type="text" id="postal_code" name="postal_code" class="form-control" value="{{member.postal_code}}">
+        </div>
+        <div class="col">
+          <label for="country">Country</label>
+          <input type="text" id="country" name="country" class="form-control" value="{{member.country}}">
+          <p id="country_error" class="error_codes">  </p>
+        </div>
+      </div>
+    </fieldset>
+    <hr>
 
     {{!-- Temp div to list churches and observations--}}
      <div class="row mt-3 mb-5">
@@ -159,6 +157,7 @@
             </div>
         </div>
     </div>
+    <hr>
     <div class="row mt-3">
       <div class="col-2">
         <button type="button" class="btn btn-secondary" id="addChurchBtn"> Add Church </button>

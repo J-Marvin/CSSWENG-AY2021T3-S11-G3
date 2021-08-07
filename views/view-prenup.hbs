@@ -6,7 +6,7 @@
   }
 </style>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark d-flex justify-content-between">
+{{!-- <nav class="navbar navbar-expand-lg navbar-dark bg-dark d-flex justify-content-between">
   <div class="d-flex flex-row">
     <button style="background-color: transparent; border: none; padding: none"><a class="navbar-brand mt-1 ms-2" href="/forms_main_page"><i class="fas fa-arrow-left"></i></a></button>
     <a id="header" class="navbar-brand" href="/main_page">Disciple Christian Church</a>
@@ -25,17 +25,16 @@
       </li>
     </ul>
   </div>
-</nav>
+</nav> --}}
+
+{{>navbar}}
 
 <div id="prenup_info" style="display: none" data-prenup="{{prenupId}}" data-groom-person="{{groomPersonId}}" data-bride-person="{{bridePersonId}}" ></div>
-  <div class="container" style="padding-left: 10%; padding-right: 10%;">
+  <div class="container" style="padding-left: 18%; padding-right: 10%;">
     <h1 class="my-3"> View Prenuptial Record </h1>
+    {{!-- <u for="date_added">Date Added</u>
+    <p>{{dateView date}}</p> --}}
     <hr>
-    <div class="row">
-        <u for="date_added">Date Added</u>
-        <p>{{dateView date}}</p>
-    </div>
-
     <div class="row">
       <legend>Bride's Name</legend>
       <div class="col">
@@ -51,6 +50,7 @@
         <p>{{brideLast}}</p>
       </div>
     </div>
+    <hr>
     <div class="row">
       <legend>Groom's Name</legend>
       <div class="col">
@@ -66,12 +66,17 @@
         <p>{{groomLast}}</p>
       </div>
     </div>
+    <hr>
     <div class="row">
-        <legend>Planned Wedding Date</legend>
-        <p>{{dateString weddingDate}}</p>
+        <u> Planned wedding date </u>
+        <p>{{dateView weddingDate}}</p>
     </div>
-
+    <hr>
     <div class="row my-3">
-      <a><button class="btn btn-secondary mb-4">Wedding Record</button></a>
+      <div class="col">
+        <a><button class="btn btn-secondary mb-4">Wedding Record</button></a>
+      </div>
+      <div class="col d-flex justify-content-end">
+          <a href="/edit_prenup/{{prenupId}}"> <button class="btn btn-secondary mb-4">Edit Prenup Form</button> </a>
+      </div>
     </div>
-    <a href="/edit_prenup/{{prenupId}}"> <button class="btn btn-secondary mb-4">Edit Prenup Form</button> </a>
