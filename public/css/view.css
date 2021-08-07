@@ -1,4 +1,8 @@
 p {
-    font-size: larger;
-    font-weight: 500;
+    font-size: 13pt;
+}
+
+u {
+    font-style: italic;
+    font-variant: small-caps;
 }

@@ -1,8 +1,19 @@
-<div class='observation' data-observation="{{this.observation_id}}">
-  <p>Date of observation: {{dateView this.date}}</p>
-  <p>
-    Observer: <span class="observer">{{this.observer}}</span> <br>
-    Comment: <span class="comment">{{this.comment}}</span> <br>
-    <button type="button" class="fas fa-trash delObservationBtn"></button> <button type="button"class="fas fa-edit editObservationBtn"></button>
-  </p>
+<div class="card mb-3 observation" data-observation="{{this.observation_id}}" style="max-width: 540px;">
+  <div class="row">
+    <div class="col">
+      <div class="card-body">
+        <h5 class="card-title"><span class="comment">{{this.comment}}</span></h5>
+        <hr>
+        <div class="row">
+          <div class="col">
+            <p class="card-text"><span class="observer">{{this.observer}}</span> </p>
+          </div>
+          <div class="col d-flex justify-content-end">
+            <p class="card-text"><small class="text-muted">{{dateView this.date}}</small></p>
+          </div>
+        </div>
+        <button type="button" class="fas fa-trash delObservationBtn mt-3"></button> <button type="button"class="fas fa-edit editObservationBtn"></button>
+      </div>
+    </div>
+  </div>
 </div>

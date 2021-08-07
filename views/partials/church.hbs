@@ -1,4 +1,4 @@
-<div class="church" data-church="{{this.church_id}}" style="border: 1px">
+{{!-- <div class="church" data-church="{{this.church_id}}" style="border: 1px">
 <p data-address="{{this.address_id}}">
   Church Name: <span class="church_name"> {{this.church_name}} </span><br>
   Address Line 1: <span class="church_address_line">{{this.address_line}} </span><br>
@@ -10,4 +10,17 @@
  <button type="button" class="fas fa-trash delChurchBtn"></button> <button type="button" class="fas fa-edit editChurchBtn"></button>
 </p>
 
+</div> --}}
+
+<div class="card mb-3 church" data-church="{{this.church_id}}" style="max-width: 540px;">
+  <div class="row">
+    <div class="col">
+      <div class="card-body">
+        <h5 class="card-title"><span class="church_name" data-address="{{this.address_id}}"> {{this.church_name}} </span></h5>
+        <hr>
+        <p class="card-text">{{this.address_line}}, {{this.city}}, {{this.province}}, {{this.country}} </p>
+        <button type="button" class="fas fa-trash delChurchBtn"></button> <button type="button" class="fas fa-edit editChurchBtn"></button>
+      </div>
+    </div>
+  </div>
 </div>

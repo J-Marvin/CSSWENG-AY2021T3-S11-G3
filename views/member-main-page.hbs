@@ -34,16 +34,16 @@
       <a href="/add_member"><i style="width: 3em; height: 3em; color:black;" class="far fa-plus-square"></i></a>
     </div>
   </div>
-  <div class="row">
-      <div class="row mt-3" style="--bs-gutter-x: 0rem;">
+  <div class="row listrow">
+      <div class="row mt-3 toprow" style="--bs-gutter-x: 0rem;">
         <div class="col-{{#if canSee}}1{{else}}2{{/if}} tile">
-          <p class="variables"> Member ID </p>
+          <p class="variables"> ID </p>
         </div>
         <div class="col-{{#if canSee}}2{{else}}10{{/if}} tile">
           <p class="variables"> Name </p>
         </div>
         {{#if canSee}}
-          <div class="col-1 tile">
+          <div class="col-2 tile">
             <p class="variables"> Birth Date </p>
           </div>
           <div class="col-2 tile">
@@ -58,28 +58,31 @@
           {{/if}}
       </div>
       {{#each members}}
-        <div class="row" style="--bs-gutter-x: 0rem;">
-          <div class="col-{{#if ../canSee}}1{{else}}2{{/if}} tile">
-            <p class="variables"> {{this.member_id}} </p>
+        <a class="memberlink" href="/member/{{this.member_id}}">
+          <div class="row indivmember" style="--bs-gutter-x: 0rem;">
+            <div class="col-{{#if ../canSee}}1{{else}}2{{/if}} tile">
+              <p class="variables"> {{this.member_id}} </p>
+            </div>
+            <div class="col-{{#if ../canSee}}2{{else}}10{{/if}} tile">
+                <p class="variables"> {{this.first_name}} {{this.last_name}} </p>
+            </div>
+            {{#if ../canSee}}
+              <div class="col-2 tile">
+                <p class="variables"> {{dateView this.birthday}} </p>
+              </div>
+              <div class="col-2 tile">
+                <p class="variables"> {{this.mobile}} </p>
+              </div>
+              <div class="col tile">
+                <p class="variables"> {{this.email}} </p>
+              </div>
+              <div class="col tile">
+                <p class="variables"> {{this.address}} </p>
+              </div>
+            {{/if}}
           </div>
-          <div class="col-{{#if ../canSee}}2{{else}}10{{/if}} tile">
-              <a href="/member/{{this.member_id}}"> <p class="variables"> {{this.first_name}} {{this.last_name}} </p> </a>
-          </div>
-          {{#if ../canSee}}
-            <div class="col-1 tile">
-              <p class="variables"> {{dateView this.birthday}} </p>
-            </div>
-            <div class="col-2 tile">
-              <p class="variables"> {{this.mobile}} </p>
-            </div>
-            <div class="col tile">
-              <p class="variables"> {{this.email}} </p>
-            </div>
-            <div class="col tile">
-              <p class="variables"> {{this.address}} </p>
-            </div>
-          {{/if}}
-        </div>
+        </a>
+        <hr>
       {{/each}}
   </div>
 </div>

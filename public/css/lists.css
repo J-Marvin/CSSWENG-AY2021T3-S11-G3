@@ -1,14 +1,47 @@
+@import url(fonts.css);
+
 .tile {
-    border: 1px;
-    border-color: black;
-    border-style: solid;
+    padding: 5px;
 }
 
 .variables {
-    text-align: center;
+    text-align: left;
     margin-bottom: -0.01rem;
 }
 
-.row {
+.row>* {
     --bs-gutter-x: 0rem;
+    padding-left: 0;
+    padding-right: 0;
 }
+
+p {
+    white-space: nowrap; 
+    font-family: Helvetica;
+}
+
+.memberlink {
+    color: black !important;
+    text-decoration: none !important;
+}
+
+hr {
+    margin: 0 !important;
+}
+
+.toprow p {
+    font-weight: bold;
+    border-bottom: 3px black double;
+}
+
+.indivmember {
+    padding: 8px;
+}
+
+.indivmember:hover {
+    background-color: #ececff;
+    cursor: pointer;
+  }
+
+
+
