@@ -27,17 +27,7 @@ function createWindow () {
     mainWindow = null
   })
 
-  globalShortcut.register('f5', function () {
-    console.log('f5 is pressed')
-    mainWindow.reload()
-  })
-
-  globalShortcut.register('CommandOrControl+R', function () {
-    console.log('CommandOrControl+R is pressed')
-    mainWindow.reload()
-  })
-
-  // mainWindow.removeMenu()
+  mainWindow.removeMenu()
 
   console.log(hostname + ' ' + port)
 }

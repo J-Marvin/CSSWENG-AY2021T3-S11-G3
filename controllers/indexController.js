@@ -100,8 +100,6 @@ const controller = {
       ]
 
       db.find(db.tables.COUPLE_TABLE, null, joinTables, columns, function (result) {
-        console.log(result)
-
         res.render('forms-main-page', {
           styles: ['lists'],
           prenup: result
