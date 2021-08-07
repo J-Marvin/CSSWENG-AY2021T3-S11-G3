@@ -1170,7 +1170,7 @@ const prenupController = {
       // const oldgroomLast = req.body.oldgroomLast
 
       // old data bride
-      const oldbrideMemberId = req.body.oldbrideMemberId
+      // const oldbrideMemberId = req.body.oldbrideMemberId
       // const oldbridePersonId = req.body.oldbridePersonId // female_id
       // const bridebrideFirst = req.body.oldbrideFirst
       // const bridebrideMiddle = req.body.oldbrideMiddle
@@ -1185,7 +1185,7 @@ const prenupController = {
       data.male[personFields.LAST_NAME] = newgroomLast
 
       // new data bride
-      const newbrideMemberId = req.body.newbrideMemberId
+      // const newbrideMemberId = req.body.newbrideMemberId
 
       const coupleId = req.body.coupleId
       const prenupId = req.body.prenupId
@@ -1262,7 +1262,7 @@ const prenupController = {
         female: {}
       }
       // old data groom
-      const oldgroomMemberId = req.body.oldgroomMemberId
+      // const oldgroomMemberId = req.body.oldgroomMemberId
       // const oldgroomPersonId = req.body.oldgroomPersonId // male_id
       // const oldgroomFirst = req.body.oldgroomFirst
       // const oldgroomMiddle = req.body.oldgroomMiddle
@@ -1284,7 +1284,7 @@ const prenupController = {
       data.female[personFields.LAST_NAME] = newbrideLast
 
       // new data bride
-      const newgroomMemberId = req.body.newgroomMemberId
+      // const newgroomMemberId = req.body.newgroomMemberId
 
       const coupleId = req.body.coupleId
       const prenupId = req.body.prenupId
