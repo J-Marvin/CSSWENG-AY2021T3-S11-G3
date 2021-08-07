@@ -331,7 +331,13 @@ const prenupController = {
                       //   currentDate: data.prenup[prenupRecordFields.DATE],
                       //   weddingDate: data.prenup[prenupRecordFields.DATE_OF_WEDDING]
                       // })
-                      res.redirect('/forms_main_page')
+                      if (parseInt(req.session.level) === 1) {
+                        console.log('here if')
+                        res.redirect('/main_page')
+                      } else {
+                        console.log('here else')
+                        res.redirect('/forms_main_page')
+                      }
                     }
                   })
                 } else {
@@ -435,7 +441,13 @@ const prenupController = {
                   db.update(db.tables.MEMBER_TABLE, { prenup_record_id: prenupRecId }, memberCondition, function (result) {
                     if (result !== null) {
                       // render the success page along with the newly added prenup record
-                      res.redirect('/forms_main_page')
+                      if (parseInt(req.session.level) === 1) {
+                        console.log('here if')
+                        res.redirect('/main_page')
+                      } else {
+                        console.log('here else')
+                        res.redirect('/forms_main_page')
+                      }
                     } else {
                       res.send('UPDATE MEMBER ID ERROR')
                     }
@@ -541,7 +553,13 @@ const prenupController = {
                     //   currentDate: date,
                     //   weddingDate: weddingDate
                     // })
-                    res.redirect('/forms_main_page')
+                    if (parseInt(req.session.level) === 1) {
+                      console.log('here if')
+                      res.redirect('/main_page')
+                    } else {
+                      console.log('here else')
+                      res.redirect('/forms_main_page')
+                    }
                   } else {
                     res.send('UPDATE PRENUP ERROR')
                   }
@@ -646,7 +664,13 @@ const prenupController = {
                     //   currentDate: date,
                     //   weddingDate: weddingDate
                     // })
-                    res.redirect('/forms_main_page')
+                    if (parseInt(req.session.level) === 1) {
+                      console.log('here if')
+                      res.redirect('/main_page')
+                    } else {
+                      console.log('here else')
+                      res.redirect('/forms_main_page')
+                    }
                   } else {
                     res.send('UPDATE PRENUP ERROR')
                   }
