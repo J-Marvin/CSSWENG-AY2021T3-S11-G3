@@ -7,15 +7,16 @@
       document.getElementById("bride_member").checked = false
       document.getElementById("bride_member").removeAttribute("disabled")
       document.getElementById("bride_non_member").setAttribute("disabled", "disabled")
-      $("#prenup-info").data('data-bridecheck-member', '0')
-      
+      $("#prenup-info").attr('data-checkbride-member', '0')
+      console.log("data('data-checkbride-member', '0')")
     }
     else {
       document.getElementById("bride_non_member_div").style.display = "none"
       document.getElementById("bride_non_member").checked = false
       document.getElementById("bride_non_member").removeAttribute("disabled")
       document.getElementById("bride_member").setAttribute("disabled", "disabled")
-      $('#prenup-info').data('data-bridecheck-member', '1')
+      $('#prenup-info').attr('data-checkbride-member', '1')
+      console.log("data('data-checkbride-member', '1')")
     }
     document.getElementById(status + "_div").style.display = "block"
   }
@@ -25,31 +26,18 @@
       document.getElementById("groom_member").checked = false
       document.getElementById("groom_member").removeAttribute("disabled")
       document.getElementById("groom_non_member").setAttribute("disabled", "disabled")
-      $('#prenup-info').data('data-groomcheck-member', '0')
+      $('#prenup-info').attr('data-checkgroom-member', '0')
+      console.log("data('data-checkgroom-member', '0')")
     }
     else {
       document.getElementById("groom_non_member_div").style.display = "none"
       document.getElementById("groom_non_member").checked = false
       document.getElementById("groom_non_member").removeAttribute("disabled")
       document.getElementById("groom_member").setAttribute("disabled", "disabled")
-      $('#prenup-info').data('data-groomcheck-member', '1')
+      $('#prenup-info').attr('data-checkgroom-member', '1')
+      console.log("data('data-checkgroom-member', '1')")
     }
     document.getElementById(status + "_div").style.display = "block"
-  }
-  function checkMemberBoxes() {
-    /*
-      Checks if checkbox bride_non_member is checked by user AND 
-      checkbox groom_non_member is NOT checked, then change the 
-      'action' of the form to '/addPrenupBrideNonMember'
-      ELSE: change the change the 
-      'action' of the form to '/addPrenupGroomNonMember'
-    */
-    if ($('#bride_non_member').is(':checked') && $('#groom_non_member').is(':checked') !== true) {
-      $('#prenup_form').attr('action', '/addPrenupBrideNonMember')
-    
-    } else if ($('#bride_non_member').is(':checked') !== true && $('#groom_non_member').is(':checked')) {
-      $('#prenup_form').attr('action', '/addPrenupGroomNonMember')
-    }
   }
 </script>
 
@@ -57,6 +45,8 @@
 <div id="prenup-info" 
     data-prenuprecord-id="{{bride.record_id}}" 
     data-couple-id="{{bride.couple_id}}"
+    data-currentdate="{{bride.date}}"
+    data-oldweddingdate="{{bride.date_of_wedding}}"
     data-checkbride-member="1"
     data-checkgroom-member="1"></div>
 <div id="oldbride-info"
@@ -64,13 +54,13 @@
     data-oldbride-personid="{{bride.person_id}}"
     data-oldbride-first="{{bride.first_name}}"
     data-oldbride-middle="{{bride.middle_name}}"
-    data-oldbridelast="{{bride.last_name}}"></div>
+    data-oldbride-last="{{bride.last_name}}"></div>
 <div id="oldgroom-info"
     data-oldgroom-memberid="{{groom.member_id}}"
     data-oldgroom-personid="{{groom.person_id}}"
     data-oldgroom-first="{{groom.first_name}}"
     data-oldgroom-middle="{{groom.middle_name}}"
-    data-oldgroomlast="{{groom.last_name}}"></div>
+    data-oldgroom-last="{{groom.last_name}}"></div>
 <form id="prenup_form" method="POST" class="container"> 
   <div class="container" style="padding-left: 20%; padding-right: 20%;">
     <h1 class="my-3">Edit Prenup Form</h1>
@@ -179,6 +169,10 @@
       </div>
     </div>
     <div class="row">
+      <div class="col">
+        <label>Date Added</label>
+        <p>{{dateString bride.date}}</p>
+      </div>
       <div class="col">
         <label for="wedding_date">Planned Wedding Date</label>
         <input type="date" id="wedding_date" name="wedding_date" class="form-control">

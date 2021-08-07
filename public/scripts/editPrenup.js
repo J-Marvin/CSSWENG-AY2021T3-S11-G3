@@ -109,47 +109,101 @@ $(document).ready(function () {
     var groomMember = $('#input_groom_member').val() === '' || $('#input_groom_member').val() === null
 
     if((brideNonMember) && (brideMember)) {
-    isValid = false
-    $('#bride_info_error').text('Accomplish all fields')
-    } else {
-    $('#bride_info_error').text('')
+      isValid = false
+      $('#bride_info_error').text('Accomplish all fields')
+      } else {
+      $('#bride_info_error').text('')
     }
 
     if((groomNonMember) && (groomMember)) {
-    isValid = false
-    $('#groom_info_error').text('Accomplish all fields')
-    } else {
-    $('#groom_info_error').text('')
+      isValid = false
+      $('#groom_info_error').text('Accomplish all fields')
+      } else {
+      $('#groom_info_error').text('')
     }
 
     if(validator.isEmpty($('#wedding_date').val())) {
-    isValid = false
-    $('#wedding_date_error').text('Select a date')
-    } else {
-    $('#wedding_date_error').text('')
+      isValid = false
+      $('#wedding_date_error').text('Select a date')
+      } else {
+      $('#wedding_date_error').text('')
     }
+
+    if ($('#prenup-info').attr('data-currentdate') > $('#wedding_date').val()) {
+      isValid = false
+      $('#wedding_date_error').text('Wedding date should not be earlier than current date')
+    } else {
+      $('#wedding_date_error').text('')
+    }
+    return isValid
   }
 
   $('#edit-prenup').click(function () {
     console.log('edit prenup submit button')
+    // let data = {
+    //     coupleId: $('#prenup-info').attr('data-couple-id'),
+    //     prenupId:$('#prenup-info').attr('data-prenuprecord-id'),
+    //     weddingDate: $('#wedding_date').val(),
+    //     // old data groom
+    //     oldgroomMemberId: $('#oldgroom-info').attr('data-oldgroom-memberid'),
+    //     oldgroomPersonId: $('#oldgroom-info').attr('data-oldgroom-personid'),
+    //     oldgroomFirst: $('#oldgroom-info').attr('data-oldgroom-first'),
+    //     oldgroomMiddle: $('#oldgroom-info').attr('data-oldgroom-middle'),
+    //     oldgroomLast: $('#oldgroom-info').attr('data-oldgroom-last'),
+    
+    //     // old data bride
+    //     oldbrideMemberId: $('#oldbride-info').attr('data-oldbride-memberid'),
+    //     oldbridePersonId: $('#oldbride-info').attr('data-oldbride-personid'),
+    //     oldbrideFirst: $('#oldbride-info').attr('data-oldbride-first'),
+    //     oldbrideMiddle: $('#oldbride-info').attr('data-oldbride-middle'),
+    //     oldbrideLast: $('#oldbride-info').attr('data-oldbride-last')
+    //   }
+    // console.log("DATA:\n")
+    //   console.log('data.oldbridePerson' + data.oldbridePersonId)
+    //   console.log('data.oldbrideMember' + data.oldbrideMemberId)
+    //   console.log('data.oldbrideFirst)' + data.oldbrideFirst)
+    //   console.log('data.oldbrideMiddle' + data.oldbrideMiddle)
+    //   console.log('data.oldbrideLast)' + data.oldbrideLast)
+
+    //   console.log('data.oldgroomPerson' + data.oldgroomPersonId)
+    //   console.log('data.oldgroomMember' + data.oldgroomMemberId)
+    //   console.log('data.oldgroomFirst)' + data.oldgroomFirst)
+    //   console.log('data.oldgroomMiddle' + data.oldgroomMiddle)
+    //   console.log('data.oldgroomLast)' + data.oldgroomLast)
+
+    //   console.log('data.newbridePerson' + data.newbridePersonId)
+    //   console.log('data.newbrideMember' + data.newbrideMemberId)
+    //   console.log('data.newbrideFirst)' + data.newbrideFirst)
+    //   console.log('data.newbrideMiddle' + data.newbrideMiddle)
+    //   console.log('data.newbrideLast)' + data.newbrideLast)
+
+    //   console.log('data.newgroomPerson' + data.newgroomPersonId)
+    //   console.log('data.newgroomMember' + data.newgroomMemberId)
+    //   console.log('data.newgroomFirst)' + data.newgroomFirst)
+    //   console.log('data.newgroomMiddle' + data.newgroomMiddle)
+    //   console.log('data.newgroomLast)' + data.newgroomLast)
+
+    //   console.log('data.weddingDate' + data.weddingDate)
+    //   console.log('data.prenupId' + data.prenupId)
+    //   console.log('data.coupleId' + data.coupleId)
     if (validateFields()) {
       let data = {
         coupleId: $('#prenup-info').attr('data-couple-id'),
         prenupId:$('#prenup-info').attr('data-prenuprecord-id'),
-        wedding_date: $('#wedding_date').val(),
+        weddingDate: $('#wedding_date').val(),
         // old data groom
-        oldgroomMemberId: $('#oldgroom-info').attr('oldgroom-memberid'),
-        oldgroomPersonId: $('#oldgroom-info').attr('oldgroom-personid'),
-        oldgroomFirst: $('#oldgroom-info').attr('oldgroom-first'),
-        oldgroomMiddle: $('#oldgroom-info').attr('oldgroom-middle'),
-        oldgroomLast: $('#oldgroom-info').attr('oldgroom-last'),
+        oldgroomMemberId: $('#oldgroom-info').attr('data-oldgroom-memberid'),
+        oldgroomPersonId: $('#oldgroom-info').attr('data-oldgroom-personid'),
+        oldgroomFirst: $('#oldgroom-info').attr('data-oldgroom-first'),
+        oldgroomMiddle: $('#oldgroom-info').attr('data-oldgroom-middle'),
+        oldgroomLast: $('#oldgroom-info').attr('data-oldgroom-last'),
     
         // old data bride
-        oldbrideMemberId: $('#oldbride-info').attr('oldbride-memberid'),
-        oldbridePersonId: $('#oldbride-info').attr('oldbride-personid'),
-        oldbrideFirst: $('#oldbride-info').attr('oldbride-first'),
-        oldbrideMiddle: $('#oldbride-info').attr('oldbride-middle'),
-        oldbrideLast: $('#oldbride-info').attr('oldbride-last')
+        oldbrideMemberId: $('#oldbride-info').attr('data-oldbride-memberid'),
+        oldbridePersonId: $('#oldbride-info').attr('data-oldbride-personid'),
+        oldbrideFirst: $('#oldbride-info').attr('data-oldbride-first'),
+        oldbrideMiddle: $('#oldbride-info').attr('data-oldbride-middle'),
+        oldbrideLast: $('#oldbride-info').attr('data-oldbride-last')
       }
     
       const bridecheck_member = $('#prenup-info').attr('data-checkbride-member')
@@ -197,10 +251,50 @@ $(document).ready(function () {
         data.newbrideFirst = $('#bride_first_name').val()
         data.newbrideMiddle = $('#bride_mid_name').val()
         data.newbrideLast = $('#bride_last_name').val()
+
+      } else if (parseInt(groomcheck_member) == 0 && parseInt(bridecheck_member) == 0) {
+        // if both groom and bride are nonmembers
+        url_route = '/postUpdatePrenupNonMember'
+        // get nonmember bride's info
+        data.newbrideFirst = $('#bride_first_name').val()
+        data.newbrideMiddle = $('#bride_mid_name').val()
+        data.newbrideLast = $('#bride_last_name').val()
+        // get nonmember groom's info
+        data.newgroomFirst = $('#groom_first_name').val()
+        data.newgroomMiddle = $('#groom_mid_name').val()
+        data.newgroomLast = $('#groom_last_name').val()
       }
         
-      console.log("data")
-      console.log(url_route)
+      console.log("DATA:\n")
+      console.log('data.oldbridePerson' + data.oldbridePersonId)
+      console.log('data.oldbrideMember' + data.oldbrideMemberId)
+      console.log('data.oldbrideFirst)' + data.oldbrideFirst)
+      console.log('data.oldbrideMiddle' + data.oldbrideMiddle)
+      console.log('data.oldbrideLast)' + data.oldbrideLast)
+
+      console.log('data.oldgroomPerson' + data.oldgroomPersonId)
+      console.log('data.oldgroomMember' + data.oldgroomMemberId)
+      console.log('data.oldgroomFirst)' + data.oldgroomFirst)
+      console.log('data.oldgroomMiddle' + data.oldgroomMiddle)
+      console.log('data.oldgroomLast)' + data.oldgroomLast)
+
+      console.log('data.newbridePerson' + data.newbridePersonId)
+      console.log('data.newbrideMember' + data.newbrideMemberId)
+      console.log('data.newbrideFirst)' + data.newbrideFirst)
+      console.log('data.newbrideMiddle' + data.newbrideMiddle)
+      console.log('data.newbrideLast)' + data.newbrideLast)
+
+      console.log('data.newgroomPerson' + data.newgroomPersonId)
+      console.log('data.newgroomMember' + data.newgroomMemberId)
+      console.log('data.newgroomFirst)' + data.newgroomFirst)
+      console.log('data.newgroomMiddle' + data.newgroomMiddle)
+      console.log('data.newgroomLast)' + data.newgroomLast)
+
+      console.log('data.weddingDate' + data.weddingDate)
+      console.log('data.prenupId' + data.prenupId)
+      console.log('data.coupleId' + data.coupleId)
+
+      console.log("url_route = " + url_route)
       $.ajax({
         type: "POST",
         data: data,
