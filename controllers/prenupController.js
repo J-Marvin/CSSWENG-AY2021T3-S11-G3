@@ -678,7 +678,7 @@ const prenupController = {
       WHERE pre_nuptial.record_id = <some record id>
       */
       const data = {
-        scripts: ['addPrenup'],
+        scripts: ['editPrenup'],
         styles: ['forms'],
         bride: {},
         groom: {}
@@ -715,10 +715,64 @@ const prenupController = {
       db.find(db.tables.PRENUPTIAL_TABLE, cond, joinTables1, '*', function (result) {
         if (result !== null) {
           data.groom = result[0]
+          console.log('data.groom')
+          console.log(data.groom)
           db.find(db.tables.PRENUPTIAL_TABLE, cond, joinTables2, '*', function (result) {
             if (result !== null) {
               data.bride = result[0]
-              res.render('edit-prenup', data)
+              console.log('data.bride')
+              console.log(data.bride)
+              const cond1 = new Condition(queryTypes.where)
+              const cond2 = new Condition(queryTypes.whereNull)
+              const cond3 = new Condition(queryTypes.where)
+              const cond4 = new Condition(queryTypes.whereNull)
+
+              const joinTables1 = [
+                {
+                  tableName: db.tables.PERSON_TABLE,
+                  sourceCol: db.tables.MEMBER_TABLE + '.' + memberFields.PERSON,
+                  destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
+                }
+              ]
+              let brideNames = []
+              let groomNames = []
+              // set the WHERE clause
+              cond1.setQueryObject(
+                {
+                  sex: 'Female',
+                  civil_status: 'Single'
+                }
+              )
+              cond2.setField(db.tables.MEMBER_TABLE + '.' + memberFields.PRENUP_RECORD)
+              // get all female members
+              db.find(db.tables.MEMBER_TABLE, [cond1, cond2], joinTables1, '*', function (result) {
+                if (result !== null) {
+                  brideNames = result
+                  data.brideNames = brideNames
+                  console.log(brideNames)
+                  // conditions = []
+
+                  // set the WHERE clause
+                  cond3.setQueryObject(
+                    {
+                      sex: 'Male',
+                      civil_status: 'Single'
+                    }
+                  )
+                  cond4.setField(db.tables.MEMBER_TABLE + '.' + memberFields.PRENUP_RECORD)
+
+                  // get all male members
+                  db.find(db.tables.MEMBER_TABLE, [cond3, cond4], joinTables1, '*', function (result) {
+                    // console.log(result)
+                    if (result !== null) {
+                      groomNames = result
+                      data.groomNames = groomNames
+                      console.log(groomNames)
+                      res.render('edit-prenup', data)
+                    }
+                  })
+                }
+              })
             }
           })
         }

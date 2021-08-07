@@ -61,6 +61,9 @@ const hbHelpers = {
     if (level === 'N/A' || level === undefined || level === null) {
       return true
     }
+  },
+  isUndefined: function (value) {
+    return value === undefined || value === null
   }
 
 }

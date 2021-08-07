@@ -7,7 +7,7 @@
       document.getElementById("bride_member").checked = false
       document.getElementById("bride_member").removeAttribute("disabled")
       document.getElementById("bride_non_member").setAttribute("disabled", "disabled")
-      $("#prenup_form").attr('action', '/create_prenup')
+      $("#prenup-info").data('data-bridecheck-member', '0')
       
     }
     else {
@@ -15,7 +15,7 @@
       document.getElementById("bride_non_member").checked = false
       document.getElementById("bride_non_member").removeAttribute("disabled")
       document.getElementById("bride_member").setAttribute("disabled", "disabled")
-      $("#prenup_form").attr('action', '/create_prenup_member')
+      $('#prenup-info').data('data-bridecheck-member', '1')
     }
     document.getElementById(status + "_div").style.display = "block"
   }
@@ -25,14 +25,14 @@
       document.getElementById("groom_member").checked = false
       document.getElementById("groom_member").removeAttribute("disabled")
       document.getElementById("groom_non_member").setAttribute("disabled", "disabled")
-      $("#prenup_form").attr('action', '/create_prenup')
+      $('#prenup-info').data('data-groomcheck-member', '0')
     }
     else {
       document.getElementById("groom_non_member_div").style.display = "none"
       document.getElementById("groom_non_member").checked = false
       document.getElementById("groom_non_member").removeAttribute("disabled")
       document.getElementById("groom_member").setAttribute("disabled", "disabled")
-      $("#prenup_form").attr('action', '/create_prenup_member')
+      $('#prenup-info').data('data-groomcheck-member', '1')
     }
     document.getElementById(status + "_div").style.display = "block"
   }
@@ -53,8 +53,25 @@
   }
 </script>
 
-            {{!--       Edit prenup member connection     --}}
-<form id="prenup_form" action="/edit_prenup_member" method="POST" class="container"> 
+            {{!--       Edit prenup member connection, route will dynamically change     --}}
+<div id="prenup-info" 
+    data-prenuprecord-id="{{bride.record_id}}" 
+    data-couple-id="{{bride.couple_id}}"
+    data-checkbride-member="1"
+    data-checkgroom-member="1"></div>
+<div id="oldbride-info"
+    data-oldbride-memberid="{{bride.member_id}}"
+    data-oldbride-personid="{{bride.person_id}}"
+    data-oldbride-first="{{bride.first_name}}"
+    data-oldbride-middle="{{bride.middle_name}}"
+    data-oldbridelast="{{bride.last_name}}"></div>
+<div id="oldgroom-info"
+    data-oldgroom-memberid="{{groom.member_id}}"
+    data-oldgroom-personid="{{groom.person_id}}"
+    data-oldgroom-first="{{groom.first_name}}"
+    data-oldgroom-middle="{{groom.middle_name}}"
+    data-oldgroomlast="{{groom.last_name}}"></div>
+<form id="prenup_form" method="POST" class="container"> 
   <div class="container" style="padding-left: 20%; padding-right: 20%;">
     <h1 class="my-3">Edit Prenup Form</h1>
     <hr>
@@ -62,16 +79,25 @@
       <div class="col">
         <legend>Bride</legend>
         <hr>
-        {{#if lockBrideNonMember}}
-        <input type="checkbox" id="bride_non_member" onclick="display_div_bride('bride_non_member')" disabled> Non-member
+        {{#if (isUndefined bride.member_id)}}
+        {{> prenup-checkbox1}}
         {{else}}
-        <input type="checkbox" id="bride_non_member" onclick="display_div_bride('bride_non_member')"> Non-member
+        {{> prenup-checkbox2}}
         {{/if}}
-        <input class="mb-3" type="checkbox" id="bride_member" onclick="display_div_bride('bride_member')" checked disabled> Member
+        
         <div id="bride_member_div" style="display:block">
           <label>Select Bride</label>
           <select name="input_bride_member" id="input_bride_member" class="form-select">
-            <option></option>
+            {{#if bride.member_id}}
+            <option value="{{bride.member_id}}, {{bride.person_id}}, {{bride.first_name}}, {{bride.middle_name}}, {{bride.last_name}}"
+                    data-bride-memberid="{{bride.member_id}}" 
+                    data-bride-personid="{{bride.person_id}}"
+                    data-bride-firstname="{{bride.first_name}}"
+                    data-bride-middlename="{{bride.middle_name}}"
+                    data-bride-lastname="{{bride.last_name}}">
+              {{bride.member_id}} | {{bride.first_name}} {{bride.middle_name}}. {{bride.last_name}}
+            </option>
+            {{/if}}
             {{!-- checks if the names length is only 1 (i.e. brideNames.length == 1), function is in helpers/hbsHelper.js--}}
             {{#if (isLengthOne brideNames.length)}}
               {{> oneDropdownBride brideNames=brideNames}}
@@ -103,16 +129,25 @@
       <div class="col">
         <legend>Groom</legend>
         <hr>
-        {{#if lockGroomNonMember}}
-        <input type="checkbox" id="groom_non_member" onclick="display_div_groom('groom_non_member')" disabled> Non-member
+        {{#if (isUndefined groom.member_id)}}
+        {{> prenup-checkbox3}}
         {{else}}
-        <input type="checkbox" id="groom_non_member" onclick="display_div_groom('groom_non_member')"> Non-member
+        {{> prenup-checkbox4}}
         {{/if}}
-        <input class="mb-3" type="checkbox" id="groom_member" onclick="display_div_groom('groom_member')" checked disabled> Member
 
         <div id="groom_member_div" style="display:block">
           <label>Select Groom</label>
           <select name="input_groom_member" id="input_groom_member" class="form-select">
+            {{#if groom.member_id}}
+            <option value="{{groom.member_id}}, {{groom.person_id}}, {{groom.first_name}}, {{groom.middle_name}}, {{groom.last_name}}"
+                    data-groom-memberid="{{groom.member_id}}" 
+                    data-groom-personid="{{groom.person_id}}"
+                    data-groom-firstname="{{groom.first_name}}"
+                    data-groom-middlename="{{groom.middle_name}}"
+                    data-groom-lastname="{{groom.last_name}}">
+              {{groom.member_id}} | {{groom.first_name}} {{groom.middle_name}}. {{groom.last_name}}
+            {{/if}}
+            </option>
             {{!-- checks if the names length is only 1 (i.e. groomNames.length == 1), function is in helpers/hbsHelper.js--}}
             {{#if (isLengthOne groomNames.length)}}
               {{> oneDropdownGroom groomNames=groomNames}}
@@ -165,7 +200,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button id="edit-prenup" type="button" class="btn btn-primary confirmationModalBtn" onclick="checkMemberBoxes()">Submit</button>
+          <button id="edit-prenup" type="button" class="btn btn-primary confirmationModalBtn">Submit</button>
         </div>
       </div>
     </div>
