@@ -16,9 +16,14 @@
   <div class="row">
     <div class="col">
       <div class="card-body">
-        <h5 class="card-title"><span class="church_name" data-address="{{this.address_id}}"> {{this.church_name}} </span></h5>
+        <h5 class="card-title"><span class="church_name"> {{this.church_name}} </span></h5>
         <hr>
-        <p class="card-text">{{this.address_line}}, {{this.city}}, {{this.province}}, {{this.country}} </p>
+        <p class="card-text church_name" data-address="{{this.address_id}}">
+          <span class="church_address_line">{{this.address_line}} </span>,
+          <span class="church_city">{{this.city}} </span> 
+          <span class="church_province">{{this.province}} </span>
+          <span class="church_country">{{this.country}} </span>
+        </p>
         <button type="button" class="fas fa-trash delChurchBtn"></button> <button type="button" class="fas fa-edit editChurchBtn"></button>
       </div>
     </div>

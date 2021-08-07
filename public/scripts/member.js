@@ -388,8 +388,8 @@ $(document).ready(function () {
   })
 
   $(document).on('click', '.editObservationBtn', function () {
-    const comment = $(this).siblings('.comment').text()
-    const observer = $(this).siblings('.observer').text()
+    const comment = $(this).siblings('.card-title').find('.comment').text()
+    const observer = $(this).siblings('.row').find('.observer').text()
 
     const observationFieldset = $('#observationFieldset')
 
@@ -406,8 +406,8 @@ $(document).ready(function () {
 
   $(document).on('click', '.delObservationBtn', function () {
     const data = {}
-    const parent = $(this).closest('div')
-    data.observation_id = $(this).closest('div').attr('data-observation')
+    const parent = $(this).closest('.card')
+    data.observation_id = $(this).closest('.card').attr('data-observation')
     $.ajax({
       type: "DELETE",
       data: data,
@@ -424,19 +424,21 @@ $(document).ready(function () {
   })
 
   $(document).on('click', '.editChurchBtn', function () {
-    const church_name = $(this).siblings('.church_name').text()
-    const address_line = $(this).siblings('.church_address_line').text()
-    const address_line2 = $(this).siblings('.church_address_line2').text()
-    const city = $(this).siblings('.church_city').text()
-    const province = $(this).siblings('.church_province').text()
-    const country = $(this).siblings('.church_country').text()
-    const postal_code = $(this).siblings('.church_postal_code').text()
+    //alert($(this).siblings('h5').find('.church_name').text())
+
+    const church_name = $(this).siblings('h5').find('.church_name').text()
+    const address_line = $(this).siblings('p').find('.church_address_line').text()
+    const address_line2 = $(this).siblings('p').find('.church_address_line2').text()
+    const city = $(this).siblings('p').find('.church_city').text()
+    const province = $(this).siblings('p').find('.church_province').text()
+    const country = $(this).siblings('p').find('.church_country').text()
+    const postal_code = $(this).siblings('p').siblings('.church_postal_code').text()
 
     const churchFieldset = $('#churchFieldset')
 
-    editChurchId = $(this).closest('div').attr('data-church')
-    editChurchAddressId = $(this).closest('p').attr('data-address')
-    parentDiv = $(this).closest('div')
+    editChurchId = $(this).closest('.card').attr('data-church')
+    editChurchAddressId = $(this).siblings('p').attr('data-address')
+    parentDiv = $(this).closest('.card')
     addChurch = false
 
     $(churchFieldset).find('#church_name').val(church_name)
@@ -453,9 +455,9 @@ $(document).ready(function () {
 
   $(document).on('click', '.delChurchBtn', function () {
     const data = {}
-    const parent = $(this).closest('div')
-    data.church_id = $(this).closest('div').attr('data-church')
-    data.address_id = $(this).closest('p').attr('data-address')
+    const parent = $(this).closest('.card')
+    data.church_id = $(this).closest('.card').attr('data-church')
+    data.address_id = $(this).siblings('p').attr('data-address')
 
     $.ajax({
       type: "DELETE",
