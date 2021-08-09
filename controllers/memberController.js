@@ -135,6 +135,7 @@ const memberController = {
                   data.styles = ['view']
                   data.scripts = ['removeButtons']
                   data.canSee = (parseInt(req.session.level) === 3) || req.session.editMemberId !== null
+                  data.backLink = req.session.level <= 2 ? '/member_main_page' : '/main_page'
                   res.render('view-member', data)
                 }
               })
