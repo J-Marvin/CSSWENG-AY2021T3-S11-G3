@@ -30,7 +30,7 @@ $(document).ready(function () {
     var isValid = true
     var errors = ''
     
-    if(validator.isEmpty($('#first_name').val())) {
+    if (validator.isEmpty($('#first_name').val())) {
         $('#first_name_error').text('Required')
         errors += 'First name is required\n'
         isValid = false
@@ -42,6 +42,10 @@ $(document).ready(function () {
         $('#mid_name_error').text('Required')
         errors += 'Middle name is required\n'
         isValid = false
+    } else if (!validator.isLength($('#mid_name').val(), { min: 1, max: 1 })){
+      $('#mid_name_error').text('Middle initial should be one letter only')
+      errors += 'Middle Initial only\n'
+      isValid = false
     } else {
         $('#mid_name_error').text('')
     }

@@ -9,7 +9,7 @@ const validation = {
   addMemberValidation: function () {
     const validation = [
       check('first_name', 'First name is required').notEmpty(),
-      check('middle_name', 'Middle name is required').notEmpty(),
+      check('middle_name', 'Middle name is invalid').notEmpty().isLength({ min: 1, max: 1 }),
       check('last_name', 'Last name is required').notEmpty(),
       check('membership_status', 'Membership status is required').notEmpty(),
       check('birthday', 'Birthday is required').notEmpty().isDate(),
