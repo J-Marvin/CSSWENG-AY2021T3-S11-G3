@@ -16,7 +16,7 @@ const prenupController = {
     const prenupId = req.params.prenup_id
     if (parseInt(req.session.editPrenupId) === parseInt(prenupId) || parseInt(req.session.level) >= 2) {
       /*
-      tables needed: PRENUPTIAL_TABLE, COUPLE_TABLE, PEOPLE_TABLE
+      tables needed: PRENUPTIAL_TABLE, COUPLE_TABLE, PEOPLE_TABLE, MEMBER_TABLE
       SQL:
       SELECT *
       FROM pre_nuptial
@@ -24,70 +24,85 @@ const prenupController = {
       JOIN people ON people.person_id = couples.female_id
       */
       let data = {} // the prenuptial details to be rendered
-      // female id
-      const joinTables1 = [
+
+      const joinTables = [
+        // Join prenup to couple table with same id
         {
           tableName: db.tables.COUPLE_TABLE,
           sourceCol: db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.COUPLE,
           destCol: db.tables.COUPLE_TABLE + '.' + coupleFields.ID
         },
+
+        // Join table to person table from bride's person ID
         {
-          tableName: db.tables.PERSON_TABLE,
+          tableName: { bride: db.tables.PERSON_TABLE },
           sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE,
-          destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
+          destCol: 'bride.' + personFields.ID
+        },
+
+        // Join table to person table from groom's person ID
+        {
+          tableName: { groom: db.tables.PERSON_TABLE },
+          sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.MALE,
+          destCol: 'groom.' + personFields.ID
+        },
+
+        // Left join table to members id where member's person id is the same as bride's person id
+        {
+          type: 'leftJoin',
+          tableName: { bride_member: db.tables.MEMBER_TABLE },
+          sourceCol: 'bride.' + personFields.ID,
+          destCol: 'bride_member.' + memberFields.PERSON
+        },
+        // Left join table to members id where member's person id is the same as groom's person id
+        {
+          type: 'leftJoin',
+          tableName: { groom_member: db.tables.MEMBER_TABLE },
+          sourceCol: 'groom.' + personFields.ID,
+          destCol: 'groom_member.' + memberFields.PERSON
         }
       ]
-      // male id
-      const joinTables2 = [
-        {
-          tableName: db.tables.COUPLE_TABLE,
-          sourceCol: db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.COUPLE,
-          destCol: db.tables.COUPLE_TABLE + '.' + coupleFields.ID
-        },
-        {
-          tableName: db.tables.PERSON_TABLE,
-          sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.MALE,
-          destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
-        }
+      // All the fields needed here
+      const columns = [
+        db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.ID + ' as prenupId',
+        db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.DATE_OF_WEDDING + ' as weddingDate',
+        db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.DATE + ' as date',
+        'bride.' + personFields.FIRST_NAME + ' as brideFirst',
+        'bride.' + personFields.MID_NAME + ' as brideMid',
+        'bride.' + personFields.LAST_NAME + ' as brideLast',
+        'groom.' + personFields.FIRST_NAME + ' as groomFirst',
+        'groom.' + personFields.MID_NAME + ' as groomMid',
+        'groom.' + personFields.LAST_NAME + ' as groomLast',
+        'groom_member.' + memberFields.ID + ' as groomMemberId',
+        'bride_member.' + memberFields.ID + ' as brideMemberId'
       ]
 
       const cond = new Condition(queryTypes.where)
       cond.setKeyValue(db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.ID, prenupId)
-      // get female first
-      db.find(db.tables.PRENUPTIAL_TABLE, cond, joinTables1, '*', function (result) {
-        if (result !== null) {
-          const brideInfo = result
-          console.log(brideInfo)
 
-          // next get the male
-          db.find(db.tables.PRENUPTIAL_TABLE, cond, joinTables2, '*', function (result) {
-            if (result !== null) {
-              const groomInfo = result
-              console.log(groomInfo)
+      db.find(db.tables.PRENUPTIAL_TABLE, cond, joinTables, columns, function (result) {
+        if (result.length > 0) {
+          data = {
+            // spread syntax
+            ...result[0]
+          }
 
-              // initialize render data
-              data = {
-                canSee: (parseInt(req.session.editPrenupId) === parseInt(prenupId)) || (parseInt(req.session.level) >= 2),
-                prenupId: prenupId,
-                brideFirst: brideInfo[0][personFields.FIRST_NAME],
-                brideMid: brideInfo[0][personFields.MID_NAME],
-                brideLast: brideInfo[0][personFields.LAST_NAME],
-                brideMemberId: brideInfo[0][personFields.MEMBER],
-                bridePersonId: brideInfo[0][personFields.ID],
-                groomFirst: groomInfo[0][personFields.FIRST_NAME],
-                groomMid: groomInfo[0][personFields.MID_NAME],
-                groomLast: groomInfo[0][personFields.LAST_NAME],
-                groomMemberId: groomInfo[0][personFields.MEMBER],
-                groomPersonId: groomInfo[0][personFields.ID],
-                date: groomInfo[0][prenupRecordFields.DATE],
-                weddingDate: groomInfo[0][prenupRecordFields.DATE_OF_WEDDING]
-              }
-              req.session.editPrenupId = prenupId
-              data.styles = ['view']
-              res.render('view-prenup', data)
+          data.canSee = (parseInt(req.session.editPrenupId) === parseInt(prenupId)) || (parseInt(req.session.level) >= 2)
+          data.styles = ['view']
+          data.backLink = parseInt(req.session.level) >= 2 ? '/forms_main_page' : '/main_page'
+          res.render('view-prenup', data)
+        } else {
+          res.status(401)
+          res.render('error', {
+            title: '404 Record Not Found',
+            css: ['global', 'error'],
+            status: {
+              code: '401',
+              message: 'Record Not Found'
             }
           })
         }
+        console.log(result)
       })
     } else {
       res.status(401)
@@ -331,13 +346,14 @@ const prenupController = {
                       //   currentDate: data.prenup[prenupRecordFields.DATE],
                       //   weddingDate: data.prenup[prenupRecordFields.DATE_OF_WEDDING]
                       // })
-                      if (parseInt(req.session.level) === 1) {
-                        console.log('here if')
-                        res.redirect('/main_page')
-                      } else {
-                        console.log('here else')
-                        res.redirect('/forms_main_page')
-                      }
+                      res.redirect('/view_prenup/' + result[0])
+                      // if (parseInt(req.session.level) === 1) {
+                      //   console.log('here if')
+                      //   res.redirect('/main_page')
+                      // } else {
+                      //   console.log('here else')
+                      //   res.redirect('/forms_main_page')
+                      // }
                     }
                   })
                 } else {
@@ -441,13 +457,15 @@ const prenupController = {
                   db.update(db.tables.MEMBER_TABLE, { prenup_record_id: prenupRecId }, memberCondition, function (result) {
                     if (result !== null) {
                       // render the success page along with the newly added prenup record
-                      if (parseInt(req.session.level) === 1) {
-                        console.log('here if')
-                        res.redirect('/main_page')
-                      } else {
-                        console.log('here else')
-                        res.redirect('/forms_main_page')
-                      }
+                      // if (parseInt(req.session.level) === 1) {
+                      //   console.log('here if')
+                      //   res.redirect('/main_page')
+                      // } else {
+                      //   console.log('here else')
+                      //   res.redirect('/forms_main_page')
+                      // }
+
+                      res.redirect('/view_prenup/' + result[0])
                     } else {
                       res.send('UPDATE MEMBER ID ERROR')
                     }
@@ -553,13 +571,15 @@ const prenupController = {
                     //   currentDate: date,
                     //   weddingDate: weddingDate
                     // })
-                    if (parseInt(req.session.level) === 1) {
-                      console.log('here if')
-                      res.redirect('/main_page')
-                    } else {
-                      console.log('here else')
-                      res.redirect('/forms_main_page')
-                    }
+                    // if (parseInt(req.session.level) === 1) {
+                    //   console.log('here if')
+                    //   res.redirect('/main_page')
+                    // } else {
+                    //   console.log('here else')
+                    //   res.redirect('/forms_main_page')
+                    // }
+
+                    res.redirect('/view_prenup/' + result[0])
                   } else {
                     res.send('UPDATE PRENUP ERROR')
                   }
@@ -664,13 +684,15 @@ const prenupController = {
                     //   currentDate: date,
                     //   weddingDate: weddingDate
                     // })
-                    if (parseInt(req.session.level) === 1) {
-                      console.log('here if')
-                      res.redirect('/main_page')
-                    } else {
-                      console.log('here else')
-                      res.redirect('/forms_main_page')
-                    }
+                    // if (parseInt(req.session.level) === 1) {
+                    //   console.log('here if')
+                    //   res.redirect('/main_page')
+                    // } else {
+                    //   console.log('here else')
+                    //   res.redirect('/forms_main_page')
+                    // }
+
+                    res.redirect('/view_prenup/' + result[0])
                   } else {
                     res.send('UPDATE PRENUP ERROR')
                   }
