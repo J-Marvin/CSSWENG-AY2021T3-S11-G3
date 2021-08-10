@@ -8,6 +8,7 @@ const hbsHelpers = require('./helpers/hbsHelper')
 const session = require('express-session')
 const MemoryStore = require('memorystore')(session)
 const nocache = require('nocache')
+const fse = require('fs-extra')
 
 const app = express()
 const routes = require('./routes/routes.js')
@@ -26,7 +27,12 @@ const port = process.env.PORT
 const hostname = process.env.HOSTNAME
 const file = path.join('database', 'church.db')
 
-db.initDB(file)
+if (fse.existsSync('database')) {
+  db.initDB(file)
+} else {
+  fse.mkdirSync('database')
+  db.initDB(file)
+}
 
 app.engine('hbs', hbs.engine)
 app.set('view engine', '.hbs')
