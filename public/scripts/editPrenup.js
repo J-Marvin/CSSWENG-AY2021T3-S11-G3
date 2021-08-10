@@ -1,3 +1,43 @@
+function display_div_bride (status) {
+    
+  if(status === "bride_non_member") {
+    document.getElementById("bride_member_div").style.display = "none"
+    document.getElementById("bride_member").checked = false
+    document.getElementById("bride_member").removeAttribute("disabled")
+    document.getElementById("bride_non_member").setAttribute("disabled", "disabled")
+    $("#prenup-info").attr('data-checkbride-member', '0')
+    console.log("data('data-checkbride-member', '0')")
+  }
+  else {
+    document.getElementById("bride_non_member_div").style.display = "none"
+    document.getElementById("bride_non_member").checked = false
+    document.getElementById("bride_non_member").removeAttribute("disabled")
+    document.getElementById("bride_member").setAttribute("disabled", "disabled")
+    $('#prenup-info').attr('data-checkbride-member', '1')
+    console.log("data('data-checkbride-member', '1')")
+  }
+  document.getElementById(status + "_div").style.display = "block"
+}
+function display_div_groom (status) {
+  if(status === "groom_non_member") {
+    document.getElementById("groom_member_div").style.display = "none"
+    document.getElementById("groom_member").checked = false
+    document.getElementById("groom_member").removeAttribute("disabled")
+    document.getElementById("groom_non_member").setAttribute("disabled", "disabled")
+    $('#prenup-info').attr('data-checkgroom-member', '0')
+    console.log("data('data-checkgroom-member', '0')")
+  }
+  else {
+    document.getElementById("groom_non_member_div").style.display = "none"
+    document.getElementById("groom_non_member").checked = false
+    document.getElementById("groom_non_member").removeAttribute("disabled")
+    document.getElementById("groom_member").setAttribute("disabled", "disabled")
+    $('#prenup-info').attr('data-checkgroom-member', '1')
+    console.log("data('data-checkgroom-member', '1')")
+  }
+  document.getElementById(status + "_div").style.display = "block"
+}
+
 $(document).ready(function () {
   $('#bride_first_name').blur(function () {
     // if error message is empty
@@ -63,42 +103,6 @@ $(document).ready(function () {
     $('#confirmationModal').modal('hide');
   })
 
-  $('#create-prenup').click(function() {
-    var isValid = true
-
-    var brideNonMember = validator.isEmpty($('#bride_first_name').val()) || validator.isEmpty($('#bride_mid_name').val()) || validator.isEmpty($('#bride_last_name').val())
-    var brideMember = $('#input_bride_member').val() === '' || $('#input_bride_member').val() === null
-
-    var groomNonMember = validator.isEmpty($('#groom_first_name').val()) || validator.isEmpty($('#groom_mid_name').val()) || validator.isEmpty($('#groom_last_name').val())
-    var groomMember = $('#input_groom_member').val() === '' || $('#input_groom_member').val() === null
-
-    if((brideNonMember) && (brideMember)) {
-      isValid = false
-      $('#bride_info_error').text('Accomplish all fields')
-    } else {
-      $('#bride_info_error').text('')
-    }
-
-    if((groomNonMember) && (groomMember)) {
-      isValid = false
-      $('#groom_info_error').text('Accomplish all fields')
-    } else {
-      $('#groom_info_error').text('')
-    }
-
-    if(validator.isEmpty($('#wedding_date').val())) {
-      isValid = false
-      $('#wedding_date_error').text('Select a date')
-    } else {
-      $('#wedding_date_error').text('')
-    }
-
-    if(isValid) {
-      //alert('submit')
-      $('#prenup_form').submit()
-    }
-  })
-
   function validateFields () {
     var isValid = true
 
@@ -108,19 +112,69 @@ $(document).ready(function () {
     var groomNonMember = validator.isEmpty($('#groom_first_name').val()) || validator.isEmpty($('#groom_mid_name').val()) || validator.isEmpty($('#groom_last_name').val())
     var groomMember = $('#input_groom_member').val() === '' || $('#input_groom_member').val() === null
 
+    var checkBrideNonMember = $('#bride_non_member').is(':checked')
+    var checkBrideMember = $('#bride_member').is(':checked')
+
+    var checkGroomNonMember = $('#groom_non_member').is(':checked')
+    var checkGroomMember = $('#groom_member').is(':checked')
+
+    /* 
+      if checkbox for bride non-member is checked, then bride non-member fields should NOT be empty
+      and brideMember selected dropdown is blank
+    */
+    if ((checkBrideNonMember) && (brideNonMember) && (brideMember === false)) {
+      isValid = false
+      $('#bride_info_error').text('The bride member selected in the dropdown should be empty')
+      console.log('invalid1')
+    } else {
+      console.log('valid1')
+    }
+
+    /* 
+      if checkbox for bride member is checked, then bride member selected dropdown is NOT blank
+      and brideMember fields should NOT be empty
+    */
+    if ((checkBrideMember) && (brideNonMember === false) && (brideMember)) {
+      isValid = false
+      $('#bride_info_error').text('The bride non-member text fields should be empty')
+      console.log('invalid2')
+    } else {
+      console.log('valid2')
+    }
+
+    /* 
+      if checkbox for groom non-member is checked, then groom non-member fields should NOT be empty
+      and groom member selected dropdown is blank
+    */
+    if ((checkGroomNonMember) && (groomNonMember) && (groomMember === false)) {
+      isValid = false
+      $('#groom_info_error').text('The groom member selected in the dropdown should be empty')
+      console.log('invalid3')
+    } else {
+      console.log('valid3')
+    }
+
+    /* 
+      if checkbox for groom member is checked, then groom member selected dropdown is NOT blank
+      and groom member fields should NOT be empty
+    */
+    if ((checkGroomMember) && (groomNonMember === false) && (groomMember)) {
+      isValid = false
+      $('#groom_info_error').text('The groom non-member text fields should be empty')
+      console.log('invalid4')
+    } else {
+      console.log('valid4')
+    }
+
     if((brideNonMember) && (brideMember)) {
       isValid = false
       $('#bride_info_error').text('Accomplish all fields')
-      } else {
-      $('#bride_info_error').text('')
-    }
+      }
 
     if((groomNonMember) && (groomMember)) {
       isValid = false
       $('#groom_info_error').text('Accomplish all fields')
-      } else {
-      $('#groom_info_error').text('')
-    }
+      } 
 
     if(validator.isEmpty($('#wedding_date').val())) {
       isValid = false
@@ -265,4 +319,26 @@ $(document).ready(function () {
         console.log('validateFields error')
     }
   })
+  function clearTextFields () {
+    if ($('#oldbride-info').attr('data-oldbride-memberid') !== '' || 
+       $('#oldbride-info').attr('data-oldbride-memberid') !== '') {
+      $('#bride_first_name').val('')
+      $('#bride_mid_name').val('')
+      $('#bride_last_name').val('')
+      console.log('bride text fields cleared')
+    } else {
+      console.log('bride text fields not cleared')
+    }
+  
+    if ($('#oldgroom-info').attr('data-oldgroom-memberid') !== '' ||
+        $('#oldgroom-info').attr('data-oldgroom-memberid') !== '') {
+      $('#groom_first_name').val('')
+      $('#groom_mid_name').val('')
+      $('#groom_last_name').val('')
+      console.log('groom text fields cleared')
+    } else {
+      console.log('groom text fields not cleared')
+    }
+  }
+  clearTextFields()
 })
