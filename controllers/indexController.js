@@ -8,12 +8,25 @@ const coupleFields = require('../models/couple')
 const controller = {
   getMainPage: function (req, res) {
     req.session.editMemberId = null
-    res.render('main-page', {
-      level: req.session.level,
-      styles: ['mainPage'],
-      scripts: [''],
-      canSee: !(parseInt(req.session.level) === 1)
-    })
+    const level = req.session.level
+    if (level !== undefined && level !== null) {
+      res.render('main-page', {
+        level: req.session.level,
+        styles: ['mainPage'],
+        scripts: [''],
+        canSee: !(parseInt(req.session.level) === 1)
+      })
+    } else {
+      res.status(401)
+      res.render('error', {
+        title: '401 Unauthorized Access',
+        css: ['global', 'error'],
+        status: {
+          code: '401',
+          message: 'Unauthorized access'
+        }
+      })
+    }
   },
   getMemberMainPage: function (req, res) {
     const level = req.session.level

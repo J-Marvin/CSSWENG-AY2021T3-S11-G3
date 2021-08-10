@@ -11,7 +11,9 @@ $(document).ready(function() {
       success: function (result) {
         if (result)
           $('#login_form').unbind().submit()
-        else alert("Invalid password")
+        else {
+          $('#errorModal').modal('show')
+        }
       }
     })
   })
