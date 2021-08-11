@@ -1,3 +1,60 @@
+function display_div_bride (status) {
+    
+  if(status === "bride_non_member") {
+    document.getElementById("bride_member_div").style.display = "none"
+    document.getElementById("bride_member").checked = false
+    document.getElementById("bride_member").removeAttribute("disabled")
+    document.getElementById("bride_non_member").setAttribute("disabled", "disabled")
+    $("#prenup_form").attr('action', '/create_prenup')
+    
+  }
+  else {
+    document.getElementById("bride_non_member_div").style.display = "none"
+    document.getElementById("bride_non_member").checked = false
+    document.getElementById("bride_non_member").removeAttribute("disabled")
+    document.getElementById("bride_member").setAttribute("disabled", "disabled")
+    $("#prenup_form").attr('action', '/create_prenup_member')
+  }
+  document.getElementById(status + "_div").style.display = "block"
+}
+function display_div_groom (status) {
+  if(status === "groom_non_member") {
+    document.getElementById("groom_member_div").style.display = "none"
+    document.getElementById("groom_member").checked = false
+    document.getElementById("groom_member").removeAttribute("disabled")
+    document.getElementById("groom_non_member").setAttribute("disabled", "disabled")
+    $("#prenup_form").attr('action', '/create_prenup')
+  }
+  else {
+    document.getElementById("groom_non_member_div").style.display = "none"
+    document.getElementById("groom_non_member").checked = false
+    document.getElementById("groom_non_member").removeAttribute("disabled")
+    document.getElementById("groom_member").setAttribute("disabled", "disabled")
+    $("#prenup_form").attr('action', '/create_prenup_member')
+  }
+  document.getElementById(status + "_div").style.display = "block"
+}
+function checkMemberBoxesAndDate () {
+  /*
+    Checks if checkbox bride_non_member is checked by user AND 
+    checkbox groom_non_member is NOT checked, then change the 
+    'action' of the form to '/addPrenupBrideNonMember'
+    ELSE: change the change the 
+    'action' of the form to '/addPrenupGroomNonMember'
+  */
+  if ($('#bride_non_member').is(':checked') && $('#groom_non_member').is(':checked') !== true) {
+    $('#prenup_form').attr('action', '/addPrenupBrideNonMember')
+  
+  } else if ($('#bride_non_member').is(':checked') !== true && $('#groom_non_member').is(':checked')) {
+    $('#prenup_form').attr('action', '/addPrenupGroomNonMember')
+  }
+
+  // check if current date is empty
+  if (!$('#current_date').val()) {
+    $('#current_date').val(new Date().toISOString().slice(0,10))
+  }
+}
+
 $(document).ready(function () {
   $('#bride_first_name').blur(function () {
     // if error message is empty
@@ -65,10 +122,6 @@ $(document).ready(function () {
     }
   })
 
-  $('.confirmationModalBtn').click(function () {
-    $('#confirmationModal').modal('hide');
-  })
-
   $('#create-prenup').click(function() {
     var isValid = true
 
@@ -78,18 +131,70 @@ $(document).ready(function () {
     var groomNonMember = validator.isEmpty($('#groom_first_name').val()) || validator.isEmpty($('#groom_mid_name').val()) || validator.isEmpty($('#groom_last_name').val())
     var groomMember = $('#input_groom_member').val() === '' || $('#input_groom_member').val() === null
 
+    var checkBrideNonMember = $('#bride_non_member').is(':checked')
+    var checkBrideMember = $('#bride_member').is(':checked')
+
+    var checkGroomNonMember = $('#groom_non_member').is(':checked')
+    var checkGroomMember = $('#groom_member').is(':checked')
+
+    /* 
+      if checkbox for bride non-member is checked, then bride non-member fields should NOT be empty
+      and brideMember selected dropdown is blank
+    */
+    if ((checkBrideNonMember) && (brideNonMember) && (brideMember === false)) {
+      isValid = false
+      $('#bride_info_error').text('The bride member selected in the dropdown should be empty')
+      console.log('invalid1')
+    } else {
+      console.log('valid1')
+    }
+
+    /* 
+      if checkbox for bride member is checked, then bride member selected dropdown is NOT blank
+      and brideMember fields should NOT be empty
+    */
+    if ((checkBrideMember) && (brideNonMember === false) && (brideMember)) {
+      isValid = false
+      $('#bride_info_error').text('The bride non-member text fields should be empty')
+      console.log('invalid2')
+    } else {
+      console.log('valid2')
+    }
+
+    /* 
+      if checkbox for groom non-member is checked, then groom non-member fields should NOT be empty
+      and groom member selected dropdown is blank
+    */
+    if ((checkGroomNonMember) && (groomNonMember) && (groomMember === false)) {
+      isValid = false
+      $('#groom_info_error').text('The groom member selected in the dropdown should be empty')
+      console.log('invalid3')
+    } else {
+      console.log('valid3')
+    }
+
+    /* 
+      if checkbox for groom member is checked, then groom member selected dropdown is NOT blank
+      and groom member fields should NOT be empty
+    */
+    if ((checkGroomMember) && (groomNonMember === false) && (groomMember)) {
+      isValid = false
+      $('#groom_info_error').text('The groom non-member text fields should be empty')
+      console.log('invalid4')
+    } else {
+      console.log('valid4')
+    }
+
+    // if bride fields are empty
     if((brideNonMember) && (brideMember)) {
       isValid = false
       $('#bride_info_error').text('Accomplish all fields')
-    } else {
-      $('#bride_info_error').text('')
     }
 
+    // if groom fields are empty
     if((groomNonMember) && (groomMember)) {
       isValid = false
       $('#groom_info_error').text('Accomplish all fields')
-    } else {
-      $('#groom_info_error').text('')
     }
 
     if(validator.isEmpty($('#current_date').val())) {
@@ -116,29 +221,6 @@ $(document).ready(function () {
     if(isValid) {
       //alert('submit')
       $('#prenup_form').submit()
-    }
-  })
-
-  $('#edit-prenup').click(function () {
-    if (validateFields()) {
-      const data = {
-        member_id: $('#member_info').attr('data-member'),
-        address_id: $('#member_info').attr('data-address'),
-        person_id: $('#member_info').attr('data-person')
-      }
-      
-      console.log("data")
-      $.ajax({
-        type: "POST",
-        data: data,
-        url: "/",
-        success: function (result) {
-          if (result === true)
-            //location.href('/member/' + data.member_id)
-            window.location = '/view_prenup/' + data.prenup_record_id
-          else alert("Changes not saved")
-        }
-      })
     }
   })
 
