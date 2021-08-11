@@ -337,13 +337,14 @@ const prenupController = {
                     if (result !== false) {
                       console.log(result)
                       req.session.editPrenupId = result[0]
-                      if (parseInt(req.session.level) === 1) {
-                        console.log('here if')
-                        res.redirect('/main_page')
-                      } else {
-                        console.log('here else')
-                        res.redirect('/view_prenup/' + result[0])
-                      }
+                      res.redirect('/view_prenup/' + result[0])
+                      // if (parseInt(req.session.level) === 1) {
+                      //   console.log('here if')
+                      //   res.redirect('/main_page')
+                      // } else {
+                      //   console.log('here else')
+                      //   res.redirect('/view_prenup/' + result[0])
+                      // }
                     } else {
                       res.send('ADD PRENUP ERROR')
                     }
@@ -450,13 +451,7 @@ const prenupController = {
                     if (result !== null) {
                       // redirect to view prenup if level >= 2 else go back to main page
                       req.session.editPrenupId = prenupRecId
-                      if (parseInt(req.session.level) === 1) {
-                        console.log('here if')
-                        res.redirect('/main_page')
-                      } else {
-                        console.log('here else')
-                        res.redirect('/view_prenup/' + prenupRecId)
-                      }
+                      res.redirect('/view_prenup/' + prenupRecId)
                     } else {
                       res.send('UPDATE MEMBER ID ERROR')
                     }
@@ -553,13 +548,7 @@ const prenupController = {
                   if (result !== null) {
                     // redirect to view prenup if level >= 2 else go back to main page
                     req.session.editPrenupId = prenupRecId
-                    if (parseInt(req.session.level) === 1) {
-                      console.log('here if')
-                      res.redirect('/main_page')
-                    } else {
-                      console.log('here else')
-                      res.redirect('/view_prenup/' + prenupRecId)
-                    }
+                    res.redirect('/view_prenup/' + prenupRecId)
                   } else {
                     res.send('UPDATE PRENUP ERROR')
                   }
@@ -655,15 +644,9 @@ const prenupController = {
                   if (result !== null) {
                     // redirect to view prenup if level >= 2 else go back to main page
                     req.session.editPrenupId = prenupRecId
-                    if (parseInt(req.session.level) === 1) {
-                      console.log('here if')
-                      res.redirect('/main_page')
-                    } else {
-                      console.log('here else')
-                      res.redirect('/view_prenup/' + prenupRecId)
-                    }
+                    res.redirect('/view_prenup/' + prenupRecId)
                   } else {
-                    res.send('UPDATE PRENUP ERROR')
+                    res.send('ERROR')
                   }
                 })
               } else {
