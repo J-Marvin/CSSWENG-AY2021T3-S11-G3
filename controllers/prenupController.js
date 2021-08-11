@@ -86,8 +86,11 @@ const prenupController = {
             // spread syntax
             ...result[0]
           }
-
+          // canSee is set to the edit button
           data.canSee = (parseInt(req.session.editPrenupId) === parseInt(prenupId)) || (parseInt(req.session.level) >= 2)
+          if ((parseInt(req.session.level) <= 2)) {
+            data.canSee = false
+          }
           data.styles = ['view']
           data.backLink = parseInt(req.session.level) >= 2 ? '/forms_main_page' : '/main_page'
           res.render('view-prenup', data)
@@ -334,26 +337,15 @@ const prenupController = {
                     if (result !== false) {
                       console.log(result)
                       req.session.editPrenupId = result[0]
-                      // render the success page along with the newly added prenup record
-                      // res.render('prenup-success', {
-                      //   css: ['global'],
-                      //   brideFirst: data.female[personFields.FIRST_NAME],
-                      //   brideMid: data.female[personFields.MID_NAME],
-                      //   brideLast: data.female[personFields.LAST_NAME],
-                      //   groomFirst: data.male[personFields.FIRST_NAME],
-                      //   groomMid: data.male[personFields.MID_NAME],
-                      //   groomLast: data.male[personFields.LAST_NAME],
-                      //   currentDate: data.prenup[prenupRecordFields.DATE],
-                      //   weddingDate: data.prenup[prenupRecordFields.DATE_OF_WEDDING]
-                      // })
-                      res.redirect('/view_prenup/' + result[0])
-                      // if (parseInt(req.session.level) === 1) {
-                      //   console.log('here if')
-                      //   res.redirect('/main_page')
-                      // } else {
-                      //   console.log('here else')
-                      //   res.redirect('/forms_main_page')
-                      // }
+                      if (parseInt(req.session.level) === 1) {
+                        console.log('here if')
+                        res.redirect('/main_page')
+                      } else {
+                        console.log('here else')
+                        res.redirect('/view_prenup/' + result[0])
+                      }
+                    } else {
+                      res.send('ADD PRENUP ERROR')
                     }
                   })
                 } else {
@@ -456,16 +448,15 @@ const prenupController = {
                   memberCondition.setKeyValue(memberFields.ID, groomMemberId)
                   db.update(db.tables.MEMBER_TABLE, { prenup_record_id: prenupRecId }, memberCondition, function (result) {
                     if (result !== null) {
-                      // render the success page along with the newly added prenup record
-                      // if (parseInt(req.session.level) === 1) {
-                      //   console.log('here if')
-                      //   res.redirect('/main_page')
-                      // } else {
-                      //   console.log('here else')
-                      //   res.redirect('/forms_main_page')
-                      // }
-
-                      res.redirect('/view_prenup/' + result[0])
+                      // redirect to view prenup if level >= 2 else go back to main page
+                      req.session.editPrenupId = prenupRecId
+                      if (parseInt(req.session.level) === 1) {
+                        console.log('here if')
+                        res.redirect('/main_page')
+                      } else {
+                        console.log('here else')
+                        res.redirect('/view_prenup/' + prenupRecId)
+                      }
                     } else {
                       res.send('UPDATE MEMBER ID ERROR')
                     }
@@ -560,26 +551,15 @@ const prenupController = {
                 memberCondition.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.ID, groomMemberId)
                 db.update(db.tables.MEMBER_TABLE, { prenup_record_id: prenupRecId }, memberCondition, function (result) {
                   if (result !== null) {
-                    // render the success page along with the newly added prenup record
-                    // res.render('prenup-success', {
-                    //   brideFirst: brideFirst,
-                    //   brideMid: brideMid,
-                    //   brideLast: brideLast,
-                    //   groomFirst: groomFirst,
-                    //   groomMid: groomMid,
-                    //   groomLast: groomLast,
-                    //   currentDate: date,
-                    //   weddingDate: weddingDate
-                    // })
-                    // if (parseInt(req.session.level) === 1) {
-                    //   console.log('here if')
-                    //   res.redirect('/main_page')
-                    // } else {
-                    //   console.log('here else')
-                    //   res.redirect('/forms_main_page')
-                    // }
-
-                    res.redirect('/view_prenup/' + result[0])
+                    // redirect to view prenup if level >= 2 else go back to main page
+                    req.session.editPrenupId = prenupRecId
+                    if (parseInt(req.session.level) === 1) {
+                      console.log('here if')
+                      res.redirect('/main_page')
+                    } else {
+                      console.log('here else')
+                      res.redirect('/view_prenup/' + prenupRecId)
+                    }
                   } else {
                     res.send('UPDATE PRENUP ERROR')
                   }
@@ -673,26 +653,15 @@ const prenupController = {
                 memberCondition.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.ID, brideMemberId)
                 db.update(db.tables.MEMBER_TABLE, { prenup_record_id: prenupRecId }, memberCondition, function (result) {
                   if (result !== null) {
-                    // render the success page along with the newly added prenup record
-                    // res.render('prenup-success', {
-                    //   brideFirst: brideFirst,
-                    //   brideMid: brideMid,
-                    //   brideLast: brideLast,
-                    //   groomFirst: groomFirst,
-                    //   groomMid: groomMid,
-                    //   groomLast: groomLast,
-                    //   currentDate: date,
-                    //   weddingDate: weddingDate
-                    // })
-                    // if (parseInt(req.session.level) === 1) {
-                    //   console.log('here if')
-                    //   res.redirect('/main_page')
-                    // } else {
-                    //   console.log('here else')
-                    //   res.redirect('/forms_main_page')
-                    // }
-
-                    res.redirect('/view_prenup/' + result[0])
+                    // redirect to view prenup if level >= 2 else go back to main page
+                    req.session.editPrenupId = prenupRecId
+                    if (parseInt(req.session.level) === 1) {
+                      console.log('here if')
+                      res.redirect('/main_page')
+                    } else {
+                      console.log('here else')
+                      res.redirect('/view_prenup/' + prenupRecId)
+                    }
                   } else {
                     res.send('UPDATE PRENUP ERROR')
                   }
