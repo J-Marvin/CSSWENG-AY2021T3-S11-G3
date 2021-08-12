@@ -1,0 +1,19 @@
+<div class="card mb-3 observation" data-observation="{{this.observation_id}}" style="max-width: 540px;">
+  <div class="row">
+    <div class="col">
+      <div class="card-body">
+        <h5 class="card-title"><span class="comment">{{this.comment}}</span></h5>
+        <hr>
+        <div class="row">
+          <div class="col observercol">
+            <p class="card-text observer">{{this.observer}}</p>
+          </div>
+          <div class="col d-flex justify-content-end">
+            <p class="card-text"><small class="text-muted">{{dateView this.date}}</small></p>
+          </div>
+        </div>
+        <button type="button" class="fas fa-trash delObservationBtn mt-3"></button> <button type="button"class="fas fa-edit editObservationBtn"></button>
+      </div>
+    </div>
+  </div>
+</div>

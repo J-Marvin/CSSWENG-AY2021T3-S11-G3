@@ -3,8 +3,11 @@ const personFields = require('../models/person')
 const memberFields = require('../models/members')
 const addressFields = require('../models/address')
 const bapRegFields = require('../models/baptismalRegistry')
-const prenupRecordFields = require('../models/prenupRecord')
-const coupleFields = require('../models/Couple.js')
+const churchFields = require('../models/church')
+const { validationResult } = require('express-validator')
+const observationFields = require('../models/observation')
+const { Condition, queryTypes } = require('../models/condition.js')
+const moment = require('moment')
 
 const memberController = {
   /**
@@ -13,7 +16,144 @@ const memberController = {
    * @param res - the result to be sent out after processing the request
    */
   getAddMemberPage: function (req, res) {
-    res.render('add-member-temp')
+    req.session.editMemberId = null
+    res.render('add-member-temp', {
+      styles: ['forms'],
+      scripts: ['member']
+    })
+  },
+
+  getEditMember: function (req, res) {
+    if (req.session.editMemberId === parseInt(req.params.member_id) || parseInt(req.session.level) === 3) {
+      const data = {
+        styles: ['forms'],
+        scripts: ['member']
+      }
+      const condition = new Condition(queryTypes.where)
+      const churchCondition = new Condition(queryTypes.where)
+      const observationCondition = new Condition(queryTypes.where)
+
+      const joinTables = [
+        {
+          tableName: db.tables.PERSON_TABLE,
+          sourceCol: db.tables.MEMBER_TABLE + '.' + memberFields.PERSON,
+          destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
+        },
+        {
+          tableName: db.tables.ADDRESS_TABLE,
+          sourceCol: db.tables.MEMBER_TABLE + '.' + memberFields.ADDRESS,
+          destCol: db.tables.ADDRESS_TABLE + '.' + addressFields.ID
+        }
+      ]
+
+      const joinChurchTables = [
+        {
+          tableName: db.tables.ADDRESS_TABLE,
+          sourceCol: db.tables.CHURCH_TABLE + '.' + churchFields.ADDRESS,
+          destCol: db.tables.ADDRESS_TABLE + '.' + addressFields.ID
+        }
+      ]
+
+      condition.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.ID, parseInt(req.params.member_id))
+      churchCondition.setKeyValue(churchFields.MEMBER, parseInt(req.params.member_id))
+      observationCondition.setKeyValue(observationFields.OBSERVEE, parseInt(req.params.member_id))
+      db.find(db.tables.MEMBER_TABLE, condition, joinTables, '*', function (result) {
+        if (result) {
+          data.member = result[0]
+          db.find(db.tables.CHURCH_TABLE, churchCondition, joinChurchTables, '*', function (result) {
+            if (result) {
+              data.churches = result
+
+              db.find(db.tables.OBSERVATION_TABLE, observationCondition, null, '*', function (result) {
+                if (result) {
+                  data.observations = result
+                  res.render('edit-member-temp', data)
+                }
+              })
+            }
+          })
+        }
+      })
+    } else {
+      res.status(401)
+      res.render('error', {
+        title: '401 Unauthorized Access',
+        css: ['global', 'error'],
+        status: {
+          code: '401',
+          message: 'Unauthorized access'
+        }
+      })
+    }
+  },
+
+  getViewMember: function (req, res) {
+    if (parseInt(req.session.editMemberId) === parseInt(req.params.member_id) || parseInt(req.session.level) >= 2) {
+      const data = {
+      }
+      const condition = new Condition(queryTypes.where)
+      const churchCondition = new Condition(queryTypes.where)
+      const observationCondition = new Condition(queryTypes.where)
+
+      const joinTables = [
+        {
+          tableName: db.tables.PERSON_TABLE,
+          sourceCol: db.tables.MEMBER_TABLE + '.' + memberFields.PERSON,
+          destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
+        },
+        {
+          tableName: db.tables.ADDRESS_TABLE,
+          sourceCol: db.tables.MEMBER_TABLE + '.' + memberFields.ADDRESS,
+          destCol: db.tables.ADDRESS_TABLE + '.' + addressFields.ID
+        }
+      ]
+
+      const joinChurchTables = [
+        {
+          tableName: db.tables.ADDRESS_TABLE,
+          sourceCol: db.tables.CHURCH_TABLE + '.' + churchFields.ADDRESS,
+          destCol: db.tables.ADDRESS_TABLE + '.' + addressFields.ID
+        }
+      ]
+
+      condition.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.ID, parseInt(req.params.member_id))
+      churchCondition.setKeyValue(churchFields.MEMBER, parseInt(req.params.member_id))
+      observationCondition.setKeyValue(observationFields.OBSERVEE, parseInt(req.params.member_id))
+      db.find(db.tables.MEMBER_TABLE, condition, joinTables, '*', function (result) {
+        if (result) {
+          data.member = result[0]
+          db.find(db.tables.CHURCH_TABLE, churchCondition, joinChurchTables, '*', function (result) {
+            if (result) {
+              data.churches = result
+              db.find(db.tables.OBSERVATION_TABLE, observationCondition, null, '*', function (result) {
+                if (result) {
+                  data.observations = result
+                  data.member.age = new Date(data.member.birthday)
+                  const today = moment()
+                  const b = moment(data.member.birthday)
+                  data.member.age = moment.duration(today.diff(b)).years()
+                  data.styles = ['view']
+                  data.scripts = ['removeButtons']
+                  data.canSee = (parseInt(req.session.level) === 3) || req.session.editMemberId !== null
+                  data.backLink = parseInt(req.session.level) >= 2 ? '/member_main_page' : '/main_page'
+                  res.render('view-member', data)
+                }
+              })
+            }
+          })
+        }
+      })
+    } else {
+      res.status(401)
+      res.render('error', {
+        title: '401 Unauthorized Access',
+        css: ['global', 'error'],
+        status: {
+          code: '401',
+          message: 'Unauthorized access'
+        }
+      })
+    }
   },
 
   /**
@@ -22,70 +162,173 @@ const memberController = {
    * @param res - the result to be sent out after processing the request
    */
   createMember: function (req, res) {
-    const data = {
-      person: {},
-      member: {},
-      address: {}
-    }
+    let errors = validationResult(req)
 
-    data.person[personFields.FIRST_NAME] = req.body.first_name
-    data.person[personFields.MID_NAME] = req.body.mid_name
-    data.person[personFields.LAST_NAME] = req.body.last_name
+    if (req.session.level !== null && req.session.level !== undefined) {
+      if (!errors.isEmpty()) {
+        errors = errors.errors
+        let msg = ''
+        errors.forEach((error) => {
+          msg += error.msg + '<br>'
+        })
+        res.send(msg)
+      } else {
+        const data = {
+          person: {},
+          member: {},
+          address: {}
+        }
 
-    data.address[addressFields.ADDRESS_LINE] = req.body.address_line
-    data.address[addressFields.BRGY] = req.body.barangay
-    data.address[addressFields.CITY] = req.body.city
-    data.address[addressFields.PROVINCE] = req.body.province
+        data.person[personFields.FIRST_NAME] = req.body.first_name
+        data.person[personFields.MID_NAME] = req.body.middle_name
+        data.person[personFields.LAST_NAME] = req.body.last_name
 
-    data.member[memberFields.AGE] = req.body.age
-    data.member[memberFields.BIRTHDAY] = req.body.birthday
-    data.member[memberFields.OCCUPATION] = req.body.occupation
-    data.member[memberFields.WORKPLACE] = req.body.workplace
-    data.member[memberFields.EMAIL] = req.body.email
-    data.member[memberFields.MOBILE] = req.body.mobile
-    data.member[memberFields.EDUCATIONAL_ATTAINMENT] = req.body.educational_attainment
-    data.member[memberFields.ALMA_MATER] = req.body.alma_mater
-    data.member[memberFields.SKILLS] = req.body.skills
-    data.member[memberFields.DATE] = new Date().toString()
+        data.address[addressFields.ADDRESS_LINE] = req.body.address_line
+        data.address[addressFields.ADDRESS_LINE2] = req.body.address_line2
+        data.address[addressFields.CITY] = req.body.city
+        data.address[addressFields.PROVINCE] = req.body.province
+        data.address[addressFields.POSTAL_CODE] = req.body.postal_code
+        data.address[addressFields.COUNTRY] = req.body.country
 
-    // insert to PEOPLE table
-    db.insert(db.tables.PERSON_TABLE, data.person, function (personId) {
-      // update person_id
-      if (personId) {
-        data.member[memberFields.PERSON] = personId
+        data.member[memberFields.BIRTHDAY] = req.body.birthday
+        data.member[memberFields.OCCUPATION] = req.body.occupation
+        data.member[memberFields.WORKPLACE] = req.body.workplace
+        data.member[memberFields.EMAIL] = req.body.email
+        data.member[memberFields.MOBILE] = req.body.mobile
+        data.member[memberFields.TELEPHONE] = req.body.telephone
+        data.member[memberFields.EDUCATIONAL_ATTAINMENT] = req.body.educational_attainment
+        data.member[memberFields.ALMA_MATER] = req.body.alma_mater
+        data.member[memberFields.SKILLS] = req.body.skills
+        data.member[memberFields.MEMBER_STATUS] = req.body.membership_status
+        data.member[memberFields.FAMILY] = req.body.family_members
+        data.member[memberFields.SEX] = req.body.sex
+        data.member[memberFields.DATE] = new Date().toISOString()
 
-        // insert to ADDRESS table
-        db.insert(db.tables.ADDRESS_TABLE, data.address, function (addressId) {
-          // update address_id
-          if (addressId) {
-            data.member[memberFields.ADDRESS] = addressId
-            // finally insert to MEMBER table
-            db.insert(db.tables.MEMBER_TABLE, data.member, function (result) {
-              // insert res.render() or res.redirect()
-              res.send(result)
+        if (req.body.civil_status !== 'Others') {
+          data.member[memberFields.CIVIL_STATUS] = req.body.civil_status
+        } else {
+          data.member[memberFields.CIVIL_STATUS] = req.body.civil_status_others
+        }
+
+        // insert to PEOPLE table
+        db.insert(db.tables.PERSON_TABLE, data.person, function (personId) {
+          // update person_id
+          if (personId) {
+            data.member[memberFields.PERSON] = personId
+
+            // insert to ADDRESS table
+            db.insert(db.tables.ADDRESS_TABLE, data.address, function (addressId) {
+              // update address_id
+              if (addressId) {
+                data.member[memberFields.ADDRESS] = addressId
+                // finally insert to MEMBER table
+                db.insert(db.tables.MEMBER_TABLE, data.member, function (result) {
+                  // insert res.render() or res.redirect()
+                  const personCondition = new Condition(queryTypes.where)
+                  personCondition.setKeyValue(personFields.ID, data.member[memberFields.PERSON])
+                  const memberId = result[0]
+                  db.update(db.tables.PERSON_TABLE, { member_id: result[0] }, personCondition, function (result) {
+                    req.session.editMemberId = memberId
+                    res.redirect('/member/' + memberId)
+                  })
+                })
+              } else {
+                res.send('ERROR')
+              }
             })
           } else {
             res.send('ERROR')
           }
         })
-      } else {
-        res.send('ERROR')
       }
-    })
+    } else {
+      res.status(401)
+      res.render('error', {
+        title: '401 Unauthorized Access',
+        css: ['global', 'error'],
+        status: {
+          code: '401',
+          message: 'Unauthorized access'
+        }
+      })
+    }
   },
   /**
    * This function updates a row in the members table
    * @param req - the incoming request containing either the query or body
    * @param res - the result to be sent out after processing the request
    */
-  updateMember: function (req, res) {
-    const data = req.query.data
-    const condition = req.query.condition
+  postUpdateMember: function (req, res) {
+    let errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      errors = errors.errors
 
-    db.updateOne(db.tables.MEMBER_TABLE, data, condition, function (result) {
-      console.log(result)
-      // insert res.render() or res.redirect()
-    })
+      let msg = ''
+
+      errors.forEach((error) => {
+        msg += error.msg + '\n'
+      })
+
+      res.send(msg)
+    } else {
+      const data = {
+        person: {},
+        address: {},
+        member: {}
+      }
+
+      const addressCondition = new Condition(queryTypes.where)
+      addressCondition.setKeyValue(addressFields.ID, req.body.address_id)
+      const personCondition = new Condition(queryTypes.where)
+      personCondition.setKeyValue(personFields.ID, req.body.person_id)
+      const memberCondition = new Condition(queryTypes.where)
+      memberCondition.setKeyValue(memberFields.ID, req.body.member_id)
+
+      data.person[personFields.FIRST_NAME] = req.body.first_name
+      data.person[personFields.MID_NAME] = req.body.middle_name
+      data.person[personFields.LAST_NAME] = req.body.last_name
+
+      data.address[addressFields.ADDRESS_LINE] = req.body.address_line
+      data.address[addressFields.ADDRESS_LINE2] = req.body.address_line2
+      data.address[addressFields.CITY] = req.body.city
+      data.address[addressFields.PROVINCE] = req.body.province
+      data.address[addressFields.POSTAL_CODE] = req.body.postal_code
+      data.address[addressFields.COUNTRY] = req.body.country
+
+      data.member[memberFields.BIRTHDAY] = req.body.birthday
+      data.member[memberFields.OCCUPATION] = req.body.occupation
+      data.member[memberFields.WORKPLACE] = req.body.workplace
+      data.member[memberFields.EMAIL] = req.body.email
+      data.member[memberFields.MOBILE] = req.body.mobile
+      data.member[memberFields.TELEPHONE] = req.body.telephone
+      data.member[memberFields.EDUCATIONAL_ATTAINMENT] = req.body.educational_attainment
+      data.member[memberFields.ALMA_MATER] = req.body.alma_mater
+      data.member[memberFields.SKILLS] = req.body.skills
+      data.member[memberFields.FAMILY] = req.body.family_members
+      data.member[memberFields.MEMBER_STATUS] = req.body.membership_status
+      data.member[memberFields.CIVIL_STATUS] = req.body.civil_status
+      data.member[memberFields.SEX] = req.body.sex
+
+      db.update(db.tables.PERSON_TABLE, data.person, personCondition, function (result) {
+        if (!result) {
+          res.send(false)
+        } else {
+          db.update(db.tables.ADDRESS_TABLE, data.address, addressCondition, function (result) {
+            if (!result) {
+              res.send(false)
+            } else {
+              db.update(db.tables.MEMBER_TABLE, data.member, memberCondition, function (result) {
+                if (result) {
+                  res.send(true)
+                } else {
+                  res.send(false)
+                }
+              })
+            }
+          })
+        }
+      })
+    }
   },
   /**
    * This function deletes a row in the members table
@@ -95,7 +338,7 @@ const memberController = {
   deleteMember: function (req, res) {
     const condition = req.query.condition
 
-    db.updateOne(db.tables.MEMBER_TABLE, condition, function (result) {
+    db.update(db.tables.MEMBER_TABLE, condition, function (result) {
       console.log(result)
       // insert res.render() or res.redirect()
     })
@@ -131,14 +374,14 @@ const memberController = {
     const memberId = req.query.memberId
 
     // set up the SET query: SET SET prenup_record_id = record_id
-    // this will look like {prenup_record_id: <some prenup id>} inside db.updateOne
+    // this will look like {prenup_record_id: <some prenup id>} inside db.update
     const data = {}
     data[memberFields.PRENUP_RECORD] = recordId
 
     // set up the WHERE condition: WHERE member_id = <some member id>
     const condition = {}
     condition[memberFields.ID] = memberId
-    db.updateOne(db.tables.MEMBER_TABLE, data, condition, function (result) {
+    db.update(db.tables.MEMBER_TABLE, data, condition, function (result) {
       if (result !== false) {
         // insert res.render() or res.redirect()
       }

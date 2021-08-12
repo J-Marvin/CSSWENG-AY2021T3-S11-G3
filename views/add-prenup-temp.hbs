@@ -1,0 +1,104 @@
+{{>navbar}}
+<form id="prenup_form" action="/create_prenup_member" method="POST" class="container"> 
+  <div class="container" style="padding-left: 20%; padding-right: 20%;">
+    <h1 class="my-3">Add Prenup Form</h1>
+    <hr>
+    <div class="row">
+      <div class="col">
+        <legend>Bride</legend>
+        <hr>
+        {{#if lockBrideNonMember}}
+        <input type="checkbox" id="bride_non_member" onclick="display_div_bride('bride_non_member')" disabled> Non-member
+        {{else}}
+        <input type="checkbox" id="bride_non_member" onclick="display_div_bride('bride_non_member')"> Non-member
+        {{/if}}
+        <input class="mb-3" type="checkbox" id="bride_member" onclick="display_div_bride('bride_member')" checked disabled> Member
+        <div id="bride_member_div" style="display:block">
+          <label>Select Bride</label>
+          <select name="input_bride_member" id="input_bride_member" class="form-select">
+            {{!-- checks if the names length is only 1 (i.e. brideNames.length == 1), function is in helpers/hbsHelper.js--}}
+            {{#if (isLengthOne brideNames.length)}}
+              {{> oneDropdownBride brideNames=brideNames}}
+            {{else}}
+              {{> dropdownBride brideNames=brideNames}}
+            {{/if}}
+          </select>
+        </div>
+        <fieldset class="form-group" id="bride_non_member_div" style="display:none">
+          <div class="div">
+            <div class="row">
+              <div class="col-12">
+                <label for="bride_first_name">First Name</label>
+                <input type="text" id="bride_first_name" name="bride_first_name" class="form-control">
+              </div>
+              <div class="col-12">
+                <label for="bride_mid_name">Middle Initial</label>
+                <input type="text" id="bride_mid_name" name="bride_mid_name" class="form-control">
+              </div>
+              <div class="col-12">
+                <label for="bride_last_name">Last Name</label>
+                <input type="text" id="bride_last_name" name="bride_last_name"class="form-control">
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <p id="bride_info_error" class="error_codes"> </p>
+      </div>
+      <div class="col">
+        <legend>Groom</legend>
+        <hr>
+        {{#if lockGroomNonMember}}
+        <input type="checkbox" id="groom_non_member" onclick="display_div_groom('groom_non_member')" disabled> Non-member
+        {{else}}
+        <input type="checkbox" id="groom_non_member" onclick="display_div_groom('groom_non_member')"> Non-member
+        {{/if}}
+        <input class="mb-3" type="checkbox" id="groom_member" onclick="display_div_groom('groom_member')" checked disabled> Member
+
+        <div id="groom_member_div" style="display:block">
+          <label>Select Groom</label>
+          <select name="input_groom_member" id="input_groom_member" class="form-select">
+            {{!-- checks if the names length is only 1 (i.e. groomNames.length == 1), function is in helpers/hbsHelper.js--}}
+            {{#if (isLengthOne groomNames.length)}}
+              {{> oneDropdownGroom groomNames=groomNames}}
+            {{else}}
+              {{> dropdownGroom groomNames=groomNames}}
+            {{/if}}
+          </select>
+        </div>
+        
+        <fieldset class="form-group" id="groom_non_member_div" style="display:none">
+          <div class="div">
+            <div class="row">
+              <div class="col-12">
+                <label for="groom_first_name">First Name</label>
+                <input type="text" id="groom_first_name" name="groom_first_name" class="form-control">
+              </div>
+              <div class="col-12">
+                <label for="groom_mid_name">Middle Initial</label>
+                <input type="text" id="groom_mid_name" name="groom_mid_name" class="form-control">
+              </div>
+              <div class="col-12">
+                <label for="groom_last_name">Last Name</label>
+                <input type="text" id="groom_last_name" name="groom_last_name"class="form-control">
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <p id="groom_info_error" class="error_codes"> </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label for="current_date">Current Date</label>
+        <input type="date" id="current_date" name="current_date" class="form-control">
+        <p id="current_date_error" class="error_codes"> </p>
+      </div>
+      <div class="col">
+        <label for="wedding_date">Planned Wedding Date</label>
+        <input type="date" id="wedding_date" name="wedding_date" class="form-control">
+        <p id="wedding_date_error" class="error_codes"> </p>
+      </div>
+    </div>
+    <button id="create-prenup" type="button" class="btn btn-primary mt-3" onclick="checkMemberBoxesAndDate()">Submit</button>
+  </div>
+</form>

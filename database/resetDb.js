@@ -3,21 +3,21 @@ const knex = require('knex')
 const fse = require('fs-extra')
 const bcrypt = require('bcrypt')
 const saltRounds = 10
-let knexClient = null
 
 const startIds = [
-  { table: 'people', start: 11000000 },
-  { table: 'address', start: 2000000 },
+  { table: 'people', start: 12000000 },
   { table: 'members', start: 1000000 },
+  { table: 'address', start: 2000000 },
   { table: 'accounts', start: 0 },
-  { table: 'donations', start: 8000000 },
   { table: 'bap_reg', start: 3000000 },
-  { table: 'wedding_reg', start: 5000000 },
   { table: 'pre_nuptial', start: 4000000 },
+  { table: 'wedding_reg', start: 5000000 },
   { table: 'witness', start: 6000000 },
   { table: 'inf_dedication', start: 7000000 },
+  { table: 'donations', start: 8000000 },
+  { table: 'observations', start: 9000000 },
   { table: 'couples', start: 10000000 },
-  { table: 'observations', start: 9000000 }
+  { table: 'churches', start: 11000000 }
 ]
 
 const data = [
@@ -29,22 +29,22 @@ const data = [
     },
     address: {
       address_line: 'Apples',
-      barangay: '130',
       city: 'London',
-      province: null
+      province: null,
+      country: 'United Kingdom'
     },
     member: {
-      member_status: 'active',
-      civil_status: 'single',
-      age: 25,
-      birthday: new Date(1996, 2, 3).toISOString(),
+      member_status: 'Active',
+      civil_status: 'Single',
+      birthday: new Date(1996, 1, 3).toISOString(),
       occupation: 'IT',
       workplace: 'Quezon City',
       email: 'jonathan@gmail.com',
       telephone: null,
       mobile: '922',
       educ_attainment: 'College',
-      alma_mater: 'DLSU-Manila'
+      alma_mater: 'DLSU-Manila',
+      sex: 'Male'
     }
   },
 
@@ -56,22 +56,22 @@ const data = [
     },
     address: {
       address_line: 'Mangoes',
-      barangay: '131',
-      city: 'London',
-      province: null
+      city: 'Ottawa',
+      province: null,
+      country: 'Canada'
     },
     member: {
-      member_status: 'active',
-      civil_status: 'married',
-      age: 54,
-      birthday: new Date(1966, 9, 27).toISOString(),
+      member_status: 'Active',
+      civil_status: 'Married',
+      birthday: new Date(1966, 8, 27).toISOString(),
       occupation: 'Engineer',
       workplace: 'Manila',
       email: 'joseph@gmail.com',
       telephone: null,
       mobile: '912',
       educ_attainment: 'High School',
-      alma_mater: 'DLSZ'
+      alma_mater: 'DLSZ',
+      sex: 'Male'
     }
   },
 
@@ -83,22 +83,22 @@ const data = [
     },
     address: {
       address_line: 'Ishimura',
-      barangay: '7',
       city: 'Aegis',
-      province: null
+      province: null,
+      country: 'USA'
     },
     member: {
-      member_status: 'active',
-      civil_status: 'single',
-      age: '19',
-      birthday: new Date(2001, 12, 5).toISOString(),
+      member_status: 'Active',
+      civil_status: 'Single',
+      birthday: new Date(2001, 11, 5).toISOString(),
       occupation: 'Student',
       workplace: 'DLSU',
       email: 'isaac_clarke@gmail.com',
       telephone: null,
       mobile: '988',
       educ_attainment: 'High School',
-      alma_mater: 'DLSZ'
+      alma_mater: 'DLSZ',
+      sex: 'Male'
     }
   },
 
@@ -110,22 +110,22 @@ const data = [
     },
     address: {
       address_line: 'Thessia',
-      barangay: '2077',
       city: 'Serrice',
-      province: null
+      province: null,
+      country: 'Protean'
     },
     member: {
-      member_status: 'active',
-      civil_status: 'single',
-      age: 25,
-      birthday: new Date(1996, 1, 7).toISOString(),
+      member_status: 'Active',
+      civil_status: 'Single',
+      birthday: new Date(1996, 0, 7).toISOString(),
       occupation: 'Researcher',
       workplace: 'Therum',
       email: 'liara_broker@gmail.com',
       telephone: null,
       mobile: '988',
       educ_attainment: 'Doctorate',
-      alma_mater: 'Grissom Academy'
+      alma_mater: 'Grissom Academy',
+      sex: 'Female'
     }
   },
 
@@ -137,50 +137,71 @@ const data = [
     },
     address: {
       address_line: 'Omega',
-      barangay: 'Normandy',
       city: 'Palaven',
-      province: null
+      province: null,
+      country: 'Turian'
     },
     member: {
-      member_status: 'inactive',
-      civil_status: 'single',
-      age: 25,
-      birthday: new Date(1996, 3, 6).toISOString(),
+      member_status: 'inActive',
+      civil_status: 'Single',
+      birthday: new Date(1996, 2, 6).toISOString(),
       occupation: 'Investigator',
       workplace: 'Citadel',
       email: 'garrus@csec.com',
       telephone: null,
       mobile: '945',
       educ_attainment: 'College',
-      alma_mater: 'Palaven Academy'
+      alma_mater: 'Palaven Academy',
+      sex: 'Male'
     }
   }
 ]
 
-function delDatabase () {
-  if (fse.existsSync('church.db')) {
-    fse.remove('church.db', (err) => {
-      if (err) {
-        console.log(err)
-      } else {
-        initDatabase()
-        insertData()
-      }
-    })
-  } else {
-    initDatabase()
-    insertData()
-  }
+const resetDb = {
+  /**
+   * This function resets the databse to the dummy data
+   * @param {*} file the path to the file
+   */
+  reset: function (file) {
+    if (fse.existsSync(file)) {
+      fse.remove(file, (err) => {
+        if (err) {
+          console.log(err)
+        } else {
+          initDatabase(file)
+          insertData()
+        }
+      })
+    } else {
+      initDatabase(file)
+      insertData()
+    }
+  },
+
+  initialize: function (file) {
+    if (fse.existsSync(file)) {
+      fse.remove(file, (err) => {
+        if (err) {
+          console.log(err)
+        } else {
+          initDatabase(file)
+        }
+      })
+    } else {
+      initDatabase(file)
+    }
+  },
+  knexClient: null
 }
 
-function initDatabase (callback) {
-  const db = sqlite('church.db')
+function initDatabase (file) {
+  const db = sqlite(file)
 
   // Initialize Knex connection
-  knexClient = knex({
+  resetDb.knexClient = knex({
     client: 'sqlite3',
     connection: {
-      filename: 'church.db'
+      filename: file
     },
     useNullAsDefault: true
   })
@@ -321,9 +342,11 @@ function initDatabase (callback) {
     'CREATE TABLE IF NOT EXISTS address (' +
     'address_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
     'address_line TEXT, ' +
-    'barangay TEXT, ' +
+    'address_line2 TEXT,' +
     'city TEXT, ' +
-    'province TEXT' +
+    'province TEXT,' +
+    'postal_code TEXT,' +
+    'country TEXT' +
     ')'
 
   /* This statement creates the Members table
@@ -361,7 +384,6 @@ function initDatabase (callback) {
     'person_id INTEGER NOT NULL,' +
     'member_status TEXT,' +
     'civil_status TEXT,' +
-    'age INTEGER,' +
     'birthday TEXT,' +
     'occupation TEXT,' +
     'workplace TEXT,' +
@@ -373,7 +395,7 @@ function initDatabase (callback) {
     'skills TEXT,' +
     'date_created TEXT,' +
     'sex TEXT,' +
-    'churches TEXT,' +
+    'family_members TEXT,' +
     'parents_id INTEGER,' +
     'FOREIGN KEY(address_id) REFERENCES address(address_id),' +
     'FOREIGN KEY(bap_reg_id) REFERENCES bap_reg(reg_id), ' +
@@ -428,13 +450,23 @@ function initDatabase (callback) {
     'observation_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
     'comment TEXT NOT NULL,' +
     'observee_id INTEGER NOT NULL,' +
-    'observer_id INTEGER NOT NULL,' +
-    'FOREIGN KEY(observee_id) REFERENCES members(member_id),' +
-    'FOREIGN KEY(observer_id) REFERENCES people(person_id)' +
+    'observer TEXT NOT NULL,' +
+    'date TEXT NOT NULL,' +
+    'FOREIGN KEY(observee_id) REFERENCES members(member_id)' +
+    ')'
+
+  const createChurches =
+    'CREATE TABLE IF NOT EXISTS churches(' +
+    'church_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,' +
+    'church_name TEXT NOT NULL, ' +
+    'member_id INTEGER NOT NULL, ' +
+    'address_id INTEGER NOT NULL,' +
+    'FOREIGN KEY(member_id) REFERENCES members(member_id), ' +
+    'FOREIGN KEY(address_id) REFERENCES address(address_id)' +
     ')'
 
   startIds.forEach((record) => {
-    knexClient('sqlite_sequence').insert({
+    resetDb.knexClient('sqlite_sequence').insert({
       name: record.table,
       seq: record.start
     }).catch((err) => { console.log(err) })
@@ -453,6 +485,7 @@ function initDatabase (callback) {
   db.prepare(createCouple).run()
   db.prepare(createPerson).run()
   db.prepare(createObservations).run()
+  db.prepare(createChurches).run()
 
   // close the connection to the db
   db.close()
@@ -460,13 +493,13 @@ function initDatabase (callback) {
 
 function insertData () {
   // insert accounts
-  knexClient('accounts').select().then(function (res) {
+  resetDb.knexClient('accounts').select().then(function (res) {
     if (res.length === 0) {
       bcrypt.hash('NormandyN7', saltRounds, (err, hash) => {
         if (err) {
           console.log(err)
         }
-        knexClient('accounts').insert({
+        resetDb.knexClient('accounts').insert({
           level: 1,
           hashed_password: hash
         }).catch(function (err) {
@@ -478,7 +511,7 @@ function insertData () {
           console.log(err)
         }
 
-        knexClient('accounts').insert({
+        resetDb.knexClient('accounts').insert({
           level: 2,
           hashed_password: hash
         }).catch(function (err) {
@@ -489,7 +522,7 @@ function insertData () {
         if (err) {
           console.log(err)
         }
-        knexClient('accounts').insert({
+        resetDb.knexClient('accounts').insert({
           level: 3,
           hashed_password: hash
         }).catch(function (err) {
@@ -500,17 +533,22 @@ function insertData () {
   })
 
   data.forEach((record) => {
-    knexClient('people').insert(record.person).then((person) => {
+    resetDb.knexClient('people').insert(record.person).then((person) => {
       if (person) {
         record.member.person_id = person[0]
 
-        knexClient('address').insert(record.address).then((address) => {
+        resetDb.knexClient('address').insert(record.address).then((address) => {
           if (address) {
             record.member.address_id = address[0]
-            knexClient('members').insert(record.member).then((result) => {
+            resetDb.knexClient('members').insert(record.member).then((result) => {
               if (result) {
-                console.log('Inserted ' + result)
-                console.log(record.member)
+                resetDb.knexClient('people').where('person_id', '=', record.member.person_id).update({
+                  member_id: result[0]
+                }).then((result) => {
+                  if (result) {
+                    console.log('Filled up database with dummy data')
+                  }
+                })
               } else {
                 console.log(result)
               }
@@ -526,5 +564,4 @@ function insertData () {
   })
 }
 
-// delete tables and insert
-delDatabase()
+module.exports = resetDb

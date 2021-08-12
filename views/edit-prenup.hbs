@@ -1,0 +1,101 @@
+{{>navbar}}
+<div id="prenup-info" 
+    data-prenuprecord-id="{{bride.record_id}}" 
+    data-couple-id="{{bride.couple_id}}"
+    data-currentdate="{{bride.date}}"
+    data-oldweddingdate="{{bride.date_of_wedding}}"
+    data-checkbride-member="1"
+    data-checkgroom-member="1"></div>
+<div id="oldbride-info"
+    {{#if (isUndefined bride.member_id)}} data-oldbride-memberid="" {{else}}data-oldbride-memberid="{{bride.member_id}}"{{/if}}
+    data-oldbride-personid="{{bride.person_id}}"
+    data-oldbride-first="{{bride.first_name}}"
+    data-oldbride-middle="{{bride.middle_name}}"
+    data-oldbride-last="{{bride.last_name}}"></div>
+<div id="oldgroom-info"
+    {{#if (isUndefined groom.member_id)}} data-oldgroom-memberid="" {{else}} data-oldgroom-memberid="{{groom.member_id}}"{{/if}}
+    data-oldgroom-personid="{{groom.person_id}}"
+    data-oldgroom-first="{{groom.first_name}}"
+    data-oldgroom-middle="{{groom.middle_name}}"
+    data-oldgroom-last="{{groom.last_name}}"></div>
+{{!--       Edit prenup member connection, route will dynamically change     --}}
+<form id="prenup_form" method="POST" class="container"> 
+  <div class="container" style="padding-left: 20%; padding-right: 20%;">
+    <h1 class="my-3">Edit Prenup Form</h1>
+    <hr>
+    <div class="row">
+      <div class="col">
+        <legend>Bride</legend>
+        <hr>
+        {{#if (isUndefined bride.member_id)}}
+          {{> prenup-checkbox1}}
+          {{!-- bride non-member (NM) --}}
+          {{> editPrenupBrideNM bride=bride display='block'}}
+          {{!-- bride member (M) --}}
+          {{> editPrenupBrideM bride=bride brideNames=brideNames display='none'}}
+        {{else}}
+          {{> prenup-checkbox2}}
+          {{!-- bride member (M) --}}
+          {{> editPrenupBrideM bride=bride brideNames=brideNames display='block'}}
+          {{!-- bride non-member (NM) --}}
+          {{> editPrenupBrideNM bride=bride display='none'}}
+        {{/if}}
+        
+        <p id="bride_info_error" class="error_codes"> </p>
+      </div>
+      <div class="col">
+        <legend>Groom</legend>
+        <hr>
+        {{#if (isUndefined groom.member_id)}}
+          {{> prenup-checkbox3}}
+          {{!-- groom non-member (NM) --}}
+          {{> editPrenupGroomNM groom=groom display='block'}}
+          {{!-- groom member (M) --}}
+          {{> editPrenupGroomM groom=groom groomNames=groomNames display='none'}}
+        {{else}}
+          {{> prenup-checkbox4}}
+          {{!-- groom member (M) --}}
+          {{> editPrenupGroomM groom=groom groomNames=groomNames display='block'}}
+          {{!-- groom non-member (NM) --}}
+          {{> editPrenupGroomNM groom=groom display='none'}}
+        {{/if}}
+        
+        <p id="groom_info_error" class="error_codes"> </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label>Date Added</label>
+        <input type="text" value="{{dateView bride.date}}" class="form-control" disabled>
+      </div>
+      <div class="col">
+        <label for="wedding_date">Planned Wedding Date</label>
+        <input type="date" id="wedding_date" name="wedding_date" class="form-control">
+        <p id="wedding_date_error" class="error_codes"> </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col d-flex justify-content-end">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmationModal">
+          Save Changes
+        </button>
+      </div>
+    </div>
+  </div>
+
+    <!-- Modal -->
+  <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"> Confirm Changes? </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button id="edit-prenup" type="button" class="btn btn-primary confirmationModalBtn">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

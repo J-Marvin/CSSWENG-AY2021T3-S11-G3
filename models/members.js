@@ -3,7 +3,6 @@ const memberFields = {
   ADDRESS: 'address_id',
   MEMBER_STATUS: 'member_status',
   CIVIL_STATUS: 'civil_status',
-  AGE: 'age',
   BIRTHDAY: 'birthday',
   OCCUPATION: 'occupation',
   WORKPLACE: 'workplace',
@@ -19,8 +18,8 @@ const memberFields = {
   SKILLS: 'skills',
   DATE: 'date_created',
   SEX: 'sex',
-  CHURCHES: 'churches',
-  PARENTS: 'parents_id'
+  PARENTS: 'parents_id',
+  FAMILY: 'family_members'
 }
 
 module.exports = memberFields

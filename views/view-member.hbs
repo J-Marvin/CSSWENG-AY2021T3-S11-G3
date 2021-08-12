@@ -1,0 +1,176 @@
+<style>
+  @import url(/css/fonts.css);
+
+  #header {
+      font-family: JuliusSansPro;
+  }
+</style>
+
+{{>navbar}}
+
+<div id="member_info" style="display: none" data-member="{{member.member_id}}" data-address="{{member.address_id}}" data-person="{{member.person_id}}" ></div>
+  <div class="container" style="padding-left: 18%; padding-right: 10%;">
+    <div class="row">
+      <h1 class="my-3"> View Member </h1>
+      {{!-- <u for="date_created">Date Added</u>
+      <p>{{dateView member.date_created}}</p> --}}
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col">
+        <u for="first_name">First Name</u>
+        <p>{{member.first_name}}</p>
+      </div>
+      <div class="col">
+        <u for="mid_name">Middle Initial</u>
+        <p>{{member.middle_name}}</p>
+      </div>
+      <div class="col">
+        <u for="last_name">Last Name</u>
+        <p>{{member.last_name}}</p>
+      </div>
+    </div>
+    {{#if canSee}}
+      <div class="row">
+        <div class="col-4">
+          <u for="birthday">Birthday</u>
+          <p>{{dateView member.birthday}}</p>
+        </div>
+        <div class="col-8">
+          <u for="occupation">Occupation</u>
+          <p>{{member.occupation}}</p>
+        </div>
+      </div>
+      <div class="row">
+      <div class="col">
+        <u for="membership_status">Membership Status</u>
+        <p>{{member.member_status}}</p>
+      </div>
+      <div class="col">
+        <u for="civil_status">Civil Status</u>
+        <p>{{member.civil_status}}</p>
+      </div>
+      <div class="col">
+        <u for="sex">Sex</u>
+        <p>{{member.sex}}</p>
+      </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-4">
+          <u for="mobile">Mobile</u>
+          <p> {{member.mobile}} </p>
+        </div>
+        <div class="col">
+          <u for="telephone">Telephone</u>
+          <p> {{member.telephone}} </p>
+          <p id="telephone_error" class="error_codes"> </p>
+        </div>
+        <div class="col">
+          <u for="email">Email</u>
+          <p> {{member.email}} </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4">
+          <u for="workplace">Workplace</u>
+          <p> {{member.workplace}} </p>
+        </div>
+        <div class="col-4">
+          <u for="educational_attainment">Educational Attainment</u>
+          <p> {{member.educ_attainment}} </p>
+        </div>
+        <div class="col">
+          <u for="alma_mater">Last School Attended</u>
+          <p> {{member.alma_mater}} </p>
+        </div>
+      </div>
+      <div class="row">
+          <div class="col-4">
+              <u for="churches">Family Members</u>
+              <p> {{member.family_members}} </p>
+          </div>
+          <div class="col">
+              <u for="skills">Skills</u>
+              <p> {{member.skills}} </p>
+          </div>
+      </div>
+
+      <hr>
+      <fieldset class="form-group">
+        <div class="row">
+          <div class="col-4">
+            <u for="adress_line">Address Line 1</u>
+            <p> {{member.address_line}} </p>
+          </div>
+          <div class="col">
+            <u for="address_line2">Address Line 2</u>
+            <p> {{member.address_line2}} </p>    
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-4">
+            <u for="city">City</u>
+            <p> {{member.city}} </p>    
+          </div>
+          <div class="col">
+            <u for="province">State / Region</u>
+            <p> {{member.province}} </p>  
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-4">
+            <u for="postal_code">Postal Code</u>
+            <p> {{member.postal_code}} </p>
+          </div>
+          <div class="col">
+            <u for="country">Country</u>
+            <p> {{member.country}} </p>
+            <p id="country_error" class="error_codes">  </p>
+          </div>
+        </div>
+      </fieldset>
+      <hr>
+
+      {{!-- Temp div to list churches and observations--}}
+      <div class="row mt-3 mb-5">
+          <div class="col">
+            <div class="row mb-3">
+              <u class="churchObs"> Churches </u>
+            </div>
+            <div id="churchList"> {{!-- Please use the same id when replacing the divs--}}
+                {{#each churches}}
+                {{>church this}}
+                {{/each}}
+            </div>
+          </div>
+          <div class="col">
+            <div class="row mb-3">
+              <u class="churchObs"> Observations  </u>
+            </div>
+            <div id="observationList">
+            {{#each observations}}
+                {{>observation this}}
+            {{/each}}
+            </div>
+          </div>
+      </div>
+
+    {{/if}}
+    <hr>
+
+    <div class="row my-1">
+      <div class="col">
+        {{#if member.prenup_record_id}}
+          <a href="/view_prenup/{{member.prenup_record_id}}" id="view_prenup" type="button" class="btn btn-secondary">View
+            Prenup</a>
+        {{else}}
+          <a href="/edit_member/{{member.member_id}}/add_prenup" id="add_prenup" type="button" class="btn btn-secondary">Add
+            Prenup</a>
+        {{/if}}
+      </div>
+      <div class="col d-flex justify-content-end">
+        <a href="/edit_member/{{member.member_id}}"> <button class="btn btn-secondary mb-4">Edit Member</button> </a>
+        <button class="btn btn-danger mb-4 ms-2">Delete Member</button>
+      </div>
+    </div>

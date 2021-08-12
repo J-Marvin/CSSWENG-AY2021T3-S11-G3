@@ -1,0 +1,45 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark d-flex justify-content-between">
+  <div class="d-flex flex-row">
+    <a id="header" class="navbar-brand mx-3" href="/main_page">Disciple Christian Church | Level {{ level }}</a>
+  </div>
+  <div class="d-flex justify-content-end" id="navbarSupportedContent">
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <li class="nav-item dropdown">
+        <a class="nav-link mx-3" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="fas fa-bars"></i>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+          <li><a class="dropdown-item" href="#">Settings</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="/logout">Logout</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div id="maindiv" class="container maindiv d-flex justify-content-center align-items-center">
+  <div class="row">
+    <div class="col mx-3">
+      <a href="{{#if canSee}}/member_main_page{{else}}/add_member{{/if}}" class="mainBtns">
+        <div class="card" style="width: 18rem;">
+          <img src="../images/lineartone.png" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title buttonText">{{#if canSee}}Members{{else}}Add Members{{/if}}</h5>
+            {{!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> --}}
+          </div>
+        </div>
+      </a>
+    </div>
+    <div class="col mx-3">
+      <a href="{{#if canSee}}/forms_main_page{{else}}/add_prenup{{/if}}" class="mainBtns">
+        <div class="card" style="width: 18rem;">
+          <img src="../images/linearttwo.jfif" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title buttonText">Registries</h5>
+            {{!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> --}}
+          </div>
+        </div>
+      </a>
+  </div>
+</div>
