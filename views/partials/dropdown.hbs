@@ -1,0 +1,6 @@
+<option id="default" value="0" disabled selected hidden>Select Member</option>
+{{#each this}}
+  {{!-- value is the same --}}
+  <option value="{{member_id}}, {{person_id}}, {{first_name}}, {{middle_name}}, {{last_name}}">{{member_id}} |
+    {{first_name}} {{middle_name}}. {{last_name}}</option>
+{{/each}}

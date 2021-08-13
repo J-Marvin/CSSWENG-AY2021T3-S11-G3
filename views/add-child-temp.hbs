@@ -1,0 +1,110 @@
+{{>navbar}}
+<form id="add_dedication_form" class="container">
+  <div class="container" style="padding-left: 20%; padding-right: 20%;">
+    <h1 class="my-3">Add Child Dedication Form</h1>
+    <hr>
+    <div class="row">
+      <div class="col">
+        <legend>Child</legend>
+        <hr>
+        <input type="checkbox" id="child_non_member"> Non-member
+        <input class="mb-3" type="checkbox" id="child_member" checked disabled> Member
+      
+        <div id="child_member_div" style="display:block">
+          <label>Select Child</label>
+          <select name="input_child_member" id="input_child_member" class="form-select">
+            {{>dropdown members}}
+          </select>
+        </div>
+      
+        <fieldset class="form-group" id="child_non_member_div" style="display:none">
+          <div class="div">
+            <div class="row">
+              <div class="col-12">
+                <label for="child_first_name">First Name</label>
+                <input type="text" id="child_first_name" name="child_first_name" class="form-control">
+              </div>
+              <div class="col-12">
+                <label for="child_mid_name">Middle Initial</label>
+                <input type="text" id="child_mid_name" name="child_mid_name" class="form-control">
+              </div>
+              <div class="col-12">
+                <label for="child_last_name">Last Name</label>
+                <input type="text" id="child_last_name" name="child_last_name" class="form-control">
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <p id="parent2_info_error" class="error_codes"> </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <legend>Parent / Guardian</legend>
+        <hr>
+        <input type="checkbox" id="parent1_non_member"> Non Member
+
+        <input class="mb-3" type="checkbox" id="parent1_member" checked disabled> Member
+        <div id="parent1_member_div" style="display:block">
+          <label>Select Parent / Guardian</label>
+          <select name="input_parent1" id="input_parent1_member" class="form-select">
+            {{>dropdown members}}
+          </select>
+        </div>
+        <fieldset class="form-group" id="parent1_non_member_div" style="display:none">
+          <div class="div">
+            <div class="row">
+              <div class="col-12">
+                <label for="parent1_first_name">First Name</label>
+                <input type="text" id="parent1_first_name" name="parent1_first_name" class="form-control">
+              </div>
+              <div class="col-12">
+                <label for="parent1_mid_name">Middle Initial</label>
+                <input type="text" id="parent1_mid_name" name="parent1_mid_name" class="form-control">
+              </div>
+              <div class="col-12">
+                <label for="parent1_last_name">Last Name</label>
+                <input type="text" id="parent1_last_name" name="parent1_last_name" class="form-control">
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <p id="parent1_info_error" class="error_codes"> </p>
+      </div>
+      <div class="col">
+        <legend>Parent / Guardian</legend>
+        <hr>
+        <input type="checkbox" id="parent2_non_member"> Non-member
+        <input class="mb-3" type="checkbox" id="parent2_member" checked disabled> Member
+
+        <div id="parent2_member_div" style="display:block">
+          <label>Select Parent / Guardian</label>
+          <select name="input_parent2_member" id="input_parent2_member" class="form-select">
+            {{>dropdown members}}
+          </select>
+        </div>
+
+        <fieldset class="form-group" id="parent2_non_member_div" style="display:none">
+          <div class="div">
+            <div class="row">
+              <div class="col-12">
+                <label for="parent2_first_name">First Name</label>
+                <input type="text" id="parent2_first_name" name="parent2_first_name" class="form-control">
+              </div>
+              <div class="col-12">
+                <label for="parent2_mid_name">Middle Initial</label>
+                <input type="text" id="parent2_mid_name" name="parent2_mid_name" class="form-control">
+              </div>
+              <div class="col-12">
+                <label for="parent2_last_name">Last Name</label>
+                <input type="text" id="parent2_last_name" name="parent2_last_name" class="form-control">
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <p id="parent2_info_error" class="error_codes"> </p>
+      </div>
+    </div>
+    <button id="create-prenup" type="button" class="btn btn-primary mt-3">Submit</button>
+  </div>
+</form>

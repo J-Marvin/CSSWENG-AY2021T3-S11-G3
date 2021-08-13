@@ -16,12 +16,13 @@
         <div id="bride_member_div" style="display:block">
           <label>Select Bride</label>
           <select name="input_bride_member" id="input_bride_member" class="form-select">
+            {{>dropdown brideNames}}
             {{!-- checks if the names length is only 1 (i.e. brideNames.length == 1), function is in helpers/hbsHelper.js--}}
-            {{#if (isLengthOne brideNames.length)}}
+            {{!-- {{#if (isLengthOne brideNames.length)}}
               {{> oneDropdownBride brideNames=brideNames}}
             {{else}}
               {{> dropdownBride brideNames=brideNames}}
-            {{/if}}
+            {{/if}} --}}
           </select>
         </div>
         <fieldset class="form-group" id="bride_non_member_div" style="display:none">
@@ -58,11 +59,12 @@
           <label>Select Groom</label>
           <select name="input_groom_member" id="input_groom_member" class="form-select">
             {{!-- checks if the names length is only 1 (i.e. groomNames.length == 1), function is in helpers/hbsHelper.js--}}
-            {{#if (isLengthOne groomNames.length)}}
+            {{>dropdown groomNames}}
+            {{!-- {{#if (isLengthOne groomNames.length)}}
               {{> oneDropdownGroom groomNames=groomNames}}
             {{else}}
               {{> dropdownGroom groomNames=groomNames}}
-            {{/if}}
+            {{/if}} --}}
           </select>
         </div>
         
