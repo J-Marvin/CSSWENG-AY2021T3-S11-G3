@@ -42,6 +42,7 @@ const dedicationController = {
    */
   getViewDedication: function (req, res) {
     const dedicationId = req.params.dedication_id
+    console.log(dedicationId)
     if ((parseInt(req.session.level) >= 2) || (parseInt(req.session.dedicationId)) === dedicationId) {
       let data = {}
       /*
@@ -55,23 +56,26 @@ const dedicationController = {
       */
       const joinTables = [
         {
-          tableName: db.tables.INFANT_TABLE,
+          tableName: db.tables.COUPLE_TABLE,
           sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.ID,
-          destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
+          destCol: db.tables.INFANT_TABLE + '.' + infDedFields.PARENTS
+        },
+        {
+          tableName: db.tables.PERSON_TABLE,
+          sourceCol: db.tables.PERSON_TABLE + '.' + personFields.ID,
+          destCol: db.tables.INFANT_TABLE + '.' + infDedFields.PERSON
         }
       ]
       const cond1 = new Condition(queryTypes.where)
       cond1.setKeyValue(db.tables.INFANT_TABLE + '.' + infDedFields.ID, dedicationId)
-      // father
       const joinTables2 = [
+        // father
         {
           tableName: db.tables.PERSON_TABLE,
           sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.MALE,
           destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
-        }
-      ]
-      // mother
-      const joinTables3 = [
+        },
+        // mother
         {
           tableName: db.tables.PERSON_TABLE,
           sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE,
@@ -86,13 +90,14 @@ const dedicationController = {
           db.tables.INFANT_TABLE + '.' + infDedFields.PERSON + ' as personId',
           db.tables.INFANT_TABLE + '.' + infDedFields.PARENTS + ' as parentsId',
           db.tables.INFANT_TABLE + '.' + infDedFields.DATE + ' as date',
+          db.tables.INFANT_TABLE + '.' + infDedFields.PLACE + ' as place',
           db.tables.INFANT_TABLE + '.' + infDedFields.OFFICIANT + ' as officiant',
-          db.tables.INFANT_TABLE + '.' + infDedFields.PLACE + ' as location',
+          db.tables.COUPLE_TABLE + '.' + coupleFields.MALE + ' as dadId',
+          db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE + ' as momId',
+          db.tables.PERSON_TABLE + '.' + personFields.MEMBER + ' as memberId',
           db.tables.PERSON_TABLE + '.' + personFields.FIRST_NAME + ' as firstName',
           db.tables.PERSON_TABLE + '.' + personFields.MID_NAME + ' as middleName',
-          db.tables.PERSON_TABLE + '.' + personFields.LAST_NAME + ' as lastName',
-          db.tables.COUPLE_TABLE + '.' + coupleFields.MALE + ' as dadId',
-          db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE + ' as momId'
+          db.tables.PERSON_TABLE + '.' + personFields.LAST_NAME + ' as lastName'
         ],
         // getting the father's name
         [
@@ -121,15 +126,15 @@ const dedicationController = {
           const condMother = new Condition(queryTypes.where)
           condMother.setKeyValue(db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE, momId)
           // get dad
-          db.find(db.tables.PERSON_TABLE, condFather, joinTables2, columns[1], function (result) {
+          db.find(db.tables.COUPLE_TABLE, condFather, joinTables2[0], columns[1], function (result) {
             if (result.length > 0) {
-              data.dadFather = result[0].dadFather
+              data.dadFirst = result[0].dadFirst
               data.dadMid = result[0].dadMid
               data.dadLast = result[0].dadLast
               // get mom
-              db.find(db.tables.PERSON_TABLE, condFather, joinTables3, columns[2], function (result) {
+              db.find(db.tables.COUPLE_TABLE, condMother, joinTables2[1], columns[2], function (result) {
                 if (result.length > 0) {
-                  data.momFather = result[0].momFather
+                  data.momFirst = result[0].momFirst
                   data.momMid = result[0].momMid
                   data.momLast = result[0].momLast
                   // canSee is set to the edit button
@@ -139,8 +144,8 @@ const dedicationController = {
                   }
                   data.styles = ['view']
                   data.backLink = parseInt(req.session.level) >= 2 ? '/forms_main_page' : '/main_page'
-                  // res.render('view-dedication', data)
-                  res.send(true)
+                  res.render('view-dedication', data)
+                  // res.send(data)
                 }
               })
             }
