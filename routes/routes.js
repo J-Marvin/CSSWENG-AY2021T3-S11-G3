@@ -20,6 +20,7 @@ app.get('/main_page', indexController.getMainPage)
 app.get('/member_main_page', indexController.getMemberMainPage)
 app.get('/add_member', memberController.getAddMemberPage)
 app.get('/add_dedication', dedicationController.getAddDedicationPage)
+app.get('/view_dedication/:dedication_id', dedicationController.getViewDedication)
 app.get('/edit_member/:member_id', memberController.getEditMember)
 app.get('/edit_prenup/:prenup_id', prenupController.getEditPrenup)
 
