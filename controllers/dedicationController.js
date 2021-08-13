@@ -28,10 +28,9 @@ const dedicationController = {
       if (result) {
         const data = {}
         data.members = result
-        data.scripts = [
-          'addDedication'
-        ]
-        res.render('add-child-temp', data)
+        data.styles = ['forms']
+        data.scripts = ['addDedication']
+        res.render('add-child-dedication', data)
       }
     })
   },

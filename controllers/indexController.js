@@ -69,7 +69,22 @@ const controller = {
     }
   },
 
+  getDedicationMainPage: function (req, res) {
+    res.render('dedication-main-page', {
+      styles: ['lists']
+    })
+  },
+
   getFormsMainPage: function (req, res) {
+    res.render('forms-main-page', {
+      level: req.session.level,
+      styles: ['mainPage'],
+      scripts: [''],
+      canSee: !(parseInt(req.session.level) === 1)
+    })
+  },
+
+  getPrenupMainPage: function (req, res) {
     const level = req.session.level
 
     if (level === undefined || level === null || parseInt(level) === 1) {
@@ -113,7 +128,7 @@ const controller = {
       ]
 
       db.find(db.tables.COUPLE_TABLE, null, joinTables, columns, function (result) {
-        res.render('forms-main-page', {
+        res.render('prenup-main-page', {
           styles: ['lists'],
           prenup: result
         })

@@ -22,14 +22,17 @@ app.get('/add_member', memberController.getAddMemberPage)
 app.get('/add_dedication', dedicationController.getAddDedicationPage)
 app.get('/edit_member/:member_id', memberController.getEditMember)
 app.get('/edit_prenup/:prenup_id', prenupController.getEditPrenup)
+app.get('/forms_main_page', indexController.getFormsMainPage)
 
 app.get('/member/:member_id', memberController.getViewMember)
 
-app.get('/forms_main_page', indexController.getFormsMainPage)
+app.get('/prenup_main_page', indexController.getPrenupMainPage)
 app.get('/add_prenup', prenupController.getPrenupPage)
 app.get('/edit_member/:member_id/add_prenup', prenupController.getPrenupPage)
 app.get('/view_prenup/:prenup_id', prenupController.getViewPrenup)
 app.get('/edit_prenup/:prenup_id', prenupController.getEditPrenup)
+
+app.get('/dedication_main_page', indexController.getDedicationMainPage)
 
 app.post('/login', loginController.postLogIn)
 app.post('/add_member', validation.addMemberValidation(), memberController.createMember)
