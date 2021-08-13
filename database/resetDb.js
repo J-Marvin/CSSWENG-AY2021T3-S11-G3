@@ -255,7 +255,7 @@ function initDatabase (file) {
     'wedding_id INTEGER,' +
     'person_id INTEGER NOT NULL,' +
     'FOREIGN KEY(dedication_id) REFERENCES inf_dedication(dedication_id),' +
-    'FOREIGN KEY(wedding_id) REFERENCES wedding_red(reg_id),' +
+    'FOREIGN KEY(wedding_id) REFERENCES wedding_reg(reg_id),' +
     'FOREIGN KEY(person_id) REFERENCES people(person_id)' +
     ')'
 
