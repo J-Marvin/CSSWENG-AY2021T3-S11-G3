@@ -1,21 +1,27 @@
 const db = require('../models/db')
 const coupleFields = require('../models/couple')
 const personFields = require('../models/person')
-const infantDedicationFields = require('../models/infantDedication')
 const witnessFields = require('../models/witness')
 const memberFields = require('../models/members')
+const infDedFields = require('../models/infantDedication')
+const { Condition, queryTypes } = require('../models/condition')
 
 const dedicationController = {
+  /**
+   * This function gets the dedication page
+   * @param req - the incoming request containing either the query or body
+   * @param res - the result to be sent out after processing the request
+   */
   getDedicationPage: function (req, res) {
     res.send('Temp')
   },
 
-  getAddDedicationPage: function(req, res) {
+  getAddDedicationPage: function (req, res) {
     const join = [
       {
         tableName: db.tables.PERSON_TABLE,
         sourceCol: db.tables.MEMBER_TABLE + '.' + memberFields.PERSON,
-        destCol: db.tables.PERSON_TABLE + '.' + personFields.ID,
+        destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
       }
     ]
     db.find(db.tables.MEMBER_TABLE, [], join, '*', function (result) {
@@ -30,6 +36,145 @@ const dedicationController = {
     })
   },
 
+  /**
+   * This function renders the view of a specific child dedication record
+   * @param req - the incoming request containing either the query or body
+   * @param res - the result to be sent out after processing the request
+   */
+  getViewDedication: function (req, res) {
+    const dedicationId = req.params.dedication_id
+    if ((parseInt(req.session.level) >= 2) || (parseInt(req.session.dedicationId)) === dedicationId) {
+      let data = {}
+      /*
+        infant_dedication tables needed: inf_dedication, couple, people
+        SQL:
+        SELECT *
+        FROM inf_dedication
+        JOIN couples ON couples.couple_id = inf_dedication.parents_id
+        JOIN people ON people.person_id = inf_dedication.person_id
+        WHERE inf_dedication.dedication_id = <dedication_id>;
+      */
+      const joinTables = [
+        {
+          tableName: db.tables.INFANT_TABLE,
+          sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.ID,
+          destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
+        }
+      ]
+      const cond1 = new Condition(queryTypes.where)
+      cond1.setKeyValue(db.tables.INFANT_TABLE + '.' + infDedFields.ID, dedicationId)
+      // father
+      const joinTables2 = [
+        {
+          tableName: db.tables.PERSON_TABLE,
+          sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.MALE,
+          destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
+        }
+      ]
+      // mother
+      const joinTables3 = [
+        {
+          tableName: db.tables.PERSON_TABLE,
+          sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE,
+          destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
+        }
+      ]
+      // All the fields needed here
+      const columns = [
+        // infant dedication table
+        [
+          db.tables.INFANT_TABLE + '.' + infDedFields.ID + ' as dedicationId',
+          db.tables.INFANT_TABLE + '.' + infDedFields.PERSON + ' as personId',
+          db.tables.INFANT_TABLE + '.' + infDedFields.PARENTS + ' as parentsId',
+          db.tables.INFANT_TABLE + '.' + infDedFields.DATE + ' as date',
+          db.tables.INFANT_TABLE + '.' + infDedFields.OFFICIANT + ' as officiant',
+          db.tables.INFANT_TABLE + '.' + infDedFields.PLACE + ' as location',
+          db.tables.PERSON_TABLE + '.' + personFields.FIRST_NAME + ' as firstName',
+          db.tables.PERSON_TABLE + '.' + personFields.MID_NAME + ' as middleName',
+          db.tables.PERSON_TABLE + '.' + personFields.LAST_NAME + ' as lastName',
+          db.tables.COUPLE_TABLE + '.' + coupleFields.MALE + ' as dadId',
+          db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE + ' as momId'
+        ],
+        // getting the father's name
+        [
+          db.tables.PERSON_TABLE + '.' + personFields.FIRST_NAME + ' as dadFirst',
+          db.tables.PERSON_TABLE + '.' + personFields.MID_NAME + ' as dadMid',
+          db.tables.PERSON_TABLE + '.' + personFields.LAST_NAME + ' as dadLast'
+        ],
+        // getting the mother's name
+        [
+          db.tables.PERSON_TABLE + '.' + personFields.FIRST_NAME + ' as momFirst',
+          db.tables.PERSON_TABLE + '.' + personFields.MID_NAME + ' as momMid',
+          db.tables.PERSON_TABLE + '.' + personFields.LAST_NAME + ' as momLast'
+        ]
+      ]
+      db.find(db.tables.INFANT_TABLE, cond1, joinTables, columns[0], function (result) {
+        if (result.length > 0) {
+          data = {
+            // spread syntax
+            ...result[0]
+          }
+          // get father and mother's name
+          const dadId = data.dadId
+          const momId = data.momId
+          const condFather = new Condition(queryTypes.where)
+          condFather.setKeyValue(db.tables.COUPLE_TABLE + '.' + coupleFields.MALE, dadId)
+          const condMother = new Condition(queryTypes.where)
+          condMother.setKeyValue(db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE, momId)
+          // get dad
+          db.find(db.tables.PERSON_TABLE, condFather, joinTables2, columns[1], function (result) {
+            if (result.length > 0) {
+              data.dadFather = result[0].dadFather
+              data.dadMid = result[0].dadMid
+              data.dadLast = result[0].dadLast
+              // get mom
+              db.find(db.tables.PERSON_TABLE, condFather, joinTables3, columns[2], function (result) {
+                if (result.length > 0) {
+                  data.momFather = result[0].momFather
+                  data.momMid = result[0].momMid
+                  data.momLast = result[0].momLast
+                  // canSee is set to the edit button
+                  data.canSee = (parseInt(req.session.dedicationId) === parseInt(dedicationId)) || (parseInt(req.session.level) >= 2)
+                  if ((parseInt(req.session.level) <= 2)) {
+                    data.canSee = false
+                  }
+                  data.styles = ['view']
+                  data.backLink = parseInt(req.session.level) >= 2 ? '/forms_main_page' : '/main_page'
+                  // res.render('view-dedication', data)
+                  res.send(true)
+                }
+              })
+            }
+          })
+        } else {
+          res.status(401)
+          res.render('error', {
+            title: '404 Record Not Found',
+            css: ['global', 'error'],
+            status: {
+              code: '401',
+              message: 'Record Not Found'
+            }
+          })
+        }
+      })
+    } else {
+      res.status(401)
+      res.render('error', {
+        title: '401 Unauthorized Access',
+        css: ['global', 'error'],
+        status: {
+          code: '401',
+          message: 'Unauthorized access'
+        }
+      })
+    }
+  },
+  /**
+   * This function adds a child dedication record to the database
+   * @param req - the incoming request containing either the query or body
+   * @param res - the result to be sent out after processing the request
+   */
   postAddDedication: function (req, res) {
     // The Data to be inserted to Infant Dedication Table
     const data = {}
@@ -45,9 +190,9 @@ const dedicationController = {
     const couple = {}
 
     // Store officiant, date and place to data
-    data[infantDedicationFields.OFFICIANT] = req.body.officiant
-    data[infantDedicationFields.DATE] = new Date().toISOString()
-    data[infantDedicationFields.PLACE] = req.body.place
+    data[infDedFields.OFFICIANT] = req.body.officiant
+    data[infDedFields.DATE] = new Date().toISOString()
+    data[infDedFields.PLACE] = req.body.place
 
     /* req.body.guardian1 fields:
        personId
@@ -61,7 +206,7 @@ const dedicationController = {
      */
     people.guardian1 = JSON.parse(req.body.guardian1)
 
-    // If second guardian is available
+    // If second guardian is available`
     if (req.body.guardian2 === null || req.body.guardian2 === undefined) {
       people.guardian2 = null
     } else {
@@ -111,7 +256,7 @@ const dedicationController = {
       offsets.guardian1 = offsets.guardian1 + 1
       offsets.guardian2 = offsets.guardian2 + 1
     } else {
-      data[infantDedicationFields.PERSON] = people.child.person_id
+      data[infDedFields.PERSON] = people.child.person_id
     }
 
     // Insert people (not including witnesses)
@@ -120,7 +265,7 @@ const dedicationController = {
       if (result) {
         if (result.length > 0) {
           if (people.child.person_id === null || people.child.person_id === undefined) {
-            data[infantDedicationFields.PERSON] = result[0] - offsets.child
+            data[infDedFields.PERSON] = result[0] - offsets.child
           }
           if (people.guardian1.person_id === null || people.guardian1.person_id === undefined) {
             couple[coupleFields.FEMALE] = result[0] - offsets.guardian1
@@ -133,7 +278,7 @@ const dedicationController = {
         // Insert guardians/parents to couple table
         db.insert(db.tables.COUPLE_TABLE, couple, function (result) {
           if (result) {
-            data[infantDedicationFields.PARENTS] = result
+            data[infDedFields.PARENTS] = result
 
             console.log(data)
 
@@ -146,21 +291,21 @@ const dedicationController = {
                     db.insert(db.tables.PEOPLE_TABLE, people.witnesses, function (result) {
                       if (result) {
                         result = result[0]
-  
+
                         const witnesses = people.witnesses.map(function (witness) {
                           const witnessInfo = {}
                           witnessInfo[witnessFields.DEDICATION] = dedicationId
                           witnessInfo[witnessFields.PERSON] = result
                           result -= 1
-  
+
                           return witnessInfo
                         })
-  
+
                         db.insert(db.tables.WITNESS_TABLE, witnesses, function (result) {
                           if (result) {
                             res.send(result)
                           } else {
-                            res.send("WITNESS TABLE ERROR")
+                            res.send('WITNESS TABLE ERROR')
                           }
                         })
                       } else {
@@ -181,7 +326,7 @@ const dedicationController = {
         })
       } else {
         console.log(result)
-        res.send("INSERT PEOPLE ERROR")
+        res.send('INSERT PEOPLE ERROR')
       }
     })
   }
