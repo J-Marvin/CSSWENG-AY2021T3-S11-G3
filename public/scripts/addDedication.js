@@ -172,7 +172,6 @@ $(document).ready(function() {
   })
 
   $('#add_witness').click(function (){
-    witnessCtr++;
     var isValid = true
 
     var witnessMember = $('#input_witness_member').val() === null
@@ -201,6 +200,7 @@ $(document).ready(function() {
       $('#witness_first_name').val('')
       $('#witness_mid_name').val('')
       $('#witness_last_name').val('')
+      witnessCtr++;
     }
   })
 
