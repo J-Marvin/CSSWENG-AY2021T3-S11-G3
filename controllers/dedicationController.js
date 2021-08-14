@@ -15,7 +15,11 @@ const dedicationController = {
   getDedicationPage: function (req, res) {
     res.send('Temp')
   },
-
+  /**
+   * This function renders the add dedication page
+   * @param req - the incoming request containing either the query or body
+   * @param res - the result to be sent out after processing the request
+   */
   getAddDedicationPage: function (req, res) {
     const join = [
       {
@@ -41,6 +45,22 @@ const dedicationController = {
    * @param res - the result to be sent out after processing the request
    */
   getViewDedication: function (req, res) {
+    /*
+      This local function renders the error page
+    */
+    function sendError (title, code) {
+      const msg = title
+      res.status(code)
+      res.render('error', {
+        title: title,
+        css: ['global', 'error'],
+        status: {
+          code: parseInt(code),
+          message: msg
+        }
+      })
+    }
+    // function execution starts here
     const dedicationId = req.params.dedication_id
     console.log(dedicationId)
     if ((parseInt(req.session.level) >= 2) || (parseInt(req.session.dedicationId)) === dedicationId) {
@@ -80,6 +100,12 @@ const dedicationController = {
           tableName: db.tables.PERSON_TABLE,
           sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE,
           destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
+        },
+        // witness
+        {
+          tableName: db.tables.PERSON_TABLE,
+          sourceCol: db.tables.WITNESS_TABLE + '.' + witnessFields.PERSON,
+          destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
         }
       ]
       // All the fields needed here
@@ -110,8 +136,19 @@ const dedicationController = {
           db.tables.PERSON_TABLE + '.' + personFields.FIRST_NAME + ' as momFirst',
           db.tables.PERSON_TABLE + '.' + personFields.MID_NAME + ' as momMid',
           db.tables.PERSON_TABLE + '.' + personFields.LAST_NAME + ' as momLast'
+        ],
+        // getting the witness
+        [
+          db.tables.WITNESS_TABLE + '.' + witnessFields.DEDICATION + ' as dedicationId',
+          db.tables.WITNESS_TABLE + '.' + witnessFields.PERSON + ' as personId',
+          db.tables.WITNESS_TABLE + '.' + witnessFields.ID + ' as witnessId',
+          db.tables.PERSON_TABLE + '.' + personFields.FIRST_NAME + ' as firstName',
+          db.tables.PERSON_TABLE + '.' + personFields.MID_NAME + ' as middleName',
+          db.tables.PERSON_TABLE + '.' + personFields.LAST_NAME + ' as lastName'
         ]
       ]
+      const condWitness = new Condition(queryTypes.where)
+      condWitness.setKeyValue(db.tables.WITNESS_TABLE + '.' + witnessFields.DEDICATION, dedicationId)
       db.find(db.tables.INFANT_TABLE, cond1, joinTables, columns[0], function (result) {
         if (result.length > 0) {
           data = {
@@ -137,41 +174,37 @@ const dedicationController = {
                   data.momFirst = result[0].momFirst
                   data.momMid = result[0].momMid
                   data.momLast = result[0].momLast
-                  // canSee is set to the edit button
-                  data.canSee = (parseInt(req.session.dedicationId) === parseInt(dedicationId)) || (parseInt(req.session.level) >= 2)
-                  if ((parseInt(req.session.level) <= 2)) {
-                    data.canSee = false
-                  }
-                  data.styles = ['view']
-                  data.backLink = parseInt(req.session.level) >= 2 ? '/forms_main_page' : '/main_page'
-                  res.render('view-dedication', data)
-                  // res.send(data)
+                  // get witnesses
+                  db.find(db.tables.WITNESS_TABLE, condWitness, joinTables2[2], columns[3], function (result) {
+                    if (result.length > 0) {
+                      data.witnesses = result
+                      // canSee is set to the edit button
+                      data.canSee = (parseInt(req.session.dedicationId) === parseInt(dedicationId)) || (parseInt(req.session.level) >= 2)
+                      if ((parseInt(req.session.level) <= 2)) {
+                        data.canSee = false
+                      }
+                      data.styles = ['view']
+                      // data.scripts = ['']
+                      data.backLink = parseInt(req.session.level) >= 2 ? '/forms_main_page' : '/main_page'
+                      res.render('view-dedication', data)
+                    } else {
+                      sendError('404 Record Not Found', 404)
+                    }
+                  })
+                } else {
+                  sendError('404 Record Not Found', 404)
                 }
               })
+            } else {
+              sendError('404 Record Not Found', 404)
             }
           })
         } else {
-          res.status(401)
-          res.render('error', {
-            title: '404 Record Not Found',
-            css: ['global', 'error'],
-            status: {
-              code: '401',
-              message: 'Record Not Found'
-            }
-          })
+          sendError('404 Record Not Found', 404)
         }
       })
     } else {
-      res.status(401)
-      res.render('error', {
-        title: '401 Unauthorized Access',
-        css: ['global', 'error'],
-        status: {
-          code: '401',
-          message: 'Unauthorized access'
-        }
-      })
+      sendError('401 Unauthorized Access', 401)
     }
   },
   /**
@@ -292,7 +325,7 @@ const dedicationController = {
                 if (people.witnesses !== null && people.witness !== undefined) {
                   if (people.witnesses.length === 0) {
                     const dedicationId = result
-                    db.insert(db.tables.PEOPLE_TABLE, people.witnesses, function (result) {
+                    db.insert(db.tables.PERSON_TABLE, people.witnesses, function (result) {
                       if (result) {
                         result = result[0]
 
