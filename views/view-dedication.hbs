@@ -16,4 +16,7 @@
 {{dadLast}}<br>
 {{momFirst}}<br>
 {{momMid}}<br>
-{{momLast}}
+{{momLast}}<br>
+{{#each witnesses}}
+    {{this.personId}}, {{this.firstName}} {{this.middleName}} {{this.lastName}}<br>
+{{/each}}
