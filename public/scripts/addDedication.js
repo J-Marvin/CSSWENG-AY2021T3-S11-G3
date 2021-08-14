@@ -1,4 +1,9 @@
 $(document).ready(function() {
+
+  var witnessCtr = 0
+
+  $('select').change(hideChoices)
+
   // bind function to child non-member
   $('#child_non_member').change(function() {
     $(this).attr('disabled', true)
@@ -21,7 +26,28 @@ $(document).ready(function() {
     $('#child_mid_name').val('')
     $('#child_last_name').val('')
   })
-  $('select').change(hideChoices)
+
+  $('#witness_non_member').change(function() {
+    $(this).attr('disabled', true)
+    $('#witness_member').removeAttr('disabled')
+    $('#witness_member').prop('checked', false)
+    $('#witness_member_div').hide()
+    $('#witness_non_member_div').show()
+    $('select').find('option[value="' + $('#input_witness_member').val() + '"]').removeAttr('hidden')
+    $('#input_witness_member').val(0)
+  })
+
+  // bind function to witness member
+  $('#witness_member').change(function () {
+    $(this).attr('disabled', true)
+    $('#witness_non_member').removeAttr('disabled')
+    $('#witness_non_member').prop('checked', false)
+    $('#witness_non_member_div').hide()
+    $('#witness_member_div').show()
+    $('#witness_first_name').val('')
+    $('#witness_mid_name').val('')
+    $('#witness_last_name').val('')
+  })
 
   // bind function to parent1 non member
   $('#parent1_non_member').change(function() {
@@ -110,6 +136,8 @@ $(document).ready(function() {
 
     var officiantField = $('#officiant').val() === ''
     var addressField = $('#address').val() === ''
+    var dateField = $('#date').val() === ''
+
 
     if(childFieldMember && childFieldNonMember) {
       isValid = false
@@ -157,6 +185,20 @@ $(document).ready(function() {
       $('#address_info_error').text('')
     }
 
+    if(dateField) {
+      isValid = false
+      $('#date_info_error').text('Please accomplish')
+    } else {
+      $('#date_info_error').text('')
+    }
+
+    if(witnessCtr === 0) {
+      isValid = false
+      $('#witness_info_error').text('There must be at least one witness')
+    } else {
+      $('#witness_info_error').text('')
+    }
+
     if(isValid) {
       const data = {
         child: {},
@@ -180,6 +222,54 @@ $(document).ready(function() {
       console.log(data)
     }
   })
+
+  $('#add_witness').click(function (){
+    witnessCtr++;
+    var isValid = true
+
+    var witnessMember = $('#input_witness_member').val() === null
+    var witnessNonMember = $('#witness_first_name').val() === '' || $('#witness_mid_name').val() === '' || $('#witness_last_name').val() === ''
+
+    if (witnessMember && witnessNonMember) {
+      isValid = false
+      $('#witness_modal_info_error').text('Please accomplish all fields')
+    } else {
+      $('#witness_modal_info_error').text('')
+    }
+
+    if(isValid) {
+      $('#witnessModal').modal('toggle');
+      var witnessName
+      if(witnessMember) {
+        witnessName = $('#witness_first_name').val() + ' ' + $('#witness_mid_name').val() + ' ' + $('#witness_last_name').val()
+        $('#witness_row').append("<div class='col-4' style='margin-bottom: 1em;'><div class='card'><div class='card-body'><p class='card-text'>" + witnessName + "</p><button type='button' class='fas fa-trash delWitnessBtn '></button></div></div></div>")
+      } else {
+        witnessName = $('#input_witness_member').val()
+        witnessName = witnessName.replace(/\d+/g, '')
+        witnessName = witnessName.replace(/,/g, '')
+        $('#witness_row').append("<div class='col-4' style='margin-bottom: 1em;'><div class='card'><div class='card-body'><p class='card-text'>" + witnessName + "</p><button type='button' class='fas fa-trash delWitnessBtn '></button> </div></div></div>")
+      }
+      $('#witness_info_error').text('')
+      $('#witness_first_name').val('')
+      $('#witness_mid_name').val('')
+      $('#witness_last_name').val('')
+    }
+  })
+
+  $('#add_witness_button').click(function() {
+    if(witnessCtr === 12) {
+      $('#witness_info_error').text('You have reached the maximum number of witnesses')
+    } else {
+      $('#witnessModal').modal('show')
+      $('#witness_info_error').text('')
+    }
+  })
+
+  $(document).on('click', '.delWitnessBtn', function () {
+    $(this).closest('.col-4').remove()
+    witnessCtr--
+  })
+  
 
   /**
    * 

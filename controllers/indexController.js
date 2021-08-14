@@ -69,18 +69,18 @@ const controller = {
     }
   },
 
-  getDedicationMainPage: function (req, res) {
-    res.render('dedication-main-page', {
-      styles: ['lists']
-    })
-  },
-
   getFormsMainPage: function (req, res) {
     res.render('forms-main-page', {
       level: req.session.level,
       styles: ['mainPage'],
       scripts: [''],
       canSee: !(parseInt(req.session.level) === 1)
+    })
+  },
+
+  getDedicationMainPage: function (req, res) {
+    res.render('dedication-main-page', {
+      styles: ['lists']
     })
   },
 
