@@ -1,6 +1,7 @@
 $(document).ready(function() {
 
   var witnessCtr = 0
+  var addedWitness = false
 
   $('select').change(hideChoices)
 
@@ -141,33 +142,37 @@ $(document).ready(function() {
       data.place = $('#address').val()
       data.witnesses = []
 
-      const witnesses = $('#witness_div') // change id once front end is oks
+      const witnesses = $('.witness')
 
       for (witness of witnesses) {
         const currWitness = {}
 
-        // CHANGE DEPENDING ON FRONT END
-        if($(witness))) {
-          currWitness.person_id = $(witness).find('#person_id')
+        if($(witness).attr('data-member-info') !== null && $(witness).attr('data-member-info') !== undefined) {
+          currWitness.person_id = $(witness).attr('data-member-info').split(', ')[1]
+          currWitness.isMember = true
+          console.log(currWitness.person_id)
         } else {
-          currWitness.first_name = $(witness).find('#first_name').val()
-          currWitness.mid_name = $(witness).find('#mid_name').val()
-          currWitness.last_name = $(witness).find('#last_name').val() // change if needed
+          currWitness.first_name = $(witness).find('.first_name').text()
+          currWitness.mid_name = $(witness).find('.mid_name').text()
+          currWitness.last_name = $(witness).find('.last_name').text()
         }
 
         data.witnesses.push(currWitness)
       }
-  
+      
+      data.witnesses = JSON.stringify(data.witnesses)
+
       $.ajax({
         type: 'POST',
         data: data,
         url: '/add_dedication',
         success: function (result){
-          alert(result)
+          if (result) {
+            location.href = '/view_dedication/' + result
+          }
         }
       })
-  
-      console.log(data)
+
     }
   })
 
@@ -185,22 +190,38 @@ $(document).ready(function() {
     }
 
     if(isValid) {
-      $('#witnessModal').modal('toggle');
       var witnessName
+      console.log(witnessMember)
       if(witnessMember) {
-        witnessName = $('#witness_first_name').val() + ' ' + $('#witness_mid_name').val() + ' ' + $('#witness_last_name').val()
-        $('#witness_row').append("<div class='col-4' style='margin-bottom: 1em;'><div class='card'><div class='card-body'><p class='card-text'>" + witnessName + "</p><button type='button' class='fas fa-trash delWitnessBtn '></button></div></div></div>")
+        const firstName = $('#witness_first_name').val()
+        const midName = $('#witness_mid_name').val()
+        const lastName = $('#witness_last_name').val()
+        $('#witness_row').append(
+          "<div class='col-4' style='margin-bottom: 1em;'>" +
+            "<div class='card witness'><div class='card-body'>" + 
+              "<p class='card-text'>" + 
+                "<span class='first_name'>" + firstName + "</span> " + 
+                "<span class='mid_name'>" + midName + "</span> " + 
+                "<span class='last_name'>" + lastName + "</span>" + 
+              "</p>" +
+              "<button type='button' class='fas fa-trash delWitnessBtn '></button>" + 
+            "</div>" + 
+          "</div>" + 
+        "</div>")
       } else {
-        witnessName = $('#input_witness_member').val()
-        witnessName = witnessName.replace(/\d+/g, '')
+        const witness_info = $('#input_witness_member').val()
+        witnessName = witness_info.replace(/\d+/g, '')
         witnessName = witnessName.replace(/,/g, '')
-        $('#witness_row').append("<div class='col-4' style='margin-bottom: 1em;'><div class='card'><div class='card-body'><p class='card-text'>" + witnessName + "</p><button type='button' class='fas fa-trash delWitnessBtn '></button> </div></div></div>")
+        $('#witness_row').append("<div class='col-4' style='margin-bottom: 1em;'><div class='card witness' data-member-info=\"" + witness_info + "\"><div class='card-body'><p class='card-text'>" + witnessName + "</p><button type='button' class='fas fa-trash delWitnessBtn '></button> </div></div></div>")
       }
       $('#witness_info_error').text('')
       $('#witness_first_name').val('')
       $('#witness_mid_name').val('')
       $('#witness_last_name').val('')
       witnessCtr++;
+      
+      addedWitness = true
+      $('#witnessModal').modal('hide');
     }
   })
 
@@ -214,9 +235,15 @@ $(document).ready(function() {
   })
 
   $(document).on('click', '.delWitnessBtn', function () {
+    const member = $(this).closest('.card').attr('data-member-info')
+    if (member !== null) {
+      $('select').find('option[value="' + member + '"]').removeAttr('hidden')
+    }
     $(this).closest('.col-4').remove()
     witnessCtr--
   })
+
+  $('#witnessModal').on('hide.bs.modal', resetModal)
   
 
   /**
@@ -258,87 +285,100 @@ $(document).ready(function() {
       $('select').find('option[value="' + previous + '"]').removeAttr('hidden')
     }
   }
-})
 
-function validateFields() {
-  var isValid = true
-
-  var childFieldMember = $('#input_child_member').val() === null
-  var childFieldNonMember = $('#child_first_name').val() === '' || $('#child_mid_name').val() === '' || $('#child_last_name').val() === ''
-  //alert(childFieldNonMember + ' ' + childFieldMember )
-
-  var guardianOneMember = $('#input_parent1_member').val() === null
-  var guardianOneNonMember = $('#parent1_first_name').val() === '' || $('#parent1_mid_name').val() === '' || $('#parent1_last_name').val() === ''
-
-  var guardianTwoNone = $('#parent2_none').is(':checked')
-  var guardianTwoMember = $('#input_parent2_member').val() === null
-  var guardianTwoNonMember = $('#parent2_first_name').val() === '' || $('#parent2_mid_name').val() === '' || $('#parent2_last_name').val() === ''
-
-  var officiantField = $('#officiant').val() === ''
-  var addressField = $('#address').val() === ''
-  var dateField = $('#date').val() === ''
-
-
-  if (childFieldMember && childFieldNonMember) {
-    isValid = false
-    $('#child_info_error').text('Please provide child name')
-  } else {
-    $('#child_info_error').text('')
+  function resetModal() {
+    const currWitness = $('#input_witness_member').val()
+    $('#input_witness_member').val(0)
+    $('#input_witness_member').data('previous', null)
+    if (currWitness !== '' && !addedWitness) {
+      $('select').find('option[value="' + currWitness + '"]').removeAttr('hidden')
+    } else {
+      addedWitness = false
+    }
   }
 
-  if (guardianTwoNone && guardianOneMember && guardianOneNonMember) {
-    isValid = false
-    $('#parent1_info_error').text('Accomplish all fields')
-    $('#parent2_info_error').text('')
-  } else if (!guardianTwoNone) {
-    if (guardianOneMember && guardianOneNonMember) {
+  function validateFields() {
+    var isValid = true
+  
+    var childFieldMember = $('#input_child_member').val() === null
+    var childFieldNonMember = $('#child_first_name').val() === '' || $('#child_mid_name').val() === '' || $('#child_last_name').val() === ''
+    //alert(childFieldNonMember + ' ' + childFieldMember )
+  
+    var guardianOneMember = $('#input_parent1_member').val() === null
+    var guardianOneNonMember = $('#parent1_first_name').val() === '' || $('#parent1_mid_name').val() === '' || $('#parent1_last_name').val() === ''
+  
+    var guardianTwoNone = $('#parent2_none').is(':checked')
+    var guardianTwoMember = $('#input_parent2_member').val() === null
+    var guardianTwoNonMember = $('#parent2_first_name').val() === '' || $('#parent2_mid_name').val() === '' || $('#parent2_last_name').val() === ''
+  
+    var officiantField = $('#officiant').val() === ''
+    var addressField = $('#address').val() === ''
+    var dateField = $('#date').val() === ''
+  
+  
+    if (childFieldMember && childFieldNonMember) {
+      isValid = false
+      $('#child_info_error').text('Please provide child name')
+    } else {
+      $('#child_info_error').text('')
+    }
+  
+    if (guardianTwoNone && guardianOneMember && guardianOneNonMember) {
       isValid = false
       $('#parent1_info_error').text('Accomplish all fields')
+      $('#parent2_info_error').text('')
+    } else if (!guardianTwoNone) {
+      if (guardianOneMember && guardianOneNonMember) {
+        isValid = false
+        $('#parent1_info_error').text('Accomplish all fields')
+      } else {
+        $('#parent1_info_error').text('')
+      }
+      if (guardianTwoMember && guardianTwoNonMember) {
+        isValid = false
+        $('#parent2_info_error').text('Accomplish all fields')
+      } else {
+        $('#parent2_info_error').text('')
+      }
     } else {
+  
       $('#parent1_info_error').text('')
-    }
-    if (guardianTwoMember && guardianTwoNonMember) {
-      isValid = false
-      $('#parent2_info_error').text('Accomplish all fields')
-    } else {
       $('#parent2_info_error').text('')
     }
-  } else {
-
-    $('#parent1_info_error').text('')
-    $('#parent2_info_error').text('')
+  
+    if (officiantField) {
+      isValid = false
+      $('#officiant_info_error').text('Please accomplish')
+    } else {
+  
+      $('#officiant_info_error').text('')
+    }
+  
+    if (addressField) {
+      isValid = false
+      $('#address_info_error').text('Please accomplish')
+    } else {
+  
+      $('#address_info_error').text('')
+    }
+  
+    if (dateField) {
+      isValid = false
+      $('#date_info_error').text('Please accomplish')
+    } else {
+      $('#date_info_error').text('')
+    }
+  
+    if (witnessCtr === 0) {
+      isValid = false
+      $('#witness_info_error').text('There must be at least one witness')
+    } else {
+      $('#witness_info_error').text('')
+    }
+  
+  
+    return isValid
   }
-
-  if (officiantField) {
-    isValid = false
-    $('#officiant_info_error').text('Please accomplish')
-  } else {
-
-    $('#officiant_info_error').text('')
-  }
-
-  if (addressField) {
-    isValid = false
-    $('#address_info_error').text('Please accomplish')
-  } else {
-
-    $('#address_info_error').text('')
-  }
-
-  if (dateField) {
-    isValid = false
-    $('#date_info_error').text('Please accomplish')
-  } else {
-    $('#date_info_error').text('')
-  }
-
-  if (witnessCtr === 0) {
-    isValid = false
-    $('#witness_info_error').text('There must be at least one witness')
-  } else {
-    $('#witness_info_error').text('')
-  }
+})
 
 
-  return isValid
-}

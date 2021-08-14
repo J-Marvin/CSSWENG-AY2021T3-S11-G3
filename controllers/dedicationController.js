@@ -21,22 +21,34 @@ const dedicationController = {
    * @param res - the result to be sent out after processing the request
    */
   getAddDedicationPage: function (req, res) {
-    const join = [
-      {
-        tableName: db.tables.PERSON_TABLE,
-        sourceCol: db.tables.MEMBER_TABLE + '.' + memberFields.PERSON,
-        destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
-      }
-    ]
-    db.find(db.tables.MEMBER_TABLE, [], join, '*', function (result) {
-      if (result) {
-        const data = {}
-        data.members = result
-        data.styles = ['forms']
-        data.scripts = ['addDedication']
-        res.render('add-child-dedication', data)
-      }
-    })
+    if (req.session.level === null || req.session.level === undefined) {
+      res.render('error', {
+        title: '401 Unauthorized Access',
+        css: ['global', 'error'],
+        status: {
+          code: '401',
+          message: 'Unauthorized access'
+        },
+        backLink: '/forms_main_page'
+      })
+    } else {
+      const join = [
+        {
+          tableName: db.tables.PERSON_TABLE,
+          sourceCol: db.tables.MEMBER_TABLE + '.' + memberFields.PERSON,
+          destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
+        }
+      ]
+      db.find(db.tables.MEMBER_TABLE, [], join, '*', function (result) {
+        if (result) {
+          const data = {}
+          data.members = result
+          data.styles = ['forms']
+          data.scripts = ['addDedication']
+          res.render('add-child-dedication', data)
+        }
+      })
+    }
   },
 
   /**
@@ -57,13 +69,14 @@ const dedicationController = {
         status: {
           code: parseInt(code),
           message: msg
-        }
+        },
+        backLink: '/main_page'
       })
     }
     // function execution starts here
-    const dedicationId = req.params.dedication_id
+    const dedicationId = parseInt(req.params.dedication_id)
     console.log(dedicationId)
-    if ((parseInt(req.session.level) >= 2) || (parseInt(req.session.dedicationId)) === dedicationId) {
+    if (parseInt(req.session.level) >= 2 || req.session.dedicationId === dedicationId) {
       let data = {}
       /*
         infant_dedication tables needed: inf_dedication, couple, people
@@ -214,7 +227,6 @@ const dedicationController = {
    */
   postAddDedication: function (req, res) {
     // The Data to be inserted to Infant Dedication Table
-    console.log(req.body)
     const data = {}
 
     // The information of the guardians and child
@@ -251,7 +263,7 @@ const dedicationController = {
       people.guardian2 = JSON.parse(req.body.guardian2)
     }
     people.child = JSON.parse(req.body.child)
-    people.witnesses = req.body.witnesses
+    people.witnesses = JSON.parse(req.body.witnesses)
 
     // people to be inserted in the people table
     const peopleInfo = []
@@ -297,7 +309,6 @@ const dedicationController = {
     }
 
     // Insert people (not including witnesses)
-    console.log(peopleInfo)
     db.insert(db.tables.PERSON_TABLE, peopleInfo, function (result) {
       if (result) {
         if (result.length > 0) {
@@ -320,74 +331,70 @@ const dedicationController = {
             // Insert Acutal Dedication to table
             db.insert(db.tables.INFANT_TABLE, data, function (result) {
               if (result) {
-                console.log(people.witnesses)
-                if (Array.isArray(people.witnesses)) {
-                  // If there are witnesses
-                  if (people.witnesses.length === 0) {
-                    const dedicationId = result
+                if (people.witnesses.length > 0) {
+                  const dedicationId = result[0]
 
-                    const witnessInfo = []
-                    const witnesses = []
+                  const witnessInfo = []
+                  const witnesses = []
 
-                    people.witnesses.foreach(function (witness) {
-                      const currWitness = {}
+                  people.witnesses.forEach(function (witness) {
+                    const currWitness = {}
 
-                      // For every membmer witness, add to currWitnesses
-                      if (witness.isMember) {
-                        currWitness[witnessFields.DEDICATION] = dedicationId
-                        currWitness[witnessFields.PERSON] = witness.person_id
-                        witnesses.push(currWitness)
-                      } else { // For every non-member witness, add to witnessInfo to insert to people table
-                        currWitness[personFields.FIRST_NAME] = witness.first_name
-                        currWitness[personFields.MID_NAME] = witness.mid_name
-                        currWitness[personFields.LAST_NAME] = witness.last_name
+                    // For every membmer witness, add to currWitnesses
+                    if (witness.isMember) {
+                      currWitness[witnessFields.DEDICATION] = dedicationId
+                      currWitness[witnessFields.PERSON] = witness.person_id
+                      witnesses.push(currWitness)
+                    } else { // For every non-member witness, add to witnessInfo to insert to people table
+                      currWitness[personFields.FIRST_NAME] = witness.first_name
+                      currWitness[personFields.MID_NAME] = witness.mid_name
+                      currWitness[personFields.LAST_NAME] = witness.last_name
 
-                        witnessInfo.push(currWitness)
-                      }
-                    })
+                      witnessInfo.push(currWitness)
+                    }
+                  })
 
-                    // Insert to Non-Member witnesses
-                    db.insert(db.tables.PERSON_TABLE, witnessInfo, function (result) {
-                      if (result) {
-                        result = result[0]
+                  // Insert to Non-Member witnesses
+                  db.insert(db.tables.PERSON_TABLE, witnessInfo, function (result) {
+                    if (result) {
+                      result = result[0]
 
-                        // Concatenate all member witnesses with just inserted witnesses
-                        const allWitnesses = witnesses.concat(witnessInfo.map(function (witness) {
-                          const witnessInfo = {}
-                          witnessInfo[witnessFields.DEDICATION] = dedicationId
-                          witnessInfo[witnessFields.PERSON] = result
-                          result -= 1
+                      // Concatenate all member witnesses with just inserted witnesses
+                      const allWitnesses = witnesses.concat(witnessInfo.map(function (witness) {
+                        const witnessInfo = {}
+                        witnessInfo[witnessFields.DEDICATION] = dedicationId
+                        witnessInfo[witnessFields.PERSON] = result
+                        result -= 1
 
-                          return witnessInfo
-                        }))
+                        return witnessInfo
+                      }))
 
-                        // Insert to witness table
-                        db.insert(db.tables.WITNESS_TABLE, allWitnesses, function (result) {
-                          if (result) {
-                            res.send(result)
-                          } else {
-                            res.send('WITNESS TABLE ERROR')
-                          }
-                        })
-                      } else {
-                        res.send('ERROR WITNESS PEOPLE')
-                      }
-                    })
-                  }
+                      // Insert to witness table
+                      db.insert(db.tables.WITNESS_TABLE, allWitnesses, function (result) {
+                        if (result) {
+                          req.session.dedicationId = dedicationId
+                          res.send(JSON.stringify(dedicationId))
+                        } else {
+                          res.send(false)
+                        }
+                      })
+                    } else {
+                      res.send(false)
+                    }
+                  })
                 } else {
-                  res.send(true)
+                  res.send(false)
                 }
               } else {
-                res.send('INFANT ERROR')
+                res.send(false)
               }
             })
           } else {
-            res.send('INSERT COUPLE ERROR')
+            res.send(false)
           }
         })
       } else {
-        console.log(result)
-        res.send('INSERT PEOPLE ERROR')
+        res.send(false)
       }
     })
   }
