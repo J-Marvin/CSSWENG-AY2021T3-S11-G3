@@ -181,6 +181,7 @@ const dedicationController = {
    */
   postAddDedication: function (req, res) {
     // The Data to be inserted to Infant Dedication Table
+    console.log(req.body)
     const data = {}
 
     // The information of the guardians and child
@@ -211,13 +212,12 @@ const dedicationController = {
     people.guardian1 = JSON.parse(req.body.guardian1)
 
     // If second guardian is available`
-    if (req.body.guardian2 === null || req.body.guardian2 === undefined) {
+    if (req.body.guardian2 === null || req.body.guardian2 === undefined || req.body.guardian2 === '') {
       people.guardian2 = null
     } else {
       people.guardian2 = JSON.parse(req.body.guardian2)
     }
     people.child = JSON.parse(req.body.child)
-    console.log(people.child)
     people.witnesses = req.body.witnesses
 
     // people to be inserted in the people table
@@ -246,7 +246,7 @@ const dedicationController = {
       guardian[personFields.LAST_NAME] = people.guardian2.last_name
       peopleInfo.push(guardian)
       offsets.guardian1 = offsets.guardian1 + 1
-    } else {
+    } else if (people.guardian2 !== null) {
       couple[coupleFields.MALE] = people.guardian2.person_id
     }
 
@@ -282,30 +282,54 @@ const dedicationController = {
         // Insert guardians/parents to couple table
         db.insert(db.tables.COUPLE_TABLE, couple, function (result) {
           if (result) {
-            data[infDedFields.PARENTS] = result
+            data[infDedFields.PARENTS] = result[0]
 
-            console.log(data)
-
+            // Insert Acutal Dedication to table
             db.insert(db.tables.INFANT_TABLE, data, function (result) {
               if (result) {
                 console.log(people.witnesses)
-                if (people.witnesses !== null && people.witness !== undefined) {
+                if (Array.isArray(people.witnesses)) {
+                  // If there are witnesses
                   if (people.witnesses.length === 0) {
                     const dedicationId = result
-                    db.insert(db.tables.PEOPLE_TABLE, people.witnesses, function (result) {
+
+                    const witnessInfo = []
+                    const witnesses = []
+
+                    people.witnesses.foreach(function (witness) {
+                      const currWitness = {}
+
+                      // For every membmer witness, add to currWitnesses
+                      if (witness.isMember) {
+                        currWitness[witnessFields.DEDICATION] = dedicationId
+                        currWitness[witnessFields.PERSON] = witness.person_id
+                        witnesses.push(currWitness)
+                      } else { // For every non-member witness, add to witnessInfo to insert to people table
+                        currWitness[personFields.FIRST_NAME] = witness.first_name
+                        currWitness[personFields.MID_NAME] = witness.mid_name
+                        currWitness[personFields.LAST_NAME] = witness.last_name
+
+                        witnessInfo.push(currWitness)
+                      }
+                    })
+
+                    // Insert to Non-Member witnesses
+                    db.insert(db.tables.PERSON_TABLE, witnessInfo, function (result) {
                       if (result) {
                         result = result[0]
 
-                        const witnesses = people.witnesses.map(function (witness) {
+                        // Concatenate all member witnesses with just inserted witnesses
+                        const allWitnesses = witnesses.concat(witnessInfo.map(function (witness) {
                           const witnessInfo = {}
                           witnessInfo[witnessFields.DEDICATION] = dedicationId
                           witnessInfo[witnessFields.PERSON] = result
                           result -= 1
 
                           return witnessInfo
-                        })
+                        }))
 
-                        db.insert(db.tables.WITNESS_TABLE, witnesses, function (result) {
+                        // Insert to witness table
+                        db.insert(db.tables.WITNESS_TABLE, allWitnesses, function (result) {
                           if (result) {
                             res.send(result)
                           } else {

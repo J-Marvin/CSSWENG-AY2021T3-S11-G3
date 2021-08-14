@@ -93,71 +93,9 @@ $(document).ready(function() {
   })
 
   $('#create-dedication').click(function (){
-    // valdiation first 
 
-    var isValid = true
-
-    var childFieldMember = $('#input_child_member').val() === null
-    var childFieldNonMember = $('#child_first_name').val() === '' || $('#child_mid_name').val() === '' || $('#child_last_name').val() === ''
-    //alert(childFieldNonMember + ' ' + childFieldMember )
-
-    var guardianOneMember = $('#input_parent1_member').val() === null
-    var guardianOneNonMember = $('#parent1_first_name').val() === '' || $('#parent1_mid_name').val() === '' || $('#parent1_last_name').val() === ''
-
-    var guardianTwoNone = $('#parent2_none').is(':checked')
-    var guardianTwoMember = $('#input_parent2_member').val() === null
-    var guardianTwoNonMember = $('#parent2_first_name').val() === '' || $('#parent2_mid_name').val() === '' || $('#parent2_last_name').val() === ''
-
-    var officiantField = $('#officiant').val() === ''
-    var addressField = $('#address').val() === ''
-
-    if(childFieldMember && childFieldNonMember) {
-      isValid = false
-      $('#child_info_error').text('Please provide child name')
-    } else {
-      
-      $('#child_info_error').text('')
-    }
-
-    if(guardianTwoNone && guardianOneMember && guardianOneNonMember) {
-      isValid = false
-      $('#parent1_info_error').text('Accomplish all fields')
-      $('#parent2_info_error').text('')
-    } else if(!guardianTwoNone) {
-      isValid = false
-      if(guardianOneMember && guardianOneNonMember) {
-        $('#parent1_info_error').text('Accomplish all fields')
-      } else {
-        $('#parent1_info_error').text('')
-      }
-      if(guardianTwoMember && guardianTwoNonMember) {
-        $('#parent2_info_error').text('Accomplish all fields')
-      } else {
-        $('#parent2_info_error').text('')
-      }
-    } else {
-      
-      $('#parent1_info_error').text('')
-      $('#parent2_info_error').text('')
-    }
-
-    if(officiantField) {
-      isValid = false
-      $('#officiant_info_error').text('Please accomplish')
-    } else {
-      
-      $('#officiant_info_error').text('')
-    }
-
-    if(addressField) {
-      isValid = false
-      $('#address_info_error').text('Please accomplish')
-    } else {
-      
-      $('#address_info_error').text('')
-    }
-
-    if(isValid) {
+    console.log(validateFields())
+    if(validateFields()) {
       const data = {
         child: {},
         guardian1: {},
@@ -166,14 +104,40 @@ $(document).ready(function() {
   
       data.child = JSON.stringify(getDetails($('#child_member'), $('#input_child_member'), $('#child_first_name'), $('#child_mid_name'), $('#child_last_name')))
       data.guardian1 = JSON.stringify(getDetails($('#parent1_member'), $('#input_parent1_member'), $('#parent1_first_name'), $('#parent1_mid_name'), $('#parent1_last_name')))
-      data.guardian2 = JSON.stringify(getDetails($('#parent2_member'), $('#input_parent2_member'), $('#parent2_first_name'), $('#parent2_mid_name'), $('#parent2_last_name')))
+
+      if ($('#parent2_none').is(':checked')){
+        data.guardian2 = null
+      } else {
+        data.guardian2 = JSON.stringify(getDetails($('#parent2_member'), $('#input_parent2_member'), $('#parent2_first_name'), $('#parent2_mid_name'), $('#parent2_last_name')))
+      }
+
+      data.officiant = $('#officiant').val()
+      data.place = $('#address').val()
+      data.witnesses = []
+
+      const witnesses = $('#witness_div') // change id once front end is oks
+
+      for (witness of witnesses) {
+        const currWitness = {}
+
+        // CHANGE DEPENDING ON FRONT END
+        if($(witness))) {
+          currWitness.person_id = $(witness).find('#person_id')
+        } else {
+          currWitness.first_name = $(witness).find('#first_name').val()
+          currWitness.mid_name = $(witness).find('#mid_name').val()
+          currWitness.last_name = $(witness).find('#last_name').val() // change if needed
+        }
+
+        data.witnesses.push(currWitness)
+      }
   
       $.ajax({
         type: 'POST',
         data: data,
         url: '/add_dedication',
         success: function (result){
-          
+          alert(result)
         }
       })
   
@@ -221,3 +185,69 @@ $(document).ready(function() {
     }
   }
 })
+
+function validateFields() {
+  var isValid = true
+
+  var childFieldMember = $('#input_child_member').val() === null
+  var childFieldNonMember = $('#child_first_name').val() === '' || $('#child_mid_name').val() === '' || $('#child_last_name').val() === ''
+  //alert(childFieldNonMember + ' ' + childFieldMember )
+
+  var guardianOneMember = $('#input_parent1_member').val() === null
+  var guardianOneNonMember = $('#parent1_first_name').val() === '' || $('#parent1_mid_name').val() === '' || $('#parent1_last_name').val() === ''
+
+  var guardianTwoNone = $('#parent2_none').is(':checked')
+  var guardianTwoMember = $('#input_parent2_member').val() === null
+  var guardianTwoNonMember = $('#parent2_first_name').val() === '' || $('#parent2_mid_name').val() === '' || $('#parent2_last_name').val() === ''
+
+  var officiantField = $('#officiant').val() === ''
+  var addressField = $('#address').val() === ''
+
+  if (childFieldMember && childFieldNonMember) {
+    isValid = false
+    $('#child_info_error').text('Please provide child name')
+  } else {
+    $('#child_info_error').text('')
+  }
+  
+  if (guardianTwoNone && guardianOneMember && guardianOneNonMember) {
+    isValid = false
+    $('#parent1_info_error').text('Accomplish all fields')
+    $('#parent2_info_error').text('')
+  } else if (!guardianTwoNone) {
+    if (guardianOneMember && guardianOneNonMember) {
+      isValid = false
+      $('#parent1_info_error').text('Accomplish all fields')
+    } else {
+      $('#parent1_info_error').text('')
+    }
+    if (guardianTwoMember && guardianTwoNonMember) {
+      isValid = false
+      $('#parent2_info_error').text('Accomplish all fields')
+    } else {
+      $('#parent2_info_error').text('')
+    }
+  } else {
+
+    $('#parent1_info_error').text('')
+    $('#parent2_info_error').text('')
+  }
+
+  if (officiantField) {
+    isValid = false
+    $('#officiant_info_error').text('Please accomplish')
+  } else {
+
+    $('#officiant_info_error').text('')
+  }
+
+  if (addressField) {
+    isValid = false
+    $('#address_info_error').text('Please accomplish')
+  } else {
+
+    $('#address_info_error').text('')
+  }
+
+  return isValid
+}
