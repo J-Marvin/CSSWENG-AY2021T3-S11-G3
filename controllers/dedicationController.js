@@ -21,7 +21,6 @@ const dedicationController = {
    * @param res - the result to be sent out after processing the request
    */
   getAddDedicationPage: function (req, res) {
-    req.session.level = 3
     if (req.session.level === null || req.session.level === undefined) {
       res.render('error', {
         title: '401 Unauthorized Access',
@@ -46,6 +45,7 @@ const dedicationController = {
           data.members = result
           data.styles = ['forms']
           data.scripts = ['addDedication']
+          data.backLink = parseInt(req.session.level) >= 2 ? '/dedication_main_page' : '/forms_main_page'
           res.render('add-child-dedication', data)
         }
       })
@@ -211,6 +211,7 @@ const dedicationController = {
                     data.styles = ['view']
                     // data.scripts = ['']
                     data.backLink = parseInt(req.session.level) >= 2 ? '/dedication_main_page' : '/forms_main_page'
+                    console.log(data)
                     res.render('view-dedication', data)
                   } else {
                     sendError('404 Witnesses Record Not Found', 404)
