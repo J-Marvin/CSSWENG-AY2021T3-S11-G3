@@ -133,7 +133,7 @@ const controller = {
         'guardianTwo.' + personFields.LAST_NAME + ' as guardianTwo_last_name'
       ]
       db.find(db.tables.INFANT_TABLE, null, joinTables, columns, function (result) {
-        console.log(result)
+        // console.log(result)
         res.render('dedication-main-page', {
           styles: ['lists'],
           dedication: result
