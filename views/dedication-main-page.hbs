@@ -62,7 +62,11 @@
             <p class="variables"> {{this.guardianOne_first_name}} {{this.guardianOne_mid_name}}. {{this.guardianOne_last_name}} </p>
           </div>
           <div class="col-3 tile">
-            <p class="variables"> {{this.guardianTwo_first_name}} {{this.guardianTwo_mid_name}}. {{this.guardianTwo_last_name}} </p>
+            {{#if (isUndefined this.guardianTwo_first_name)}}
+              <p class="variables">N/A</p>
+            {{else}}
+              <p class="variables"> {{this.guardianTwo_first_name}} {{this.guardianTwo_mid_name}}. {{this.guardianTwo_last_name}} </p>
+            {{/if}}
           </div>
         </div>
       </a>

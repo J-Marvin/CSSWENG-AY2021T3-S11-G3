@@ -105,11 +105,13 @@ const controller = {
           destCol: 'infant.' + personFields.ID
         },
         {
+          type: 'leftJoin',
           tableName: { guardianOne: db.tables.PERSON_TABLE },
           sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE,
           destCol: 'guardianOne.' + personFields.ID
         },
         {
+          type: 'leftJoin',
           tableName: { guardianTwo: db.tables.PERSON_TABLE },
           sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.MALE,
           destCol: 'guardianTwo.' + personFields.ID
@@ -118,7 +120,6 @@ const controller = {
 
       const columns = [
         db.tables.INFANT_TABLE + '.' + infDedFields.ID,
-        // db.tables.INFANT_TABLE + '.' + infDedFields.DATE,
         'infant.' + personFields.FIRST_NAME + ' as infant_first_name',
         'infant.' + personFields.MID_NAME + ' as infant_mid_name',
         'infant.' + personFields.LAST_NAME + ' as infant_last_name',
