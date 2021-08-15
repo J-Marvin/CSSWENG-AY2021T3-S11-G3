@@ -14,7 +14,7 @@ const prenupController = {
    */
   getViewPrenup: function (req, res) {
     const prenupId = req.params.prenup_id
-    if (parseInt(req.session.editPrenupId) === parseInt(prenupId) || parseInt(req.session.level) >= 2) {
+    if (parseInt(req.session.editId) === parseInt(prenupId) || parseInt(req.session.level) >= 2) {
       /*
       tables needed: PRENUPTIAL_TABLE, COUPLE_TABLE, PEOPLE_TABLE, MEMBER_TABLE
       SQL:
@@ -87,7 +87,7 @@ const prenupController = {
             ...result[0]
           }
           // canSee is set to the edit button
-          data.canSee = (parseInt(req.session.editPrenupId) === parseInt(prenupId)) || (parseInt(req.session.level) >= 2)
+          data.canSee = (parseInt(req.session.editId) === parseInt(prenupId)) || (parseInt(req.session.level) >= 2)
           if ((parseInt(req.session.level) <= 2)) {
             data.canSee = false
           }
@@ -165,8 +165,7 @@ const prenupController = {
             if (result !== null) {
               const brideNames = result
               console.log('brideNames: ' + brideNames)
-              req.session.editPrenupId = null
-              req.session.editMemberId = member
+              req.session.editId = member
               res.render('add-prenup-temp', {
                 scripts: ['addPrenup'],
                 styles: ['forms'],
@@ -197,8 +196,7 @@ const prenupController = {
             if (result !== null) {
               const groomNames = result
               console.log('groomNames: ' + groomNames)
-              req.session.editPrenupId = null
-              req.session.editMemberId = member
+              req.session.editId = member
               res.render('add-prenup-temp', {
                 scripts: ['addPrenup'],
                 styles: ['forms'],
@@ -261,7 +259,7 @@ const prenupController = {
             if (result !== null) {
               groomNames = result
               console.log(groomNames)
-              req.session.editPrenupId = null
+              req.session.editId = null
               res.render('add-prenup-temp', {
                 styles: ['forms'],
                 scripts: ['addPrenup'],
@@ -336,7 +334,7 @@ const prenupController = {
                   db.insert(db.tables.PRENUPTIAL_TABLE, data.prenup, function (result) {
                     if (result !== false) {
                       console.log(result)
-                      req.session.editPrenupId = result[0]
+                      req.session.editId = result[0]
                       res.redirect('/view_prenup/' + result[0])
                       // if (parseInt(req.session.level) === 1) {
                       //   console.log('here if')
@@ -450,7 +448,7 @@ const prenupController = {
                   db.update(db.tables.MEMBER_TABLE, { prenup_record_id: prenupRecId }, memberCondition, function (result) {
                     if (result !== null) {
                       // redirect to view prenup if level >= 2 else go back to main page
-                      req.session.editPrenupId = prenupRecId
+                      req.session.editId = prenupRecId
                       res.redirect('/view_prenup/' + prenupRecId)
                     } else {
                       res.send('UPDATE MEMBER ID ERROR')
@@ -547,7 +545,7 @@ const prenupController = {
                 db.update(db.tables.MEMBER_TABLE, { prenup_record_id: prenupRecId }, memberCondition, function (result) {
                   if (result !== null) {
                     // redirect to view prenup if level >= 2 else go back to main page
-                    req.session.editPrenupId = prenupRecId
+                    req.session.editId = prenupRecId
                     res.redirect('/view_prenup/' + prenupRecId)
                   } else {
                     res.send('UPDATE PRENUP ERROR')
@@ -643,7 +641,7 @@ const prenupController = {
                 db.update(db.tables.MEMBER_TABLE, { prenup_record_id: prenupRecId }, memberCondition, function (result) {
                   if (result !== null) {
                     // redirect to view prenup if level >= 2 else go back to main page
-                    req.session.editPrenupId = prenupRecId
+                    req.session.editId = prenupRecId
                     res.redirect('/view_prenup/' + prenupRecId)
                   } else {
                     res.send('ERROR')
@@ -670,7 +668,7 @@ const prenupController = {
    */
   getEditPrenup: function (req, res) {
     const prenupId = req.params.prenup_id
-    if (parseInt(req.session.level) === 3 || parseInt(req.session.editPrenupId === parseInt(prenupId))) {
+    if (parseInt(req.session.level) === 3 || parseInt(req.session.editId === parseInt(prenupId))) {
     // if (parseInt(req.session.level) === 3) { // For testing purposes
       /*
       SELECT *
@@ -922,7 +920,7 @@ const prenupController = {
                     if (result !== null) {
                       // set new male_id
                       db.update(db.tables.COUPLE_TABLE, { male_id: newgroomPersonId }, coupleCond, function (result) {
-                        req.session.editPrenupId = prenupId
+                        req.session.editId = prenupId
                         res.send(true)
                       })
                     }
@@ -964,7 +962,7 @@ const prenupController = {
                       // set new female_id
                       db.update(db.tables.COUPLE_TABLE, { female_id: newbridePersonId }, coupleCond, function (result) {
                         if (result !== null) {
-                          req.session.editPrenupId = prenupId
+                          req.session.editId = prenupId
                           res.send(true)
                         } else {
                           console.log('update couple female_id to new female_id error')

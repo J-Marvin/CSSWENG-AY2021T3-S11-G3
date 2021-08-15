@@ -21,6 +21,7 @@ const dedicationController = {
    * @param res - the result to be sent out after processing the request
    */
   getAddDedicationPage: function (req, res) {
+    req.session.level = 3
     if (req.session.level === null || req.session.level === undefined) {
       res.render('error', {
         title: '401 Unauthorized Access',
@@ -85,7 +86,7 @@ const dedicationController = {
     // read dedicationId from params
     const dedicationId = parseInt(req.params.dedication_id)
     console.log(dedicationId)
-    if (parseInt(req.session.level) >= 2 || req.session.dedicationId === dedicationId) {
+    if (parseInt(req.session.level) >= 2 || req.session.editId === dedicationId) {
       let data = {}
       /*
         infant_dedication tables needed: inf_dedication, couple, people
@@ -428,7 +429,7 @@ const dedicationController = {
                       // Insert to witness table
                       db.insert(db.tables.WITNESS_TABLE, allWitnesses, function (result) {
                         if (result) {
-                          req.session.dedicationId = dedicationId
+                          req.session.editId = dedicationId
                           res.send(JSON.stringify(dedicationId))
                         } else {
                           res.send(false)
