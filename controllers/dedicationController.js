@@ -74,6 +74,15 @@ const dedicationController = {
       })
     }
     // function execution starts here
+    // joinTables and columns INDICES
+    const TABLE_PARENT1 = 0
+    const TABLE_PARENT2 = 1
+    const TABLE_WITNESSES = 2
+    const COL_INF = 0
+    const COL_PARENT1 = 1
+    const COL_PARENT2 = 2
+    const COL_WITNESSES = 3
+    // read dedicationId from params
     const dedicationId = parseInt(req.params.dedication_id)
     console.log(dedicationId)
     if (parseInt(req.session.level) >= 2 || req.session.dedicationId === dedicationId) {
@@ -102,19 +111,19 @@ const dedicationController = {
       const cond1 = new Condition(queryTypes.where)
       cond1.setKeyValue(db.tables.INFANT_TABLE + '.' + infDedFields.ID, dedicationId)
       const joinTables2 = [
-        // father
-        {
-          tableName: db.tables.PERSON_TABLE,
-          sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.MALE,
-          destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
-        },
-        // mother
+        // parent1, index TABLE_PARENT1 = 0
         {
           tableName: db.tables.PERSON_TABLE,
           sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE,
           destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
         },
-        // witness
+        // parent2, index TABLE_PARENT2 = 1
+        {
+          tableName: db.tables.PERSON_TABLE,
+          sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.MALE,
+          destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
+        },
+        // witness, index TABLE_WITNESSES = 2
         {
           tableName: db.tables.PERSON_TABLE,
           sourceCol: db.tables.WITNESS_TABLE + '.' + witnessFields.PERSON,
@@ -123,7 +132,7 @@ const dedicationController = {
       ]
       // All the fields needed here
       const columns = [
-        // infant dedication table
+        // infant dedication table, index COL_INF = 0
         [
           db.tables.INFANT_TABLE + '.' + infDedFields.ID + ' as dedicationId',
           db.tables.INFANT_TABLE + '.' + infDedFields.PERSON + ' as personId',
@@ -131,30 +140,33 @@ const dedicationController = {
           db.tables.INFANT_TABLE + '.' + infDedFields.DATE + ' as date',
           db.tables.INFANT_TABLE + '.' + infDedFields.PLACE + ' as place',
           db.tables.INFANT_TABLE + '.' + infDedFields.OFFICIANT + ' as officiant',
-          db.tables.COUPLE_TABLE + '.' + coupleFields.MALE + ' as dadId',
-          db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE + ' as momId',
+          db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE + ' as parent1Id',
+          db.tables.COUPLE_TABLE + '.' + coupleFields.MALE + ' as parent2Id',
           db.tables.PERSON_TABLE + '.' + personFields.MEMBER + ' as memberId',
           db.tables.PERSON_TABLE + '.' + personFields.FIRST_NAME + ' as firstName',
           db.tables.PERSON_TABLE + '.' + personFields.MID_NAME + ' as middleName',
           db.tables.PERSON_TABLE + '.' + personFields.LAST_NAME + ' as lastName'
         ],
-        // getting the father's name
+        // getting the mother's name (parent1), index COL_PARENT1 = 1
         [
-          db.tables.PERSON_TABLE + '.' + personFields.FIRST_NAME + ' as dadFirst',
-          db.tables.PERSON_TABLE + '.' + personFields.MID_NAME + ' as dadMid',
-          db.tables.PERSON_TABLE + '.' + personFields.LAST_NAME + ' as dadLast'
+          db.tables.PERSON_TABLE + '.' + personFields.MEMBER + ' as parent1MemberId',
+          db.tables.PERSON_TABLE + '.' + personFields.FIRST_NAME + ' as parent1First',
+          db.tables.PERSON_TABLE + '.' + personFields.MID_NAME + ' as parent1Mid',
+          db.tables.PERSON_TABLE + '.' + personFields.LAST_NAME + ' as parent1Last'
         ],
-        // getting the mother's name
+        // getting the father's name (parent2), index COL_PARENT2 = 2
         [
-          db.tables.PERSON_TABLE + '.' + personFields.FIRST_NAME + ' as momFirst',
-          db.tables.PERSON_TABLE + '.' + personFields.MID_NAME + ' as momMid',
-          db.tables.PERSON_TABLE + '.' + personFields.LAST_NAME + ' as momLast'
+          db.tables.PERSON_TABLE + '.' + personFields.MEMBER + ' as parent2MemberId',
+          db.tables.PERSON_TABLE + '.' + personFields.FIRST_NAME + ' as parent2First',
+          db.tables.PERSON_TABLE + '.' + personFields.MID_NAME + ' as parent2Mid',
+          db.tables.PERSON_TABLE + '.' + personFields.LAST_NAME + ' as parent2Last'
         ],
-        // getting the witness
+        // getting the witness, index COL_WITNESSES = 3
         [
           db.tables.WITNESS_TABLE + '.' + witnessFields.DEDICATION + ' as dedicationId',
           db.tables.WITNESS_TABLE + '.' + witnessFields.PERSON + ' as personId',
           db.tables.WITNESS_TABLE + '.' + witnessFields.ID + ' as witnessId',
+          db.tables.PERSON_TABLE + '.' + personFields.MEMBER + ' as witnessMemberId',
           db.tables.PERSON_TABLE + '.' + personFields.FIRST_NAME + ' as firstName',
           db.tables.PERSON_TABLE + '.' + personFields.MID_NAME + ' as middleName',
           db.tables.PERSON_TABLE + '.' + personFields.LAST_NAME + ' as lastName'
@@ -162,58 +174,104 @@ const dedicationController = {
       ]
       const condWitness = new Condition(queryTypes.where)
       condWitness.setKeyValue(db.tables.WITNESS_TABLE + '.' + witnessFields.DEDICATION, dedicationId)
-      db.find(db.tables.INFANT_TABLE, cond1, joinTables, columns[0], function (result) {
+      db.find(db.tables.INFANT_TABLE, cond1, joinTables, columns[COL_INF], function (result) {
         if (result.length > 0) {
           data = {
             // spread syntax
             ...result[0]
           }
           // get father and mother's name
-          const dadId = data.dadId
-          const momId = data.momId
-          const condFather = new Condition(queryTypes.where)
-          condFather.setKeyValue(db.tables.COUPLE_TABLE + '.' + coupleFields.MALE, dadId)
-          const condMother = new Condition(queryTypes.where)
-          condMother.setKeyValue(db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE, momId)
-          // get dad
-          db.find(db.tables.COUPLE_TABLE, condFather, joinTables2[0], columns[1], function (result) {
-            if (result.length > 0) {
-              data.dadFirst = result[0].dadFirst
-              data.dadMid = result[0].dadMid
-              data.dadLast = result[0].dadLast
-              // get mom
-              db.find(db.tables.COUPLE_TABLE, condMother, joinTables2[1], columns[2], function (result) {
-                if (result.length > 0) {
-                  data.momFirst = result[0].momFirst
-                  data.momMid = result[0].momMid
-                  data.momLast = result[0].momLast
-                  // get witnesses
-                  db.find(db.tables.WITNESS_TABLE, condWitness, joinTables2[2], columns[3], function (result) {
-                    if (result.length > 0) {
-                      data.witnesses = result
-                      // canSee is set to the edit button
-                      data.canSee = (parseInt(req.session.dedicationId) === parseInt(dedicationId)) || (parseInt(req.session.level) >= 2)
-                      if ((parseInt(req.session.level) <= 2)) {
-                        data.canSee = false
-                      }
-                      data.styles = ['view']
-                      // data.scripts = ['']
-                      data.backLink = parseInt(req.session.level) >= 2 ? '/forms_main_page' : '/main_page'
-                      res.render('view-dedication', data)
-                    } else {
-                      sendError('404 Record Not Found', 404)
+          const parent1Id = data.parent1Id // saved in couples.female_id
+          const parent2Id = data.parent2Id // saved in couples.male_id
+          console.log('parent1Id = ' + parent1Id)
+          console.log('parent2Id = ' + parent2Id)
+          // if single parent
+          if (parent2Id === null || parent2Id === undefined) {
+            const condParent1 = new Condition(queryTypes.where)
+            condParent1.setKeyValue(db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE, parent1Id)
+
+            // get only parent1
+            db.find(db.tables.COUPLE_TABLE, condParent1, joinTables2[TABLE_PARENT1], columns[COL_PARENT1], function (parent1) {
+              if (parent1.length > 0) {
+                data.parent1First = parent1[0].parent1First
+                data.parent1Mid = parent1[0].parent1Mid
+                data.parent1Last = parent1[0].parent1Last
+                data.parent1MemberId = parent1[0].parent1MemberId
+
+                // get witnesses
+                db.find(db.tables.WITNESS_TABLE, condWitness, joinTables2[TABLE_WITNESSES], columns[COL_WITNESSES], function (result) {
+                  if (result.length > 0) {
+                    data.witnesses = result
+                    // canSee is set to the edit button
+                    data.canSee = (parseInt(req.session.dedicationId) === parseInt(dedicationId)) || (parseInt(req.session.level) >= 2)
+                    if ((parseInt(req.session.level) <= 2)) {
+                      data.canSee = false
                     }
-                  })
-                } else {
-                  sendError('404 Record Not Found', 404)
-                }
-              })
-            } else {
-              sendError('404 Record Not Found', 404)
-            }
-          })
+                    data.styles = ['view']
+                    // data.scripts = ['']
+                    data.backLink = parseInt(req.session.level) >= 2 ? '/dedication_main_page' : '/forms_main_page'
+                    res.render('view-dedication', data)
+                  } else {
+                    console.log('@if witnesses not found')
+                    sendError('404 Witnesses Record Not Found', 404)
+                  }
+                })
+              } else {
+                console.log('@if parent1 not found')
+                sendError('404 Parent 1 Record Not Found', 404)
+              }
+            })
+          // end of if-block
+          } else { // if 2 parents/guardian is in the record
+            const condParent1 = new Condition(queryTypes.where)
+            condParent1.setKeyValue(db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE, parent1Id)
+            const condParent2 = new Condition(queryTypes.where)
+            condParent2.setKeyValue(db.tables.COUPLE_TABLE + '.' + coupleFields.MALE, parent2Id)
+
+            // get parent1
+            db.find(db.tables.COUPLE_TABLE, condParent1, joinTables2[TABLE_PARENT1], columns[COL_PARENT1], function (parent1) {
+              if (parent1.length > 0) {
+                data.parent1First = parent1[0].parent1First
+                data.parent1Mid = parent1[0].parent1Mid
+                data.parent1Last = parent1[0].parent1Last
+                data.parent1MemberId = parent1[0].parent1MemberId
+
+                // get parent2
+                db.find(db.tables.COUPLE_TABLE, condParent2, joinTables2[TABLE_PARENT2], columns[COL_PARENT2], function (parent2) {
+                  if (parent2.length > 0) {
+                    data.parent2First = parent2[0].parent2First
+                    data.parent2Mid = parent2[0].parent2Mid
+                    data.parent2Last = parent2[0].parent2Last
+                    data.parent2MemberId = parent2[0].parent2MemberId
+
+                    // get witnesses
+                    db.find(db.tables.WITNESS_TABLE, condWitness, joinTables2[TABLE_WITNESSES], columns[COL_WITNESSES], function (result) {
+                      if (result.length > 0) {
+                        data.witnesses = result
+                        // canSee is set to the edit button
+                        data.canSee = (parseInt(req.session.dedicationId) === parseInt(dedicationId)) || (parseInt(req.session.level) >= 2)
+                        if ((parseInt(req.session.level) <= 2)) {
+                          data.canSee = false
+                        }
+                        data.styles = ['view']
+                        // data.scripts = ['']
+                        data.backLink = parseInt(req.session.level) >= 2 ? '/dedication_main_page' : '/forms_main_page'
+                        res.render('view-dedication', data) // render data
+                      } else {
+                        sendError('404 Witnesses Record Not Found', 404)
+                      }
+                    })
+                  } else {
+                    sendError('404 Parent 2 Record Not Found', 404)
+                  }
+                })
+              } else {
+                sendError('404 Parent 1 Record Not Found', 404)
+              }
+            })
+          } // end of else block
         } else {
-          sendError('404 Record Not Found', 404)
+          sendError('404 Record Not Found at Child Dedication Table', 404)
         }
       })
     } else {
