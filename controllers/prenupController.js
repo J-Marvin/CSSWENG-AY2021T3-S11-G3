@@ -3,7 +3,7 @@ const personFields = require('../models/person')
 const prenupRecordFields = require('../models/prenupRecord')
 const coupleFields = require('../models/couple')
 const { Condition, queryTypes } = require('../models/condition')
-const { validationResult } = require('express-validator')
+const { validationResult, query } = require('express-validator')
 const memberFields = require('../models/members')
 
 const prenupController = {
@@ -722,10 +722,18 @@ const prenupController = {
               data.bride = result[0]
               console.log('data.bride')
               console.log(data.bride)
-              const cond1 = new Condition(queryTypes.where)
-              const cond2 = new Condition(queryTypes.whereNull)
-              const cond3 = new Condition(queryTypes.where)
-              const cond4 = new Condition(queryTypes.whereNull)
+
+              const femaleConds = [
+                new Condition(queryTypes.where),
+                new Condition(queryTypes.whereNull)
+              ]
+
+              const maleConds = [
+                new Condition(queryTypes.where),
+                new Condition(queryTypes.whereNull)
+              ]
+              const includeBrideCond = new Condition(queryTypes.orWhere)
+              const includeGroomCond = new Condition(queryTypes.orWhere)
 
               const joinTables1 = [
                 {
@@ -737,32 +745,44 @@ const prenupController = {
               let brideNames = []
               let groomNames = []
               // set the WHERE clause
-              cond1.setQueryObject(
+              femaleConds[0].setQueryObject(
                 {
                   sex: 'Female',
                   civil_status: 'Single'
                 }
               )
-              cond2.setField(db.tables.MEMBER_TABLE + '.' + memberFields.PRENUP_RECORD)
+              femaleConds[1].setField(db.tables.MEMBER_TABLE + '.' + memberFields.PRENUP_RECORD)
+
+              if (data.bride.member_id !== null && data.bride.member_id !== undefined) {
+                includeBrideCond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.ID, data.bride.member_id)
+                femaleConds.push(includeBrideCond)
+              }
+
+              if (data.groom.member_id !== null && data.groom.member_id !== undefined) {
+                includeGroomCond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.ID, data.groom.member_id)
+                maleConds.push(includeGroomCond)
+              }
+
               // get all female members
-              db.find(db.tables.MEMBER_TABLE, [cond1, cond2], joinTables1, '*', function (result) {
+              db.find(db.tables.MEMBER_TABLE, femaleConds, joinTables1, '*', function (result) {
                 if (result !== null) {
                   brideNames = result
                   data.brideNames = brideNames
+                  console.log("BRIDES")
                   console.log(brideNames)
                   // conditions = []
 
                   // set the WHERE clause
-                  cond3.setQueryObject(
+                  maleConds[0].setQueryObject(
                     {
                       sex: 'Male',
                       civil_status: 'Single'
                     }
                   )
-                  cond4.setField(db.tables.MEMBER_TABLE + '.' + memberFields.PRENUP_RECORD)
+                  maleConds[1].setField(db.tables.MEMBER_TABLE + '.' + memberFields.PRENUP_RECORD)
 
                   // get all male members
-                  db.find(db.tables.MEMBER_TABLE, [cond3, cond4], joinTables1, '*', function (result) {
+                  db.find(db.tables.MEMBER_TABLE, maleConds, joinTables1, '*', function (result) {
                     // console.log(result)
                     if (result !== null) {
                       groomNames = result
