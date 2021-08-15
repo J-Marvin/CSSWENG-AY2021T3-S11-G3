@@ -2,7 +2,14 @@ $(document).ready(function() {
 
   var witnessCtr = 0
   var addedWitness = false
+  const selectChild = $('#input_child_member').selectize()
+  const selectParent1 = $('#input_parent1_member').selectize()
+  const selectParent2 = $('#input_parent2_member').selectize()
+  const selectWitness = $('#input_witness_member').selectize()
 
+  
+  initSelectize()
+  
   $('select').change(hideChoices)
 
   // bind function to child non-member
@@ -12,8 +19,9 @@ $(document).ready(function() {
     $('#child_member').prop('checked', false)
     $('#child_member_div').hide()
     $('#child_non_member_div').show()
-    $('select').find('option[value="' + $('#input_child_member').val() + '"]').removeAttr('hidden')
-    $('#input_child_member').val(0)
+
+    selectizeEnable($('#input_child_member').val())
+    $(selectChild)[0].selectize.setValue('0')
   })
 
   // bind function to child member
@@ -34,8 +42,8 @@ $(document).ready(function() {
     $('#witness_member').prop('checked', false)
     $('#witness_member_div').hide()
     $('#witness_non_member_div').show()
-    $('select').find('option[value="' + $('#input_witness_member').val() + '"]').removeAttr('hidden')
-    $('#input_witness_member').val(0)
+    selectizeEnable($('#input_witness_member').val())
+    $(selectWitness)[0].selectize.setValue('0')
   })
 
   // bind function to witness member
@@ -57,8 +65,8 @@ $(document).ready(function() {
     $('#parent1_member').prop('checked', false)
     $('#parent1_member_div').hide()
     $('#parent1_non_member_div').show()
-    $('select').find('option[value="' + $('#input_parent1_member').val() + '"]').removeAttr('hidden')
-    $('#input_parent1_member').val(0)
+    selectizeEnable($('#input_parent1_member').val())
+    $(selectParent1)[0].selectize.setValue('0')
   })
 
   // bind function to parent1 member
@@ -79,8 +87,9 @@ $(document).ready(function() {
     $('#parent2_member').prop('checked', false)
     $('#parent2_member_div').hide()
     $('#parent2_non_member_div').show()
-    $('select').find('option[value="' + $('#input_parent2_member').val() + '"]').removeAttr('hidden')
-    $('#input_parent2_member').val(0)
+
+    selectizeEnable($('#input_parent2_member').val())
+    $(selectParent2)[0].selectize.setValue('0')
 
     $('#parent2_none').removeAttr('disabled')
     $('#parent2_none').prop('checked', false)
@@ -115,7 +124,8 @@ $(document).ready(function() {
     $('#parent2_mid_name').val('')
     $('#parent2_last_name').val('')
 
-    $('#input_parent2_member').val(0)
+    selectizeEnable($('#input_parent2_member').val())
+    $(selectParent2)[0].selectize.setValue('0')
     $('#parent2_info_error').text('')
   })
 
@@ -237,7 +247,7 @@ $(document).ready(function() {
   $(document).on('click', '.delWitnessBtn', function () {
     const member = $(this).closest('.card').attr('data-member-info')
     if (member !== null) {
-      $('select').find('option[value="' + member + '"]').removeAttr('hidden')
+      selectizeEnable(member)
     }
     $(this).closest('.col-4').remove()
     witnessCtr--
@@ -276,25 +286,25 @@ $(document).ready(function() {
    */
   function hideChoices() {
     var previous = $(this).data('previous')
-    $('select').find('option[value="' + $(this).val() + '"]').attr('hidden', true)
-
-    $(this).data('previous', $(this).val())
+    var currOption = $(this).val()
+    selectizeDisable(currOption)
+    $(this).data('previous', currOption)
 
     // if there was a previously selected choice, free up from other input fields
     if (previous !== null || previous !== undefined) {
-      $('select').find('option[value="' + previous + '"]').removeAttr('hidden')
+      selectizeEnable(previous)
     }
   }
 
   function resetModal() {
     const currWitness = $('#input_witness_member').val()
-    $('#input_witness_member').val(0)
     $('#input_witness_member').data('previous', null)
     if (currWitness !== '' && !addedWitness) {
-      $('select').find('option[value="' + currWitness + '"]').removeAttr('hidden')
+      selectizeEnable(currWitness)
     } else {
       addedWitness = false
     }
+    $(selectWitness)[0].selectize.setValue('0')
   }
 
   function validateFields() {
@@ -378,6 +388,31 @@ $(document).ready(function() {
   
   
     return isValid
+  }
+
+  function selectizeEnable(data) {
+    $('#input_child_member').parent().find('.option[data-value="' + data + '"]').attr('data-selectable', true)
+    $('#input_parent1_member').parent().find('.option[data-value="' + data + '"]').attr('data-selectable', true)
+    $('#input_parent2_member').parent().find('.option[data-value="' + data + '"]').attr('data-selectable', true)
+    $('#input_witness_member').parent().find('.option[data-value="' + data + '"]').attr('data-selectable', true)
+  }
+
+  function selectizeDisable(data) {
+    $('#input_child_member').parent().find('.option[data-value="' + data + '"]').removeAttr('data-selectable')
+    $('#input_parent1_member').parent().find('.option[data-value="' + data + '"]').removeAttr('data-selectable')
+    $('#input_parent2_member').parent().find('.option[data-value="' + data + '"]').removeAttr('data-selectable')
+    $('#input_witness_member').parent().find('.option[data-value="' + data + '"]').removeAttr('data-selectable')
+  }
+
+  function initSelectize() {
+    $(selectChild)[0].selectize.refreshOptions()
+    $(selectParent1)[0].selectize.refreshOptions()
+    $(selectParent2)[0].selectize.refreshOptions()
+    $(selectWitness)[0].selectize.refreshOptions()
+
+    $('.selectize-dropdown').hide();
+    $('.selectize-input').removeClass('focus input-active dropdown-active');
+    $('div.selectize-input > input').blur();
   }
 })
 
