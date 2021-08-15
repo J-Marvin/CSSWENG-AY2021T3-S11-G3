@@ -1,4 +1,4 @@
-{{>navbar}}
+{{!-- {{>navbar}}
 DedicationId: {{infant_dedication_id}}<br>
 Child memberId: {{infant_member_id}}<br>
 Child personId: {{infant_person_id}}<br>
@@ -17,4 +17,89 @@ Place: {{place}}<br>
 Witnesses (Ninong/Ninang):<br>
 {{#each witnesses}}
     {{this.witness_person_id}}, {{this.witness_first_name}} {{this.witness_middle_name}} {{this.witness_last_name}}<br>
-{{/each}}
+{{/each}} --}}
+
+<style>
+  @import url(/css/fonts.css);
+
+  #header {
+      font-family: JuliusSansPro;
+  }
+</style>
+
+{{>navbar}}
+
+<div id="prenup_info" style="display: none" data-dedication="{{infant_dedication_id}}" ></div>
+  <div class="container" style="padding-left: 18%; padding-right: 10%;">
+    <h1 class="my-3"> View Child Dedication Record </h1>
+    <hr>
+    <div class="row">
+      <legend>Child Name</legend>
+      <div class="col">
+        <u for="first_name">First Name</u>
+        <p>{{infant_first_name}}</p>
+      </div>
+      <div class="col">
+        <u for="mid_name">Middle Initial</u>
+        <p>{{infant_middle_name}}</p>
+      </div>
+      <div class="col">
+        <u for="last_name">Last Name</u>
+        <p>{{infant_last_name}}</p>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <legend>Guardian One</legend>
+      <div class="col">
+        <u for="first_name">First Name</u>
+        <p>{{guardianOne_first_name}}</p>
+      </div>
+      <div class="col">
+        <u for="mid_name">Middle Initial</u>
+        <p>{{guardianOne_mid_name}}</p>
+      </div>
+      <div class="col">
+        <u for="last_name">Last Name</u>
+        <p>{{guardianOne_last_name}}</p>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <legend>Guardian Two</legend>
+      <div class="col">
+        <u for="first_name">First Name</u>
+        <p>{{guardianTwo_first_name}}</p>
+      </div>
+      <div class="col">
+        <u for="mid_name">Middle Initial</u>
+        <p>{{guardianTwo_mid_name}}</p>
+      </div>
+      <div class="col">
+        <u for="last_name">Last Name</u>
+        <p>{{guardianTwo_last_name}}</p>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-4">
+            <u> Officiant </u>
+            <p>{{officiant}}</p>
+        </div>
+        <div class="col-4">
+            <u> Address </u>
+            <p>{{place}}</p>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+      <legend>Witnesses</legend>
+      {{#each witnesses}}
+        {{>witness this}}
+      {{/each}}
+    </div>
+    <div class="row my-3">
+      <div class="col">
+        <a><button class="btn btn-secondary mb-4">Edit Dedication Form</button></a>
+      </div>
+    </div>
