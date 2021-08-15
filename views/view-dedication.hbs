@@ -69,15 +69,27 @@ Witnesses (Ninong/Ninang):<br>
       <legend>Guardian Two</legend>
       <div class="col">
         <u for="first_name">First Name</u>
-        <p>{{guardianTwo_first_name}}</p>
+        {{#if (isUndefined guardianTwo_first_name)}}
+          <p>N/A</p>
+        {{else}}
+          <p>{{guardianTwo_first_name}}</p>
+        {{/if}}
       </div>
       <div class="col">
         <u for="mid_name">Middle Initial</u>
-        <p>{{guardianTwo_mid_name}}</p>
+        {{#if (isUndefined guardianTwo_mid_name)}}
+          <p>N/A</p>
+        {{else}}
+          <p>{{guardianTwo_mid_name}}</p>
+        {{/if}}
       </div>
       <div class="col">
         <u for="last_name">Last Name</u>
-        <p>{{guardianTwo_last_name}}</p>
+        {{#if (isUndefined guardianTwo_last_name)}}
+          <p>N/A</p>
+        {{else}}
+          <p>{{guardianTwo_last_name}}</p>
+        {{/if}}
       </div>
     </div>
     <hr>
