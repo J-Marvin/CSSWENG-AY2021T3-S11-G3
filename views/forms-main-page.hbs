@@ -21,8 +21,9 @@
 
 <div id="maindiv" class="container maindiv d-flex justify-content-center align-items-center">
   <div class="row">
+    {{#if canSee}}
     <div class="col mx-3">
-      <a href="{{#if canSee}}/dedication_main_page{{else}}/add_dedication{{/if}}" class="mainBtns">
+      <a href="/dedication_main_page" class="mainBtns">
         <div class="card" style="width: 18rem;">
           <img src="../images/lineartone.png" class="card-img-top" alt="...">
           <div class="card-body">
@@ -32,6 +33,7 @@
         </div>
       </a>
     </div>
+    {{/if}}
     <div class="col mx-3">
       <a href="{{#if canSee}}/prenup_main_page{{else}}/add_prenup{{/if}}" class="mainBtns">
         <div class="card" style="width: 18rem;">

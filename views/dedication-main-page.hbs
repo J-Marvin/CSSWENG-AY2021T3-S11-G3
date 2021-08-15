@@ -40,29 +40,29 @@
           <p class="variables"> Dedication ID </p>
         </div>
         <div class="col-4 tile">
+          <p class="variables"> Child Name </p>
+        </div>
+        <div class="col-3 tile">
           <p class="variables"> Guardian One </p>
         </div>
         <div class="col-3 tile">
           <p class="variables"> Guardian Two </p>
-        </div>
-        <div class="col-3 tile">
-          <p class="variables"> Child name </p>
         </div>          
       </div>
       {{#each dedication}}
-      <a class="memberlink" href="/view_prenup/{{this.record_id}}">
+      <a class="memberlink" href="/view_dedication/{{this.dedication_id}}">
         <div class="row indivmember" style="--bs-gutter-x: 0rem;">
           <div class="col-2 tile">
-            <p class="variables"> {{this.record_id}} </p>
+            <p class="variables"> {{this.dedication_id}} </p>
           </div>
           <div class="col-4 tile">
-              <p class="variables"> </p>
+              <p class="variables"> {{this.infant_first_name}} {{this.infant_mid_name}} {{this.infant_last_name}}</p>
           </div>
           <div class="col-3 tile">
-            <p class="variables"> </p>
+            <p class="variables"> {{this.guardianOne_first_name}} {{this.guardianOne_mid_name}}. {{this.guardianOne_last_name}} </p>
           </div>
           <div class="col-3 tile">
-            <p class="variables"> </p>
+            <p class="variables"> {{this.guardianTwo_first_name}} {{this.guardianTwo_mid_name}}. {{this.guardianTwo_last_name}} </p>
           </div>
         </div>
       </a>
