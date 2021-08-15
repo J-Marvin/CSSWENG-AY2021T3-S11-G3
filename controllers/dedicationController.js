@@ -134,42 +134,42 @@ const dedicationController = {
       const columns = [
         // infant dedication table, index COL_INF = 0
         [
-          db.tables.INFANT_TABLE + '.' + infDedFields.ID + ' as dedicationId',
-          db.tables.INFANT_TABLE + '.' + infDedFields.PERSON + ' as personId',
-          db.tables.INFANT_TABLE + '.' + infDedFields.PARENTS + ' as parentsId',
+          db.tables.INFANT_TABLE + '.' + infDedFields.ID + ' as dedication_id',
+          db.tables.INFANT_TABLE + '.' + infDedFields.PERSON + ' as infant_person_id',
+          db.tables.INFANT_TABLE + '.' + infDedFields.PARENTS + ' as parents_id',
           db.tables.INFANT_TABLE + '.' + infDedFields.DATE + ' as date',
           db.tables.INFANT_TABLE + '.' + infDedFields.PLACE + ' as place',
           db.tables.INFANT_TABLE + '.' + infDedFields.OFFICIANT + ' as officiant',
-          db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE + ' as parent1Id',
-          db.tables.COUPLE_TABLE + '.' + coupleFields.MALE + ' as parent2Id',
-          db.tables.PERSON_TABLE + '.' + personFields.MEMBER + ' as memberId',
-          db.tables.PERSON_TABLE + '.' + personFields.FIRST_NAME + ' as firstName',
-          db.tables.PERSON_TABLE + '.' + personFields.MID_NAME + ' as middleName',
-          db.tables.PERSON_TABLE + '.' + personFields.LAST_NAME + ' as lastName'
+          db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE + ' as guardianOne_person_id',
+          db.tables.COUPLE_TABLE + '.' + coupleFields.MALE + ' as guardianTwo_person_id',
+          db.tables.PERSON_TABLE + '.' + personFields.MEMBER + ' as infant_member_id',
+          db.tables.PERSON_TABLE + '.' + personFields.FIRST_NAME + ' as infant_first_name',
+          db.tables.PERSON_TABLE + '.' + personFields.MID_NAME + ' as infant_middle_name',
+          db.tables.PERSON_TABLE + '.' + personFields.LAST_NAME + ' as infant_last_name'
         ],
         // getting the mother's name (parent1), index COL_PARENT1 = 1
         [
-          db.tables.PERSON_TABLE + '.' + personFields.MEMBER + ' as parent1MemberId',
-          db.tables.PERSON_TABLE + '.' + personFields.FIRST_NAME + ' as parent1First',
-          db.tables.PERSON_TABLE + '.' + personFields.MID_NAME + ' as parent1Mid',
-          db.tables.PERSON_TABLE + '.' + personFields.LAST_NAME + ' as parent1Last'
+          db.tables.PERSON_TABLE + '.' + personFields.MEMBER + ' as guardianOne_member_id',
+          db.tables.PERSON_TABLE + '.' + personFields.FIRST_NAME + ' as guardianOne_first_name',
+          db.tables.PERSON_TABLE + '.' + personFields.MID_NAME + ' as guardianOne_mid_name',
+          db.tables.PERSON_TABLE + '.' + personFields.LAST_NAME + ' as guardianOne_last_name'
         ],
         // getting the father's name (parent2), index COL_PARENT2 = 2
         [
-          db.tables.PERSON_TABLE + '.' + personFields.MEMBER + ' as parent2MemberId',
-          db.tables.PERSON_TABLE + '.' + personFields.FIRST_NAME + ' as parent2First',
-          db.tables.PERSON_TABLE + '.' + personFields.MID_NAME + ' as parent2Mid',
-          db.tables.PERSON_TABLE + '.' + personFields.LAST_NAME + ' as parent2Last'
+          db.tables.PERSON_TABLE + '.' + personFields.MEMBER + ' as guardianTwo_member_id',
+          db.tables.PERSON_TABLE + '.' + personFields.FIRST_NAME + ' as guardianTwo_first_name',
+          db.tables.PERSON_TABLE + '.' + personFields.MID_NAME + ' as guardianTwo_mid_name',
+          db.tables.PERSON_TABLE + '.' + personFields.LAST_NAME + ' as guardianTwo_last_name'
         ],
         // getting the witness, index COL_WITNESSES = 3
         [
-          db.tables.WITNESS_TABLE + '.' + witnessFields.DEDICATION + ' as dedicationId',
-          db.tables.WITNESS_TABLE + '.' + witnessFields.PERSON + ' as personId',
-          db.tables.WITNESS_TABLE + '.' + witnessFields.ID + ' as witnessId',
-          db.tables.PERSON_TABLE + '.' + personFields.MEMBER + ' as witnessMemberId',
-          db.tables.PERSON_TABLE + '.' + personFields.FIRST_NAME + ' as firstName',
-          db.tables.PERSON_TABLE + '.' + personFields.MID_NAME + ' as middleName',
-          db.tables.PERSON_TABLE + '.' + personFields.LAST_NAME + ' as lastName'
+          db.tables.WITNESS_TABLE + '.' + witnessFields.DEDICATION + ' as dedication_id',
+          db.tables.WITNESS_TABLE + '.' + witnessFields.PERSON + ' as witness_person_id',
+          db.tables.WITNESS_TABLE + '.' + witnessFields.ID + ' as witness_id',
+          db.tables.PERSON_TABLE + '.' + personFields.MEMBER + ' as witness_member_id',
+          db.tables.PERSON_TABLE + '.' + personFields.FIRST_NAME + ' as witness_first_name',
+          db.tables.PERSON_TABLE + '.' + personFields.MID_NAME + ' as witness_middle_name',
+          db.tables.PERSON_TABLE + '.' + personFields.LAST_NAME + ' as witness_last_name'
         ]
       ]
       const condWitness = new Condition(queryTypes.where)
@@ -181,8 +181,8 @@ const dedicationController = {
             ...result[0]
           }
           // get father and mother's name
-          const parent1Id = data.parent1Id // saved in couples.female_id
-          const parent2Id = data.parent2Id // saved in couples.male_id
+          const parent1Id = data.guardianOne_person_id // saved in couples.female_id
+          const parent2Id = data.guardianTwo_person_id // saved in couples.male_id
           console.log('parent1Id = ' + parent1Id)
           console.log('parent2Id = ' + parent2Id)
           // if single parent
@@ -193,10 +193,10 @@ const dedicationController = {
             // get only parent1
             db.find(db.tables.COUPLE_TABLE, condParent1, joinTables2[TABLE_PARENT1], columns[COL_PARENT1], function (parent1) {
               if (parent1.length > 0) {
-                data.parent1First = parent1[0].parent1First
-                data.parent1Mid = parent1[0].parent1Mid
-                data.parent1Last = parent1[0].parent1Last
-                data.parent1MemberId = parent1[0].parent1MemberId
+                data.guardianOne_first_name = parent1[0].guardianOne_first_name
+                data.guardianOne_mid_name = parent1[0].guardianOne_mid_name
+                data.guardianOne_last_name = parent1[0].guardianOne_last_name
+                data.guardianOne_member_id = parent1[0].guardianOne_member_id
 
                 // get witnesses
                 db.find(db.tables.WITNESS_TABLE, condWitness, joinTables2[TABLE_WITNESSES], columns[COL_WITNESSES], function (result) {
@@ -212,12 +212,10 @@ const dedicationController = {
                     data.backLink = parseInt(req.session.level) >= 2 ? '/dedication_main_page' : '/forms_main_page'
                     res.render('view-dedication', data)
                   } else {
-                    console.log('@if witnesses not found')
                     sendError('404 Witnesses Record Not Found', 404)
                   }
                 })
               } else {
-                console.log('@if parent1 not found')
                 sendError('404 Parent 1 Record Not Found', 404)
               }
             })
@@ -231,18 +229,18 @@ const dedicationController = {
             // get parent1
             db.find(db.tables.COUPLE_TABLE, condParent1, joinTables2[TABLE_PARENT1], columns[COL_PARENT1], function (parent1) {
               if (parent1.length > 0) {
-                data.parent1First = parent1[0].parent1First
-                data.parent1Mid = parent1[0].parent1Mid
-                data.parent1Last = parent1[0].parent1Last
-                data.parent1MemberId = parent1[0].parent1MemberId
+                data.guardianOne_first_name = parent1[0].guardianOne_first_name
+                data.guardianOne_mid_name = parent1[0].guardianOne_mid_name
+                data.guardianOne_last_name = parent1[0].guardianOne_last_name
+                data.guardianOne_member_id = parent1[0].guardianOne_member_id
 
                 // get parent2
                 db.find(db.tables.COUPLE_TABLE, condParent2, joinTables2[TABLE_PARENT2], columns[COL_PARENT2], function (parent2) {
                   if (parent2.length > 0) {
-                    data.parent2First = parent2[0].parent2First
-                    data.parent2Mid = parent2[0].parent2Mid
-                    data.parent2Last = parent2[0].parent2Last
-                    data.parent2MemberId = parent2[0].parent2MemberId
+                    data.guardianTwo_first_name = parent2[0].guardianTwo_first_name
+                    data.guardianTwo_mid_name = parent2[0].guardianTwo_mid_name
+                    data.guardianTwo_last_name = parent2[0].guardianTwo_last_name
+                    data.guardianTwo_member_id = parent2[0].guardianTwo_member_id
 
                     // get witnesses
                     db.find(db.tables.WITNESS_TABLE, condWitness, joinTables2[TABLE_WITNESSES], columns[COL_WITNESSES], function (result) {

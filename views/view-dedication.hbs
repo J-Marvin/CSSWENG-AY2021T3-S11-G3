@@ -1,20 +1,20 @@
 {{>navbar}}
-DedicationId: {{dedicationId}}<br>
-Child memberId: {{memberId}}<br>
-Child personId: {{personId}}<br>
-Child: {{firstName}}, {{middleName}}, {{lastName}}<br>
+DedicationId: {{infant_dedication_id}}<br>
+Child memberId: {{infant_member_id}}<br>
+Child personId: {{infant_person_id}}<br>
+Child: {{infant_first_name}}, {{infant_middle_name}}, {{infant_last_name}}<br>
 
-ParentsId: {{parentsId}}<br>
-Parent1: {{parent1First}}, {{parent1Mid}}, {{parent1Last}}<br>
-Parent1 personId: {{parent1Id}}, Parent1 memberId: {{parent1MemberId}}<br>
+ParentsId: {{parents_id}}<br>
+Guardian1: {{guardianOne_first_name}}, {{guardianOne_mid_name}}, {{guardianOne_last_name}}<br>
+Guardian1 personId: {{guardianOne_person_id}}, Parent1 memberId: {{guardianOne_member_id}}<br>
 
-Parent2: {{parent2First}}, {{parent2Mid}}, {{parent2Last}}<br>
-Parent2 personId: {{parent2Id}}, Parent2 memberId: {{parent2MemberId}}<br>
+Guardian2: {{guardianTwo_first_name}}, {{guardianTwo_mid_name}}, {{guardianTwo_last_name}}<br>
+Guardian2 personId: {{guardianTwo_person_id}}, Parent2 memberId: {{guardianTwo_member_id}}<br>
 
 Officiant: {{officiant}}<br>
 Date: {{dateView date}}<br>
 Place: {{place}}<br>
 Witnesses (Ninong/Ninang):<br>
 {{#each witnesses}}
-    {{this.personId}}, {{this.firstName}} {{this.middleName}} {{this.lastName}}<br>
+    {{this.witness_person_id}}, {{this.witness_first_name}} {{this.witness_middle_name}} {{this.witness_last_name}}<br>
 {{/each}}
