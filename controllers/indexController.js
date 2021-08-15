@@ -8,7 +8,7 @@ const infDedFields = require('../models/infantDedication')
 
 const controller = {
   getMainPage: function (req, res) {
-    req.session.editMemberId = null
+    req.session.editId = null
     const level = req.session.level
     if (level !== undefined && level !== null) {
       res.render('main-page', {
@@ -31,7 +31,7 @@ const controller = {
   },
   getMemberMainPage: function (req, res) {
     const level = req.session.level
-    req.session.editMemberId = null
+    req.session.editId = null
     if (level === undefined || level === null || parseInt(level) === 1) {
       res.status(401)
       res.render('error', {
@@ -71,6 +71,7 @@ const controller = {
   },
 
   getFormsMainPage: function (req, res) {
+    req.session.editId = null
     res.render('forms-main-page', {
       level: req.session.level,
       styles: ['mainPage'],
@@ -81,6 +82,7 @@ const controller = {
 
   getDedicationMainPage: function (req, res) {
     const level = req.session.level
+    req.session.editId = null
 
     if (level === undefined || level === null || parseInt(level) === 1) {
       res.status(401)
@@ -141,6 +143,7 @@ const controller = {
   },
 
   getPrenupMainPage: function (req, res) {
+    req.session.editId = null
     const level = req.session.level
 
     if (level === undefined || level === null || parseInt(level) === 1) {
