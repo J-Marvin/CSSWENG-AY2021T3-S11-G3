@@ -4,8 +4,6 @@ $(document).ready(function() {
   var GFatherWitnessCtr = 0
   var addedWitness = false
   var witnessType = null
-  var addWitnessMale = false
-  var addWitnessFemale = false
 
   const selectChild = $('#input_child_member').selectize()
   const selectParent1 = $('#input_parent1_member').selectize()
@@ -159,7 +157,6 @@ $(document).ready(function() {
 
   $('#create-dedication').click(function (){
 
-    console.log(validateFields())
     $('#create-dedication').prop('disabled', true)
     if(validateFields()) {
       const data = {
@@ -179,28 +176,34 @@ $(document).ready(function() {
 
       data.officiant = $('#officiant').val()
       data.place = $('#address').val()
-      data.witnesses = []
+      data.witnessMale = []
+      data.witnessFemale = []
       data.date = new Date($('#date').val()).toISOString()
 
       const witnesses = $('.witness')
-
       for (witness of witnesses) {
         const currWitness = {}
+        const isMale = $(witness).hasClass('male')
+        currWitness.type = isMale ? 'Godfather' : 'Godmother'
 
         if($(witness).attr('data-member-info') !== null && $(witness).attr('data-member-info') !== undefined) {
           currWitness.person_id = $(witness).attr('data-member-info').split(', ')[1]
           currWitness.isMember = true
-          console.log(currWitness.person_id)
         } else {
           currWitness.first_name = $(witness).find('.first_name').text()
           currWitness.mid_name = $(witness).find('.mid_name').text()
           currWitness.last_name = $(witness).find('.last_name').text()
         }
 
-        data.witnesses.push(currWitness)
+        if (isMale) {
+          data.witnessMale.push(currWitness)
+        } else {
+          data.witnessFemale.push(currWitness)
+        }
       }
       
-      data.witnesses = JSON.stringify(data.witnesses)
+      data.witnessMale = JSON.stringify(data.witnessMale)
+      data.witnessFemale = JSON.stringify(data.witnessFemale)
 
       $.ajax({
         type: 'POST',
@@ -224,7 +227,7 @@ $(document).ready(function() {
   $('#add_gmother_witness').click(function (){
     var isValid = true
 
-    var witnessMember = $('#input_witness_gmother_member').val() === '0'
+    var witnessMember = $('#input_witness_gmother_member').val() === '0' || $('#input_witness_gmother_member').val() === ''
     var witnessNonMember = $('#witness_gmother_first_name').val() === '' || $('#witness_gmother_mid_name').val() === '' || $('#witness_gmother_last_name').val() === ''
 
     if (witnessMember && witnessNonMember) {
@@ -236,14 +239,13 @@ $(document).ready(function() {
 
     if(isValid) {
       var witnessName
-      console.log(witnessMember)
       if(witnessMember) {
         const firstName = $('#witness_gmother_first_name').val()
         const midName = $('#witness_gmother_mid_name').val()
         const lastName = $('#witness_gmother_last_name').val()
         $('#gmother_witness_row').append(
           "<div class='col-4' style='margin-bottom: 1em;'>" +
-            "<div class='card witness'><div class='card-body'>" + 
+            "<div class='card witness female'><div class='card-body'>" + 
               "<p class='card-text'>" + 
                 "<span class='first_name'>" + firstName + "</span> " + 
                 "<span class='mid_name'>" + midName + "</span> " + 
@@ -273,7 +275,7 @@ $(document).ready(function() {
   $('#add_gfather_witness').click(function (){
     var isValid = true
 
-    var witnessMember = $('#input_witness_gfather_member').val() === '0'
+    var witnessMember = $('#input_witness_gfather_member').val() === '0' || $('#input_witness_gfather_member').val() === ''
     var witnessNonMember = $('#witness_gfather_first_name').val() === '' || $('#witness_gfather_mid_name').val() === '' || $('#witness_gfather_last_name').val() === ''
 
     if (witnessMember && witnessNonMember) {
@@ -285,14 +287,13 @@ $(document).ready(function() {
 
     if(isValid) {
       var witnessName
-      console.log(witnessMember)
       if(witnessMember) {
         const firstName = $('#witness_gfather_first_name').val()
         const midName = $('#witness_gfather_mid_name').val()
         const lastName = $('#witness_gfather_last_name').val()
         $('#gfather_witness_row').append(
           "<div class='col-4' style='margin-bottom: 1em;'>" +
-            "<div class='card witness'><div class='card-body'>" + 
+            "<div class='card witness male'><div class='card-body'>" + 
               "<p class='card-text'>" + 
                 "<span class='first_name'>" + firstName + "</span> " + 
                 "<span class='mid_name'>" + midName + "</span> " + 
@@ -306,7 +307,7 @@ $(document).ready(function() {
         const witness_info = $('#input_witness_gfather_member').val()
         witnessName = witness_info.replace(/\d+/g, '')
         witnessName = witnessName.replace(/,/g, '')
-        $('#gfather_witness_row').append("<div class='col-4' style='margin-bottom: 1em;'><div class='card witness' data-member-info=\"" + witness_info + "\"><div class='card-body'><p class='card-text'>" + witnessName + "</p><button type='button' class='fas fa-trash delGFatherWitnessBtn '></button> </div></div></div>")
+        $('#gfather_witness_row').append("<div class='col-4' style='margin-bottom: 1em;'><div class='card witness male' data-member-info=\"" + witness_info + "\"><div class='card-body'><p class='card-text'>" + witnessName + "</p><button type='button' class='fas fa-trash delGFatherWitnessBtn '></button> </div></div></div>")
       }
       $('#witness_gfather_info_error').text('')
       $('#witness_gfather_first_name').val('')
@@ -325,6 +326,7 @@ $(document).ready(function() {
     } else {
       $('#GMotherWitnessModal').modal('show')
       $('#witness_gmother_info_error').text('')
+      isMaleModal = false
     }
   })
 
@@ -334,6 +336,7 @@ $(document).ready(function() {
     } else {
       $('#GFatherWitnessModal').modal('show')
       $('#witness_gfather_info_error').text('')
+      isMaleModal = true
     }
   })
 
@@ -355,7 +358,7 @@ $(document).ready(function() {
     GFatherWitnessCtr--
   })
 
-  $('#witnessModal').on('hide.bs.modal', resetModal)
+  $('.modal').on('hide.bs.modal', resetModal)
   
 
   /**
@@ -399,23 +402,26 @@ $(document).ready(function() {
   }
 
   function resetModal() {
-    var currWitness = $('#input_witness_gmother_member').val()
-    $('#input_witness_gmother_member').data('previous', null)
-    if (currWitness !== '' && !addedWitness) {
-      selectizeEnable(currWitness)
-    } else {
-      addedWitness = false
-    }
-    $(selectWitnessGMother)[0].selectize.setValue('0')
 
-    var currWitness = $('#input_witness_gfather_member').val()
-    $('#input_witness_gfather_member').data('previous', null)
-    if (currWitness !== '' && !addedWitness) {
-      selectizeEnable(currWitness)
+    if (isMaleModal) {
+      var currWitness = $('#input_witness_gfather_member').val()
+      $('#input_witness_gfather_member').data('previous', null)
+      if (currWitness !== '' && !addedWitness) {
+        selectizeEnable(currWitness)
+      } else {
+        addedWitness = false
+      }
+      $(selectWitnessGFather)[0].selectize.setValue('0')
     } else {
-      addedWitness = false
+      var currWitness = $('#input_witness_gmother_member').val()
+      $('#input_witness_gmother_member').data('previous', null)
+      if (currWitness !== '' && !addedWitness) {
+        selectizeEnable(currWitness)
+      } else {
+        addedWitness = false
+      }
+      $(selectWitnessGMother)[0].selectize.setValue('0')
     }
-    $(selectWitnessGFather)[0].selectize.setValue('0')
   }
 
   function validateFields() {
@@ -521,7 +527,7 @@ $(document).ready(function() {
     $('#input_parent1_member').parent().find('.option[data-value="' + data + '"]').removeAttr('data-selectable')
     $('#input_parent2_member').parent().find('.option[data-value="' + data + '"]').removeAttr('data-selectable')
     $('#input_witness_gmother_member').parent().find('.option[data-value="' + data + '"]').removeAttr('data-selectable')
-    $('#input_witness_gmfather_member').parent().find('.option[data-value="' + data + '"]').removeAttr('data-selectable')
+    $('#input_witness_gfather_member').parent().find('.option[data-value="' + data + '"]').removeAttr('data-selectable')
   }
 
   function initSelectize() {

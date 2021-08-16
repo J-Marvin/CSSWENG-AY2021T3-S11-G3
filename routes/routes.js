@@ -25,6 +25,9 @@ app.get('/edit_member/:member_id', memberController.getEditMember)
 app.get('/edit_prenup/:prenup_id', prenupController.getEditPrenup)
 app.get('/forms_main_page', indexController.getFormsMainPage)
 
+// TODO: DELETE THIS
+app.get('/test/:dedication_id', dedicationController.getViewDedicationTemp)
+
 app.get('/member/:member_id', memberController.getViewMember)
 
 app.get('/prenup_main_page', indexController.getPrenupMainPage)
