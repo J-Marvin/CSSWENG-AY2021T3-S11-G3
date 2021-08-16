@@ -303,6 +303,9 @@ function initDatabase (file) {
     'CREATE TABLE IF NOT EXISTS wedding_reg (' +
     'reg_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,' +
     'prenup_record_id INTEGER NOT NULL,' +
+    'couple_id INTEGER NOT NULL,' +
+    'date TEXT, ' +
+    'date_of_wedding TEXT,' +
     'bride_parents_id INTEGER,' +
     'groom_parents_id INTEGER,' +
     'date TEXT,' +
