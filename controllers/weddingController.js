@@ -281,7 +281,10 @@ const weddingController = {
 
         db.insert(db.tables.COUPLE_TABLE, coupleInfo, function (result) {
           if (result) {
-            
+            result = result[0]
+            data[weddingRegFields.BRIDE_PARENTS] = result - coupleOffsets.brideParents
+            data[weddingRegFields.GROOM_PARENTS] = result - coupleOffsets.groomParents
+            // if data[couple] is null, get from result
           } else {
             res.send(false)
           }
