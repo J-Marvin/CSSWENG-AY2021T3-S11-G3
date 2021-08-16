@@ -104,6 +104,197 @@ const weddingController = {
       }
     })
   },
+
+  postAddWedding: function (req, res) {
+    const data = {}
+
+    const people = {
+      bride: null,
+      groom: null,
+      brideMother: null,
+      brideFather: null,
+      groomMother: null,
+      groomFather: null
+    }
+    const couples = {
+      couple: {},
+      brideParents: {},
+      groomParents: {}
+    }
+
+    const peopleOffsets = {
+      bride: 0,
+      groom: 0,
+      brideMother: 0,
+      brideFather: 0,
+      groomMother: 0,
+      groomFather: 0
+    }
+
+    const coupleOffsets = {
+      brideParents: 0,
+      groomParents: 0
+    }
+
+    const peopleInfo = []
+    const coupleInfo = []
+
+    // Extract data from req.body
+    const hasPrenup = req.body.hasPrenup
+    people.bride = JSON.parse(req.body.bride)
+    people.groom = JSON.parse(req.body.groom)
+    people.brideMother = JSON.parse(req.body.bride_mother)
+    people.brideFather = JSON.parse(req.body.bride_father)
+    people.groomMother = JSON.parse(req.body.groom_mother)
+    people.groomFather = JSON.parse(req.body.groom_father)
+
+    // If the form already has prenup, couple_id should be in req.body
+    if (hasPrenup) {
+      couples.couple = req.body.couple_id // CHANGE
+    } else {
+      if (people.bride.isMember) {
+        couples.couple[coupleFields.FEMALE] = people.bride.person_id
+      } else {
+        const bride = {}
+        bride[personFields.FIRST_NAME] = people.bride.first_name
+        bride[personFields.MID_NAME] = people.bride.mid_name
+        bride[personFields.LAST_NAME] = people.bride.last_name
+
+        peopleInfo.push(bride)
+      }
+
+      if (people.groom.isMember) {
+        couples.couple[coupleFields.MALE] = people.groom.person_id
+      } else {
+        const groom = {}
+        groom[personFields.FIRST_NAME] = people.groom.first_name
+        groom[personFields.MID_NAME] = people.groom.mid_name
+        groom[personFields.LAST_NAME] = people.groom.last_name
+
+        peopleInfo.push(groom)
+
+        peopleOffsets.bride += 1
+      }
+    }
+
+    // check Bride Parents
+    if (people.brideMother.isMember) {
+      couples.brideParents[coupleFields.FEMALE] = people.brideMother.person_id
+    } else {
+      const parent = {}
+      parent[personFields.FIRST_NAME] = people.brideMother.first_name
+      parent[personFields.MID_NAME] = people.brideMother.mid_name
+      parent[personFields.LAST_NAME] = people.brideMother.last_name
+
+      peopleInfo.push(parent)
+
+      peopleOffsets.bride += 1
+      peopleOffsets.groom += 1
+    }
+
+    if (people.brideFather.isMember) {
+      couples.brideParents[coupleFields.MALE] = people.brideFather.person_id
+    } else {
+      const parent = {}
+      parent[personFields.FIRST_NAME] = people.brideFather.first_name
+      parent[personFields.MID_NAME] = people.brideFather.mid_name
+      parent[personFields.LAST_NAME] = people.brideFather.last_name
+
+      peopleInfo.push(parent)
+
+      peopleOffsets.bride += 1
+      peopleOffsets.groom += 1
+      peopleOffsets.brideMother += 1
+    }
+
+    // Check Groom Parents
+
+    if (people.groomMother.isMember) {
+      couples.groomParents[coupleFields.FEMALE] = people.groomMother.person_id
+    } else {
+      const parent = {}
+      parent[personFields.FIRST_NAME] = people.groomMother.first_name
+      parent[personFields.MID_NAME] = people.groomMother.mid_name
+      parent[personFields.LAST_NAME] = people.groomMother.last_name
+
+      peopleInfo.push(parent)
+
+      peopleOffsets.bride += 1
+      peopleOffsets.groom += 1
+      peopleOffsets.brideMother += 1
+      peopleOffsets.brideFather += 1
+    }
+
+    if (people.groomFather.isMember) {
+      couples.groomParents[coupleFields.MALE] = people.groomFather.person_id
+    } else {
+      const parent = {}
+      parent[personFields.FIRST_NAME] = people.groomFather.first_name
+      parent[personFields.MID_NAME] = people.groomFather.mid_name
+      parent[personFields.LAST_NAME] = people.groomFather.last_name
+
+      peopleInfo.push(parent)
+
+      peopleOffsets.bride += 1
+      peopleOffsets.groom += 1
+      peopleOffsets.brideMother += 1
+      peopleOffsets.brideFather += 1
+      peopleOffsets.brideMother += 1
+    }
+
+    db.insert(db.tables.PERSON_TABLE, peopleInfo, function (result) {
+      if (result) {
+        result = result[0]
+
+        if (!people.bride.isMember) {
+          couples.couple[coupleFields.FEMALE] = result - peopleOffsets.bride
+        }
+
+        if (!people.groom.isMember) {
+          couples.couple[coupleFields.MALE] = result - peopleOffsets.groom
+        }
+
+        if (!people.brideMother.isMember) {
+          couples.brideParents[coupleFields.FEMALE] = result - peopleOffsets.brideMother
+        }
+
+        if (!people.brideFather.isMember) {
+          couples.brideParents[coupleFields.MALE] = result - peopleOffsets.brideFather
+        }
+
+        if (!people.groomMother.isMember) {
+          couples.groomParents[coupleFields.FEMALE] = result - peopleOffsets.groomMother
+        }
+
+        if (!people.groomFather.isMember) {
+          couples.groomParents[coupleFields.MALE] = result.peopleOffsets.groomFather
+        }
+
+        coupleInfo.push(couples.brideParents)
+        coupleInfo.push(couples.groomParents)
+        coupleOffsets.brideParents += 1
+        if (!hasPrenup) {
+          coupleInfo.push(couples.couple)
+          coupleOffsets.brideParents += 1
+          coupleOffsets.groomParents += 1
+        }
+
+        db.insert(db.tables.COUPLE_TABLE, coupleInfo, function (result) {
+          if (result) {
+            result = result[0]
+            data[weddingRegFields.BRIDE_PARENTS] = result - coupleOffsets.brideParents
+            data[weddingRegFields.GROOM_PARENTS] = result - coupleOffsets.groomParents
+            // if data[couple] is null, get from result
+          } else {
+            res.send(false)
+          }
+        })
+      } else {
+        res.send(false)
+      }
+    })
+  },
+
   /**
    * This function updates a row in the wedding table
    * @param req - the incoming request containing either the query or body

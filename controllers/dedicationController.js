@@ -46,6 +46,10 @@ const dedicationController = {
           data.styles = ['forms']
           data.scripts = ['addDedication']
           data.backLink = parseInt(req.session.level) >= 2 ? '/dedication_main_page' : '/forms_main_page'
+          data.males = data.members.filter((element) => { return element[memberFields.SEX] === 'Male' })
+          data.females = data.members.filter((element) => { return element[memberFields.SEX] === 'Female' })
+
+          console.log(data)
           res.render('add-child-dedication', data)
         }
       })
@@ -139,6 +143,7 @@ const dedicationController = {
           db.tables.INFANT_TABLE + '.' + infDedFields.PERSON + ' as infant_person_id',
           db.tables.INFANT_TABLE + '.' + infDedFields.PARENTS + ' as parents_id',
           db.tables.INFANT_TABLE + '.' + infDedFields.DATE + ' as date',
+          db.tables.INFANT_TABLE + '.' + infDedFields.DEDICATION_DATE + ' as dedication_date',
           db.tables.INFANT_TABLE + '.' + infDedFields.PLACE + ' as place',
           db.tables.INFANT_TABLE + '.' + infDedFields.OFFICIANT + ' as officiant',
           db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE + ' as guardianOne_person_id',
@@ -301,6 +306,7 @@ const dedicationController = {
     data[infDedFields.OFFICIANT] = req.body.officiant
     data[infDedFields.DATE] = new Date().toISOString()
     data[infDedFields.PLACE] = req.body.place
+    data[infDedFields.DEDICATION_DATE] = req.body.date
 
     /* req.body.guardian1 fields:
        personId
@@ -321,7 +327,9 @@ const dedicationController = {
       people.guardian2 = JSON.parse(req.body.guardian2)
     }
     people.child = JSON.parse(req.body.child)
-    people.witnesses = JSON.parse(req.body.witnesses)
+    // people.witnesses = JSON.parse(req.body.witnesses)
+    people.witnessMale = JSON.parse(req.body.witnessMale)
+    people.witnessFemale = JSON.parse(req.body.witnessFemale)
 
     // people to be inserted in the people table
     const peopleInfo = []
@@ -395,10 +403,25 @@ const dedicationController = {
                   const witnessInfo = []
                   const witnesses = []
 
-                  people.witnesses.forEach(function (witness) {
+                  people.witnessMale.forEach(function (witness) {
                     const currWitness = {}
+                    currWitness[witnessFields.TYPE] = 'Godfather'
+                    if (witness.isMember) {
+                      currWitness[witnessFields.DEDICATION] = dedicationId
+                      currWitness[witnessFields.PERSON] = witness.person_id
+                      witnesses.push(currWitness)
+                    } else { // For every non-member witness, add to witnessInfo to insert to people table
+                      currWitness[personFields.FIRST_NAME] = witness.first_name
+                      currWitness[personFields.MID_NAME] = witness.mid_name
+                      currWitness[personFields.LAST_NAME] = witness.last_name
 
-                    // For every membmer witness, add to currWitnesses
+                      witnessInfo.push(currWitness)
+                    }
+                  })
+
+                  people.witnessFemale.forEach(function (witness) {
+                    const currWitness = {}
+                    currWitness[witnessFields.TYPE] = 'Godmother'
                     if (witness.isMember) {
                       currWitness[witnessFields.DEDICATION] = dedicationId
                       currWitness[witnessFields.PERSON] = witness.person_id
