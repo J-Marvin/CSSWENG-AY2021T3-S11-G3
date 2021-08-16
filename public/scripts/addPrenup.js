@@ -129,10 +129,10 @@ $(document).ready(function () {
     var isValid = true
 
     var brideNonMember = validator.isEmpty($('#bride_first_name').val()) || validator.isEmpty($('#bride_mid_name').val()) || validator.isEmpty($('#bride_last_name').val())
-    var brideMember = $('#input_bride_member').val() === '0' || $('#input_bride_member').val() === null
+    var brideMember = $('#input_bride_member').val() === '0' || $('#input_bride_member').val() === ''
 
     var groomNonMember = validator.isEmpty($('#groom_first_name').val()) || validator.isEmpty($('#groom_mid_name').val()) || validator.isEmpty($('#groom_last_name').val())
-    var groomMember = $('#input_groom_member').val() === '0' || $('#input_groom_member').val() === null
+    var groomMember = $('#input_groom_member').val() === '0' || $('#input_groom_member').val() === ''
 
     var checkBrideNonMember = $('#bride_non_member').is(':checked')
     var checkBrideMember = $('#bride_member').is(':checked')
