@@ -199,6 +199,7 @@ $(document).ready(function() {
 
   $('#add_witness').click(function (){
     var isValid = true
+
     var witnessMember = $('#input_witness_member').val() === '0' || $('#input_witness_member').val() === ''
     var witnessNonMember = $('#witness_first_name').val() === '' || $('#witness_mid_name').val() === '' || $('#witness_last_name').val() === ''
 
