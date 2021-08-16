@@ -2,6 +2,10 @@ $(document).ready(function() {
 
   var witnessCtr = 0
   var addedWitness = false
+  var witnessType = null
+  var addWitnessMale = false
+  var addWitnessFemale = false
+
   const selectChild = $('#input_child_member').selectize()
   const selectParent1 = $('#input_parent1_member').selectize()
   const selectParent2 = $('#input_parent2_member').selectize()
@@ -392,7 +396,6 @@ $(document).ready(function() {
     } else {
       $('#witness_info_error').text('')
     }
-  
   
     return isValid
   }
