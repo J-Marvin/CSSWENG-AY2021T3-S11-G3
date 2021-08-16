@@ -314,8 +314,9 @@ $(document).ready(function() {
 
   function validateFields() {
     var isValid = true
-  
-    var childFieldMember = $('#input_child_member').val() === null
+    
+    var childNonMember = $('#child_non_member').is(':checked')
+    var childFieldMember = $('#input_child_member').val() === '0'
     var childFieldNonMember = $('#child_first_name').val() === '' || $('#child_mid_name').val() === '' || $('#child_last_name').val() === ''
     //alert(childFieldNonMember + ' ' + childFieldMember )
   
@@ -331,7 +332,7 @@ $(document).ready(function() {
     var dateField = $('#date').val() === ''
   
   
-    if (childFieldMember && childFieldNonMember) {
+    if ((childNonMember && childFieldNonMember) || (!childNonMember && childFieldMember)) {
       isValid = false
       $('#child_info_error').text('Please provide child name')
     } else {
