@@ -195,8 +195,7 @@ $(document).ready(function() {
 
   $('#add_witness').click(function (){
     var isValid = true
-
-    var witnessMember = $('#input_witness_member').val() === '0'
+    var witnessMember = $('#input_witness_member').val() === '0' || $('#input_witness_member').val() === ''
     var witnessNonMember = $('#witness_first_name').val() === '' || $('#witness_mid_name').val() === '' || $('#witness_last_name').val() === ''
 
     if (witnessMember && witnessNonMember) {
@@ -318,15 +317,15 @@ $(document).ready(function() {
     var isValid = true
     
     var childNonMember = $('#child_non_member').is(':checked')
-    var childFieldMember = $('#input_child_member').val() === '0'
+    var childFieldMember = $('#input_child_member').val() === '0' || $('#input_child_member').val() === ''
     var childFieldNonMember = $('#child_first_name').val() === '' || $('#child_mid_name').val() === '' || $('#child_last_name').val() === ''
     //alert(childFieldNonMember + ' ' + childFieldMember )
   
-    var guardianOneMember = $('#input_parent1_member').val() === '0'
+    var guardianOneMember = $('#input_parent1_member').val() === '0' || $('#input_parent1_member').val() === ''
     var guardianOneNonMember = $('#parent1_first_name').val() === '' || $('#parent1_mid_name').val() === '' || $('#parent1_last_name').val() === ''
   
     var guardianTwoNone = $('#parent2_none').is(':checked')
-    var guardianTwoMember = $('#input_parent2_member').val() === '0'
+    var guardianTwoMember = $('#input_parent2_member').val() === '0' || $('#input_parent2_member').val() === ''
     var guardianTwoNonMember = $('#parent2_first_name').val() === '' || $('#parent2_mid_name').val() === '' || $('#parent2_last_name').val() === ''
   
     var officiantField = $('#officiant').val() === ''
