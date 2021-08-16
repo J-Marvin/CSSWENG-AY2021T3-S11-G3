@@ -235,6 +235,7 @@ function initDatabase (file) {
     'person_id INTEGER NOT NULL, ' +
     'parents_id INTEGER, ' +
     'date TEXT, ' +
+    'dedication_date TEXT, ' +
     'place TEXT, ' +
     'officiant TEXT,' +
     'FOREIGN KEY(person_id) REFERENCES people(person_id),' +

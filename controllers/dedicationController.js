@@ -139,6 +139,7 @@ const dedicationController = {
           db.tables.INFANT_TABLE + '.' + infDedFields.PERSON + ' as infant_person_id',
           db.tables.INFANT_TABLE + '.' + infDedFields.PARENTS + ' as parents_id',
           db.tables.INFANT_TABLE + '.' + infDedFields.DATE + ' as date',
+          db.tables.INFANT_TABLE + '.' + infDedFields.DEDICATION_DATE + ' as dedication_date',
           db.tables.INFANT_TABLE + '.' + infDedFields.PLACE + ' as place',
           db.tables.INFANT_TABLE + '.' + infDedFields.OFFICIANT + ' as officiant',
           db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE + ' as guardianOne_person_id',
@@ -301,6 +302,7 @@ const dedicationController = {
     data[infDedFields.OFFICIANT] = req.body.officiant
     data[infDedFields.DATE] = new Date().toISOString()
     data[infDedFields.PLACE] = req.body.place
+    data[infDedFields.DEDICATION_DATE] = req.body.date
 
     /* req.body.guardian1 fields:
        personId

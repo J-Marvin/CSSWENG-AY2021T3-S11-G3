@@ -7,7 +7,7 @@ $(document).ready(function() {
   const selectParent2 = $('#input_parent2_member').selectize()
   const selectWitness = $('#input_witness_member').selectize()
 
-  
+  initDate()
   initSelectize()
   
   $('select').change(hideChoices)
@@ -152,6 +152,7 @@ $(document).ready(function() {
       data.officiant = $('#officiant').val()
       data.place = $('#address').val()
       data.witnesses = []
+      data.date = new Date($('#date').val()).toISOString()
 
       const witnesses = $('.witness')
 
@@ -417,6 +418,12 @@ $(document).ready(function() {
     $('.selectize-dropdown').hide();
     $('.selectize-input').removeClass('focus input-active dropdown-active');
     $('div.selectize-input > input').blur();
+  }
+
+  function initDate() {
+    const today = new Date()
+
+    $('#date').val(today.getFullYear() + '-' + (today.getMonth() + 1).toString().padStart(2, '0') + '-' + today.getDate())
   }
 })
 
