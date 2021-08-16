@@ -136,3 +136,21 @@ Witnesses (Ninong/Ninang):<br>
       </div>
     </div>
     {{/if}}
+
+    Male
+    <br>
+    {{#each witnessMale}} 
+    {{this.witness_first_name}},
+    {{this.witness_middle_name}},
+    {{this.witness_last_name}}
+    <br>
+    {{/each}}
+    <br>
+    Female
+    <br>
+    {{#each witnessFemale}}
+    {{this.witness_first_name}} ,
+    {{this.witness_middle_name}} ,
+    {{this.witness_last_name}} 
+    <br>
+    {{/each}}

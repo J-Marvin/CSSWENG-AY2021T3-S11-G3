@@ -413,7 +413,6 @@ function initDatabase (file) {
     'date_of_wedding TEXT,' +
     'bride_parents_id INTEGER,' +
     'groom_parents_id INTEGER,' +
-    'date TEXT,' +
     'location TEXT, ' +
     'solemnizing_officer TEXT,' +
     'contract_no TEXT, ' +
