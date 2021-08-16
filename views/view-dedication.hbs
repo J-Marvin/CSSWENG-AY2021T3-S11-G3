@@ -38,6 +38,9 @@ Witnesses (Ninong/Ninang):<br>
       <div class="col">
         <u for="first_name">First Name</u>
         <p>{{infant_first_name}}</p>
+        {{#if infant_member_id}}
+          <a href="/member/{{infant_member_id}}"><button class="btn btn-secondary mb-4">Child's Member Profile</button></a>
+        {{/if}}
       </div>
       <div class="col">
         <u for="mid_name">Middle Initial</u>
@@ -54,6 +57,9 @@ Witnesses (Ninong/Ninang):<br>
       <div class="col">
         <u for="first_name">First Name</u>
         <p>{{guardianOne_first_name}}</p>
+        {{#if guardianOne_member_id}}
+          <a href="/member/{{guardianOne_member_id}}"><button class="btn btn-secondary mb-4">Member Profile</button></a>
+        {{/if}}
       </div>
       <div class="col">
         <u for="mid_name">Middle Initial</u>
@@ -73,6 +79,9 @@ Witnesses (Ninong/Ninang):<br>
           <p>N/A</p>
         {{else}}
           <p>{{guardianTwo_first_name}}</p>
+          {{#if guardianTwo_member_id}}
+          <a href="/member/{{guardianTwo_member_id}}"><button class="btn btn-secondary mb-4">Member Profile</button></a>
+          {{/if}}
         {{/if}}
       </div>
       <div class="col">
@@ -110,8 +119,10 @@ Witnesses (Ninong/Ninang):<br>
         {{>witness this}}
       {{/each}}
     </div>
+    {{#if canSee}}
     <div class="row my-3">
       <div class="col">
         <a><button class="btn btn-secondary mb-4">Edit Dedication Form</button></a>
       </div>
     </div>
+    {{/if}}

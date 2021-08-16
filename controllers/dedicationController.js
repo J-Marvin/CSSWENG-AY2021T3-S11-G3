@@ -45,6 +45,7 @@ const dedicationController = {
           data.members = result
           data.styles = ['forms']
           data.scripts = ['addDedication']
+          data.backLink = parseInt(req.session.level) >= 2 ? '/dedication_main_page' : '/forms_main_page'
           res.render('add-child-dedication', data)
         }
       })
@@ -210,6 +211,7 @@ const dedicationController = {
                     data.styles = ['view']
                     // data.scripts = ['']
                     data.backLink = parseInt(req.session.level) >= 2 ? '/dedication_main_page' : '/forms_main_page'
+                    console.log(data)
                     res.render('view-dedication', data)
                   } else {
                     sendError('404 Witnesses Record Not Found', 404)
