@@ -3,13 +3,17 @@ $(document).ready(function() {
   var GMotherWitnessCtr = 0
   var GFatherWitnessCtr = 0
   var addedWitness = false
+  var witnessType = null
+  var addWitnessMale = false
+  var addWitnessFemale = false
+
   const selectChild = $('#input_child_member').selectize()
   const selectParent1 = $('#input_parent1_member').selectize()
   const selectParent2 = $('#input_parent2_member').selectize()
   const selectWitnessGMother = $('#input_witness_gmother_member').selectize()
   const selectWitnessGFather = $('#input_witness_gfather_member').selectize()
 
-  
+  initDate()
   initSelectize()
   
   $('select').change(hideChoices)
@@ -156,6 +160,7 @@ $(document).ready(function() {
   $('#create-dedication').click(function (){
 
     console.log(validateFields())
+    $('#create-dedication').prop('disabled', true)
     if(validateFields()) {
       const data = {
         child: {},
@@ -175,6 +180,7 @@ $(document).ready(function() {
       data.officiant = $('#officiant').val()
       data.place = $('#address').val()
       data.witnesses = []
+      data.date = new Date($('#date').val()).toISOString()
 
       const witnesses = $('.witness')
 
@@ -203,10 +209,15 @@ $(document).ready(function() {
         success: function (result){
           if (result) {
             location.href = '/view_dedication/' + result
+          } else {
+            $('#create-dedication').prop('disabled', false)
+            alert('An error occured')
           }
         }
       })
 
+    } else {
+      $('#create-dedication').prop('disabled', false)
     }
   })
 
@@ -409,16 +420,17 @@ $(document).ready(function() {
 
   function validateFields() {
     var isValid = true
-  
-    var childFieldMember = $('#input_child_member').val() === null
+    
+    var childNonMember = $('#child_non_member').is(':checked')
+    var childFieldMember = $('#input_child_member').val() === '0' || $('#input_child_member').val() === ''
     var childFieldNonMember = $('#child_first_name').val() === '' || $('#child_mid_name').val() === '' || $('#child_last_name').val() === ''
     //alert(childFieldNonMember + ' ' + childFieldMember )
   
-    var guardianOneMember = $('#input_parent1_member').val() === null
+    var guardianOneMember = $('#input_parent1_member').val() === '0' || $('#input_parent1_member').val() === ''
     var guardianOneNonMember = $('#parent1_first_name').val() === '' || $('#parent1_mid_name').val() === '' || $('#parent1_last_name').val() === ''
   
     var guardianTwoNone = $('#parent2_none').is(':checked')
-    var guardianTwoMember = $('#input_parent2_member').val() === null
+    var guardianTwoMember = $('#input_parent2_member').val() === '0' || $('#input_parent2_member').val() === ''
     var guardianTwoNonMember = $('#parent2_first_name').val() === '' || $('#parent2_mid_name').val() === '' || $('#parent2_last_name').val() === ''
   
     var officiantField = $('#officiant').val() === ''
@@ -426,7 +438,7 @@ $(document).ready(function() {
     var dateField = $('#date').val() === ''
   
   
-    if (childFieldMember && childFieldNonMember) {
+    if ((childNonMember && childFieldNonMember) || (!childNonMember && childFieldMember)) {
       isValid = false
       $('#child_info_error').text('Please provide child name')
     } else {
@@ -493,7 +505,6 @@ $(document).ready(function() {
       $('#witness_gfather_info_error').text('')
     }
   
-  
     return isValid
   }
 
@@ -523,6 +534,12 @@ $(document).ready(function() {
     $('.selectize-dropdown').hide();
     $('.selectize-input').removeClass('focus input-active dropdown-active');
     $('div.selectize-input > input').blur();
+  }
+
+  function initDate() {
+    const today = new Date()
+
+    $('#date').val(today.getFullYear() + '-' + (today.getMonth() + 1).toString().padStart(2, '0') + '-' + today.getDate())
   }
 })
 
