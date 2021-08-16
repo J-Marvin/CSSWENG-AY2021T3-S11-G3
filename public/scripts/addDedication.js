@@ -260,6 +260,7 @@ $(document).ready(function() {
         $('#gmother_witness_row').append("<div class='col-4' style='margin-bottom: 1em;'><div class='card witness' data-member-info=\"" + witness_info + "\"><div class='card-body'><p class='card-text'>" + witnessName + "</p><button type='button' class='fas fa-trash delGMotherWitnessBtn '></button> </div></div></div>")
       }
       $('#witness_gmother_info_error').text('')
+      $('#witness_gfather_info_error').text('')
       $('#witness_gmother_first_name').val('')
       $('#witness_gmother_mid_name').val('')
       $('#witness_gmother_last_name').val('')
@@ -309,6 +310,7 @@ $(document).ready(function() {
         $('#gfather_witness_row').append("<div class='col-4' style='margin-bottom: 1em;'><div class='card witness' data-member-info=\"" + witness_info + "\"><div class='card-body'><p class='card-text'>" + witnessName + "</p><button type='button' class='fas fa-trash delGFatherWitnessBtn '></button> </div></div></div>")
       }
       $('#witness_gfather_info_error').text('')
+      $('#witness_gmother_info_error').text('')
       $('#witness_gfather_first_name').val('')
       $('#witness_gfather_mid_name').val('')
       $('#witness_gfather_last_name').val('')
@@ -491,17 +493,12 @@ $(document).ready(function() {
       $('#date_info_error').text('')
     }
   
-    if (GMotherWitnessCtr === 0) {
+    if (GMotherWitnessCtr === 0 && GFatherWitnessCtr === 0) {
       isValid = false
-      $('#witness_gmother_info_error').text('There must be at least one godmother')
+      $('#witness_gmother_info_error').text('There must be at least one godmother or godfather')
+      $('#witness_gfather_info_error').text('There must be at least one godmother or godfather')
     } else {
       $('#witness_gmother_info_error').text('')
-    }
-
-    if (GFatherWitnessCtr === 0) {
-      isValid = false
-      $('#witness_gfather_info_error').text('There must be at least one godfather')
-    } else {
       $('#witness_gfather_info_error').text('')
     }
   
