@@ -322,11 +322,11 @@ $(document).ready(function() {
     var childFieldNonMember = $('#child_first_name').val() === '' || $('#child_mid_name').val() === '' || $('#child_last_name').val() === ''
     //alert(childFieldNonMember + ' ' + childFieldMember )
   
-    var guardianOneMember = $('#input_parent1_member').val() === null
+    var guardianOneMember = $('#input_parent1_member').val() === '0'
     var guardianOneNonMember = $('#parent1_first_name').val() === '' || $('#parent1_mid_name').val() === '' || $('#parent1_last_name').val() === ''
   
     var guardianTwoNone = $('#parent2_none').is(':checked')
-    var guardianTwoMember = $('#input_parent2_member').val() === null
+    var guardianTwoMember = $('#input_parent2_member').val() === '0'
     var guardianTwoNonMember = $('#parent2_first_name').val() === '' || $('#parent2_mid_name').val() === '' || $('#parent2_last_name').val() === ''
   
     var officiantField = $('#officiant').val() === ''
