@@ -358,6 +358,7 @@ function initDatabase (file) {
     'witness_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
     'dedication_id INTEGER,' +
     'wedding_id INTEGER,' +
+    'type TEXT,' +
     'person_id INTEGER NOT NULL,' +
     'FOREIGN KEY(dedication_id) REFERENCES inf_dedication(dedication_id),' +
     'FOREIGN KEY(wedding_id) REFERENCES wedding_reg(reg_id),' +
