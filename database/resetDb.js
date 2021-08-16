@@ -154,6 +154,110 @@ const data = [
       alma_mater: 'Palaven Academy',
       sex: 'Male'
     }
+  },
+  {
+    person: {
+      first_name: 'Josuke',
+      middle_name: 'J',
+      last_name: 'Higashikata'
+    },
+    address: {
+      address_line: 'Higashikata Estate',
+      city: 'Morioh',
+      province: null,
+      country: 'Japan'
+    },
+    member: {
+      member_status: 'Active',
+      civil_status: 'Single',
+      birthday: new Date(1980, 5, 6).toISOString(),
+      occupation: 'Seaman',
+      workplace: 'Japan',
+      email: 'crazydiamond@gmail.com',
+      telephone: null,
+      mobile: '09123456789',
+      educ_attainment: 'College',
+      alma_mater: 'DLSJ',
+      sex: 'Male'
+    }
+  },
+  {
+    person: {
+      first_name: 'Nino',
+      middle_name: 'N',
+      last_name: 'Nakano'
+    },
+    address: {
+      address_line: 'Nakano Estate',
+      city: 'Tokyo',
+      province: null,
+      country: 'Japan'
+    },
+    member: {
+      member_status: 'Active',
+      civil_status: 'Single',
+      birthday: new Date(2000, 5, 5).toISOString(),
+      occupation: 'Cook',
+      workplace: 'Japan',
+      email: 'nino_nakano@gmail.com',
+      telephone: null,
+      mobile: '09987654321',
+      educ_attainment: 'College',
+      alma_mater: 'DLSJ',
+      sex: 'Female'
+    }
+  },
+  {
+    person: {
+      first_name: 'Miku',
+      middle_name: 'N',
+      last_name: 'Nakano'
+    },
+    address: {
+      address_line: 'Nakano Estate',
+      city: 'Tokyo',
+      province: null,
+      country: 'Japan'
+    },
+    member: {
+      member_status: 'Active',
+      civil_status: 'Single',
+      birthday: new Date(2000, 5, 5).toISOString(),
+      occupation: 'Cook',
+      workplace: 'Japan',
+      email: 'miku_nakano@gmail.com',
+      telephone: null,
+      mobile: '09987654321',
+      educ_attainment: 'College',
+      alma_mater: 'DLSJ',
+      sex: 'Female'
+    }
+  },
+  {
+    person: {
+      first_name: 'Yotsuba',
+      middle_name: 'N',
+      last_name: 'Nakano'
+    },
+    address: {
+      address_line: 'Nakano Estate',
+      city: 'Tokyo',
+      province: null,
+      country: 'Japan'
+    },
+    member: {
+      member_status: 'Active',
+      civil_status: 'Single',
+      birthday: new Date(2000, 5, 5).toISOString(),
+      occupation: 'Athlete',
+      workplace: 'Japan',
+      email: 'yotsuba_nakano@gmail.com',
+      telephone: null,
+      mobile: '09987654321',
+      educ_attainment: 'College',
+      alma_mater: 'DLSJ',
+      sex: 'Female'
+    }
   }
 ]
 
