@@ -133,6 +133,7 @@ $(document).ready(function() {
 
     console.log(validateFields())
     if(validateFields()) {
+      $('#create-dedication').prop('disabled', true)
       const data = {
         child: {},
         guardian1: {},
@@ -179,6 +180,9 @@ $(document).ready(function() {
         success: function (result){
           if (result) {
             location.href = '/view_dedication/' + result
+          } else {
+            $('#create-dedication').prop('disabled', false)
+            alert('An error occured')
           }
         }
       })
