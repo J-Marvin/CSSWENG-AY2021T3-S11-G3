@@ -171,8 +171,12 @@ $(document).ready(function () {
     }
   })
   $('#create-member').click(function() {
+    $('#create-member').prop('disabled', true)
+
     if(validateFields()) {
       $('#create-member-form').submit()
+    } else {
+      $('#create-member').prop('disabled', false)
     }
   })
 

@@ -126,6 +126,7 @@ $(document).ready(function () {
   })
 
   $('#create-prenup').click(function() {
+    $('#create-prenup').prop('disabled', true)
     var isValid = true
 
     var brideNonMember = validator.isEmpty($('#bride_first_name').val()) || validator.isEmpty($('#bride_mid_name').val()) || validator.isEmpty($('#bride_last_name').val())
@@ -224,6 +225,8 @@ $(document).ready(function () {
     if(isValid) {
       //alert('submit')
       $('#prenup_form').submit()
+    } else {
+      $('#create-prenup').prop('disabled', false)
     }
   })
 
