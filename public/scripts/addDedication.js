@@ -1,11 +1,13 @@
 $(document).ready(function() {
 
-  var witnessCtr = 0
+  var GMotherWitnessCtr = 0
+  var GFatherWitnessCtr = 0
   var addedWitness = false
   const selectChild = $('#input_child_member').selectize()
   const selectParent1 = $('#input_parent1_member').selectize()
   const selectParent2 = $('#input_parent2_member').selectize()
-  const selectWitness = $('#input_witness_member').selectize()
+  const selectWitnessGMother = $('#input_witness_gmother_member').selectize()
+  const selectWitnessGFather = $('#input_witness_gfather_member').selectize()
 
   
   initSelectize()
@@ -36,26 +38,48 @@ $(document).ready(function() {
     $('#child_last_name').val('')
   })
 
-  $('#witness_non_member').change(function() {
+  $('#witness_gmother_non_member').change(function() {
     $(this).attr('disabled', true)
-    $('#witness_member').removeAttr('disabled')
-    $('#witness_member').prop('checked', false)
-    $('#witness_member_div').hide()
-    $('#witness_non_member_div').show()
-    selectizeEnable($('#input_witness_member').val())
-    $(selectWitness)[0].selectize.setValue('0')
+    $('#witness_gmother_member').removeAttr('disabled')
+    $('#witness_gmother_member').prop('checked', false)
+    $('#witness_gmother_member_div').hide()
+    $('#witness_gmother_non_member_div').show()
+    selectizeEnable($('#input_witness_gmother_member').val())
+    $(selectWitnessGMother)[0].selectize.setValue('0')
   })
 
   // bind function to witness member
-  $('#witness_member').change(function () {
+  $('#witness_gmother_member').change(function () {
     $(this).attr('disabled', true)
-    $('#witness_non_member').removeAttr('disabled')
-    $('#witness_non_member').prop('checked', false)
-    $('#witness_non_member_div').hide()
-    $('#witness_member_div').show()
-    $('#witness_first_name').val('')
-    $('#witness_mid_name').val('')
-    $('#witness_last_name').val('')
+    $('#witness_gmother_non_member').removeAttr('disabled')
+    $('#witness_gmother_non_member').prop('checked', false)
+    $('#witness_gmother_non_member_div').hide()
+    $('#witness_gmother_member_div').show()
+    $('#witness_gmother_first_name').val('')
+    $('#witness_gmother_mid_name').val('')
+    $('#witness_gmother_last_name').val('')
+  })
+
+  $('#witness_gfather_non_member').change(function() {
+    $(this).attr('disabled', true)
+    $('#witness_gfather_member').removeAttr('disabled')
+    $('#witness_gfather_member').prop('checked', false)
+    $('#witness_gfather_member_div').hide()
+    $('#witness_gfather_non_member_div').show()
+    selectizeEnable($('#input_witness_gfather_member').val())
+    $(selectWitnessGFather)[0].selectize.setValue('0')
+  })
+
+  // bind function to witness member
+  $('#witness_gfather_member').change(function () {
+    $(this).attr('disabled', true)
+    $('#witness_gfather_non_member').removeAttr('disabled')
+    $('#witness_gfather_non_member').prop('checked', false)
+    $('#witness_gfather_non_member_div').hide()
+    $('#witness_gfather_member_div').show()
+    $('#witness_gfather_first_name').val('')
+    $('#witness_gfather_mid_name').val('')
+    $('#witness_gfather_last_name').val('')
   })
 
   // bind function to parent1 non member
@@ -186,27 +210,27 @@ $(document).ready(function() {
     }
   })
 
-  $('#add_witness').click(function (){
+  $('#add_gmother_witness').click(function (){
     var isValid = true
 
-    var witnessMember = $('#input_witness_member').val() === null
-    var witnessNonMember = $('#witness_first_name').val() === '' || $('#witness_mid_name').val() === '' || $('#witness_last_name').val() === ''
+    var witnessMember = $('#input_witness_gmother_member').val() === '0'
+    var witnessNonMember = $('#witness_gmother_first_name').val() === '' || $('#witness_gmother_mid_name').val() === '' || $('#witness_gmother_last_name').val() === ''
 
     if (witnessMember && witnessNonMember) {
       isValid = false
-      $('#witness_modal_info_error').text('Please accomplish all fields')
+      $('#witness_gmother_modal_info_error').text('Please accomplish all fields')
     } else {
-      $('#witness_modal_info_error').text('')
+      $('#witness_gmother_modal_info_error').text('')
     }
 
     if(isValid) {
       var witnessName
       console.log(witnessMember)
       if(witnessMember) {
-        const firstName = $('#witness_first_name').val()
-        const midName = $('#witness_mid_name').val()
-        const lastName = $('#witness_last_name').val()
-        $('#witness_row').append(
+        const firstName = $('#witness_gmother_first_name').val()
+        const midName = $('#witness_gmother_mid_name').val()
+        const lastName = $('#witness_gmother_last_name').val()
+        $('#gmother_witness_row').append(
           "<div class='col-4' style='margin-bottom: 1em;'>" +
             "<div class='card witness'><div class='card-body'>" + 
               "<p class='card-text'>" + 
@@ -214,43 +238,110 @@ $(document).ready(function() {
                 "<span class='mid_name'>" + midName + "</span> " + 
                 "<span class='last_name'>" + lastName + "</span>" + 
               "</p>" +
-              "<button type='button' class='fas fa-trash delWitnessBtn '></button>" + 
+              "<button type='button' class='fas fa-trash delGMotherWitnessBtn '></button>" + 
             "</div>" + 
           "</div>" + 
         "</div>")
       } else {
-        const witness_info = $('#input_witness_member').val()
+        const witness_info = $('#input_witness_gmother_member').val()
         witnessName = witness_info.replace(/\d+/g, '')
         witnessName = witnessName.replace(/,/g, '')
-        $('#witness_row').append("<div class='col-4' style='margin-bottom: 1em;'><div class='card witness' data-member-info=\"" + witness_info + "\"><div class='card-body'><p class='card-text'>" + witnessName + "</p><button type='button' class='fas fa-trash delWitnessBtn '></button> </div></div></div>")
+        $('#gmother_witness_row').append("<div class='col-4' style='margin-bottom: 1em;'><div class='card witness' data-member-info=\"" + witness_info + "\"><div class='card-body'><p class='card-text'>" + witnessName + "</p><button type='button' class='fas fa-trash delGMotherWitnessBtn '></button> </div></div></div>")
       }
-      $('#witness_info_error').text('')
-      $('#witness_first_name').val('')
-      $('#witness_mid_name').val('')
-      $('#witness_last_name').val('')
-      witnessCtr++;
+      $('#witness_gmother_info_error').text('')
+      $('#witness_gmother_first_name').val('')
+      $('#witness_gmother_mid_name').val('')
+      $('#witness_gmother_last_name').val('')
+      GMotherWitnessCtr++;
       
       addedWitness = true
-      $('#witnessModal').modal('hide');
+      $('#GMotherWitnessModal').modal('hide');
     }
   })
 
-  $('#add_witness_button').click(function() {
-    if(witnessCtr === 12) {
-      $('#witness_info_error').text('You have reached the maximum number of witnesses')
+  $('#add_gfather_witness').click(function (){
+    var isValid = true
+
+    var witnessMember = $('#input_witness_gfather_member').val() === '0'
+    var witnessNonMember = $('#witness_gfather_first_name').val() === '' || $('#witness_gfather_mid_name').val() === '' || $('#witness_gfather_last_name').val() === ''
+
+    if (witnessMember && witnessNonMember) {
+      isValid = false
+      $('#witness_gfather_modal_info_error').text('Please accomplish all fields')
     } else {
-      $('#witnessModal').modal('show')
-      $('#witness_info_error').text('')
+      $('#witness_gfather_modal_info_error').text('')
+    }
+
+    if(isValid) {
+      var witnessName
+      console.log(witnessMember)
+      if(witnessMember) {
+        const firstName = $('#witness_gfather_first_name').val()
+        const midName = $('#witness_gfather_mid_name').val()
+        const lastName = $('#witness_gfather_last_name').val()
+        $('#gfather_witness_row').append(
+          "<div class='col-4' style='margin-bottom: 1em;'>" +
+            "<div class='card witness'><div class='card-body'>" + 
+              "<p class='card-text'>" + 
+                "<span class='first_name'>" + firstName + "</span> " + 
+                "<span class='mid_name'>" + midName + "</span> " + 
+                "<span class='last_name'>" + lastName + "</span>" + 
+              "</p>" +
+              "<button type='button' class='fas fa-trash delGFatherWitnessBtn '></button>" + 
+            "</div>" + 
+          "</div>" + 
+        "</div>")
+      } else {
+        const witness_info = $('#input_witness_gfather_member').val()
+        witnessName = witness_info.replace(/\d+/g, '')
+        witnessName = witnessName.replace(/,/g, '')
+        $('#gfather_witness_row').append("<div class='col-4' style='margin-bottom: 1em;'><div class='card witness' data-member-info=\"" + witness_info + "\"><div class='card-body'><p class='card-text'>" + witnessName + "</p><button type='button' class='fas fa-trash delGFatherWitnessBtn '></button> </div></div></div>")
+      }
+      $('#witness_gfather_info_error').text('')
+      $('#witness_gfather_first_name').val('')
+      $('#witness_gfather_mid_name').val('')
+      $('#witness_gfather_last_name').val('')
+      GFatherWitnessCtr++;
+      
+      addedWitness = true
+      $('#GFatherWitnessModal').modal('hide');
     }
   })
 
-  $(document).on('click', '.delWitnessBtn', function () {
+  $('#add_gmother_button').click(function() {
+    if(GMotherWitnessCtr === 6) {
+      $('#witness_gmother_info_error').text('You have reached the maximum number of witnesses')
+    } else {
+      $('#GMotherWitnessModal').modal('show')
+      $('#witness_gmother_info_error').text('')
+    }
+  })
+
+  $('#add_gfather_button').click(function() {
+    if(GFatherWitnessCtr === 6) {
+      $('#witness_gfather_info_error').text('You have reached the maximum number of witnesses')
+    } else {
+      $('#GFatherWitnessModal').modal('show')
+      $('#witness_gfather_info_error').text('')
+    }
+  })
+
+  $(document).on('click', '.delGMotherWitnessBtn', function () {
     const member = $(this).closest('.card').attr('data-member-info')
     if (member !== null) {
       selectizeEnable(member)
     }
     $(this).closest('.col-4').remove()
-    witnessCtr--
+    GMotherWitnessCtr--
+  })
+
+  $(document).on('click', '.delGFatherWitnessBtn', function () {
+    const member = $(this).closest('.card').attr('data-member-info')
+    if (member !== null) {
+      selectizeEnable(member)
+    }
+    $(this).closest('.col-4').remove()
+    GFatherWitnessCtr--
   })
 
   $('#witnessModal').on('hide.bs.modal', resetModal)
@@ -297,14 +388,23 @@ $(document).ready(function() {
   }
 
   function resetModal() {
-    const currWitness = $('#input_witness_member').val()
-    $('#input_witness_member').data('previous', null)
+    var currWitness = $('#input_witness_gmother_member').val()
+    $('#input_witness_gmother_member').data('previous', null)
     if (currWitness !== '' && !addedWitness) {
       selectizeEnable(currWitness)
     } else {
       addedWitness = false
     }
-    $(selectWitness)[0].selectize.setValue('0')
+    $(selectWitnessGMother)[0].selectize.setValue('0')
+
+    var currWitness = $('#input_witness_gfather_member').val()
+    $('#input_witness_gfather_member').data('previous', null)
+    if (currWitness !== '' && !addedWitness) {
+      selectizeEnable(currWitness)
+    } else {
+      addedWitness = false
+    }
+    $(selectWitnessGFather)[0].selectize.setValue('0')
   }
 
   function validateFields() {
@@ -379,11 +479,18 @@ $(document).ready(function() {
       $('#date_info_error').text('')
     }
   
-    if (witnessCtr === 0) {
+    if (GMotherWitnessCtr === 0) {
       isValid = false
-      $('#witness_info_error').text('There must be at least one witness')
+      $('#witness_gmother_info_error').text('There must be at least one godmother')
     } else {
-      $('#witness_info_error').text('')
+      $('#witness_gmother_info_error').text('')
+    }
+
+    if (GFatherWitnessCtr === 0) {
+      isValid = false
+      $('#witness_gfather_info_error').text('There must be at least one godfather')
+    } else {
+      $('#witness_gfather_info_error').text('')
     }
   
   
@@ -394,21 +501,24 @@ $(document).ready(function() {
     $('#input_child_member').parent().find('.option[data-value="' + data + '"]').attr('data-selectable', true)
     $('#input_parent1_member').parent().find('.option[data-value="' + data + '"]').attr('data-selectable', true)
     $('#input_parent2_member').parent().find('.option[data-value="' + data + '"]').attr('data-selectable', true)
-    $('#input_witness_member').parent().find('.option[data-value="' + data + '"]').attr('data-selectable', true)
+    $('#input_witness_gmother_member').parent().find('.option[data-value="' + data + '"]').attr('data-selectable', true)
+    $('#input_witness_gfather_member').parent().find('.option[data-value="' + data + '"]').attr('data-selectable', true)
   }
 
   function selectizeDisable(data) {
     $('#input_child_member').parent().find('.option[data-value="' + data + '"]').removeAttr('data-selectable')
     $('#input_parent1_member').parent().find('.option[data-value="' + data + '"]').removeAttr('data-selectable')
     $('#input_parent2_member').parent().find('.option[data-value="' + data + '"]').removeAttr('data-selectable')
-    $('#input_witness_member').parent().find('.option[data-value="' + data + '"]').removeAttr('data-selectable')
+    $('#input_witness_gmother_member').parent().find('.option[data-value="' + data + '"]').removeAttr('data-selectable')
+    $('#input_witness_gmfather_member').parent().find('.option[data-value="' + data + '"]').removeAttr('data-selectable')
   }
 
   function initSelectize() {
     $(selectChild)[0].selectize.refreshOptions()
     $(selectParent1)[0].selectize.refreshOptions()
     $(selectParent2)[0].selectize.refreshOptions()
-    $(selectWitness)[0].selectize.refreshOptions()
+    $(selectWitnessGMother)[0].selectize.refreshOptions()
+    $(selectWitnessGFather)[0].selectize.refreshOptions()
 
     $('.selectize-dropdown').hide();
     $('.selectize-input').removeClass('focus input-active dropdown-active');
