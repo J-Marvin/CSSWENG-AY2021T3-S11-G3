@@ -106,6 +106,8 @@ const weddingController = {
   },
 
   postAddWedding: function (req, res) {
+    const data = {}
+
     const people = {
       bride: null,
       groom: null,
@@ -148,7 +150,7 @@ const weddingController = {
 
     // If the form already has prenup, couple_id should be in req.body
     if (hasPrenup) {
-      couples.couple = req.body.couple_id
+      couples.couple = req.body.couple_id // CHANGE
     } else {
       if (people.bride.isMember) {
         couples.couple[coupleFields.FEMALE] = people.bride.person_id
@@ -244,9 +246,46 @@ const weddingController = {
       if (result) {
         result = result[0]
 
-        // if (!people.bride.isMember) {
+        if (!people.bride.isMember) {
+          couples.couple[coupleFields.FEMALE] = result - peopleOffsets.bride
+        }
 
-        // }
+        if (!people.groom.isMember) {
+          couples.couple[coupleFields.MALE] = result - peopleOffsets.groom
+        }
+
+        if (!people.brideMother.isMember) {
+          couples.brideParents[coupleFields.FEMALE] = result - peopleOffsets.brideMother
+        }
+
+        if (!people.brideFather.isMember) {
+          couples.brideParents[coupleFields.MALE] = result - peopleOffsets.brideFather
+        }
+
+        if (!people.groomMother.isMember) {
+          couples.groomParents[coupleFields.FEMALE] = result - peopleOffsets.groomMother
+        }
+
+        if (!people.groomFather.isMember) {
+          couples.groomParents[coupleFields.MALE] = result.peopleOffsets.groomFather
+        }
+
+        coupleInfo.push(couples.brideParents)
+        coupleInfo.push(couples.groomParents)
+        coupleOffsets.brideParents += 1
+        if (!hasPrenup) {
+          coupleInfo.push(couples.couple)
+          coupleOffsets.brideParents += 1
+          coupleOffsets.groomParents += 1
+        }
+
+        db.insert(db.tables.COUPLE_TABLE, coupleInfo, function (result) {
+          if (result) {
+            
+          } else {
+            res.send(false)
+          }
+        })
       } else {
         res.send(false)
       }
