@@ -132,8 +132,8 @@ $(document).ready(function() {
   $('#create-dedication').click(function (){
 
     console.log(validateFields())
+    $('#create-dedication').prop('disabled', true)
     if(validateFields()) {
-      $('#create-dedication').prop('disabled', true)
       const data = {
         child: {},
         guardian1: {},
@@ -188,6 +188,8 @@ $(document).ready(function() {
         }
       })
 
+    } else {
+      $('#create-dedication').prop('disabled', false)
     }
   })
 
