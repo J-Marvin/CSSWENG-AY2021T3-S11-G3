@@ -248,6 +248,7 @@ $(document).ready(function () {
 
   $('#saveChurchBtn').click(function() {
 
+    $('#saveChurchBtn').prop('disabled', true)
     var isValid = true
     var errors = ''
     
@@ -289,6 +290,7 @@ $(document).ready(function () {
 
     if(!isValid) {
       //alert(errors)
+      $('#saveChurchBtn').prop('disabled', false)
     } else {
       if(addChurch) {
 
@@ -298,6 +300,7 @@ $(document).ready(function () {
           data: church,
           url: "/add_church",
           success: function (result) {
+            $('#saveChurchBtn').prop('disabled', false)
             $('#churchList').append(result)
             $(churchModal).modal('hide')
           }
@@ -311,6 +314,7 @@ $(document).ready(function () {
           data: church,
           url: "/update_church",
           success: function (result) {
+            $('#saveChurchBtn').prop('disabled', false)
             if(result) {
               $(parentDiv).find('.church_name').text(church.church_name)
               $(parentDiv).find('.church_address_line').text(church.address_line)
@@ -330,6 +334,7 @@ $(document).ready(function () {
 
   $('#saveObservationBtn').click(function() {
 
+    $('#saveObservationBtn').prop('disabled', true)
     var isValid = true
     var errors = ''
 
@@ -353,7 +358,7 @@ $(document).ready(function () {
     }
 
     if(!isValid) {
-      //alert(errors)
+      $('#saveObservationBtn').prop('disabled', false)
     } else {
         if (addObservation) {
           $.ajax({
@@ -361,6 +366,7 @@ $(document).ready(function () {
             data: observation,
             url: "/add_observation",
             success: function (result) {
+              $('#saveObservationBtn').prop('disabled', false)
               $('#observationList').append(result)
               $(observationModal).modal('hide')
             }
@@ -372,6 +378,7 @@ $(document).ready(function () {
             data: observation,
             url: "/update_observation",
             success: function (result) {
+              $('#saveObservationBtn').prop('disabled', false)
               if(result) {
                 $(parentDiv).find('.comment').text(observation.comment)
                 $(parentDiv).find('.observer').text(observation.observer)
@@ -401,7 +408,7 @@ $(document).ready(function () {
 
     const observationFieldset = $('#observationFieldset')
 
-    editObservationId = $(this).closest('div').attr('data-observation')
+    editObservationId = $(this).closest('.card').attr('data-observation')
     parentDiv = $(this).closest('div')
     addObservation = false
 
