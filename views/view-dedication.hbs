@@ -124,11 +124,26 @@ Witnesses (Ninong/Ninang):<br>
     </div>
     <hr>
     <div class="row">
-      <legend>Witnesses</legend>
-      {{#each witnesses}}
-        {{>witness this}}
-      {{/each}}
+      <legend>Ninong</legend>
+        {{#if witnessMale}}
+          {{#each witnessMale}}
+          {{>witness this}}
+          {{/each}}
+          <hr>
+        {{else}}
+          <p>N/A</p>
+        {{/if}}
+
+      <legend>Ninang</legend>
+        {{#if witnessFemale}}
+          {{#each witnessFemale}}
+          {{>witness this}}
+          {{/each}}
+        {{else}}
+          <p>N/A</p>
+        {{/if}}
     </div>
+    <hr>
     {{#if canSee}}
     <div class="row my-3">
       <div class="col">
@@ -136,7 +151,7 @@ Witnesses (Ninong/Ninang):<br>
       </div>
     </div>
     {{/if}}
-
+{{!-- 
     Male
     <br>
     {{#each witnessMale}} 
@@ -153,4 +168,4 @@ Witnesses (Ninong/Ninang):<br>
     {{this.witness_middle_name}} ,
     {{this.witness_last_name}} 
     <br>
-    {{/each}}
+    {{/each}} --}}

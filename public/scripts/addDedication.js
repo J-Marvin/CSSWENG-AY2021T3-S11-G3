@@ -229,12 +229,26 @@ $(document).ready(function() {
 
     var witnessMember = $('#input_witness_gmother_member').val() === '0' || $('#input_witness_gmother_member').val() === ''
     var witnessNonMember = $('#witness_gmother_first_name').val() === '' || $('#witness_gmother_mid_name').val() === '' || $('#witness_gmother_last_name').val() === ''
+    var witnessMiddleLen = $('#witness_gmother_mid_name').val().length === 1
 
     if (witnessMember && witnessNonMember) {
       isValid = false
       $('#witness_gmother_modal_info_error').text('Please accomplish all fields')
     } else {
       $('#witness_gmother_modal_info_error').text('')
+    }
+    if (!witnessNonMember && !witnessMiddleLen) {
+      isValid = false
+      $('#witness_gmother_modal_middle_len_error').text('Middle Initial should only contain 1 letter')
+    } else {
+      $('#witness_gmother_modal_middle_len_error').text('')
+    }
+
+    if (witnessNonMember === false && validateMidInitial($('#witness_gmother_mid_name').val()) === false) {
+      isValid = false
+      $('#witness_gmother_modal_middle_error').text('Middle Initial should only range from letters A-Z')
+    } else {
+      $('#witness_gmother_modal_middle_error').text('')
     }
 
     if(isValid) {
@@ -278,6 +292,7 @@ $(document).ready(function() {
 
     var witnessMember = $('#input_witness_gfather_member').val() === '0' || $('#input_witness_gfather_member').val() === ''
     var witnessNonMember = $('#witness_gfather_first_name').val() === '' || $('#witness_gfather_mid_name').val() === '' || $('#witness_gfather_last_name').val() === ''
+    var witnessMiddleLen = $('#witness_gfather_mid_name').val().length === 1
 
     if (witnessMember && witnessNonMember) {
       isValid = false
@@ -285,6 +300,20 @@ $(document).ready(function() {
     } else {
       $('#witness_gfather_modal_info_error').text('')
     }
+    if (!witnessNonMember && !witnessMiddleLen) {
+      isValid = false
+      $('#witness_gfather_modal_middle_len_error').text('Middle Initial should only contain 1 letter')
+    } else {
+      $('#witness_gfather_modal_middle_len_error').text('')
+    }
+
+    if (witnessNonMember === false && validateMidInitial($('#witness_gfather_mid_name').val()) === false) {
+      isValid = false
+      $('#witness_gfather_modal_middle_error').text('Middle Initial should only range from letters A-Z')
+    } else {
+      $('#witness_gfather_modal_middle_error').text('')
+    }
+
 
     if(isValid) {
       var witnessName
@@ -432,15 +461,18 @@ $(document).ready(function() {
     var childNonMember = $('#child_non_member').is(':checked')
     var childFieldMember = $('#input_child_member').val() === '0' || $('#input_child_member').val() === ''
     var childFieldNonMember = $('#child_first_name').val() === '' || $('#child_mid_name').val() === '' || $('#child_last_name').val() === ''
+    var childMiddleLen = $('#child_mid_name').val().length === 1
     //alert(childFieldNonMember + ' ' + childFieldMember )
   
     var guardianOneMember = $('#input_parent1_member').val() === '0' || $('#input_parent1_member').val() === ''
     var guardianOneNonMember = $('#parent1_first_name').val() === '' || $('#parent1_mid_name').val() === '' || $('#parent1_last_name').val() === ''
-  
+    var guardianOneMiddleLen = $('#parent1_mid_name').val().length === 1
+
     var guardianTwoNone = $('#parent2_none').is(':checked')
     var guardianTwoMember = $('#input_parent2_member').val() === '0' || $('#input_parent2_member').val() === ''
     var guardianTwoNonMember = $('#parent2_first_name').val() === '' || $('#parent2_mid_name').val() === '' || $('#parent2_last_name').val() === ''
-  
+    var guardianTwoMiddleLen = $('#parent2_mid_name').val().length === 1
+
     var officiantField = $('#officiant').val() === ''
     var addressField = $('#address').val() === ''
     var dateField = $('#date').val() === ''
@@ -451,6 +483,20 @@ $(document).ready(function() {
       $('#child_info_error').text('Please provide child name')
     } else {
       $('#child_info_error').text('')
+    }
+
+    if (!childFieldNonMember && !childMiddleLen) {
+      isValid = false
+      $('#child_middle_len_error').text("Child's middle initial should only contain 1 letter")
+    } else {
+      $('#child_middle_len_error').text('')
+    }
+
+    if (childFieldNonMember === false && validateMidInitial($('#child_mid_name').val()) === false) {
+      isValid = false
+      $('#child_middle_error').text("Child's middle initial should only range from letters A-Z")
+    } else {
+      $('#child_middle_error').text('')
     }
   
     if (guardianTwoNone && guardianOneMember && guardianOneNonMember) {
@@ -464,11 +510,39 @@ $(document).ready(function() {
       } else {
         $('#parent1_info_error').text('')
       }
+      // middle initial should only be 1 letter
+      if (!guardianOneNonMember && !guardianOneMiddleLen) {
+        $('#parent1_middle_len_error').text('Middle Initial should only contain 1 letter')
+      } else {
+        $('#parent1_middle_len_error').text('')
+      }
+
+      // middle initial checking for A-Z
+      if (guardianOneNonMember === false && validateMidInitial($('#parent1_mid_name').val()) === false) {
+        $('#parent1_middle_error').text('Middle Initial should only range from letters A-Z')
+      } else {
+        $('#parent1_middle_error').text('')
+      }
+
       if (guardianTwoMember && guardianTwoNonMember) {
         isValid = false
         $('#parent2_info_error').text('Accomplish all fields')
       } else {
         $('#parent2_info_error').text('')
+      }
+
+      // middle initial should only be 1 letter
+      if (!guardianTwoNonMember && !guardianTwoMiddleLen) {
+        $('#parent2_middle_len_error').text('Middle Initial should only contain 1 letter')
+      } else {
+        $('#parent2_middle_len_error').text('')
+      }
+
+      // middle initial checking for A-Z
+      if (guardianTwoNonMember === false && validateMidInitial($('#parent2_mid_name').val()) === false) {
+        $('#parent2_middle_error').text('Middle Initial should only range from letters A-Z')
+      } else {
+        $('#parent2_middle_error').text('')
       }
     } else {
   
@@ -543,6 +617,12 @@ $(document).ready(function() {
     const today = new Date()
 
     $('#date').val(today.getFullYear() + '-' + (today.getMonth() + 1).toString().padStart(2, '0') + '-' + today.getDate())
+  }
+  
+  // used to validate middle initial
+  function validateMidInitial (mid) {
+    const re = /[A-Z]/
+    return re.test(mid)
   }
 })
 

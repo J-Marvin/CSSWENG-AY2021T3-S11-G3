@@ -38,6 +38,11 @@ function display_div_groom (status) {
   document.getElementById(status + "_div").style.display = "block"
 }
 
+function validateMidInitial (mid) {
+  const re = /[A-Z]/
+  return re.test(mid)
+}
+
 $(document).ready(function () {
 
   // $('select').selectize()
@@ -54,6 +59,8 @@ $(document).ready(function () {
     // if error message is empty
     if (validator.isEmpty($('#bride_info_error').val())) {
       $('#bride_info_error').text('')
+      $('#bride_middle_error').text('')
+      $('#bride_middle_len_error').text('')
     }
   })
 
@@ -75,6 +82,8 @@ $(document).ready(function () {
     // if error message is empty
     if (validator.isEmpty($('#groom_info_error').val())) {
       $('#groom_info_error').text('')
+      $('#groom_middle_error').text('')
+      $('#groom_middle_len_error').text('')
     }
   })
 
@@ -112,9 +121,11 @@ $(document).ready(function () {
 
     var brideNonMember = validator.isEmpty($('#bride_first_name').val()) || validator.isEmpty($('#bride_mid_name').val()) || validator.isEmpty($('#bride_last_name').val())
     var brideMember = $('#input_bride_member').val() === '0' || $('#input_bride_member').val() === ''
+    var brideMidLenOne = $('#bride_mid_name').val().length === 1
 
     var groomNonMember = validator.isEmpty($('#groom_first_name').val()) || validator.isEmpty($('#groom_mid_name').val()) || validator.isEmpty($('#groom_last_name').val())
     var groomMember = $('#input_groom_member').val() === '0' || $('#input_groom_member').val() === ''
+    var groomMidLenOne = $('#groom_mid_name').val().length === 1
 
     var checkBrideNonMember = $('#bride_non_member').is(':checked')
     var checkBrideMember = $('#bride_member').is(':checked')
@@ -174,11 +185,33 @@ $(document).ready(function () {
       isValid = false
       $('#bride_info_error').text('Accomplish all fields')
       }
+    // if bride non member fields are not empty and
+    // middle initial text field is len > 1 and is not A-Z
+    if (!brideNonMember && !brideMidLenOne) {
+      isValid = false
+      $('#bride_middle_len_error').text('Middle Initial should only contain 1 letter')
+    }
+    if (brideNonMember === false && validateMidInitial($('#bride_mid_name').val()) === false) {
+      isValid = false
+      $('#bride_middle_error').text('Middle Initial should only range from letters A-Z')
+    }
+
 
     if((groomNonMember) && (groomMember)) {
       isValid = false
       $('#groom_info_error').text('Accomplish all fields')
-      } 
+      }
+    // if groom non member fields are not empty and
+    // middle initial text field is len > 1 and is not A-Z
+    if (!groomNonMember && !groomMidLenOne) {
+      isValid = false
+      $('#groom_middle_len_error').text('Middle Initial should only contain 1 letter')
+    }
+    
+    if (groomNonMember === false && validateMidInitial($('#groom_mid_name').val()) === false) {
+      isValid = false
+      $('#groom_middle_error').text('Middle Initial should only range from letters A-Z')
+    }
 
     if(validator.isEmpty($('#wedding_date').val())) {
       isValid = false
