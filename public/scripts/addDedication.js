@@ -512,6 +512,7 @@ $(document).ready(function() {
       }
       // middle initial should only be 1 letter
       if (!guardianOneNonMember && !guardianOneMiddleLen) {
+        isValid = false
         $('#parent1_middle_len_error').text('Middle Initial should only contain 1 letter')
       } else {
         $('#parent1_middle_len_error').text('')
@@ -519,6 +520,7 @@ $(document).ready(function() {
 
       // middle initial checking for A-Z
       if (guardianOneNonMember === false && validateMidInitial($('#parent1_mid_name').val()) === false) {
+        isValid = false
         $('#parent1_middle_error').text('Middle Initial should only range from letters A-Z')
       } else {
         $('#parent1_middle_error').text('')
@@ -533,6 +535,7 @@ $(document).ready(function() {
 
       // middle initial should only be 1 letter
       if (!guardianTwoNonMember && !guardianTwoMiddleLen) {
+        isValid = false
         $('#parent2_middle_len_error').text('Middle Initial should only contain 1 letter')
       } else {
         $('#parent2_middle_len_error').text('')
@@ -540,9 +543,32 @@ $(document).ready(function() {
 
       // middle initial checking for A-Z
       if (guardianTwoNonMember === false && validateMidInitial($('#parent2_mid_name').val()) === false) {
+        isValid = false
         $('#parent2_middle_error').text('Middle Initial should only range from letters A-Z')
       } else {
         $('#parent2_middle_error').text('')
+      }
+    } else if (guardianTwoNone) { // if checked
+      if (guardianOneMember && guardianOneNonMember) {
+        isValid = false
+        $('#parent1_info_error').text('Accomplish all fields')
+      } else {
+        $('#parent1_info_error').text('')
+      }
+      // middle initial should only be 1 letter
+      if (!guardianOneNonMember && !guardianOneMiddleLen) {
+        isValid = false
+        $('#parent1_middle_len_error').text('Middle Initial should only contain 1 letter')
+      } else {
+        $('#parent1_middle_len_error').text('')
+      }
+
+      // middle initial checking for A-Z
+      if (guardianOneNonMember === false && validateMidInitial($('#parent1_mid_name').val()) === false) {
+        isValid = false
+        $('#parent1_middle_error').text('Middle Initial should only range from letters A-Z')
+      } else {
+        $('#parent1_middle_error').text('')
       }
     } else {
   
