@@ -295,6 +295,8 @@ const memberController = {
       data.address[addressFields.POSTAL_CODE] = req.body.postal_code
       data.address[addressFields.COUNTRY] = req.body.country
 
+      console.log(req.body)
+
       data.member[memberFields.BIRTHDAY] = req.body.birthday
       data.member[memberFields.OCCUPATION] = req.body.occupation
       data.member[memberFields.WORKPLACE] = req.body.workplace
