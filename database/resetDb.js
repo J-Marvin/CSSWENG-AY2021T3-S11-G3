@@ -406,7 +406,7 @@ function initDatabase (file) {
    */
   const createWeddingReg =
     'CREATE TABLE IF NOT EXISTS wedding_reg (' +
-    'reg_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,' +
+    'wedding_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,' +
     'couple_id INTEGER NOT NULL,' +
     'date TEXT, ' +
     'date_of_wedding TEXT,' +
