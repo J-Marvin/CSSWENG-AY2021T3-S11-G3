@@ -26,6 +26,22 @@
       "/public"
     ]
   },
+  "build": {
+    "win": {
+      "target": [
+        "zip"
+      ],
+      "icon": "build/icon.png"
+      
+    },
+    "portable": {
+      "artifactName": "Disciples Christian Church.exe"
+    },
+    "directories": {
+      "buildResources": "build",
+      "output": "release"
+    }
+  },
   "dependencies": {
     "async": "^3.2.0",
     "bcrypt": "^5.0.1",

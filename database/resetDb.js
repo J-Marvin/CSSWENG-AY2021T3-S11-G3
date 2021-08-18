@@ -154,6 +154,110 @@ const data = [
       alma_mater: 'Palaven Academy',
       sex: 'Male'
     }
+  },
+  {
+    person: {
+      first_name: 'Josuke',
+      middle_name: 'J',
+      last_name: 'Higashikata'
+    },
+    address: {
+      address_line: 'Higashikata Estate',
+      city: 'Morioh',
+      province: null,
+      country: 'Japan'
+    },
+    member: {
+      member_status: 'Active',
+      civil_status: 'Single',
+      birthday: new Date(1980, 5, 6).toISOString(),
+      occupation: 'Seaman',
+      workplace: 'Japan',
+      email: 'crazydiamond@gmail.com',
+      telephone: null,
+      mobile: '09123456789',
+      educ_attainment: 'College',
+      alma_mater: 'DLSJ',
+      sex: 'Male'
+    }
+  },
+  {
+    person: {
+      first_name: 'Nino',
+      middle_name: 'N',
+      last_name: 'Nakano'
+    },
+    address: {
+      address_line: 'Nakano Estate',
+      city: 'Tokyo',
+      province: null,
+      country: 'Japan'
+    },
+    member: {
+      member_status: 'Active',
+      civil_status: 'Single',
+      birthday: new Date(2000, 5, 5).toISOString(),
+      occupation: 'Cook',
+      workplace: 'Japan',
+      email: 'nino_nakano@gmail.com',
+      telephone: null,
+      mobile: '09987654321',
+      educ_attainment: 'College',
+      alma_mater: 'DLSJ',
+      sex: 'Female'
+    }
+  },
+  {
+    person: {
+      first_name: 'Miku',
+      middle_name: 'N',
+      last_name: 'Nakano'
+    },
+    address: {
+      address_line: 'Nakano Estate',
+      city: 'Tokyo',
+      province: null,
+      country: 'Japan'
+    },
+    member: {
+      member_status: 'Active',
+      civil_status: 'Single',
+      birthday: new Date(2000, 5, 5).toISOString(),
+      occupation: 'Cook',
+      workplace: 'Japan',
+      email: 'miku_nakano@gmail.com',
+      telephone: null,
+      mobile: '09987654321',
+      educ_attainment: 'College',
+      alma_mater: 'DLSJ',
+      sex: 'Female'
+    }
+  },
+  {
+    person: {
+      first_name: 'Yotsuba',
+      middle_name: 'N',
+      last_name: 'Nakano'
+    },
+    address: {
+      address_line: 'Nakano Estate',
+      city: 'Tokyo',
+      province: null,
+      country: 'Japan'
+    },
+    member: {
+      member_status: 'Active',
+      civil_status: 'Single',
+      birthday: new Date(2000, 5, 5).toISOString(),
+      occupation: 'Athlete',
+      workplace: 'Japan',
+      email: 'yotsuba_nakano@gmail.com',
+      telephone: null,
+      mobile: '09987654321',
+      educ_attainment: 'College',
+      alma_mater: 'DLSJ',
+      sex: 'Female'
+    }
   }
 ]
 
@@ -235,6 +339,7 @@ function initDatabase (file) {
     'person_id INTEGER NOT NULL, ' +
     'parents_id INTEGER, ' +
     'date TEXT, ' +
+    'dedication_date TEXT, ' +
     'place TEXT, ' +
     'officiant TEXT,' +
     'FOREIGN KEY(person_id) REFERENCES people(person_id),' +
@@ -253,9 +358,10 @@ function initDatabase (file) {
     'witness_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
     'dedication_id INTEGER,' +
     'wedding_id INTEGER,' +
+    'type TEXT,' +
     'person_id INTEGER NOT NULL,' +
     'FOREIGN KEY(dedication_id) REFERENCES inf_dedication(dedication_id),' +
-    'FOREIGN KEY(wedding_id) REFERENCES wedding_red(reg_id),' +
+    'FOREIGN KEY(wedding_id) REFERENCES wedding_reg(reg_id),' +
     'FOREIGN KEY(person_id) REFERENCES people(person_id)' +
     ')'
 
@@ -302,9 +408,11 @@ function initDatabase (file) {
     'CREATE TABLE IF NOT EXISTS wedding_reg (' +
     'reg_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,' +
     'prenup_record_id INTEGER NOT NULL,' +
+    'couple_id INTEGER NOT NULL,' +
+    'date TEXT, ' +
+    'date_of_wedding TEXT,' +
     'bride_parents_id INTEGER,' +
     'groom_parents_id INTEGER,' +
-    'date TEXT,' +
     'location TEXT, ' +
     'solemnizing_officer TEXT,' +
     'contract_no TEXT, ' +

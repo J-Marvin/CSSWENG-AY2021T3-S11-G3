@@ -18,10 +18,12 @@
       <div class="card-body">
         <h5 class="card-title"><span class="church_name"> {{this.church_name}} </span></h5>
         <hr>
-        <p class="card-text church_name" data-address="{{this.address_id}}">
+        <p class="card-text church_address" data-address="{{this.address_id}}">
           <span class="church_address_line">{{this.address_line}} </span>,
+          <span class="church_address_line2">{{this.address_line2}} </span>,
           <span class="church_city">{{this.city}} </span> 
           <span class="church_province">{{this.province}} </span>
+          <span class="church_postal_code">{{this.postal_code}} </span>
           <span class="church_country">{{this.country}} </span>
         </p>
         <button type="button" class="fas fa-trash delChurchBtn"></button> <button type="button" class="fas fa-edit editChurchBtn"></button>

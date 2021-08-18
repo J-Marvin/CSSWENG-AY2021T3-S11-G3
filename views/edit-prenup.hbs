@@ -27,40 +27,80 @@
       <div class="col">
         <legend>Bride</legend>
         <hr>
-        {{#if (isUndefined bride.member_id)}}
-          {{> prenup-checkbox1}}
-          {{!-- bride non-member (NM) --}}
-          {{> editPrenupBrideNM bride=bride display='block'}}
-          {{!-- bride member (M) --}}
-          {{> editPrenupBrideM bride=bride brideNames=brideNames display='none'}}
-        {{else}}
-          {{> prenup-checkbox2}}
-          {{!-- bride member (M) --}}
-          {{> editPrenupBrideM bride=bride brideNames=brideNames display='block'}}
-          {{!-- bride non-member (NM) --}}
-          {{> editPrenupBrideNM bride=bride display='none'}}
-        {{/if}}
+
+        <input type="checkbox" id="bride_non_member" onclick="display_div_bride('bride_non_member')" {{#unless bride.member_id}}checked disabled{{/unless}}>
+        Non-member
+        <input class="mb-3" type="checkbox" id="bride_member" onclick="display_div_bride('bride_member')" {{#if bride.member_id}}checked disabled{{/if}}> Member
+
+        <div id="bride_member_div" style="display:{{#if bride.member_id}}block{{else}}none{{/if}}">
+          <label>Select Bride</label>
+          <select name="input_bride_member" id="input_bride_member" data-bride="{{bride.member_id}}, {{bride.person_id}}, {{bride.first_name}}, {{bride.middle_name}}, {{bride.last_name}}">
+            {{> dropdown brideNames}}
+          </select>
+        </div>
+
+        <fieldset class="form-group" id="bride_non_member_div" style="display:{{#if bride.member_id}}none{{else}}member{{/if}}">
+          <div class="div">
+            <div class="row">
+              <div class="col-12">
+                <label for="bride_first_name">First Name</label>
+                <input type="text" id="bride_first_name" name="bride_first_name" class="form-control"
+                  {{#unless bride.member_id}}value="{{bride.first_name}}"{{/unless}}>
+              </div>
+              <div class="col-12">
+                <label for="bride_mid_name">Middle Initial</label>
+                <input type="text" id="bride_mid_name" name="bride_mid_name" class="form-control" {{#unless bride.member_id}}value="{{bride.middle_name}}"{{/unless}}>
+              </div>
+              <div class="col-12">
+                <label for="bride_last_name">Last Name</label>
+                <input type="text" id="bride_last_name" name="bride_last_name" class="form-control" {{#unless bride.member_id}}value="{{bride.last_name}}"{{/unless}}>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+
         
         <p id="bride_info_error" class="error_codes"> </p>
+        <p id="bride_middle_error" class="error_codes"> </p>
+        <p id="bride_middle_len_error" class="error_codes"> </p>
       </div>
       <div class="col">
         <legend>Groom</legend>
         <hr>
-        {{#if (isUndefined groom.member_id)}}
-          {{> prenup-checkbox3}}
-          {{!-- groom non-member (NM) --}}
-          {{> editPrenupGroomNM groom=groom display='block'}}
-          {{!-- groom member (M) --}}
-          {{> editPrenupGroomM groom=groom groomNames=groomNames display='none'}}
-        {{else}}
-          {{> prenup-checkbox4}}
-          {{!-- groom member (M) --}}
-          {{> editPrenupGroomM groom=groom groomNames=groomNames display='block'}}
-          {{!-- groom non-member (NM) --}}
-          {{> editPrenupGroomNM groom=groom display='none'}}
-        {{/if}}
+        <input type="checkbox" id="groom_non_member" onclick="display_div_groom('groom_non_member')" {{#unless groom.member_id}}checked disabled{{/unless}}>
+        Non-member
+        <input class="mb-3" type="checkbox" id="groom_member" onclick="display_div_groom('groom_member')" {{#if groom.member_id}}checked disabled{{/if}}> Member
+
+        <div id="groom_member_div" style="display:{{#if groom.member_id}} block {{else}} none {{/if}}">
+          <label>Select Groom</label>
+          <select name="input_groom_member" id="input_groom_member" data-groom="{{groom.member_id}}, {{groom.person_id}}, {{groom.first_name}}, {{groom.middle_name}}, {{groom.last_name}}">
+            {{> dropdown groomNames}}
+          </select>
+        </div>
+
+        <fieldset class="form-group" id="groom_non_member_div" style="display:{{#if groom.member_id}} none {{else}} block {{/if}}">
+          <div class="div">
+            <div class="row">
+              <div class="col-12">
+                <label for="groom_first_name">First Name</label>
+                <input type="text" id="groom_first_name" name="groom_first_name" class="form-control"
+                  {{#unless groom.member_id}}value="{{groom.first_name}}"{{/unless}}>
+              </div>
+              <div class="col-12">
+                <label for="groom_mid_name">Middle Initial</label>
+                <input type="text" id="groom_mid_name" name="groom_mid_name" class="form-control" {{#unless groom.member_id}}value="{{groom.middle_name}}"{{/unless}}>
+              </div>
+              <div class="col-12">
+                <label for="groom_last_name">Last Name</label>
+                <input type="text" id="groom_last_name" name="groom_last_name" class="form-control" {{#unless groom.member_id}}value="{{groom.last_name}}"{{/unless}}>
+              </div>
+            </div>
+          </div>
+        </fieldset>
         
         <p id="groom_info_error" class="error_codes"> </p>
+        <p id="groom_middle_error" class="error_codes"> </p>
+        <p id="groom_middle_len_error" class="error_codes"> </p>
       </div>
     </div>
     <div class="row">

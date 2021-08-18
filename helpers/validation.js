@@ -62,6 +62,32 @@ const validation = {
     return validation
   },
 
+  addDedicationValidation: function () {
+    const validation = [
+      check('child').custom(function (value, req) {
+        if (value.isMember === null || value.isMember === undefined) {
+          if (value.first_name === null || value.first_name === undefined) {
+            throw new Error('First name is required')
+          } else if (value.mid_name === null || value.mid_name === undefined) {
+            throw new Error('Middle Initial is required')
+          } else if (value.last_name === null || value.last_name === undefined) {
+            throw new Error('Last name is required')
+          } else {
+            return true
+          }
+        } else {
+          if (value.person_id !== null && value.person_id !== undefined) {
+            return true
+          } else {
+            throw new Error('Invalid Person ID')
+          }
+        }
+      })
+    ]
+
+    return validation
+  },
+
   /**
    * This function validates the church form if there are no empty required fields.
    * @returns the validation array containing each boolean result

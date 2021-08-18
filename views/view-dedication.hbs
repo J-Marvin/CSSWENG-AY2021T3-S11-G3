@@ -1,0 +1,171 @@
+{{!-- {{>navbar}}
+DedicationId: {{infant_dedication_id}}<br>
+Child memberId: {{infant_member_id}}<br>
+Child personId: {{infant_person_id}}<br>
+Child: {{infant_first_name}}, {{infant_middle_name}}, {{infant_last_name}}<br>
+
+ParentsId: {{parents_id}}<br>
+Guardian1: {{guardianOne_first_name}}, {{guardianOne_mid_name}}, {{guardianOne_last_name}}<br>
+Guardian1 personId: {{guardianOne_person_id}}, Parent1 memberId: {{guardianOne_member_id}}<br>
+
+Guardian2: {{guardianTwo_first_name}}, {{guardianTwo_mid_name}}, {{guardianTwo_last_name}}<br>
+Guardian2 personId: {{guardianTwo_person_id}}, Parent2 memberId: {{guardianTwo_member_id}}<br>
+
+Officiant: {{officiant}}<br>
+Date: {{dateView date}}<br>
+Place: {{place}}<br>
+Witnesses (Ninong/Ninang):<br>
+{{#each witnesses}}
+    {{this.witness_person_id}}, {{this.witness_first_name}} {{this.witness_middle_name}} {{this.witness_last_name}}<br>
+{{/each}} --}}
+
+<style>
+  @import url(/css/fonts.css);
+
+  #header {
+      font-family: JuliusSansPro;
+  }
+</style>
+
+{{>navbar}}
+
+<div id="prenup_info" style="display: none" data-dedication="{{infant_dedication_id}}" ></div>
+  <div class="container" style="padding-left: 18%; padding-right: 10%;">
+    <h1 class="my-3"> View Child Dedication Record </h1>
+    <hr>
+    <div class="row">
+      <div class="col">
+        <legend>Date Created</legend>
+        <u for='date_created'>{{dateView date}}</u>
+      </div>
+      <div class="col">
+        <legend>Dedication Date</legend>
+        <u for='dedication_date'>{{dateView dedication_date}}</u>
+      </div>
+    </div>
+    <div class="row">
+      <legend>Child Name</legend>
+      <div class="col">
+        <u for="first_name">First Name</u>
+        <p>{{infant_first_name}}</p>
+        {{#if infant_member_id}}
+          <a href="/member/{{infant_member_id}}"><button class="btn btn-secondary mb-4">Child's Member Profile</button></a>
+        {{/if}}
+      </div>
+      <div class="col">
+        <u for="mid_name">Middle Initial</u>
+        <p>{{infant_middle_name}}</p>
+      </div>
+      <div class="col">
+        <u for="last_name">Last Name</u>
+        <p>{{infant_last_name}}</p>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <legend>Guardian One</legend>
+      <div class="col">
+        <u for="first_name">First Name</u>
+        <p>{{guardianOne_first_name}}</p>
+        {{#if guardianOne_member_id}}
+          <a href="/member/{{guardianOne_member_id}}"><button class="btn btn-secondary mb-4">Member Profile</button></a>
+        {{/if}}
+      </div>
+      <div class="col">
+        <u for="mid_name">Middle Initial</u>
+        <p>{{guardianOne_mid_name}}</p>
+      </div>
+      <div class="col">
+        <u for="last_name">Last Name</u>
+        <p>{{guardianOne_last_name}}</p>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <legend>Guardian Two</legend>
+      <div class="col">
+        <u for="first_name">First Name</u>
+        {{#if (isUndefined guardianTwo_first_name)}}
+          <p>N/A</p>
+        {{else}}
+          <p>{{guardianTwo_first_name}}</p>
+          {{#if guardianTwo_member_id}}
+          <a href="/member/{{guardianTwo_member_id}}"><button class="btn btn-secondary mb-4">Member Profile</button></a>
+          {{/if}}
+        {{/if}}
+      </div>
+      <div class="col">
+        <u for="mid_name">Middle Initial</u>
+        {{#if (isUndefined guardianTwo_mid_name)}}
+          <p>N/A</p>
+        {{else}}
+          <p>{{guardianTwo_mid_name}}</p>
+        {{/if}}
+      </div>
+      <div class="col">
+        <u for="last_name">Last Name</u>
+        {{#if (isUndefined guardianTwo_last_name)}}
+          <p>N/A</p>
+        {{else}}
+          <p>{{guardianTwo_last_name}}</p>
+        {{/if}}
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-4">
+            <u> Officiant </u>
+            <p>{{officiant}}</p>
+        </div>
+        <div class="col-4">
+            <u> Address of Dedication</u>
+            <p>{{place}}</p>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+      <legend>Godfather/s</legend>
+        {{#if witnessMale}}
+          {{#each witnessMale}}
+          {{>witness this}}
+          {{/each}}
+          <hr>
+        {{else}}
+          <p>N/A</p>
+        {{/if}}
+
+      <legend>Godmother/s</legend>
+        {{#if witnessFemale}}
+          {{#each witnessFemale}}
+          {{>witness this}}
+          {{/each}}
+        {{else}}
+          <p>N/A</p>
+        {{/if}}
+    </div>
+    <hr>
+    {{#if canSee}}
+    <div class="row my-3">
+      <div class="col">
+        <a><button class="btn btn-secondary mb-4">Edit Dedication Form</button></a>
+      </div>
+    </div>
+    {{/if}}
+{{!-- 
+    Male
+    <br>
+    {{#each witnessMale}} 
+    {{this.witness_first_name}},
+    {{this.witness_middle_name}},
+    {{this.witness_last_name}}
+    <br>
+    {{/each}}
+    <br>
+    Female
+    <br>
+    {{#each witnessFemale}}
+    {{this.witness_first_name}} ,
+    {{this.witness_middle_name}} ,
+    {{this.witness_last_name}} 
+    <br>
+    {{/each}} --}}

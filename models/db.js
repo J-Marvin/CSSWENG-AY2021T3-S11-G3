@@ -2,6 +2,7 @@ const knex = require('knex')
 const async = require('async')
 const fse = require('fs-extra')
 const sqlite3 = require('better-sqlite3')
+let currFile = null
 
 // gettings fields of all tables
 const memberFields = require('./members.js')
@@ -60,6 +61,7 @@ const database = {
    * @param {string} file the path of the file to be opened
    */
   initDB: async function (file) {
+    currFile = file
     if (!fse.existsSync(file)) {
       resetDb.reset(file)
       knexClient = resetDb.knexClient
@@ -83,43 +85,48 @@ const database = {
    */
   insert: function (table, data, callback = null) {
     // if table is not in database
-    if (!(tableNames.includes(table))) {
-      const success = false
-      callback(success)
+    if (data === null || (Array.isArray(data) && data.length === 0)) {
+      const result = []
+      callback(result)
     } else {
-      if (Array.isArray(data)) {
-        data.forEach((record) => {
-          for (const key in record) {
+      if (!(tableNames.includes(table))) {
+        const success = false
+        callback(success)
+      } else {
+        if (Array.isArray(data)) {
+          data.forEach((record) => {
+            for (const key in record) {
+              if (fields[table].includes(key) && // if the key is a valid field
+                (data[key] === null || data[key] === undefined)) {
+                // if the value is valid
+                delete data[key]
+              }
+            }
+          })
+        } else {
+          for (const key in data) {
             if (fields[table].includes(key) && // if the key is a valid field
-              (data[key] === null || data[key] === undefined)) {
+               (data[key] === null || data[key] === undefined)) {
               // if the value is valid
               delete data[key]
             }
           }
-        })
-      } else {
-        for (const key in data) {
-          if (fields[table].includes(key) && // if the key is a valid field
-             (data[key] === null || data[key] === undefined)) {
-            // if the value is valid
-            delete data[key]
-          }
         }
-      }
 
-      knexClient(table)
-        .insert(data) // insert data
-        .then(function (result) {
-          if (callback !== null) {
-            callback(result) // if there is a callback function return id of inserted row
-          }
-        }).catch(function (err) {
-          console.log(err)
-          if (callback !== null) {
-            const flag = false
-            callback(flag) // pass false to the callback function where an error occurred
-          }
-        })
+        knexClient(table)
+          .insert(data) // insert data
+          .then(function (result) {
+            if (callback !== null) {
+              callback(result) // if there is a callback function return id of inserted row
+            }
+          }).catch(function (err) {
+            console.log(err)
+            if (callback !== null) {
+              const flag = false
+              callback(flag) // pass false to the callback function where an error occurred
+            }
+          })
+      }
     }
   },
 
@@ -521,6 +528,34 @@ const database = {
       db.pragma('foreign_keys = ON')
     }
     db.close()
+  },
+  /**
+   * This method executes a single sqlite statement
+   * @param {String} stmt the sqlite statement to be executed
+   * @param {Object} params the object containing the parameters of the statement
+   * @param {Function} callback the function to be called after executing the statement
+   */
+  executeRaw: function (stmt, params = null, callback) {
+    const client = sqlite3(currFile)
+
+    try {
+      const prepdStmt = client.prepare(stmt)
+
+      if (params === null) {
+        const result = prepdStmt.run()
+        client.close()
+        callback(result)
+      } else {
+        const result = prepdStmt.run(params)
+        client.close()
+        callback(result)
+      }
+    } catch (err) {
+      if (err) {
+        const flag = false
+        callback(flag)
+      }
+    }
   }
 }
 

@@ -48,3 +48,4 @@
 - [Bootstrap](https://getbootstrap.com)
 - [FontAwesome](https://fontawesome.com)
 - [JQuery](https://jquery.com)
+- [Selectize.js](https://selectize.dev/)

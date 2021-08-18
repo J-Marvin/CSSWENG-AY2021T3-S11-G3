@@ -16,7 +16,7 @@ const memberController = {
    * @param res - the result to be sent out after processing the request
    */
   getAddMemberPage: function (req, res) {
-    req.session.editMemberId = null
+    req.session.editId = null
     res.render('add-member-temp', {
       styles: ['forms'],
       scripts: ['member']
@@ -24,7 +24,7 @@ const memberController = {
   },
 
   getEditMember: function (req, res) {
-    if (req.session.editMemberId === parseInt(req.params.member_id) || parseInt(req.session.level) === 3) {
+    if (req.session.editId === parseInt(req.params.member_id) || parseInt(req.session.level) === 3) {
       const data = {
         styles: ['forms'],
         scripts: ['member']
@@ -88,7 +88,7 @@ const memberController = {
   },
 
   getViewMember: function (req, res) {
-    if (parseInt(req.session.editMemberId) === parseInt(req.params.member_id) || parseInt(req.session.level) >= 2) {
+    if (parseInt(req.session.editId) === parseInt(req.params.member_id) || parseInt(req.session.level) >= 2) {
       const data = {
       }
       const condition = new Condition(queryTypes.where)
@@ -134,7 +134,7 @@ const memberController = {
                   data.member.age = moment.duration(today.diff(b)).years()
                   data.styles = ['view']
                   data.scripts = ['removeButtons']
-                  data.canSee = (parseInt(req.session.level) === 3) || req.session.editMemberId !== null
+                  data.canSee = (parseInt(req.session.level) === 3) || req.session.editId !== null
                   data.backLink = parseInt(req.session.level) >= 2 ? '/member_main_page' : '/main_page'
                   res.render('view-member', data)
                 }
@@ -228,7 +228,7 @@ const memberController = {
                   personCondition.setKeyValue(personFields.ID, data.member[memberFields.PERSON])
                   const memberId = result[0]
                   db.update(db.tables.PERSON_TABLE, { member_id: result[0] }, personCondition, function (result) {
-                    req.session.editMemberId = memberId
+                    req.session.editId = memberId
                     res.redirect('/member/' + memberId)
                   })
                 })
@@ -294,6 +294,8 @@ const memberController = {
       data.address[addressFields.PROVINCE] = req.body.province
       data.address[addressFields.POSTAL_CODE] = req.body.postal_code
       data.address[addressFields.COUNTRY] = req.body.country
+
+      console.log(req.body)
 
       data.member[memberFields.BIRTHDAY] = req.body.birthday
       data.member[memberFields.OCCUPATION] = req.body.occupation

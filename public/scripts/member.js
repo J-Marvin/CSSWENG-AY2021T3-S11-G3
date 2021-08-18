@@ -171,8 +171,12 @@ $(document).ready(function () {
     }
   })
   $('#create-member').click(function() {
+    $('#create-member').prop('disabled', true)
+
     if(validateFields()) {
       $('#create-member-form').submit()
+    } else {
+      $('#create-member').prop('disabled', false)
     }
   })
 
@@ -244,6 +248,7 @@ $(document).ready(function () {
 
   $('#saveChurchBtn').click(function() {
 
+    $('#saveChurchBtn').prop('disabled', true)
     var isValid = true
     var errors = ''
     
@@ -285,6 +290,7 @@ $(document).ready(function () {
 
     if(!isValid) {
       //alert(errors)
+      $('#saveChurchBtn').prop('disabled', false)
     } else {
       if(addChurch) {
 
@@ -294,6 +300,7 @@ $(document).ready(function () {
           data: church,
           url: "/add_church",
           success: function (result) {
+            $('#saveChurchBtn').prop('disabled', false)
             $('#churchList').append(result)
             $(churchModal).modal('hide')
           }
@@ -307,6 +314,7 @@ $(document).ready(function () {
           data: church,
           url: "/update_church",
           success: function (result) {
+            $('#saveChurchBtn').prop('disabled', false)
             if(result) {
               $(parentDiv).find('.church_name').text(church.church_name)
               $(parentDiv).find('.church_address_line').text(church.address_line)
@@ -326,6 +334,7 @@ $(document).ready(function () {
 
   $('#saveObservationBtn').click(function() {
 
+    $('#saveObservationBtn').prop('disabled', true)
     var isValid = true
     var errors = ''
 
@@ -349,7 +358,7 @@ $(document).ready(function () {
     }
 
     if(!isValid) {
-      //alert(errors)
+      $('#saveObservationBtn').prop('disabled', false)
     } else {
         if (addObservation) {
           $.ajax({
@@ -357,6 +366,7 @@ $(document).ready(function () {
             data: observation,
             url: "/add_observation",
             success: function (result) {
+              $('#saveObservationBtn').prop('disabled', false)
               $('#observationList').append(result)
               $(observationModal).modal('hide')
             }
@@ -368,6 +378,7 @@ $(document).ready(function () {
             data: observation,
             url: "/update_observation",
             success: function (result) {
+              $('#saveObservationBtn').prop('disabled', false)
               if(result) {
                 $(parentDiv).find('.comment').text(observation.comment)
                 $(parentDiv).find('.observer').text(observation.observer)
@@ -392,12 +403,12 @@ $(document).ready(function () {
   })
 
   $(document).on('click', '.editObservationBtn', function () {
-    const comment = $(this).siblings('.card-title').find('.comment').text()
-    const observer = $(this).siblings('.row').find('.observer').text()
+    const comment = $(this).siblings('.card-title').find('.comment').text().trim()
+    const observer = $(this).siblings('.row').find('.observer').text().trim()
 
     const observationFieldset = $('#observationFieldset')
 
-    editObservationId = $(this).closest('div').attr('data-observation')
+    editObservationId = $(this).closest('.card').attr('data-observation')
     parentDiv = $(this).closest('div')
     addObservation = false
 
@@ -410,6 +421,7 @@ $(document).ready(function () {
 
   $(document).on('click', '.delObservationBtn', function () {
     const data = {}
+    $(this).prop('disabled', true)
     const parent = $(this).closest('.card')
     data.observation_id = $(this).closest('.card').attr('data-observation')
     $.ajax({
@@ -421,6 +433,7 @@ $(document).ready(function () {
         if (result) {
           parent.remove()
         } else {
+          $(this).prop('disabled', false)
           alert("FAILED")
         }
       }
@@ -430,19 +443,19 @@ $(document).ready(function () {
   $(document).on('click', '.editChurchBtn', function () {
     //alert($(this).siblings('h5').find('.church_name').text())
 
-    const church_name = $(this).siblings('h5').find('.church_name').text()
-    const address_line = $(this).siblings('p').find('.church_address_line').text()
-    const address_line2 = $(this).siblings('p').find('.church_address_line2').text()
-    const city = $(this).siblings('p').find('.church_city').text()
-    const province = $(this).siblings('p').find('.church_province').text()
-    const country = $(this).siblings('p').find('.church_country').text()
-    const postal_code = $(this).siblings('p').siblings('.church_postal_code').text()
+    const church_name = $(this).siblings('h5').find('.church_name').text().trim()
+    const address_line = $(this).siblings('p').find('.church_address_line').text().trim()
+    const address_line2 = $(this).siblings('p').find('.church_address_line2').text().trim()
+    const city = $(this).siblings('p').find('.church_city').text().trim()
+    const province = $(this).siblings('p').find('.church_province').text().trim()
+    const country = $(this).siblings('p').find('.church_country').text().trim()
+    const postal_code = $(this).siblings('p').find('.church_postal_code').text().trim()
 
     const churchFieldset = $('#churchFieldset')
 
     editChurchId = $(this).closest('.card').attr('data-church')
     editChurchAddressId = $(this).siblings('p').attr('data-address')
-    parentDiv = $(this).closest('.card')
+    parentDiv = $(this).closest('div')
     addChurch = false
 
     $(churchFieldset).find('#church_name').val(church_name)
@@ -462,6 +475,7 @@ $(document).ready(function () {
     const parent = $(this).closest('.card')
     data.church_id = $(this).closest('.card').attr('data-church')
     data.address_id = $(this).siblings('p').attr('data-address')
+    $(this).prop('disabled', true)
 
     $.ajax({
       type: "DELETE",
@@ -473,6 +487,7 @@ $(document).ready(function () {
           parent.remove()
         } else {
           alert("FAILED")
+          $(this).prop('disabled', false)
         }
       }
     })

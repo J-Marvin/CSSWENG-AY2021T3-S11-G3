@@ -1,0 +1,267 @@
+{{>navbar}}
+<form id="add_dedication_form" class="container">
+  <div class="container" style="padding-left: 20%; padding-right: 20%;">
+    <h1 class="my-3">Add Child Dedication Form</h1>
+    <hr>
+    <div class="row">
+      <div class="col">
+        <legend>Child</legend>
+        <hr>
+        <input type="checkbox" id="child_non_member"> Non-member
+        <input class="mb-3" type="checkbox" id="child_member" checked disabled> Member
+      
+        <div id="child_member_div" style="display:block">
+          <label>Select Child</label>
+          <select name="input_child_member" id="input_child_member" >
+            {{>dropdown members}}
+          </select>
+        </div>
+      
+        <fieldset class="form-group" id="child_non_member_div" style="display:none">
+          <div class="div">
+            <div class="row">
+              <div class="col-12">
+                <label for="child_first_name">First Name</label>
+                <input type="text" id="child_first_name" name="child_first_name" class="form-control">
+              </div>
+              <div class="col-12">
+                <label for="child_mid_name">Middle Initial</label>
+                <input type="text" id="child_mid_name" name="child_mid_name" class="form-control">
+              </div>
+              <div class="col-12">
+                <label for="child_last_name">Last Name</label>
+                <input type="text" id="child_last_name" name="child_last_name" class="form-control">
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <p id="child_info_error" class="error_codes"> </p>
+        <p id="child_middle_error" class="error_codes"> </p>
+        <p id="child_middle_len_error" class="error_codes"> </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <legend>Parent / Guardian</legend>
+        <hr>
+        <input type="checkbox" id="parent1_non_member"> Non Member
+
+        <input class="mb-3" type="checkbox" id="parent1_member" checked disabled> Member
+        <div id="parent1_member_div" style="display:block">
+          <label>Select Parent / Guardian</label>
+          <select name="input_parent1" id="input_parent1_member">
+            {{>dropdown members}}
+          </select>
+        </div>
+        <fieldset class="form-group" id="parent1_non_member_div" style="display:none">
+          <div class="div">
+            <div class="row">
+              <div class="col-12">
+                <label for="parent1_first_name">First Name</label>
+                <input type="text" id="parent1_first_name" name="parent1_first_name" class="form-control">
+              </div>
+              <div class="col-12">
+                <label for="parent1_mid_name">Middle Initial</label>
+                <input type="text" id="parent1_mid_name" name="parent1_mid_name" class="form-control">
+              </div>
+              <div class="col-12">
+                <label for="parent1_last_name">Last Name</label>
+                <input type="text" id="parent1_last_name" name="parent1_last_name" class="form-control">
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <p id="parent1_info_error" class="error_codes"> </p>
+        <p id="parent1_middle_error" class="error_codes"> </p>
+        <p id="parent1_middle_len_error" class="error_codes"> </p>
+      </div>
+      <div class="col">
+        <legend>Parent / Guardian</legend>
+        <hr>
+        <input type="checkbox" id="parent2_non_member"> Non-member
+        <input class="mb-3" type="checkbox" id="parent2_member" checked disabled> Member
+        <input type="checkbox" id="parent2_none"> None
+
+        <div id="parent2_member_div" style="display:block">
+          <label>Select Parent / Guardian</label>
+          <select name="input_parent2_member" id="input_parent2_member">
+            {{>dropdown members}}
+          </select>
+        </div>
+
+        <fieldset class="form-group" id="parent2_non_member_div" style="display:none">
+          <div class="div">
+            <div class="row">
+              <div class="col-12">
+                <label for="parent2_first_name">First Name</label>
+                <input type="text" id="parent2_first_name" name="parent2_first_name" class="form-control">
+              </div>
+              <div class="col-12">
+                <label for="parent2_mid_name">Middle Initial</label>
+                <input type="text" id="parent2_mid_name" name="parent2_mid_name" class="form-control">
+              </div>
+              <div class="col-12">
+                <label for="parent2_last_name">Last Name</label>
+                <input type="text" id="parent2_last_name" name="parent2_last_name" class="form-control">
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <p id="parent2_info_error" class="error_codes"> </p>
+        <p id="parent2_middle_error" class="error_codes"> </p>
+        <p id="parent2_middle_len_error" class="error_codes"> </p2
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <hr>
+      </div>
+      <div class="col">
+        <label for="officiant">Officiant</label>
+        <input type="text" id="officiant" name="officiant" class="form-control">
+        <p id="officiant_info_error" class="error_codes"> </p>
+      </div>
+      <div class="col">
+        <label for="address">Address of Dedication</label>
+        <input type="text" id="address" name="address" class="form-control">
+        <p id="address_info_error" class="error_codes"> </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <label for="address">Date of Dedication</label>
+        <input type="date" id="date" name="date" class="form-control">
+        <p id="date_info_error" class="error_codes"> </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 d-flex justify-content-between">
+        <legend>Godmother/s</legend>
+        <i id="add_gmother_button" style="width: 2.5em; height: 2.5em; color:black;" class="far fa-plus-square"></i>
+      </div>
+    </div>
+    <div class="row" style="margin-top: -0.5em;">
+      <div class="col">
+        <hr>
+      </div>
+    </div>
+    <div class="row" id="gmother_witness_row">
+      <p id="witness_gmother_info_error" class="error_codes"> </p>
+    </div>
+    <div class="row">
+      <div class="col-12 d-flex justify-content-between">
+        <legend>Godfather/s</legend>
+        <i id="add_gfather_button" style="width: 2.5em; height: 2.5em; color:black;" class="far fa-plus-square"></i>
+      </div>
+    </div>
+    <div class="row" style="margin-top: -0.5em;">
+      <div class="col">
+        <hr>
+      </div>
+    </div>
+    <div class="row" id="gfather_witness_row">
+      <p id="witness_gfather_info_error" class="error_codes"> </p>
+    </div>
+    <button id="create-dedication" type="button" class="btn btn-primary">Submit</button>
+  </div>
+</form>
+
+<div class="modal fade" id="GMotherWitnessModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Godmother</h5>
+        <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col">
+            <input type="checkbox" id="witness_gmother_non_member"> Non Member
+            <input class="mb-3" type="checkbox" id="witness_gmother_member" checked disabled> Member
+            <div id="witness_gmother_member_div" style="display:block">
+              <label>Select Witness</label>
+              <select name="input_witness" id="input_witness_gmother_member">
+                {{>dropdown females}}
+              </select>
+            </div>
+            <fieldset class="form-group" id="witness_gmother_non_member_div" style="display:none">
+              <div class="div">
+                <div class="row">
+                  <div class="col-12">
+                    <label for="witness_first_name">First Name</label>
+                    <input type="text" id="witness_gmother_first_name" name="witness_first_name" class="form-control">
+                  </div>
+                  <div class="col-12">
+                    <label for="witness_mid_name">Middle Initial</label>
+                    <input type="text" id="witness_gmother_mid_name" name="witness_mid_name" class="form-control">
+                  </div>
+                  <div class="col-12">
+                    <label for="witness_last_name">Last Name</label>
+                    <input type="text" id="witness_gmother_last_name" name="witness_last_name" class="form-control">
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+            <p id="witness_gmother_modal_info_error" class="error_codes"> </p>
+            <p id="witness_gmother_modal_middle_error" class="error_codes"> </p>
+            <p id="witness_gmother_modal_middle_len_error" class="error_codes"> </p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="cancel_modal" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="add_gmother_witness">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="GFatherWitnessModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Godfather</h5>
+        <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col">
+            <input type="checkbox" id="witness_gfather_non_member"> Non Member
+            <input class="mb-3" type="checkbox" id="witness_gfather_member" checked disabled> Member
+            <div id="witness_gfather_member_div" style="display:block">
+              <label>Select Witness</label>
+              <select name="input_witness" id="input_witness_gfather_member">
+                {{>dropdown males}}
+              </select>
+            </div>
+            <fieldset class="form-group" id="witness_gfather_non_member_div" style="display:none">
+              <div class="div">
+                <div class="row">
+                  <div class="col-12">
+                    <label for="witness_first_name">First Name</label>
+                    <input type="text" id="witness_gfather_first_name" name="witness_first_name" class="form-control">
+                  </div>
+                  <div class="col-12">
+                    <label for="witness_mid_name">Middle Initial</label>
+                    <input type="text" id="witness_gfather_mid_name" name="witness_mid_name" class="form-control">
+                  </div>
+                  <div class="col-12">
+                    <label for="witness_last_name">Last Name</label>
+                    <input type="text" id="witness_gfather_last_name" name="witness_last_name" class="form-control">
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+            <p id="witness_gfather_modal_info_error" class="error_codes"> </p>
+            <p id="witness_gfather_modal_middle_error" class="error_codes"> </p>
+            <p id="witness_gfather_modal_middle_len_error" class="error_codes"> </p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="cancel_modal" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="add_gfather_witness">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>

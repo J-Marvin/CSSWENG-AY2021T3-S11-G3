@@ -16,7 +16,8 @@ let mainWindow
 function createWindow () {
   mainWindow = new BrowserWindow({
     width: 800,
-    height: 600
+    height: 600,
+    icon: __dirname + './public/images/logo.png'
   })
 
   mainWindow.setMinimumSize(800, 600)

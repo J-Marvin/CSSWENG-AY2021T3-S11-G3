@@ -1,0 +1,10 @@
+<div class='col-4' style='margin-bottom: 1em;'>
+  <div class='card witness'>
+    <div class='card-body'>
+      <p class='card-text'>{{this.witness_first_name}} {{this.witness_middle_name}}. {{this.witness_last_name}}</p>
+      {{#if this.witness_member_id}}
+      <a href="/member/{{this.witness_member_id}}"><button class="btn btn-secondary mb-4">Member Profile</button></a>
+      {{/if}}
+    </div>
+  </div>
+</div>

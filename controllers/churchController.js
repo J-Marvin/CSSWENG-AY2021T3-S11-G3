@@ -49,6 +49,7 @@ const churchController = {
             church[addressFields.PROVINCE] = req.body.province
             church[addressFields.POSTAL_CODE] = req.body.postal_code
             church[addressFields.COUNTRY] = req.body.country
+
             res.render('partials/church', church, (err, html) => {
               if (err) {
                 res.send(false)
