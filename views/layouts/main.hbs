@@ -8,9 +8,6 @@
         <link rel="shortcut icon" type="image/jpg" href="../images/church_logo.png"/>
 
         <base href="/">
-        {{#each styles}}
-        <link rel="stylesheet" type="text/css" href="/css/{{this}}.css">
-        {{/each}}
         
         {{!-- Bootstrap Library --}}
         <link rel="stylesheet" type="text/css" href="/bootstrap-5.0.2-dist/css/bootstrap.min.css">
@@ -18,7 +15,14 @@
         {{!-- Fontawesome Library --}}
         <link rel="stylesheet" href="/fontawesome/css/all.css">
 
+        {{!-- Selectize CSS--}}
         <link rel="stylesheet" type="text/css" href="/selectize/css/selectize.bootstrap4.css">
+
+        {{!-- DataTables CSS --}}
+        <link rel="stylesheet" type="text/css" href="/datatables/datatables.css">
+        {{#each styles}}
+        <link rel="stylesheet" type="text/css" href="/css/{{this}}.css">
+        {{/each}}
     </head>
     <body>
         
@@ -32,6 +36,9 @@
         <script src="/scripts/jquery-3.6.0.min.js"></script>
         <script src="/scripts/validator.min.js"></script>
         <script src="/selectize/js/standalone/selectize.min.js"></script>
+        <script src="/datatables/datatables.js"></script>
+        <script src="/scripts/moment.js"></script>
+        <script src="/scripts/datetime-moment.js"></script>
         {{#each scripts}}
         <script type="text/javascript" src="/scripts/{{this}}.js"></script>
         {{/each}}

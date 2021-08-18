@@ -85,4 +85,33 @@
         <hr>
       {{/each}}
   </div>
+  <table id="dataTable" class="display table" width="100%">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        {{#if canSee}}
+          <th>Birth Date</th>
+          <th>Contact Number</th>
+          <th>Email Address</th>
+          <th>Address</th>
+        {{/if}}
+      </tr>
+    </thead>
+    <tbody>
+      {{#each members}}
+        <tr data-href="/member/{{this.member_id}}">
+          <td>{{this.member_id}}</td>
+          <td>{{this.first_name}} {{this.last_name}}</td>
+
+          {{#if ../canSee}}
+            <td>{{dateView this.birthday}}</td>
+            <td>{{this.mobile}}</td>
+            <td>{{this.email}}</td>
+            <td>{{this.address}}</td>
+          {{/if}}
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
 </div>

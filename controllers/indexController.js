@@ -31,6 +31,7 @@ const controller = {
   },
   getMemberMainPage: function (req, res) {
     const level = req.session.level
+    // const level = '3'
     req.session.editId = null
     if (level === undefined || level === null || parseInt(level) === 1) {
       res.status(401)
@@ -63,6 +64,7 @@ const controller = {
 
         res.render('member-main-page', {
           styles: ['lists'],
+          scripts: ['memberTable'],
           members: result,
           canSee: parseInt(req.session.level) === 3
         })
