@@ -18,7 +18,7 @@ $(document).ready(function() {
   })
 
   $('th').css('border-bottom', '3px black double')
-  $('#member_table').on('click', 'tbody tr', function() {
+  $('#dataTable').on('click', 'tbody tr', function() {
     window.location.href = $(this).data('href')
   })
 })
