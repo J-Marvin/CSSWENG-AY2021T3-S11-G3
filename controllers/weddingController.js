@@ -10,6 +10,71 @@ const witnessFields = require('../models/witness.js')
 
 const weddingController = {
   /**
+   * This function renders the add wedding page
+   * @param req - the incoming request containing either the query or body
+   * @param res - the result to be sent out after processing the request
+   */
+  getAddWeddingPage: function (req, res) {
+    if (req.session.level === null || req.session.level === undefined) {
+      res.render('error', {
+        title: '401 Unauthorized Access',
+        css: ['global', 'error'],
+        status: {
+          code: '401',
+          message: 'Unauthorized access'
+        },
+        backLink: '/forms_main_page'
+      })
+    } else {
+      const join = [
+        {
+        }
+      ]
+      db.find(db.tables.WEDDING_TABLE, [], join, '*', function (result) {
+        if (result) {
+          const data = {}
+          data.members = result
+          data.styles = ['forms']
+          data.scripts = ['addWedding']
+          data.backLink = parseInt(req.session.level) >= 2 ? '/wedding_main_page' : '/forms_main_page'
+          // data.males = data.members.filter((element) => { return element[memberFields.SEX] === 'Male' })
+          // data.females = data.members.filter((element) => { return element[memberFields.SEX] === 'Female' })
+          res.render('add-wedding-dedication', data)
+        }
+      })
+    }
+  },
+  /**
+   * This function renders the view of a specific wedding record
+   * @param req - the incoming request containing either the query or body
+   * @param res - the result to be sent out after processing the request
+   */
+  getViewWeddingPage: function (req, res) {
+    /*
+      This local function renders the error page
+    */
+    function sendError (title, code) {
+      const msg = title
+      res.status(code)
+      res.render('error', {
+        title: title,
+        css: ['global', 'error'],
+        status: {
+          code: parseInt(code),
+          message: msg
+        },
+        backLink: '/main_page'
+      })
+    }
+    // function execution starts here
+    const weddingId = parseInt(req.params.wedding_id)
+    if (parseInt(req.session.level) >= 2 || req.session.editId === weddingId) {
+      // process here
+    } else {
+      sendError('401 Unauthorized Access', 401)
+    }
+  },
+  /**
    * This function inserts a new row in the wedding table
    * @param req - the incoming request containing either the query or body
    * @param res - the result to be sent out after processing the request
