@@ -5,6 +5,8 @@ const db = require('../models/db.js')
 const personFields = require('../models/person')
 const coupleFields = require('../models/Couple.js')
 const weddingRegFields = require('../models/weddingRegistry')
+const { prependOnceListener } = require('../routes/routes.js')
+const witnessFields = require('../models/witness.js')
 
 const weddingController = {
   /**
@@ -139,13 +141,14 @@ const weddingController = {
     const coupleInfo = []
 
     // Extract data from req.body
-    const hasPrenup = req.body.hasPrenup
     people.bride = JSON.parse(req.body.bride)
     people.groom = JSON.parse(req.body.groom)
     people.brideMother = JSON.parse(req.body.bride_mother)
     people.brideFather = JSON.parse(req.body.bride_father)
     people.groomMother = JSON.parse(req.body.groom_mother)
     people.groomFather = JSON.parse(req.body.groom_father)
+    people.witnessMale = JSON.parse(req.body.witness_male)
+    people.witnessFemale = JSON.parse(req.body.witness_female)
 
     if (people.bride.isMember) {
       couples.couple[coupleFields.FEMALE] = people.bride.person_id
@@ -172,9 +175,9 @@ const weddingController = {
     }
 
     // check Bride Parents
-    if (people.brideMother.isMember) {
+    if (people.brideMother !== null && people.brideMother.isMember) {
       couples.brideParents[coupleFields.FEMALE] = people.brideMother.person_id
-    } else {
+    } else if (people.brideMother !== null) {
       const parent = {}
       parent[personFields.FIRST_NAME] = people.brideMother.first_name
       parent[personFields.MID_NAME] = people.brideMother.mid_name
@@ -186,9 +189,9 @@ const weddingController = {
       peopleOffsets.groom += 1
     }
 
-    if (people.brideFather.isMember) {
+    if (people.brideFather !== null && people.brideFather.isMember) {
       couples.brideParents[coupleFields.MALE] = people.brideFather.person_id
-    } else {
+    } else if (people.brideFather !== null) {
       const parent = {}
       parent[personFields.FIRST_NAME] = people.brideFather.first_name
       parent[personFields.MID_NAME] = people.brideFather.mid_name
@@ -203,9 +206,9 @@ const weddingController = {
 
     // Check Groom Parents
 
-    if (people.groomMother.isMember) {
+    if (people.groomMother !== null && people.groomMother.isMember) {
       couples.groomParents[coupleFields.FEMALE] = people.groomMother.person_id
-    } else {
+    } else if (people.groomMother !== null) {
       const parent = {}
       parent[personFields.FIRST_NAME] = people.groomMother.first_name
       parent[personFields.MID_NAME] = people.groomMother.mid_name
@@ -219,9 +222,9 @@ const weddingController = {
       peopleOffsets.brideFather += 1
     }
 
-    if (people.groomFather.isMember) {
+    if (people.groomFather !== null && people.groomFather.isMember) {
       couples.groomParents[coupleFields.MALE] = people.groomFather.person_id
-    } else {
+    } else if (people.groomFather !== null) {
       const parent = {}
       parent[personFields.FIRST_NAME] = people.groomFather.first_name
       parent[personFields.MID_NAME] = people.groomFather.mid_name
@@ -264,21 +267,116 @@ const weddingController = {
           couples.groomParents[coupleFields.MALE] = result.peopleOffsets.groomFather
         }
 
-        coupleInfo.push(couples.brideParents)
-        coupleInfo.push(couples.groomParents)
+        if (people.brideMother !== null || people.brideFather !== null) {
+          coupleInfo.push(couples.brideParents)
+        }
+
+        if (people.groomMother !== null || people.groomFather !== null) {
+          coupleInfo.push(couples.groomParents)
+          coupleOffsets.brideParents += 1
+        }
+
         coupleInfo.push(couples.couple)
         coupleOffsets.brideParents += 1
-        if (!hasPrenup) {
-          coupleOffsets.brideParents += 1
-          coupleOffsets.groomParents += 1
-        }
+        coupleOffsets.groomParents += 1
 
         db.insert(db.tables.COUPLE_TABLE, coupleInfo, function (result) {
           if (result) {
             result = result[0]
-            data[weddingRegFields.BRIDE_PARENTS] = result - 2
-            data[weddingRegFields.GROOM_PARENTS] = result - 1
+            data[weddingRegFields.BRIDE_PARENTS] = result - coupleOffsets.brideParents
+            data[weddingRegFields.GROOM_PARENTS] = result - coupleOffsets.groomParents
             data[weddingRegFields.COUPLE] = result
+
+            db.insert(db.tables.WEDDING_TABLE, data, function (result) {
+              if (result) {
+                const currWedding = result[0]
+
+                const witnessMaleInfo = []
+                const witnessFemaleInfo = []
+                const witnesses = []
+
+                people.witnessMale.forEach(function (witness) {
+                  const currWitness = {}
+                  if (witness.isMember) {
+                    currWitness[witnessFields.TYPE] = 'Godfather' // Change
+                    currWitness[witnessFields.WEDDING] = currWedding
+                    currWitness[witnessFields.PERSON] = witness.person_id
+                    witnesses.push(currWitness)
+                  } else { // For every non-member witness, add to witnessInfo to insert to people table
+                    currWitness[personFields.FIRST_NAME] = witness.first_name
+                    currWitness[personFields.MID_NAME] = witness.mid_name
+                    currWitness[personFields.LAST_NAME] = witness.last_name
+
+                    witnessMaleInfo.push(currWitness)
+                  }
+                })
+
+                people.witnessFemale.forEach(function (witness) {
+                  const currWitness = {}
+                  if (witness.isMember) {
+                    currWitness[witnessFields.TYPE] = 'Godmother' // Change
+                    currWitness[witnessFields.WEDDING] = currWedding
+                    currWitness[witnessFields.PERSON] = witness.person_id
+                    witnesses.push(currWitness)
+                  } else { // For every non-member witness, add to witnessInfo to insert to people table
+                    currWitness[personFields.FIRST_NAME] = witness.first_name
+                    currWitness[personFields.MID_NAME] = witness.mid_name
+                    currWitness[personFields.LAST_NAME] = witness.last_name
+
+                    witnessFemaleInfo.push(currWitness)
+                  }
+                })
+
+                db.insert(db.tables.PERSON_TABLE, witnessMaleInfo, function (result) {
+                  if (result) {
+                    result = result[0]
+
+                    const maleWitnesses = witnessMaleInfo.map(function (witness) {
+                      const witnessInfo = {}
+                      witnessInfo[witnessFields.WEDDING] = currWedding
+                      witnessInfo[witnessFields.PERSON] = result
+                      witnessInfo[witnessFields.TYPE] = 'Godfather' // Change
+                      result -= 1
+
+                      return witnessInfo
+                    })
+
+                    db.insert(db.tables.PERSON_TABLE, witnessFemaleInfo, function (result) {
+                      if (result) {
+                        result = result[0]
+
+                        const femaleWitnesses = witnessFemaleInfo.map(function (witness) {
+                          const witnessInfo = {}
+                          witnessInfo[witnessFields.WEDDING] = currWedding
+                          witnessInfo[witnessFields.PERSON] = result
+                          witnessInfo[witnessFields.TYPE] = 'Godmother'
+                          result -= 1
+
+                          return witnessInfo
+                        })
+
+                        const allWitnesses = witnesses.concat(maleWitnesses).concat(femaleWitnesses)
+
+                        db.insert(db.tables.WITNESS_TABLE, allWitnesses, function (result) {
+                          if (result) {
+                            req.session.editId = currWedding
+                            res.send(JSON.stringify(currWedding))
+                          } else {
+                            res.send(false)
+                          }
+                        })
+                      } else {
+                        res.send(false)
+                      }
+                    })
+                  } else {
+                    res.send(false)
+                  }
+                })
+              } else {
+                res.send(false)
+              }
+            })
           } else {
             res.send(false)
           }
