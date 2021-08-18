@@ -3,7 +3,6 @@ const path = require('path')
 
 const db = require('../models/db.js')
 const personFields = require('../models/person')
-const prenupRecordFields = require('../models/prenupRecord')
 const coupleFields = require('../models/Couple.js')
 const weddingRegFields = require('../models/weddingRegistry')
 
@@ -148,33 +147,28 @@ const weddingController = {
     people.groomMother = JSON.parse(req.body.groom_mother)
     people.groomFather = JSON.parse(req.body.groom_father)
 
-    // If the form already has prenup, couple_id should be in req.body
-    if (hasPrenup) {
-      couples.couple = req.body.couple_id // CHANGE
+    if (people.bride.isMember) {
+      couples.couple[coupleFields.FEMALE] = people.bride.person_id
     } else {
-      if (people.bride.isMember) {
-        couples.couple[coupleFields.FEMALE] = people.bride.person_id
-      } else {
-        const bride = {}
-        bride[personFields.FIRST_NAME] = people.bride.first_name
-        bride[personFields.MID_NAME] = people.bride.mid_name
-        bride[personFields.LAST_NAME] = people.bride.last_name
+      const bride = {}
+      bride[personFields.FIRST_NAME] = people.bride.first_name
+      bride[personFields.MID_NAME] = people.bride.mid_name
+      bride[personFields.LAST_NAME] = people.bride.last_name
 
-        peopleInfo.push(bride)
-      }
+      peopleInfo.push(bride)
+    }
 
-      if (people.groom.isMember) {
-        couples.couple[coupleFields.MALE] = people.groom.person_id
-      } else {
-        const groom = {}
-        groom[personFields.FIRST_NAME] = people.groom.first_name
-        groom[personFields.MID_NAME] = people.groom.mid_name
-        groom[personFields.LAST_NAME] = people.groom.last_name
+    if (people.groom.isMember) {
+      couples.couple[coupleFields.MALE] = people.groom.person_id
+    } else {
+      const groom = {}
+      groom[personFields.FIRST_NAME] = people.groom.first_name
+      groom[personFields.MID_NAME] = people.groom.mid_name
+      groom[personFields.LAST_NAME] = people.groom.last_name
 
-        peopleInfo.push(groom)
+      peopleInfo.push(groom)
 
-        peopleOffsets.bride += 1
-      }
+      peopleOffsets.bride += 1
     }
 
     // check Bride Parents
@@ -272,9 +266,9 @@ const weddingController = {
 
         coupleInfo.push(couples.brideParents)
         coupleInfo.push(couples.groomParents)
+        coupleInfo.push(couples.couple)
         coupleOffsets.brideParents += 1
         if (!hasPrenup) {
-          coupleInfo.push(couples.couple)
           coupleOffsets.brideParents += 1
           coupleOffsets.groomParents += 1
         }
@@ -282,9 +276,9 @@ const weddingController = {
         db.insert(db.tables.COUPLE_TABLE, coupleInfo, function (result) {
           if (result) {
             result = result[0]
-            data[weddingRegFields.BRIDE_PARENTS] = result - coupleOffsets.brideParents
-            data[weddingRegFields.GROOM_PARENTS] = result - coupleOffsets.groomParents
-            // if data[couple] is null, get from result
+            data[weddingRegFields.BRIDE_PARENTS] = result - 2
+            data[weddingRegFields.GROOM_PARENTS] = result - 1
+            data[weddingRegFields.COUPLE] = result
           } else {
             res.send(false)
           }
