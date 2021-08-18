@@ -1,15 +1,13 @@
 const weddingRegFields = {
-  ID: 'registry_id',
+  ID: 'wedding_id',
   DATE: 'date',
-  OFFICIANT: 'officiant',
-  COUPLE: 'couple',
+  COUPLE: 'couple_id',
   DATE_OF_WEDDING: 'date_of_wedding',
   BRIDE_PARENTS: 'bride_parents_id',
   GROOM_PARENTS: 'groom_parents_id',
+  LOCATION: 'location',
   SOLEMNIZER: 'solemnizing_officer',
-  CONTRACT: 'contract_no',
-  CONTRACT_IMG: 'contract_img',
-  PRENUP: 'prenup_record_id'
+  CONTRACT: 'contract_no'
 }
 
 module.exports = weddingRegFields
