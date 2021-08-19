@@ -1,0 +1,31 @@
+{{>navbar}}
+{{!-- temporary --}}
+<div>
+    wedding_id: {{wedding_id}}<br>
+    date: {{date}}<br>
+    wedding_date: {{wedding_date}}<br>
+    location: {{location}}<br>
+    solemnizer: {{solemnizer}}<br>
+    contract_no: {{contract_no}}<br>
+    <br>
+    Bride's member id: {{bride_member_id}}<br>
+    Bride's name: {{bride_first_name}} {{bride_mid_name}} {{bride_last_name}}<br>
+    Bride's mother: {{bride_mother_member_id}}, {{bride_mother_first_name}} {{bride_mother_mid_name}} {{bride_mother_last_name}}<br>
+    Bride's father: {{bride_father_member_id}}, {{bride_father_first_name}} {{bride_father_mid_name}} {{bride_father_last_name}}<br>
+
+    <br>
+    Groom's member id: {{groom_member_id}}<br>
+    Groom's name: {{groom_first_name}} {{groom_mid_name}} {{groom_last_name}}<br>
+    Groom's mother: {{groom_mother_member_id}}, {{groom_mother_first_name}} {{groom_mother_mid_name}} {{groom_mother_last_name}}<br>
+    Groom's father: {{groom_father_member_id}}, {{groom_father_first_name}} {{groom_father_mid_name}} {{groom_father_last_name}}<br>
+
+    <br>
+    Godfathers:<br>
+    {{#each witnessMale}}
+        {{witnessMale.witness_first_name}} {{witnessMale.witness_mid_name}} {{witnessMale.witness_last_name}}
+    {{/each}}<br>
+    Godmothers:<br>
+    {{#each witnessFemale}}
+        {{witnessFemale.witness_first_name}} {{witnessFemale.witness_mid_name}} {{witnessFemale.witness_last_name}}
+    {{/each}}<br>
+</div>
