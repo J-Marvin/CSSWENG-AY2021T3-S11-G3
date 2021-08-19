@@ -34,7 +34,7 @@
       <a href="/add_dedication"><i style="width: 3em; height: 3em; color:black;" class="far fa-plus-square"></i></a>
     </div>
   </div>
-  <div class="row listrow">
+  {{!-- <div class="row listrow">
       <div class="row mt-3 toprow" style="--bs-gutter-x: 0rem;">
         <div class="col-2 tile">
           <p class="variables"> Dedication ID </p>
@@ -71,5 +71,29 @@
         </div>
       </a>
      {{/each}}
-  </div>
+  </div> --}}
+
+  <table id="dataTable" class="display table" width="100%">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Child</th>
+        <th>Parent/Guardian</th>
+        <th>Parent/Guardian</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each dedication}}
+      <tr data-href="/view_dedication/{{this.dedication_id}}">
+        <td>{{this.dedication_id}}</td>
+        <td>{{this.infant_first_name}} {{this.infant_mid_name}}. {{this.infant_last_name}}</td>
+        <td>{{this.guardianOne_first_name}} {{this.guardianOne_mid_name}}. {{this.guardianOne_last_name}}</td>
+  
+        {{#if this.guardianTwo_first_name}}
+          <td>{{this.guardianTwo_first_name}} {{this.guardianTwo_mid_name}}. {{this.guardianTwo_last_name}}</td>
+        {{/if}}
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
 </div>

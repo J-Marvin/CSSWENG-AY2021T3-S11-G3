@@ -74,7 +74,7 @@ const controller = {
 
         res.render('member-main-page', {
           styles: ['lists'],
-          scripts: ['memberTable'],
+          scripts: ['convertDataTable'],
           members: result,
           canSee: parseInt(req.session.level) === 3
         })
@@ -109,6 +109,7 @@ const controller = {
       res.render('error', {
         title: '401 Unauthorized Access',
         css: ['global', 'error'],
+        scripts: ['convertDataTable'],
         status: {
           code: '401',
           message: 'Unauthorized access'
@@ -156,6 +157,7 @@ const controller = {
         // console.log(result)
         res.render('dedication-main-page', {
           styles: ['lists'],
+          scripts: ['convertDataTable'],
           dedication: result
         })
       })
@@ -213,6 +215,7 @@ const controller = {
       db.find(db.tables.COUPLE_TABLE, null, joinTables, columns, function (result) {
         res.render('prenup-main-page', {
           styles: ['lists'],
+          scripts: ['convertDataTable'],
           prenup: result
         })
       })

@@ -34,7 +34,7 @@
       <a href="/add_prenup"><i style="width: 3em; height: 3em; color:black;" class="far fa-plus-square"></i></a>
     </div>
   </div>
-  <div class="row listrow">
+  {{!-- <div class="row listrow">
       <div class="row mt-3 toprow" style="--bs-gutter-x: 0rem;">
         <div class="col-2 tile">
           <p class="variables"> Prenup ID </p>
@@ -67,5 +67,26 @@
         </div>
       </a>
      {{/each}}
-  </div>
+  </div> --}}
+  
+  <table id="dataTable" class="display table" width="100%">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Groom</th>
+        <th>Bride</th>
+        <th>Date of Wedding</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each prenup}}
+        <tr data-href="/view_prenup/{{this.record_id}}">
+          <td>{{this.record_id}}</td>
+          <td>{{this.groom_first_name}} {{this.groom_mid_name}}. {{this.groom_last_name}}</td>
+          <td>{{this.bride_first_name}} {{this.bride_mid_name}}. {{this.bride_last_name}}</td>
+          <td>{{dateView this.date_of_wedding}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
 </div>

@@ -1,5 +1,6 @@
 $(document).ready(function() {
 
+  alert("TESET")
   $.fn.dataTable.moment('MM/DD/YYYY')
 
   var table = $('#dataTable').DataTable({
