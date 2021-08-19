@@ -7,6 +7,11 @@ const coupleFields = require('../models/couple')
 const infDedFields = require('../models/infantDedication')
 
 const controller = {
+  /**
+   * This function renders the main page
+   * @param req - the incoming request containing either the query or body
+   * @param res - the result to be sent out after processing the request
+   */
   getMainPage: function (req, res) {
     req.session.editId = null
     const level = req.session.level
@@ -29,6 +34,11 @@ const controller = {
       })
     }
   },
+  /**
+   * This function renders the member main page
+   * @param req - the incoming request containing either the query or body
+   * @param res - the result to be sent out after processing the request
+   */
   getMemberMainPage: function (req, res) {
     const level = req.session.level
     // const level = '3'
@@ -71,7 +81,11 @@ const controller = {
       })
     }
   },
-
+  /**
+   * This function renders the forms main page
+   * @param req - the incoming request containing either the query or body
+   * @param res - the result to be sent out after processing the request
+   */
   getFormsMainPage: function (req, res) {
     req.session.editId = null
     res.render('forms-main-page', {
@@ -81,7 +95,11 @@ const controller = {
       canSee: !(parseInt(req.session.level) === 1)
     })
   },
-
+  /**
+   * This function renders the child dedication record main page
+   * @param req - the incoming request containing either the query or body
+   * @param res - the result to be sent out after processing the request
+   */
   getDedicationMainPage: function (req, res) {
     const level = req.session.level
     req.session.editId = null
@@ -143,7 +161,11 @@ const controller = {
       })
     }
   },
-
+  /**
+   * This function renders the prenuptial record main page
+   * @param req - the incoming request containing either the query or body
+   * @param res - the result to be sent out after processing the request
+   */
   getPrenupMainPage: function (req, res) {
     req.session.editId = null
     const level = req.session.level
@@ -194,6 +216,28 @@ const controller = {
           prenup: result
         })
       })
+    }
+  },
+  /**
+   * This function renders the wedding main page
+   * @param req - the incoming request containing either the query or body
+   * @param res - the result to be sent out after processing the request
+   */
+  getWeddingMainPage: function (req, res) {
+    const level = req.session.level
+    req.session.editId = null
+    if (level === undefined || level === null || parseInt(level) === 1) {
+      res.status(401)
+      res.render('error', {
+        title: '401 Unauthorized Access',
+        css: ['global', 'error'],
+        status: {
+          code: '401',
+          message: 'Unauthorized access'
+        }
+      })
+    } else {
+      // process here
     }
   }
 }
