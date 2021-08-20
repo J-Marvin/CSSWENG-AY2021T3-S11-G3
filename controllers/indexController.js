@@ -241,6 +241,7 @@ const controller = {
       })
     } else {
       // process here
+      res.render('wedding-main-page')
     }
   }
 }

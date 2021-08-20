@@ -37,10 +37,13 @@ app.get('/view_prenup/:prenup_id', prenupController.getViewPrenup)
 app.get('/edit_prenup/:prenup_id', prenupController.getEditPrenup)
 
 app.get('/dedication_main_page', indexController.getDedicationMainPage)
+app.get('/wedding_main_page', indexController.getWeddingMainPage)
 
 app.post('/login', loginController.postLogIn)
 app.post('/add_member', validation.addMemberValidation(), memberController.createMember)
-// next four (4) routes for add prenuptial
+
+app.post('/create_wedding_registry'/* validation function */, weddingController.createWedding)
+
 app.post('/create_prenup', validation.addPrenupValidation(), prenupController.createPrenup)
 app.post('/create_prenup_member', validation.addMemberPrenupValid(), prenupController.createMemberPrenup)
 app.post('/addPrenupBrideNonMember', validation.addPrenupBrideNonMember(), prenupController.createPrenupBrideNonMember)
