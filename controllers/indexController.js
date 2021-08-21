@@ -4,6 +4,7 @@ const personFields = require('../models/person.js')
 const addressFields = require('../models/address.js')
 const prenupRecordFields = require('../models/prenupRecord')
 const coupleFields = require('../models/couple')
+const weddingRegFields = require('../models/weddingRegistry')
 const infDedFields = require('../models/infantDedication')
 
 const controller = {
@@ -240,8 +241,42 @@ const controller = {
         }
       })
     } else {
-      // process here
-      res.render('wedding-main-page')
+      const joinTables = [
+        {
+          tableName: db.tables.WEDDING_TABLE,
+          sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.ID,
+          destCol: db.tables.WEDDING_TABLE + '.' + weddingRegFields.COUPLE
+        },
+        {
+          tableName: { bride: db.tables.PERSON_TABLE },
+          sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE,
+          destCol: 'bride.' + personFields.ID
+        },
+        {
+          tableName: { groom: db.tables.PERSON_TABLE },
+          sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.MALE,
+          destCol: 'groom.' + personFields.ID
+        }
+      ]
+
+      const columns = [
+        db.tables.WEDDING_TABLE + '.' + weddingRegFields.ID,
+        db.tables.WEDDING_TABLE + '.' + weddingRegFields.DATE_OF_WEDDING,
+        'bride.' + personFields.FIRST_NAME + ' as bride_first_name',
+        'bride.' + personFields.MID_NAME + ' as bride_mid_name',
+        'bride.' + personFields.LAST_NAME + ' as bride_last_name',
+        'groom.' + personFields.FIRST_NAME + ' as groom_first_name',
+        'groom.' + personFields.MID_NAME + ' as groom_mid_name',
+        'groom.' + personFields.LAST_NAME + ' as groom_last_name'
+      ]
+
+      db.find(db.tables.COUPLE_TABLE, null, joinTables, columns, function (result) {
+        res.render('wedding-main-page', {
+          styles: ['lists'],
+          scripts: ['convertDataTable'],
+          prenup: result
+        })
+      })
     }
   }
 }
