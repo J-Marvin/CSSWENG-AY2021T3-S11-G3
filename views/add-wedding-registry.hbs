@@ -74,35 +74,343 @@
       </div>
     </div>
     {{!-- Bride's parents --}}
+    <legend>Bride's Parents</legend>
+    <hr>
     <div class="row"> 
-      <div class="col"></div>
-      <div class="col"></div>
+      <div class="col">
+        <legend>Mother</legend>
+        <input type="checkbox" id="bride_mother_non_member" onclick="display_div_bride_mother('bride_mother_non_member')"> Non-member
+        <input class="mb-3" type="checkbox" id="bride_mother_member" onclick="display_div_bride_mother('bride_mother_member')" checked disabled> Member
+        <input type="checkbox" id="bride_mother_none" onclick="display_div_bride_mother('bride_mother_none')"> None
+
+        <div id="bride_mother_member_div" style="display:block">
+          <label>Select</label>
+          <select name="input_bride_mother_member" id="input_bride_mother_member">
+            {{>dropdown females}}
+          </select>
+        </div>
+        <fieldset class="form-group" id="bride_mother_non_member_div" style="display:none">
+          <div class="div">
+            <div class="row">
+              <div class="col-12">
+                <label for="bride_mother_first_name">First Name</label>
+                <input type="text" id="bride_mother_first_name" name="bride_mother_first_name" class="form-control">
+              </div>
+              <div class="col-12">
+                <label for="bride_mother_mid_name">Middle Initial</label>
+                <input type="text" id="bride_mother_mid_name" name="bride_mother_mid_name" class="form-control">
+              </div>
+              <div class="col-12">
+                <label for="bride_mother_last_name">Last Name</label>
+                <input type="text" id="bride_mother_last_name" name="bride_mother_last_name"class="form-control">
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <p id="bride_mother_info_error" class="error_codes"> </p>
+        <p id="bride_mother_middle_len_error" class="error_codes"> </p>
+        <p id="bride_mother_middle_error" class="error_codes"> </p>
+      </div>
+      <div class="col">
+        <legend>Father</legend>
+        <input type="checkbox" id="bride_father_non_member" onclick="display_div_bride_father('bride_father_non_member')"> Non-member
+        <input class="mb-3" type="checkbox" id="bride_father_member" onclick="display_div_bride_father('bride_father_member')" checked disabled> Member
+        <input type="checkbox" id="bride_father_none" onclick="display_div_bride_father('bride_father_none')"> None
+
+        <div id="bride_father_member_div" style="display:block">
+          <label>Select</label>
+          <select name="input_bride_father_member" id="input_bride_father_member" >
+            {{>dropdown males}}
+          </select>
+        </div>
+        
+        <fieldset class="form-group" id="bride_father_non_member_div" style="display:none">
+          <div class="div">
+            <div class="row">
+              <div class="col-12">
+                <label for="bride_father_first_name">First Name</label>
+                <input type="text" id="bride_father_first_name" name="bride_father_first_name" class="form-control">
+              </div>
+              <div class="col-12">
+                <label for="bride_father_mid_name">Middle Initial</label>
+                <input type="text" id="bride_father_mid_name" name="bride_father_mid_name" class="form-control">
+              </div>
+              <div class="col-12">
+                <label for="bride_fatherlast_name">Last Name</label>
+                <input type="text" id="bride_father_last_name" name="bride_father_last_name"class="form-control">
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <p id="bride_father_info_error" class="error_codes"> </p>
+        <p id="bride_father_middle_error" class="error_codes"> </p>
+        <p id="bride_father_middle_len_error" class="error_codes"> </p>
+      </div>
     </div>
     {{!-- Groom's parents --}}
+    <legend>Groom's Parents</legend>
+    <hr>
     <div class="row">
-      <div class="col"></div>
-      <div class="col"></div>
+      <div class="col">
+        <legend>Mother</legend>
+        <input type="checkbox" id="groom_mother_non_member" onclick="display_div_groom_mother('groom_mother_non_member')"> Non-member
+        <input class="mb-3" type="checkbox" id="groom_mother_member" onclick="display_div_groom_mother('groom_mother_member')" checked disabled> Member
+        <input type="checkbox" id="groom_mother_none" onclick="display_div_groom_mother('groom_mother_none')"> None
+
+        <div id="groom_mother_member_div" style="display:block">
+          <label>Select</label>
+          <select name="input_groom_mother_member" id="input_groom_mother_member">
+            {{>dropdown females}}
+          </select>
+        </div>
+        <fieldset class="form-group" id="groom_mother_non_member_div" style="display:none">
+          <div class="div">
+            <div class="row">
+              <div class="col-12">
+                <label for="groom_mother_first_name">First Name</label>
+                <input type="text" id="groom_mother_first_name" name="groom_mother_first_name" class="form-control">
+              </div>
+              <div class="col-12">
+                <label for="groom_mother_mid_name">Middle Initial</label>
+                <input type="text" id="groom_mother_mid_name" name="groom_mother_mid_name" class="form-control">
+              </div>
+              <div class="col-12">
+                <label for="groom_mother_last_name">Last Name</label>
+                <input type="text" id="groom_mother_last_name" name="groom_mother_last_name"class="form-control">
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <p id="groom_mother_info_error" class="error_codes"> </p>
+        <p id="groom_mother_middle_len_error" class="error_codes"> </p>
+        <p id="groom_mother_middle_error" class="error_codes"> </p>
+      </div>
+      <div class="col">
+        <legend>Father</legend>
+        <input type="checkbox" id="groom_father_non_member" onclick="display_div_groom_father('groom_father_non_member')"> Non-member
+        <input class="mb-3" type="checkbox" id="groom_father_member" onclick="display_div_groom_father('groom_father_member')" checked disabled> Member
+        <input type="checkbox" id="groom_father_none" onclick="display_div_groom_father('groom_father_none')"> None
+
+        <div id="groom_father_member_div" style="display:block">
+          <label>Select</label>
+          <select name="input_groom_father_member" id="input_groom_father_member" >
+            {{>dropdown males}}
+          </select>
+        </div>
+        
+        <fieldset class="form-group" id="groom_father_non_member_div" style="display:none">
+          <div class="div">
+            <div class="row">
+              <div class="col-12">
+                <label for="groom_father_first_name">First Name</label>
+                <input type="text" id="groom_father_first_name" name="groom_father_first_name" class="form-control">
+              </div>
+              <div class="col-12">
+                <label for="groom_father_mid_name">Middle Initial</label>
+                <input type="text" id="groom_father_mid_name" name="groom_father_mid_name" class="form-control">
+              </div>
+              <div class="col-12">
+                <label for="groom_fatherlast_name">Last Name</label>
+                <input type="text" id="groom_father_last_name" name="groom_father_last_name"class="form-control">
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <p id="groom_father_info_error" class="error_codes"> </p>
+        <p id="groom_father_middle_error" class="error_codes"> </p>
+        <p id="groom_father_middle_len_error" class="error_codes"> </p>
+      </div>
     </div>
-    {{!-- Date and place --}}
+    {{!-- Place --}}
+    <hr>
+    <fieldset class="form-group">
+      <div class="row">
+        <legend>Wedding Location</legend>
+        <div class="col">
+          <label for="adress_line">Address Line 1</label>
+          <input type="text" id="address_line" name="address_line" class="form-control" >
+          <p id="address_line_error" class="error_codes">  </p>
+        </div>
+        <div class="col">
+          <label for="address_line2">Address Line 2</label>
+          <input type="text" id="address_line2" name="address_line2" class="form-control" >
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <label for="city">City</label>
+          <input type="text" id="city" name="city" class="form-control" >
+          <p id="city_error" class="error_codes">  </p>
+        </div>
+        <div class="col">
+          <label for="province">Province / State / Region</label>
+          <input type="text" id="provin ce" name="province" class="form-control" >
+        </div>
+        <div class="col">
+          <label for="postal_code">Postal Code</label>
+          <input type="text" id="postal_code" name="postal_code" class="form-control" >
+        </div>
+        <div class="col">
+          <label for="country">Country</label>
+          <input type="text" id="country" name="country" class="form-control" >
+          <p id="country_error" class="error_codes">  </p>
+        </div>
+      </div>
+    </fieldset>
+    {{!-- Date --}}
+    <hr>
     <div class="row">
       <div class="col">
         <div class="col">
-        <label for="current_date">Current Date</label>
-        <input type="date" id="current_date" name="current_date" class="form-control">
-        <p id="current_date_error" class="error_codes"> </p>
+          <label for="current_date">Wedding Date</label>
+          <input type="date" id="current_date" name="current_date" class="form-control">
+          <p id="current_date_error" class="error_codes"> </p>
+        </div>
       </div>
-      </div>
-      <div class="col"></div>
     </div>
     {{!-- Officiant and minister --}}
+    <hr>
     <div class="row">
-      <div class="col"></div>
-      <div class="col"></div>
+      <div class="col">
+        <label>Official</label>
+        <input type="text" id="official" class="form-control">
+        <p id="officiant_info_error" class="error_codes"> </p>
+      </div>
+      <div class="col">
+        <label>Minister</label>
+        <input type="text" id="minister" class="form-control">
+        <p id="minister_info_error" class="error_codes"> </p>
+      </div>
     </div>
     {{!-- Witnesses --}}
     <div class="row">
-
+      <div class="col-12 d-flex justify-content-between">
+        <legend>Godmother/s</legend>
+        <i id="add_gmother_button" style="width: 2.5em; height: 2.5em; color:black;" class="far fa-plus-square"></i>
+      </div>
+    </div>
+    <div class="row" style="margin-top: -0.5em;">
+      <div class="col">
+        <hr>
+      </div>
+    </div>
+    <div class="row" id="gmother_witness_row">
+      <p id="witness_gmother_info_error" class="error_codes"> </p>
+    </div>
+    <div class="row">
+      <div class="col-12 d-flex justify-content-between">
+        <legend>Godfather/s</legend>
+        <i id="add_gfather_button" style="width: 2.5em; height: 2.5em; color:black;" class="far fa-plus-square"></i>
+      </div>
+    </div>
+    <div class="row" style="margin-top: -0.5em;">
+      <div class="col">
+        <hr>
+      </div>
+    </div>
+    <div class="row" id="gfather_witness_row">
+      <p id="witness_gfather_info_error" class="error_codes"> </p>
     </div>
     <button id="create-wedding-registry" type="button" class="btn btn-primary mt-3" onclick="checkMemberBoxesAndDate()">Submit</button>
   </div>
 </form>
+
+<div class="modal fade" id="GMotherWitnessModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Godmother</h5>
+        <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col">
+            <input type="checkbox" id="witness_gmother_non_member"> Non Member
+            <input class="mb-3" type="checkbox" id="witness_gmother_member" checked disabled> Member
+            <div id="witness_gmother_member_div" style="display:block">
+              <label>Select Witness</label>
+              <select name="input_witness" id="input_witness_gmother_member">
+                {{>dropdown females}}
+              </select>
+            </div>
+            <fieldset class="form-group" id="witness_gmother_non_member_div" style="display:none">
+              <div class="div">
+                <div class="row">
+                  <div class="col-12">
+                    <label for="witness_first_name">First Name</label>
+                    <input type="text" id="witness_gmother_first_name" name="witness_first_name" class="form-control">
+                  </div>
+                  <div class="col-12">
+                    <label for="witness_mid_name">Middle Initial</label>
+                    <input type="text" id="witness_gmother_mid_name" name="witness_mid_name" class="form-control">
+                  </div>
+                  <div class="col-12">
+                    <label for="witness_last_name">Last Name</label>
+                    <input type="text" id="witness_gmother_last_name" name="witness_last_name" class="form-control">
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+            <p id="witness_gmother_modal_info_error" class="error_codes"> </p>
+            <p id="witness_gmother_modal_middle_error" class="error_codes"> </p>
+            <p id="witness_gmother_modal_middle_len_error" class="error_codes"> </p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="cancel_modal" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="add_gmother_witness">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="GFatherWitnessModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Godfather</h5>
+        <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col">
+            <input type="checkbox" id="witness_gfather_non_member"> Non Member
+            <input class="mb-3" type="checkbox" id="witness_gfather_member" checked disabled> Member
+            <div id="witness_gfather_member_div" style="display:block">
+              <label>Select Witness</label>
+              <select name="input_witness" id="input_witness_gfather_member">
+                {{>dropdown males}}
+              </select>
+            </div>
+            <fieldset class="form-group" id="witness_gfather_non_member_div" style="display:none">
+              <div class="div">
+                <div class="row">
+                  <div class="col-12">
+                    <label for="witness_first_name">First Name</label>
+                    <input type="text" id="witness_gfather_first_name" name="witness_first_name" class="form-control">
+                  </div>
+                  <div class="col-12">
+                    <label for="witness_mid_name">Middle Initial</label>
+                    <input type="text" id="witness_gfather_mid_name" name="witness_mid_name" class="form-control">
+                  </div>
+                  <div class="col-12">
+                    <label for="witness_last_name">Last Name</label>
+                    <input type="text" id="witness_gfather_last_name" name="witness_last_name" class="form-control">
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+            <p id="witness_gfather_modal_info_error" class="error_codes"> </p>
+            <p id="witness_gfather_modal_middle_error" class="error_codes"> </p>
+            <p id="witness_gfather_modal_middle_len_error" class="error_codes"> </p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="cancel_modal" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="add_gfather_witness">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
