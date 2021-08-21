@@ -189,6 +189,7 @@ $(document).ready(function() {
     function hideChoices() {
       var previous = $(this).data('previous')
       var currOption = $(this).val()
+      alert(previous + ' ' + currOption)
       selectizeDisable(currOption)
       $(this).data('previous', currOption)
   
@@ -621,4 +622,27 @@ $(document).ready(function() {
       }
     
       $('.modal').on('hide.bs.modal', resetModal)
+
+      function resetModal() {
+
+        if (isMaleModal) {
+          var currWitness = $('#input_witness_gfather_member').val()
+          $('#input_witness_gfather_member').data('previous', null)
+          if (currWitness !== '' && !addedWitness) {
+            selectizeEnable(currWitness)
+          } else {
+            addedWitness = false
+          }
+          $(selectWitnessGFather)[0].selectize.setValue('0')
+        } else {
+          var currWitness = $('#input_witness_gmother_member').val()
+          $('#input_witness_gmother_member').data('previous', null)
+          if (currWitness !== '' && !addedWitness) {
+            selectizeEnable(currWitness)
+          } else {
+            addedWitness = false
+          }
+          $(selectWitnessGMother)[0].selectize.setValue('0')
+        }
+      }
 })
