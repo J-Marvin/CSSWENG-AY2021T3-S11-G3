@@ -240,7 +240,7 @@ $(document).ready(function() {
 
       $('#create-wedding-registry').prop('disabled', true)
       if(validateFields()) {
-
+        // AJAX
       } else {
         $('#create-wedding-registry').prop('disabled', false)
       }
@@ -496,8 +496,6 @@ $(document).ready(function() {
         } else {
           $('#witness_gmother_modal_middle_error').text('')
         }
-
-        alert($('#witness_gmother_first_name').val() + ' ' + $('#witness_gmother_mid_name').val() + ' ' + $('#witness_gmother_last_name').val())
     
         if(isValid) {
           var witnessName
