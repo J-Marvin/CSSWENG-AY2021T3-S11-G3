@@ -621,10 +621,9 @@ $(document).ready(function() {
         return re.test(mid)
       }
     
-      $('.modal').on('hide.bs.modal', resetModal())
+      $('.modal').on('hide.bs.modal', resetModal)
 
       function resetModal() {
-
         if (isMaleModal) {
           var currWitness = $('#input_witness_gfather_member').val()
           $('#input_witness_gfather_member').data('previous', null)
@@ -633,7 +632,7 @@ $(document).ready(function() {
           } else {
             addedWitness = false
           }
-          $(selectWitnessGFather)[0].selectize.setValue('0')
+          $(selectGodFather)[0].selectize.setValue('0')
         } else {
           var currWitness = $('#input_witness_gmother_member').val()
           $('#input_witness_gmother_member').data('previous', null)
@@ -642,7 +641,7 @@ $(document).ready(function() {
           } else {
             addedWitness = false
           }
-          $(selectWitnessGMother)[0].selectize.setValue('0')
+          $(selectGodMother)[0].selectize.setValue('0')
         }
       }
 })
