@@ -1,31 +1,222 @@
+<style>
+  @import url(/css/fonts.css);
+
+  #header {
+      font-family: JuliusSansPro;
+  }
+</style>
+
 {{>navbar}}
-{{!-- temporary --}}
-<div>
-    wedding_id: {{wedding_id}}<br>
-    date: {{date}}<br>
-    wedding_date: {{wedding_date}}<br>
-    location: {{location}}<br>
-    solemnizer: {{solemnizer}}<br>
-    contract_no: {{contract_no}}<br>
-    <br>
-    Bride's member id: {{bride_member_id}}<br>
-    Bride's name: {{bride_first_name}} {{bride_mid_name}} {{bride_last_name}}<br>
-    Bride's mother: {{bride_mother_member_id}}, {{bride_mother_first_name}} {{bride_mother_mid_name}} {{bride_mother_last_name}}<br>
-    Bride's father: {{bride_father_member_id}}, {{bride_father_first_name}} {{bride_father_mid_name}} {{bride_father_last_name}}<br>
 
-    <br>
-    Groom's member id: {{groom_member_id}}<br>
-    Groom's name: {{groom_first_name}} {{groom_mid_name}} {{groom_last_name}}<br>
-    Groom's mother: {{groom_mother_member_id}}, {{groom_mother_first_name}} {{groom_mother_mid_name}} {{groom_mother_last_name}}<br>
-    Groom's father: {{groom_father_member_id}}, {{groom_father_first_name}} {{groom_father_mid_name}} {{groom_father_last_name}}<br>
+<div id="prenup_info" style="display: none" data-wedding="{{wedding_id}}" ></div>
+  <div class="container" style="padding-left: 18%; padding-right: 10%;">
+    <h1 class="my-3"> View Wedding Registry </h1>
+    <hr>
+    <div class="row">
+      <div class="col-6">
+        <legend>Wedding Date</legend>
+        <hr>
+        <p>{{dateView wedding_date}}</p>
+      </div>
+    </div>
+    <div class="row">
+      <legend>Bride Name</legend>
+      <div class="col">
+        <u for="first_name">First Name</u>
+        <p>{{bride_first_name}}</p>
+        {{#if bride_member_id}}
+          <a href="/member/{{bride_member_id}}"><button class="btn btn-secondary mb-4">Bride's Member Profile</button></a>
+        {{/if}}
+      </div>
+      <div class="col">
+        <u for="mid_name">Middle Initial</u>
+        <p>{{bride_mid_name}}</p>
+      </div>
+      <div class="col">
+        <u for="last_name">Last Name</u>
+        <p>{{bride_last_name}}</p>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <legend>Groom Name</legend>
+      <div class="col">
+        <u for="first_name">First Name</u>
+        <p>{{groom_first_name}}</p>
+        {{#if groom_member_id}}
+          <a href="/member/{{groom_member_id}}"><button class="btn btn-secondary mb-4">Groom's Member Profile</button></a>
+        {{/if}}
+      </div>
+      <div class="col">
+        <u for="mid_name">Middle Initial</u>
+        <p>{{groom_mid_name}}</p>
+      </div>
+      <div class="col">
+        <u for="last_name">Last Name</u>
+        <p>{{groom_last_name}}</p>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <legend>Bride Mother</legend>
+      <div class="col">
+        <u for="first_name">First Name</u>
+        {{#if (isUndefined bride_mother_first_name)}}
+          <p>N/A</p>
+        {{else}}
+          <p>{{bride_mother_first_name}}</p>
+          {{#if bride_mother_member_id}}
+          <a href="/member/{{bride_mother_member_id}}"><button class="btn btn-secondary mb-4">Member Profile</button></a>
+          {{/if}}
+        {{/if}}
+      </div>
+      <div class="col">
+        <u for="mid_name">Middle Initial</u>
+        {{#if (isUndefined bride_mother_mid_name)}}
+          <p>N/A</p>
+        {{else}}
+          <p>{{bride_mother_mid_name}}</p>
+        {{/if}}
+      </div>
+      <div class="col">
+        <u for="last_name">Last Name</u>
+        {{#if (isUndefined bride_mother_last_name)}}
+          <p>N/A</p>
+        {{else}}
+          <p>{{bride_mother_last_name}}</p>
+        {{/if}}
+      </div>
+    </div>
+    <div class="row">
+      <legend>Bride Father</legend>
+      <div class="col">
+        <u for="first_name">First Name</u>
+        {{#if (isUndefined bride_father_first_name)}}
+          <p>N/A</p>
+        {{else}}
+          <p>{{bride_father_first_name}}</p>
+          {{#if bride_father_member_id}}
+          <a href="/member/{{bride_father_member_id}}"><button class="btn btn-secondary mb-4">Member Profile</button></a>
+          {{/if}}
+        {{/if}}
+      </div>
+      <div class="col">
+        <u for="mid_name">Middle Initial</u>
+        {{#if (isUndefined bride_father_mid_name)}}
+          <p>N/A</p>
+        {{else}}
+          <p>{{bride_father_mid_name}}</p>
+        {{/if}}
+      </div>
+      <div class="col">
+        <u for="last_name">Last Name</u>
+        {{#if (isUndefined bride_father_last_name)}}
+          <p>N/A</p>
+        {{else}}
+          <p>{{bride_father_last_name}}</p>
+        {{/if}}
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <legend>Groom mother</legend>
+      <div class="col">
+        <u for="first_name">First Name</u>
+        {{#if (isUndefined groom_mother_first_name)}}
+          <p>N/A</p>
+        {{else}}
+          <p>{{groom_mother_first_name}}</p>
+          {{#if groom_mother_member_id}}
+          <a href="/member/{{groom_mother_member_id}}"><button class="btn btn-secondary mb-4">Member Profile</button></a>
+          {{/if}}
+        {{/if}}
+      </div>
+      <div class="col">
+        <u for="mid_name">Middle Initial</u>
+        {{#if (isUndefined groom_mother_mid_name)}}
+          <p>N/A</p>
+        {{else}}
+          <p>{{groom_mother_mid_name}}</p>
+        {{/if}}
+      </div>
+      <div class="col">
+        <u for="last_name">Last Name</u>
+        {{#if (isUndefined groom_mother_last_name)}}
+          <p>N/A</p>
+        {{else}}
+          <p>{{groom_mother_last_name}}</p>
+        {{/if}}
+      </div>
+    </div>
+    <div class="row">
+      <legend>Groom father</legend>
+      <div class="col">
+        <u for="first_name">First Name</u>
+        {{#if (isUndefined groom_father_first_name)}}
+          <p>N/A</p>
+        {{else}}
+          <p>{{groom_father_first_name}}</p>
+          {{#if groom_father_member_id}}
+          <a href="/member/{{groom_father_member_id}}"><button class="btn btn-secondary mb-4">Member Profile</button></a>
+          {{/if}}
+        {{/if}}
+      </div>
+      <div class="col">
+        <u for="mid_name">Middle Initial</u>
+        {{#if (isUndefined groom_father_mid_name)}}
+          <p>N/A</p>
+        {{else}}
+          <p>{{groom_father_mid_name}}</p>
+        {{/if}}
+      </div>
+      <div class="col">
+        <u for="last_name">Last Name</u>
+        {{#if (isUndefined groom_father_last_name)}}
+          <p>N/A</p>
+        {{else}}
+          <p>{{groom_father_last_name}}</p>
+        {{/if}}
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-4">
+            <u> Officiant </u>
+            <p>{{officiant}}</p>
+        </div>
+        <div class="col-4">
+            <u> Solemnizer</u>
+            <p>{{solemnizer}}</p>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+      <legend>Godfather/s</legend>
+        {{#if witnessMale}}
+          {{#each witnessMale}}
+          {{>witness this}}
+          {{/each}}
+          <hr>
+        {{else}}
+          <p>N/A</p>
+        {{/if}}
 
-    <br>
-    Godfathers:<br>
-    {{#each witnessMale}}
-        {{witnessMale.witness_first_name}} {{witnessMale.witness_mid_name}} {{witnessMale.witness_last_name}}
-    {{/each}}<br>
-    Godmothers:<br>
-    {{#each witnessFemale}}
-        {{witnessFemale.witness_first_name}} {{witnessFemale.witness_mid_name}} {{witnessFemale.witness_last_name}}
-    {{/each}}<br>
-</div>
+      <legend>Godmother/s</legend>
+        {{#if witnessFemale}}
+          {{#each witnessFemale}}
+          {{>witness this}}
+          {{/each}}
+        {{else}}
+          <p>N/A</p>
+        {{/if}}
+    </div>
+    <hr>
+    {{#if canSee}}
+    <div class="row my-3">
+      <div class="col">
+        <a><button class="btn btn-secondary mb-4">Edit Dedication Form</button></a>
+      </div>
+    </div>
+    {{/if}}
+  </div>
+  
