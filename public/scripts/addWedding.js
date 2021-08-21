@@ -250,76 +250,209 @@ $(document).ready(function() {
     function validateFields() {
       var isValid = true
       
-      var brideMember = $('#input_bride_member').val() === '0' || $('#input_bride_member').val() === ''
-      var brideNonMember = $('#bride_first_name').val() === '' || $('#bride_mid_name').val() === '' || $('#bride_last_name').val() === ''
-  
-      var groomMember = $('#input_groom_member').val() === '0' || $('#input_groom_member').val() === ''
-      var groomNonMember = $('#groom_first_name').val() === '' || $('#groom_mid_name').val() === '' || $('#groom_last_name').val() === ''
-  
+      var brideNonMember = $('#bride_non_member').is(':checked')
+      var brideFieldMember = $('#input_bride_member').val() === '0' || $('#input_bride_member').val() === ''
+      var brideFieldNonMember = $('#bride_first_name').val() === '' || $('#bride_mid_name').val() === '' || $('#bride_last_name').val() === ''
+      var brideMiddleLen = $('#bride_mid_name').val().length === 1
+
+      var groomNonMember = $('#groom_non_member').is(':checked')
+      var groomFieldMember = $('#input_groom_member').val() === '0' || $('#input_groom_member').val() === ''
+      var groomFieldNonMember = $('#groom_first_name').val() === '' || $('#groom_mid_name').val() === '' || $('#groom_last_name').val() === ''
+      var groomMiddleLen = $('#groom_mid_name').val().length === 1
+
+      var brideMotherNonMember = $('#bride_mother_non_member').is(':checked')
       var brideMotherNone = $('#bride_mother_none').is(':checked')
-      var brideMotherMember = $('#input_bride_mother_member').val() === '0' || $('#input_bride_mother_member').val() === ''
-      var brideMotherNonMember = $('#bride_mother_first_name').val() === '' || $('#bride_mother_mid_name').val() === '' || $('#bride_mother_last_name').val() === ''
-  
+      var brideMotherFieldMember = $('#input_bride_mother_member').val() === '0' || $('#input_bride_mother_member').val() === ''
+      var brideMotherFieldNonMember = $('#bride_mother_first_name').val() === '' || $('#bride_mother_mid_name').val() === '' || $('#bride_mother_last_name').val() === ''
+      var brideMotherMiddleLen = $('#bride_mother_mid_name').val().length === 1
+
+      var brideFatherNonMember = $('#bride_father_non_member').is(':checked')
       var brideFatherNone = $('#bride_father_none').is(':checked')
-      var brideFatherMember = $('#input_bride_father_member').val() === '0' || $('#input_bride_father_member').val() === ''
-      var brideFatherNonMember = $('#bride_father_first_name').val() === '' || $('#bride_father_mid_name').val() === '' || $('#bride_father_last_name').val() === ''
-  
+      var brideFatherFieldMember = $('#input_bride_father_member').val() === '0' || $('#input_bride_father_member').val() === ''
+      var brideFatherFieldNonMember = $('#bride_father_first_name').val() === '' || $('#bride_father_mid_name').val() === '' || $('#bride_father_last_name').val() === ''
+      var brideFatherMiddleLen = $('#bride_father_mid_name').val().length === 1
+
+      var groomMotherNonMember = $('#groom_mother_non_member').is(':checked')
       var groomMotherNone = $('#groom_mother_none').is(':checked')
-      var groomMotherMember = $('#input_groom_mother_member').val() === '0' || $('#input_groom_mother_member').val() === ''
-      var groomMotherNonMember = $('#groom_mother_first_name').val() === '' || $('#groom_mother_mid_name').val() === '' || $('#groom_mother_last_name').val() === ''
-  
+      var groomMotherFieldMember = $('#input_groom_mother_member').val() === '0' || $('#input_groom_mother_member').val() === ''
+      var groomMotherFieldNonMember = $('#groom_mother_first_name').val() === '' || $('#groom_mother_mid_name').val() === '' || $('#groom_mother_last_name').val() === ''
+      var groomMotherMiddleLen = $('#groom_mother_mid_name').val().length === 1
+
+      var groomFatherNonMember = $('#groom_father_non_member').is(':checked')
       var groomFatherNone = $('#groom_father_none').is(':checked')
-      var groomFatherMember = $('#input_groom_father_member').val() === '0' || $('#input_groom_father_member').val() === ''
-      var groomFatherNonMember = $('#groom_father_first_name').val() === '' || $('#groom_father_mid_name').val() === '' || $('#groom_father_last_name').val() === ''
-  
+      var groomFatherFieldMember = $('#input_groom_father_member').val() === '0' || $('#input_groom_father_member').val() === ''
+      var groomFatherFieldNonMember = $('#groom_father_first_name').val() === '' || $('#groom_father_mid_name').val() === '' || $('#groom_father_last_name').val() === ''
+      var groomFatherMiddleLen = $('#groom_father_mid_name').val().length === 1
+
       var addressLine = $('#address_line').val() === ''
       var city = $('#city').val() === ''
       var country = $('#country').val() === ''
   
       var dateField = $('#current_date').val() === ''
   
-  
-      if (brideMember && brideNonMember) {
+      
+      if ((brideNonMember && brideFieldNonMember) || (!brideNonMember && brideFieldMember)) {
         isValid = false
         $('#bride_info_error').text('Please provide bride name')
       } else {
         $('#bride_info_error').text('')
       }
-  
-      if (groomMember && groomNonMember) {
+      // check middle initial length
+      if (!brideFieldNonMember && !brideMiddleLen) {
+        isValid = false
+        $('#bride_middle_len_error').text("Bride's middle initial should only contain 1 letter")
+      } else {
+        $('#bride_middle_len_error').text('')
+      }
+
+      // check the used middle initial
+      if (brideFieldNonMember === false && validateMidInitial($('#bride_mid_name').val()) === false) {
+        isValid = false
+        $('#bride_middle_error').text("Bride's middle initial should only range from letters A-Z")
+      } else {
+        $('#bride_middle_error').text('')
+      }
+
+      if ((groomNonMember && groomFieldNonMember) || (!groomNonMember && groomFieldMember)) {
         isValid = false
         $('#groom_info_error').text('Please provide groom name')
       } else {
         $('#groom_info_error').text('')
       }
-    
-      if(!brideMotherNone && brideMotherMember && brideMotherNonMember) {
+      // check middle initial length
+      if (!groomFieldNonMember && !groomMiddleLen) {
+        isValid = false
+        $('#groom_middle_len_error').text("Groom's middle initial should only contain 1 letter")
+      } else {
+        $('#groom_middle_len_error').text('')
+      }
+
+      // check the used middle initial
+      if (groomFieldNonMember === false && validateMidInitial($('#groom_mid_name').val()) === false) {
+        isValid = false
+        $('#groom_middle_error').text("Groom's middle initial should only range from letters A-Z")
+      } else {
+        $('#groom_middle_error').text('')
+      }
+      
+      // BRIDE'S MOTHER
+      if(!brideMotherNone && brideMotherFieldMember && brideMotherFieldNonMember) {
         isValid = false
         $('#bride_mother_info_error').text('Please provide name')
       } else {
         $('#bride_mother_info_error').text('')
       }
-  
-      if(!groomMotherNone && groomMotherMember && groomMotherNonMember) {
+
+      if ((brideMotherNonMember && brideMotherFieldNonMember) || (!brideMotherNonMember && brideMotherFieldMember)) {
+        isValid = false
+        $('#bride_mother_info_error').text('Please provide name')
+      } else {
+        $('#bride_mother_info_error').text('')
+      }
+      // check middle initial length
+      if (!brideMotherFieldNonMember && !brideMotherMiddleLen) {
+        isValid = true
+        $('#bride_mother_middle_len_error').text("The middle initial of the bride's mother should only contain 1 letter")
+      } else {
+        $('#bride_mother_middle_len_error').text('')
+      }
+
+      // check the used middle initial
+      if (brideMotherFieldNonMember === false && validateMidInitial($('#bride_mother_mid_name').val()) === false) {
+        isValid = true
+        $('#bride_mother_middle_error').text("The middle initial of the bride's mother should only range from letters A-Z")
+      } else {
+        $('#bride_mother_middle_error').text('')
+      }
+      
+      // GROOM'S MOTHER
+      if(!groomMotherNone && groomMotherFieldMember && groomMotherFieldNonMember) {
         isValid = false
         $('#groom_mother_info_error').text('Please provide name')
       } else {
         $('#groom_mother_info_error').text('')
       }
-  
-      if(!brideFatherNone && brideFatherMember && brideFatherNonMember) {
+
+      if ((groomMotherNonMember && groomMotherFieldNonMember) || (!groomMotherNonMember && groomMotherFieldMember)) {
+        isValid = false
+        $('#groom_mother_info_error').text('Please provide name')
+      } else {
+        $('#groom_mother_info_error').text('')
+      }
+      // check middle initial length
+      if (!groomMotherFieldNonMember && !groomMotherMiddleLen) {
+        isValid = true
+        $('#groom_mother_middle_len_error').text("The middle initial of the groom's mother should only contain 1 letter")
+      } else {
+        $('#groom_mother_middle_len_error').text('')
+      }
+      // check the used middle initial
+      if (groomMotherFieldNonMember === false && validateMidInitial($('#groom_mother_mid_name').val()) === false) {
+        isValid = true
+        $('#groom_mother_middle_error').text("The middle initial of the groom's mother should only range from letters A-Z")
+      } else {
+        $('#groom_mother_middle_error').text('')
+      }
+      
+      // BRIDE'S FATHER
+      if(!brideFatherNone && brideFatherFieldMember && brideFatherFieldNonMember) {
         isValid = false
         $('#bride_father_info_error').text('Please provide name')
       } else {
         $('#bride_father_info_error').text('')
       }
-  
-      if(!groomFatherNone && groomFatherMember && groomFatherNonMember) {
+
+      if((brideFatherNonMember && brideFatherFieldNonMember) || (!brideFatherNonMember && brideFatherFieldMember)) {
+        isValid = false
+        $('#bride_father_info_error').text('Please provide name')
+      } else {
+        $('#bride_father_info_error').text('')
+      }
+      // check middle initial length
+      if (!brideFatherFieldNonMember && !brideFatherMiddleLen) {
+        isValid = true
+        $('#bride_father_middle_len_error').text("The middle initial of the bride's father should only contain 1 letter")
+      } else {
+        $('#bride_father_middle_len_error').text('')
+      }
+
+      // check the used middle initial
+      if (brideFatherFieldNonMember === false && validateMidInitial($('#bride_father_mid_name').val()) === false) {
+        isValid = true
+        $('#bride_father_middle_error').text("The middle initial of the bride's father should only range from letters A-Z")
+      } else {
+        $('#bride_father_middle_error').text('')
+      }
+      
+      if(!groomFatherNone && groomFatherFieldMember && groomFatherFieldNonMember) {
         isValid = false
         $('#groom_father_info_error').text('Please provide name')
       } else {
         $('#groom_father_info_error').text('')
       }
+
+      if ((groomFatherNonMember && groomFatherFieldNonMember) || (!groomFatherNonMember && groomFatherFieldMember)) {
+        isValid = false
+        $('#groom_father_info_error').text('Please provide name')
+      } else {
+        $('#groom_father_info_error').text('')
+      }
+      // check middle initial length
+      if (!groomFatherFieldNonMember && !groomFatherMiddleLen) {
+        isValid = true
+        $('#groom_father_middle_len_error').text("The middle initial of the groom's father should only contain 1 letter")
+      } else {
+        $('#groom_father_middle_len_error').text('')
+      }
+
+      // check the used middle initial
+      if (groomFatherFieldNonMember === false && validateMidInitial($('#groom_father_mid_name').val()) === false) {
+        isValid = true
+        $('#groom_father_middle_error').text("The middle initial of the groom's father should only range from letters A-Z")
+      } else {
+        $('#groom_father_middle_error').text('')
+      }
+      
   
       if(addressLine) {
         isValid = false
@@ -448,6 +581,124 @@ $(document).ready(function() {
         // if error message is empty
         if (validator.isEmpty($('#groom_info_error').val())) {
           $('#groom_info_error').text('')
+        }
+      })
+      
+      // bride's parents
+      $('#bride_mother_first_name').blur(function () {
+        // if error message is empty
+        if (validator.isEmpty($('#bride_mother_info_error').val())) {
+          $('#bride_mother_info_error').text('')
+        }
+      })
+
+      $('#bride_mother_mid_name').blur(function () {
+        // if error message is empty
+        if (validator.isEmpty($('#bride_mother_info_error').val())) {
+          $('#bride_mother_info_error').text('')
+          $('#bride_mother_middle_error').text('')
+          $('#bride_mother_middle_len_error').text('')
+        }
+      })
+
+      $('#bride_mother_last_name').blur(function () {
+        // if error message is empty
+        if (validator.isEmpty($('#bride_mother_info_error').val())) {
+          $('#bride_mother_info_error').text('')
+        }
+      })
+
+      $('#bride_father_first_name').blur(function () {
+        // if error message is empty
+        if (validator.isEmpty($('#bride_father_info_error').val())) {
+          $('#bride_father_info_error').text('')
+        }
+      })
+
+      $('#bride_father_mid_name').blur(function () {
+        // if error message is empty
+        if (validator.isEmpty($('#bride_father_info_error').val())) {
+          $('#bride_father_info_error').text('')
+          $('#bride_father_middle_error').text('')
+          $('#bride_father_middle_len_error').text('')
+        }
+      })
+
+      $('#bride_father_last_name').blur(function () {
+        // if error message is empty
+        if (validator.isEmpty($('#bride_father_info_error').val())) {
+          $('#bride_father_info_error').text('')
+        }
+      })
+
+      // groom's parents
+      $('#groom_mother_first_name').blur(function () {
+        // if error message is empty
+        if (validator.isEmpty($('#groom_mother_info_error').val())) {
+          $('#groom_mother_info_error').text('')
+        }
+      })
+
+      $('#groom_mother_mid_name').blur(function () {
+        // if error message is empty
+        if (validator.isEmpty($('#groom_mother_info_error').val())) {
+          $('#groom_mother_info_error').text('')
+          $('#groom_mother_middle_error').text('')
+          $('#groom_mother_middle_len_error').text('')
+        }
+      })
+
+      $('#groom_mother_last_name').blur(function () {
+        // if error message is empty
+        if (validator.isEmpty($('#groom_mother_info_error').val())) {
+          $('#groom_mother_info_error').text('')
+        }
+      })
+
+      $('#groom_father_first_name').blur(function () {
+        // if error message is empty
+        if (validator.isEmpty($('#groom_father_info_error').val())) {
+          $('#groom_father_info_error').text('')
+        }
+      })
+
+      $('#groom_father_mid_name').blur(function () {
+        // if error message is empty
+        if (validator.isEmpty($('#groom_father_info_error').val())) {
+          $('#groom_father_info_error').text('')
+          $('#groom_father_middle_error').text('')
+          $('#groom_father_middle_len_error').text('')
+        }
+      })
+
+      $('#groom_father_last_name').blur(function () {
+        // if error message is empty
+        if (validator.isEmpty($('#groom_father_info_error').val())) {
+          $('#groom_father_info_error').text('')
+        }
+      })
+
+      $('#address_line').blur(function () {
+        if (validator.isEmpty($('#address_line_error').val())) {
+          $('#address_line_error').text('')
+        }
+      })
+
+      $('#city').blur(function () {
+        if (validator.isEmpty($('#city_error').val())) {
+          $('#city_error').text('')
+        }
+      })
+
+      $('#country').blur(function () {
+        if (validator.isEmpty($('#country_error').val())) {
+          $('#country_error').text('')
+        }
+      })
+
+      $('#current_date').blur(function () {
+        if (validator.isEmpty($('#current_date_error').val())) {
+          $('#current_date_error').text('')
         }
       })
 
