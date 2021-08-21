@@ -189,7 +189,7 @@ $(document).ready(function() {
     function hideChoices() {
       var previous = $(this).data('previous')
       var currOption = $(this).val()
-      alert(previous + ' ' + currOption)
+      //alert(previous + ' ' + currOption)
       selectizeDisable(currOption)
       $(this).data('previous', currOption)
   
@@ -621,7 +621,7 @@ $(document).ready(function() {
         return re.test(mid)
       }
     
-      $('.modal').on('hide.bs.modal', resetModal)
+      $('.modal').on('hide.bs.modal', resetModal())
 
       function resetModal() {
 
