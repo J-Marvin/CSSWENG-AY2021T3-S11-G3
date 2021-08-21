@@ -232,8 +232,8 @@ $(document).ready(function() {
       $('#input_bride_father_member').parent().find('.option[data-value="' + data + '"]').removeAttr('data-selectable')
       $('#input_groom_mother_member').parent().find('.option[data-value="' + data + '"]').removeAttr('data-selectable')
       $('#input_groom_father_member').parent().find('.option[data-value="' + data + '"]').removeAttr('data-selectable')
-      $('#input_witness_gmother_member').parent().find('.option[data-value="' + data + '"]').attr('data-selectable', true)
-      $('#input_witness_gfather_member').parent().find('.option[data-value="' + data + '"]').attr('data-selectable', true)
+      $('#input_witness_gmother_member').parent().find('.option[data-value="' + data + '"]').removeattr('data-selectable')
+      $('#input_witness_gfather_member').parent().find('.option[data-value="' + data + '"]').removeattr('data-selectable')
     }
 
     $('#create-wedding-registry').click(function (){
@@ -249,8 +249,8 @@ $(document).ready(function() {
     function validateFields() {
       var isValid = true
       
-      var brideMember = $('#input_groom_member').val() === '0' || $('#input_groom_member').val() === ''
-      var brideNonMember = $('#groom_first_name').val() === '' || $('#groom_mid_name').val() === '' || $('#groom_last_name').val() === ''
+      var brideMember = $('#input_bride_member').val() === '0' || $('#input_bride_member').val() === ''
+      var brideNonMember = $('#bride_first_name').val() === '' || $('#bride_mid_name').val() === '' || $('#bride_last_name').val() === ''
   
       var groomMember = $('#input_groom_member').val() === '0' || $('#input_groom_member').val() === ''
       var groomNonMember = $('#groom_first_name').val() === '' || $('#groom_mid_name').val() === '' || $('#groom_last_name').val() === ''
@@ -280,7 +280,7 @@ $(document).ready(function() {
   
       if (brideMember && brideNonMember) {
         isValid = false
-        $('#bride_info_error').text('Please provide groom name')
+        $('#bride_info_error').text('Please provide bride name')
       } else {
         $('#bride_info_error').text('')
       }
