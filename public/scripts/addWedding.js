@@ -233,8 +233,8 @@ $(document).ready(function() {
       $('#input_bride_father_member').parent().find('.option[data-value="' + data + '"]').removeAttr('data-selectable')
       $('#input_groom_mother_member').parent().find('.option[data-value="' + data + '"]').removeAttr('data-selectable')
       $('#input_groom_father_member').parent().find('.option[data-value="' + data + '"]').removeAttr('data-selectable')
-      $('#input_witness_gmother_member').parent().find('.option[data-value="' + data + '"]').removeattr('data-selectable')
-      $('#input_witness_gfather_member').parent().find('.option[data-value="' + data + '"]').removeattr('data-selectable')
+      $('#input_witness_gmother_member').parent().find('.option[data-value="' + data + '"]').removeAttr('data-selectable')
+      $('#input_witness_gfather_member').parent().find('.option[data-value="' + data + '"]').removeAttr('data-selectable')
     }
 
     $('#create-wedding-registry').click(function (){
