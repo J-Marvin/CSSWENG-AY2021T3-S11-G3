@@ -42,7 +42,8 @@ app.get('/wedding_main_page', indexController.getWeddingMainPage)
 app.post('/login', loginController.postLogIn)
 app.post('/add_member', validation.addMemberValidation(), memberController.createMember)
 
-app.post('/create_wedding_registry'/* validation function */, weddingController.createWedding)
+// app.post('/create_wedding_registry'/* validation function */, weddingController.createWedding)
+app.post('/add_wedding_reg', weddingController.postAddWedding)
 
 app.post('/create_prenup', validation.addPrenupValidation(), prenupController.createPrenup)
 app.post('/create_prenup_member', validation.addMemberPrenupValid(), prenupController.createMemberPrenup)

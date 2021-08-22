@@ -267,12 +267,13 @@ $(document).ready(function() {
           }
         }
 
-        data.official = $('#official').val()
-        data.minister = $('#minister').val()
-        data.date = new Date($('#date').val()).toISOString()
+        data.officiant = $('#officiant').val()
+        data.contract = $('#contract').val()
+        data.weddingDate = new Date($('#current_date').val()).toISOString()
+        data.date = new Date().toISOString()
 
         data.bride = JSON.stringify(getDetails(
-          $('#bride_non_member'),
+          $('#bride_member'),
           null,
           $('#input_bride_member'),
           $('#bride_first_name'),
@@ -281,7 +282,7 @@ $(document).ready(function() {
           ))
 
         data.groom = JSON.stringify(getDetails(
-          $('#groom_non_member'),
+          $('#groom_member'),
           null,
           $('#input_groom_member'),
           $('#groom_first_name'),
@@ -290,7 +291,7 @@ $(document).ready(function() {
         ))
 
         data.brideMother = JSON.stringify(getDetails(
-          $('#bride_mother_non_member'),
+          $('#bride_mother_member'),
           $('#bride_mother_none'),
           $('#input_bride_mother_member'),
           $('#bride_mother_first_name'),
@@ -299,7 +300,7 @@ $(document).ready(function() {
         ))
 
         data.brideFather = JSON.stringify(getDetails(
-          $('#bride_father_non_member'),
+          $('#bride_father_member'),
           $('#bride_father_none'),
           $('#input_bride_father_member'),
           $('#bride_father_first_name'),
@@ -308,7 +309,7 @@ $(document).ready(function() {
         ))
 
         data.groomMother = JSON.stringify(getDetails(
-          $('#groom_mother_non_member'),
+          $('#groom_mother_member'),
           $('#groom_mother_none'),
           $('#input_groom_mother_member'),
           $('#groom_mother_first_name'),
@@ -317,7 +318,7 @@ $(document).ready(function() {
         ))
 
         data.groomFather = JSON.stringify(getDetails(
-          $('#groom_father_non_member'),
+          $('#groom_father_member'),
           $('#groom_father_none'),
           $('#input_groom_father_member'),
           $('#groom_father_first_name'),
@@ -329,7 +330,20 @@ $(document).ready(function() {
         data.witnessMale = JSON.stringify(data.witnessMale)
         data.witnessFemale = JSON.stringify(data.witnessFemale)
 
-        console.log(data)
+        $.ajax({
+          type: 'POST',
+          data: data,
+          url: '/add_wedding_reg',
+          success: function (result) {
+            if (result) {
+              location.href = '/view_wedding/' + result
+            } else {
+              $('#create-dedication').prop('disabled', false)
+              alert('An error occured')
+            }
+          }
+        })
+        $('#create-wedding-registry').prop('disabled', false)
       } else {
         $('#create-wedding-registry').prop('disabled', false)
       }
@@ -351,10 +365,13 @@ $(document).ready(function() {
       const person = {}
   
       person.isMember = $(memberBox).is(':checked')
-  
+      
+      console.log(person.isMember)
+
       if (person.isMember) {
         const info = $(selectField).find(':selected').val().split(', ')
         person.person_id = info[1]
+        person.member_id = info[0]
       } else {
         person.first_name = $(firstNameField).val()
         person.mid_name = $(midNameField).val()
@@ -621,7 +638,7 @@ $(document).ready(function() {
       $('#witness_gfather_member_div').hide()
       $('#witness_gfather_non_member_div').show()
       selectizeEnable($('#input_witness_gfather_member').val())
-      $(selectWitnessGFather)[0].selectize.setValue('0')
+      $(selectGodFather)[0].selectize.setValue('0')
     })
   
     // bind function to witness member
@@ -643,7 +660,7 @@ $(document).ready(function() {
       $('#witness_gmother_member_div').hide()
       $('#witness_gmother_non_member_div').show()
       selectizeEnable($('#input_witness_gmother_member').val())
-      $(selectWitnessGMother)[0].selectize.setValue('0')
+      $(selectGodMother)[0].selectize.setValue('0')
     })
   
     // bind function to witness member
