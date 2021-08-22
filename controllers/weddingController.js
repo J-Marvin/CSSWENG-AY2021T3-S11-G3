@@ -429,9 +429,11 @@ const weddingController = {
       peopleOffsets.groom += 1
       peopleOffsets.brideMother += 1
       peopleOffsets.brideFather += 1
-      peopleOffsets.brideMother += 1
+      peopleOffsets.groomMother += 1
     }
 
+    console.log(peopleInfo)
+    console.log(peopleOffsets)
     db.insert(db.tables.PERSON_TABLE, peopleInfo, function (result) {
       if (result) {
         result = result[0]
