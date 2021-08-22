@@ -41,6 +41,8 @@ const weddingController = {
           data.backLink = parseInt(req.session.level) >= 2 ? '/wedding_main_page' : '/forms_main_page'
           data.males = data.members.filter((element) => { return element[memberFields.SEX] === 'Male' })
           data.females = data.members.filter((element) => { return element[memberFields.SEX] === 'Female' })
+          data.singleMales = data.males.filter((element) => { return element[memberFields.WEDDING_REG] === null })
+          data.singleFemales = data.females.filter((element) => { return element[memberFields.WEDDING_REG] === null })
           res.render('add-wedding-registry', data)
         }
       })
