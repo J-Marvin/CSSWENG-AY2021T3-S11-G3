@@ -241,11 +241,129 @@ $(document).ready(function() {
 
       $('#create-wedding-registry').prop('disabled', true)
       if(validateFields()) {
-        // AJAX
+        const data = {}
+        data.witnessMale = []
+        data.witnessFemale = []
+
+        const witnesses = $('.witness')
+        for (witness of witnesses) {
+          const currWitness = {}
+          const isMale = $(witness).hasClass('male')
+          currWitness.type = isMale ? 'Godfather' : 'Godmother'
+
+          if ($(witness).attr('data-member-info') !== null && $(witness).attr('data-member-info') !== undefined) {
+            currWitness.person_id = $(witness).attr('data-member-info').split(', ')[1]
+            currWitness.isMember = true
+          } else {
+            currWitness.first_name = $(witness).find('.first_name').text()
+            currWitness.mid_name = $(witness).find('.mid_name').text()
+            currWitness.last_name = $(witness).find('.last_name').text()
+          }
+
+          if (isMale) {
+            data.witnessMale.push(currWitness)
+          } else {
+            data.witnessFemale.push(currWitness)
+          }
+        }
+
+        data.official = $('#official').val()
+        data.minister = $('#minister').val()
+        data.date = new Date($('#date').val()).toISOString()
+
+        data.bride = JSON.stringify(getDetails(
+          $('#bride_non_member'),
+          null,
+          $('#input_bride_member'),
+          $('#bride_first_name'),
+          $('#bride_mid_name'),
+          $('#bride_last_name')
+          ))
+
+        data.groom = JSON.stringify(getDetails(
+          $('#groom_non_member'),
+          null,
+          $('#input_groom_member'),
+          $('#groom_first_name'),
+          $('#groom_mid_name'),
+          $('#groom_last_name')
+        ))
+
+        data.brideMother = JSON.stringify(getDetails(
+          $('#bride_mother_non_member'),
+          $('#bride_mother_none'),
+          $('#input_bride_mother_member'),
+          $('#bride_mother_first_name'),
+          $('#bride_mother_mid_name'),
+          $('#bride_mother_last_name')
+        ))
+
+        data.brideFather = JSON.stringify(getDetails(
+          $('#bride_father_non_member'),
+          $('#bride_father_none'),
+          $('#input_bride_father_member'),
+          $('#bride_father_first_name'),
+          $('#bride_father_mid_name'),
+          $('#bride_father_last_name')
+        ))
+
+        data.groomMother = JSON.stringify(getDetails(
+          $('#groom_mother_non_member'),
+          $('#groom_mother_none'),
+          $('#input_groom_mother_member'),
+          $('#groom_mother_first_name'),
+          $('#groom_mother_mid_name'),
+          $('#groom_mother_last_name')
+        ))
+
+        data.groomFather = JSON.stringify(getDetails(
+          $('#groom_father_non_member'),
+          $('#groom_father_none'),
+          $('#input_groom_father_member'),
+          $('#groom_father_first_name'),
+          $('#groom_father_mid_name'),
+          $('#groom_father_last_name')
+        ))
+
+
+        data.witnessMale = JSON.stringify(data.witnessMale)
+        data.witnessFemale = JSON.stringify(data.witnessFemale)
+
+        console.log(data)
       } else {
         $('#create-wedding-registry').prop('disabled', false)
       }
     })
+
+  /**
+* 
+* @param {jQuery Object} memberBox the member checkfield
+* @param {jQuery Object} selectField the select field
+* @param {jQuery Object} firstNameField the first name field
+* @param {jQuery Object} midNameField the middle name field
+* @param {jQuery Object} lastNameField  the last name field
+* @returns 
+*/
+  function getDetails(memberBox, noneBox, selectField, firstNameField, midNameField, lastNameField) {
+    if (noneBox !== null && $(noneBox).is(':checked')) {
+      return null
+    } else {
+      const person = {}
+  
+      person.isMember = $(memberBox).is(':checked')
+  
+      if (person.isMember) {
+        const info = $(selectField).find(':selected').val().split(', ')
+        person.person_id = info[1]
+      } else {
+        person.first_name = $(firstNameField).val()
+        person.mid_name = $(midNameField).val()
+        person.last_name = $(lastNameField).val()
+      }
+      return person
+    }
+  }
+
 
     function validateFields() {
       var isValid = true
@@ -336,6 +454,9 @@ $(document).ready(function() {
       }
       
       // BRIDE'S MOTHER
+      console.log("NONE IS " + !brideMotherNone)
+      console.log("member is " + brideMotherFieldMember)
+      console.log("nonmember is " + brideMotherFieldNonMember)
       if(!brideMotherNone && brideMotherFieldMember && brideMotherFieldNonMember) {
         isValid = false
         $('#bride_mother_info_error').text('Please provide name')
@@ -771,7 +892,7 @@ $(document).ready(function() {
             const witness_info = $('#input_witness_gmother_member').val()
             witnessName = witness_info.replace(/\d+/g, '')
             witnessName = witnessName.replace(/,/g, '')
-            $('#gmother_witness_row').append("<div class='col-4' style='margin-bottom: 1em;'><div class='card witness' data-member-info=\"" + witness_info + "\"><div class='card-body'><p class='card-text'>" + witnessName + "</p><button type='button' class='fas fa-trash delGMotherWitnessBtn '></button> </div></div></div>")
+            $('#gmother_witness_row').append("<div class='col-4' style='margin-bottom: 1em;'><div class='card witness female' data-member-info=\"" + witness_info + "\"><div class='card-body'><p class='card-text'>" + witnessName + "</p><button type='button' class='fas fa-trash delGMotherWitnessBtn '></button> </div></div></div>")
           }
           $('#witness_gmother_info_error').text('')
           $('#witness_gfather_info_error').text('')
