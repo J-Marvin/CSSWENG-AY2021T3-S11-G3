@@ -402,9 +402,9 @@ $(document).ready(function() {
       var groomFatherFieldNonMember = $('#groom_father_first_name').val() === '' || $('#groom_father_mid_name').val() === '' || $('#groom_father_last_name').val() === ''
       var groomFatherMiddleLen = $('#groom_father_mid_name').val().length === 1
 
-      var addressLine = $('#address_line').val() === ''
-      var city = $('#city').val() === ''
-      var country = $('#country').val() === ''
+      var location = $('#location').val() === ''
+      var contract = $('#contract').val() === ''
+      var officiant = $('#officiant').val() === ''
   
       var dateField = $('#current_date').val() === ''
   
@@ -464,7 +464,7 @@ $(document).ready(function() {
         $('#bride_mother_info_error').text('')
       }
 
-      if ((brideMotherNonMember && brideMotherFieldNonMember) || (!brideMotherNonMember && brideMotherFieldMember)) {
+      if ((!brideMotherNone && brideMotherNonMember && brideMotherFieldNonMember) || (!brideMotherNone && !brideMotherNonMember && brideMotherFieldMember)) {
         isValid = false
         $('#bride_mother_info_error').text('Please provide name')
       } else {
@@ -494,7 +494,7 @@ $(document).ready(function() {
         $('#groom_mother_info_error').text('')
       }
 
-      if ((groomMotherNonMember && groomMotherFieldNonMember) || (!groomMotherNonMember && groomMotherFieldMember)) {
+      if ((!groomMotherNone && groomMotherNonMember && groomMotherFieldNonMember) || (!groomMotherNone && !groomMotherNonMember && groomMotherFieldMember)) {
         isValid = false
         $('#groom_mother_info_error').text('Please provide name')
       } else {
@@ -523,7 +523,7 @@ $(document).ready(function() {
         $('#bride_father_info_error').text('')
       }
 
-      if((brideFatherNonMember && brideFatherFieldNonMember) || (!brideFatherNonMember && brideFatherFieldMember)) {
+      if((!brideFatherNone && brideFatherNonMember && brideFatherFieldNonMember) || (!brideFatherNone && !brideFatherNonMember && brideFatherFieldMember)) {
         isValid = false
         $('#bride_father_info_error').text('Please provide name')
       } else {
@@ -552,7 +552,7 @@ $(document).ready(function() {
         $('#groom_father_info_error').text('')
       }
 
-      if ((groomFatherNonMember && groomFatherFieldNonMember) || (!groomFatherNonMember && groomFatherFieldMember)) {
+      if ((!groomFatherNone && groomFatherNonMember && groomFatherFieldNonMember) || (!groomFatherNone && !groomFatherNonMember && groomFatherFieldMember)) {
         isValid = false
         $('#groom_father_info_error').text('Please provide name')
       } else {
@@ -574,26 +574,25 @@ $(document).ready(function() {
         $('#groom_father_middle_error').text('')
       }
       
-  
-      if(addressLine) {
+      if (location) {
         isValid = false
-        $('#address_line_error').text('Please accomplish')
+        $('#location_error').text('Please accomplish')
       } else {
-        $('#address_line_error').text('')
+        $('#location_error').text('')
       }
   
-      if(city) {
+      if(contract) {
         isValid = false
-        $('#city_error').text('Please accomplish')
+        $('#contract_info_error').text('Please accomplish')
       } else {
-        $('#city_error').text('')
+        $('#contract_info_error').text('')
       }
-  
-      if(country) {
+
+      if (officiant) {
         isValid = false
-        $('#country_error').text('Please accomplish')
+        $('#officiant_info_error').text('Please accomplish')
       } else {
-        $('#country_error').text('')
+        $('#officiant_info_error').text('')
       }
   
       if (GMotherWitnessCtr === 0 && GFatherWitnessCtr === 0) {

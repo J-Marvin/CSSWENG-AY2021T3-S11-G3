@@ -229,6 +229,7 @@
         <div class="col">
           <label for="location">Wedding Location</label>
           <input type="text" id="location" name="location" class="form-control">
+          <p id="location_error" class="error_codes"> </p>
         </div>
 
         {{!-- <div class="col">
@@ -273,18 +274,18 @@
         </div>
       </div>
     </div>
-    {{!-- Officiant and minister --}}
+    {{!-- Officiant and contract no. --}}
     <hr>
     <div class="row">
       <div class="col">
-        <label>Official</label>
-        <input type="text" id="official" class="form-control">
+        <label>Officiant</label>
+        <input type="text" id="officiant" class="form-control">
         <p id="officiant_info_error" class="error_codes"> </p>
       </div>
       <div class="col">
-        <label>Minister</label>
-        <input type="text" id="minister" class="form-control">
-        <p id="minister_info_error" class="error_codes"> </p>
+        <label>Contract No.</label>
+        <input type="text" id="contract" class="form-control">
+        <p id="contract_info_error" class="error_codes"> </p>
       </div>
     </div>
     {{!-- Witnesses --}}
