@@ -586,6 +586,11 @@ const weddingController = {
                             }
 
                             db.update(db.tables.MEMBER_TABLE, memberUpdateData, updateConditions, function (result) {
+                              console.log(result)
+                              if (result === 0) {
+                                result = true
+                              }
+
                               if (result) {
                                 req.session.editId = currWedding
                                 console.log(currWedding)
