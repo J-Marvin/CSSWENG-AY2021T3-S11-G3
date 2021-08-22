@@ -157,7 +157,7 @@ const dedicationController = {
         db.tables.WITNESS_TABLE + '.' + witnessFields.ID + ' as witness_id',
         db.tables.PERSON_TABLE + '.' + personFields.MEMBER + ' as witness_member_id',
         db.tables.PERSON_TABLE + '.' + personFields.FIRST_NAME + ' as witness_first_name',
-        db.tables.PERSON_TABLE + '.' + personFields.MID_NAME + ' as witness_middle_name',
+        db.tables.PERSON_TABLE + '.' + personFields.MID_NAME + ' as witness_mid_name',
         db.tables.PERSON_TABLE + '.' + personFields.LAST_NAME + ' as witness_last_name',
         db.tables.WITNESS_TABLE + '.' + witnessFields.TYPE + ' as type'
       ]
