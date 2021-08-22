@@ -8,20 +8,11 @@ const { Condition, queryTypes } = require('../models/condition')
 
 const dedicationController = {
   /**
-   * This function gets the dedication page
-   * @param req - the incoming request containing either the query or body
-   * @param res - the result to be sent out after processing the request
-   */
-  getDedicationPage: function (req, res) {
-    res.send('Temp')
-  },
-  /**
    * This function renders the add dedication page
    * @param req - the incoming request containing either the query or body
    * @param res - the result to be sent out after processing the request
    */
   getAddDedicationPage: function (req, res) {
-    req.session.level = 3
     if (req.session.level === null || req.session.level === undefined) {
       res.render('error', {
         title: '401 Unauthorized Access',

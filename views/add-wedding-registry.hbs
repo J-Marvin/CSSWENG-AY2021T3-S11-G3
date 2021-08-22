@@ -12,7 +12,7 @@
         <div id="bride_member_div" style="display:block">
           <label>Select Bride</label>
           <select name="input_bride_member" id="input_bride_member">
-            {{>dropdown females}}
+            {{>dropdown singleFemales}}
           </select>
         </div>
         <fieldset class="form-group" id="bride_non_member_div" style="display:none">
@@ -46,7 +46,7 @@
         <div id="groom_member_div" style="display:block">
           <label>Select Groom</label>
           <select name="input_groom_member" id="input_groom_member" >
-            {{>dropdown males}}
+            {{>dropdown singleMales}}
           </select>
         </div>
         
@@ -292,7 +292,7 @@
     <div class="row">
       <div class="col-12 d-flex justify-content-between">
         <legend>Godmother/s</legend>
-        <i id="add_gmother_button" style="width: 2.5em; height: 2.5em; color:black;" class="far fa-plus-square"></i>
+        <button id="add_gmother_button" style="width: 2.5em; height: 2.5em; color:black;" class="far fa-plus-square"></button>
       </div>
     </div>
     <div class="row" style="margin-top: -0.5em;">
@@ -306,7 +306,7 @@
     <div class="row">
       <div class="col-12 d-flex justify-content-between">
         <legend>Godfather/s</legend>
-        <i id="add_gfather_button" style="width: 2.5em; height: 2.5em; color:black;" class="far fa-plus-square"></i>
+        <button id="add_gfather_button" style="width: 2.5em; height: 2.5em; color:black;" class="far fa-plus-square"></button>
       </div>
     </div>
     <div class="row" style="margin-top: -0.5em;">
@@ -317,7 +317,7 @@
     <div class="row" id="gfather_witness_row">
       <p id="witness_gfather_info_error" class="error_codes"> </p>
     </div>
-    <button id="create-wedding-registry" type="button" class="btn btn-primary mt-3" onclick="checkMemberBoxesAndDate()">Submit</button>
+    <button id="create-wedding-registry" type="button" class="btn btn-primary mt-3">Submit</button>
   </div>
 
   <div class="modal fade" id="GMotherWitnessModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
