@@ -268,6 +268,7 @@ $(document).ready(function() {
         }
 
         data.officiant = $('#officiant').val()
+        data.location = $('#location').val()
         data.contract = $('#contract').val()
         data.weddingDate = new Date($('#current_date').val()).toISOString()
         data.date = new Date().toISOString()

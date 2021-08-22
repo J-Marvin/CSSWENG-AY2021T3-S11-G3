@@ -81,7 +81,7 @@ const prenupController = {
       cond.setKeyValue(db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.ID, prenupId)
 
       db.find(db.tables.PRENUPTIAL_TABLE, cond, joinTables, columns, function (result) {
-        if (result.length > 0) {
+        if (result !== null && result.length > 0) {
           data = {
             // spread syntax
             ...result[0]

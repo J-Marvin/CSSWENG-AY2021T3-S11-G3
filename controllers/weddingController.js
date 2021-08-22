@@ -72,7 +72,7 @@ const weddingController = {
     }
     // function execution starts here
     const weddingId = parseInt(req.params.wedding_id)
-    if (parseInt(req.session.level) >= 2 || req.session.editId === weddingId) {
+    if (parseInt(req.session.level) >= 2 || parseInt(req.session.editId) === weddingId) {
       /*
         FROM wedding_reg
         JOIN couples ON couples.couple_id = wedding_reg.couple_id
@@ -457,7 +457,7 @@ const weddingController = {
         }
 
         if (people.groomFather !== null && !people.groomFather.isMember) {
-          couples.groomParents[coupleFields.MALE] = result.peopleOffsets.groomFather
+          couples.groomParents[coupleFields.MALE] = result - peopleOffsets.groomFather
         }
 
         if (people.brideMother !== null || people.brideFather !== null) {
@@ -591,30 +591,37 @@ const weddingController = {
                                 console.log(currWedding)
                                 res.send(JSON.stringify(currWedding))
                               } else {
+                                console.log('error updating into member table')
                                 res.send(false)
                               }
                             })
                           } else {
+                            console.log('error adding into witnesses table')
                             res.send(false)
                           }
                         })
                       } else {
+                        console.log('error adding ninang')
                         res.send(false)
                       }
                     })
                   } else {
+                    console.log('error adding ninong')
                     res.send(false)
                   }
                 })
               } else {
+                console.log('error adding into wedding table')
                 res.send(false)
               }
             })
           } else {
+            console.log('error adding couple')
             res.send(false)
           }
         })
       } else {
+        console.log('error adding people')
         res.send(false)
       }
     })
