@@ -647,7 +647,7 @@ $(document).ready(function() {
   
   // used to validate middle initial
   function validateMidInitial (mid) {
-    const re = /[A-Z]/
+    const re = /^[A-Z]/
     return re.test(mid)
   }
 })

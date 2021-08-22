@@ -490,7 +490,7 @@ $(document).ready(function() {
       }
       // check middle initial length
       if (!brideMotherFieldNonMember && !brideMotherMiddleLen) {
-        isValid = true
+        isValid = false
         $('#bride_mother_middle_len_error').text("The middle initial of the bride's mother should only contain 1 letter")
       } else {
         $('#bride_mother_middle_len_error').text('')
@@ -498,7 +498,7 @@ $(document).ready(function() {
 
       // check the used middle initial
       if (brideMotherFieldNonMember === false && validateMidInitial($('#bride_mother_mid_name').val()) === false) {
-        isValid = true
+        isValid = false
         $('#bride_mother_middle_error').text("The middle initial of the bride's mother should only range from letters A-Z")
       } else {
         $('#bride_mother_middle_error').text('')
@@ -520,14 +520,14 @@ $(document).ready(function() {
       }
       // check middle initial length
       if (!groomMotherFieldNonMember && !groomMotherMiddleLen) {
-        isValid = true
+        isValid = false
         $('#groom_mother_middle_len_error').text("The middle initial of the groom's mother should only contain 1 letter")
       } else {
         $('#groom_mother_middle_len_error').text('')
       }
       // check the used middle initial
       if (groomMotherFieldNonMember === false && validateMidInitial($('#groom_mother_mid_name').val()) === false) {
-        isValid = true
+        isValid = false
         $('#groom_mother_middle_error').text("The middle initial of the groom's mother should only range from letters A-Z")
       } else {
         $('#groom_mother_middle_error').text('')
@@ -549,7 +549,7 @@ $(document).ready(function() {
       }
       // check middle initial length
       if (!brideFatherFieldNonMember && !brideFatherMiddleLen) {
-        isValid = true
+        isValid = false
         $('#bride_father_middle_len_error').text("The middle initial of the bride's father should only contain 1 letter")
       } else {
         $('#bride_father_middle_len_error').text('')
@@ -557,7 +557,7 @@ $(document).ready(function() {
 
       // check the used middle initial
       if (brideFatherFieldNonMember === false && validateMidInitial($('#bride_father_mid_name').val()) === false) {
-        isValid = true
+        isValid = false
         $('#bride_father_middle_error').text("The middle initial of the bride's father should only range from letters A-Z")
       } else {
         $('#bride_father_middle_error').text('')
@@ -578,7 +578,7 @@ $(document).ready(function() {
       }
       // check middle initial length
       if (!groomFatherFieldNonMember && !groomFatherMiddleLen) {
-        isValid = true
+        isValid = false
         $('#groom_father_middle_len_error').text("The middle initial of the groom's father should only contain 1 letter")
       } else {
         $('#groom_father_middle_len_error').text('')
@@ -586,7 +586,7 @@ $(document).ready(function() {
 
       // check the used middle initial
       if (groomFatherFieldNonMember === false && validateMidInitial($('#groom_father_mid_name').val()) === false) {
-        isValid = true
+        isValid = false
         $('#groom_father_middle_error').text("The middle initial of the groom's father should only range from letters A-Z")
       } else {
         $('#groom_father_middle_error').text('')
@@ -1006,7 +1006,7 @@ $(document).ready(function() {
       })
 
       function validateMidInitial (mid) {
-        const re = /[A-Z]/
+        const re = /^[A-Z]/
         return re.test(mid)
       }
     
