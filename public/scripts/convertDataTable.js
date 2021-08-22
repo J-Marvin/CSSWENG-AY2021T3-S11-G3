@@ -1,10 +1,8 @@
 $(document).ready(function() {
-
-  alert("TESET")
   $.fn.dataTable.moment('MM/DD/YYYY')
 
   var table = $('#dataTable').DataTable({
-    dom: 'Bfrtip',
+    dom: 'Blfrtip',
     columnDefs: [
       {
         "targets": '_all',
@@ -15,12 +13,14 @@ $(document).ready(function() {
     ],
     buttons: [
       'copy', 'excel', 'csv', 'print', 'pdf', 'colvis'
-    ]
+    ],
+    "lengthMenu": [10, 15, 25]
   })
 
   $('th').css('border-bottom', '3px black double')
   $('#dataTable').on('click', 'tbody tr', function() {
-    window.location.href = $(this).data('href')
+    if ($(this).data('href') !== undefined)
+      window.location.href = $(this).data('href')
   })
 })
 
