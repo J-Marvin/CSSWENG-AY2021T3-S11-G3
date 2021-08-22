@@ -225,8 +225,13 @@
     <hr>
     <fieldset class="form-group">
       <div class="row">
-        <legend>Wedding Location</legend>
+        {{!-- <legend>Wedding Location</legend> --}}
         <div class="col">
+          <label for="location">Wedding Location</label>
+          <input type="text" id="location" name="location" class="form-control">
+        </div>
+
+        {{!-- <div class="col">
           <label for="address_line">Address Line 1</label>
           <input type="text" id="address_line" name="address_line" class="form-control" >
           <p id="address_line_error" class="error_codes">  </p>
@@ -235,8 +240,8 @@
           <label for="address_line2">Address Line 2</label>
           <input type="text" id="address_line2" name="address_line2" class="form-control" >
         </div>
-      </div>
-      <div class="row">
+      </div> --}}
+      {{!-- <div class="row">
         <div class="col">
           <label for="city">City</label>
           <input type="text" id="city" name="city" class="form-control" >
@@ -255,7 +260,7 @@
           <input type="text" id="country" name="country" class="form-control" >
           <p id="country_error" class="error_codes">  </p>
         </div>
-      </div>
+      </div> --}}
     </fieldset>
     {{!-- Date --}}
     <hr>
