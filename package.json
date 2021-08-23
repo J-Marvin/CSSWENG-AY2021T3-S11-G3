@@ -9,7 +9,8 @@
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
     "postinstall": "electron-builder install-app-deps",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "electron-dev": "nodemon --watch . --exec \"electron .\""
   },
   "repository": {
     "type": "git",
@@ -32,7 +33,6 @@
         "zip"
       ],
       "icon": "build/icon.png"
-      
     },
     "portable": {
       "artifactName": "Disciples Christian Church.exe"

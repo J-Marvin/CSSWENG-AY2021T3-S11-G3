@@ -8,20 +8,11 @@ const { Condition, queryTypes } = require('../models/condition')
 
 const dedicationController = {
   /**
-   * This function gets the dedication page
-   * @param req - the incoming request containing either the query or body
-   * @param res - the result to be sent out after processing the request
-   */
-  getDedicationPage: function (req, res) {
-    res.send('Temp')
-  },
-  /**
    * This function renders the add dedication page
    * @param req - the incoming request containing either the query or body
    * @param res - the result to be sent out after processing the request
    */
   getAddDedicationPage: function (req, res) {
-    req.session.level = 3
     if (req.session.level === null || req.session.level === undefined) {
       res.render('error', {
         title: '401 Unauthorized Access',
@@ -78,7 +69,7 @@ const dedicationController = {
     }
     // function execution starts here
     const dedicationId = parseInt(req.params.dedication_id)
-    if (parseInt(req.session.level) >= 2 || req.session.editId === dedicationId) {
+    if (parseInt(req.session.level) >= 2 || parseInt(req.session.editId) === dedicationId) {
       const cond1 = new Condition(queryTypes.where)
       cond1.setKeyValue(db.tables.INFANT_TABLE + '.' + infDedFields.ID, dedicationId)
       const witnessCond = new Condition(queryTypes.where)
@@ -157,13 +148,13 @@ const dedicationController = {
         db.tables.WITNESS_TABLE + '.' + witnessFields.ID + ' as witness_id',
         db.tables.PERSON_TABLE + '.' + personFields.MEMBER + ' as witness_member_id',
         db.tables.PERSON_TABLE + '.' + personFields.FIRST_NAME + ' as witness_first_name',
-        db.tables.PERSON_TABLE + '.' + personFields.MID_NAME + ' as witness_middle_name',
+        db.tables.PERSON_TABLE + '.' + personFields.MID_NAME + ' as witness_mid_name',
         db.tables.PERSON_TABLE + '.' + personFields.LAST_NAME + ' as witness_last_name',
         db.tables.WITNESS_TABLE + '.' + witnessFields.TYPE + ' as type'
       ]
 
       db.find(db.tables.INFANT_TABLE, [cond1], joinTables, columns, function (result) {
-        if (result) {
+        if (result !== null && result.length > 0) {
           const data = {
             ...result[0]
           }
