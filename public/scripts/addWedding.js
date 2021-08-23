@@ -242,10 +242,122 @@ $(document).ready(function() {
       $('#create-wedding-registry').prop('disabled', true)
       if(validateFields()) {
         // AJAX
+        const data = {
+          bride: {},
+          groom: {},
+          brideMother: {},
+          brideFather: {},
+          groomMother: {},
+          groomFather: {}
+        }
+        data.bride = JSON.stringify(getDetails($('#bride_member'), $('#input_bride_member'), $('#bride_first_name'), $('#bride_mid_name'), $('#bride_last_name')))
+        data.groom = JSON.stringify(getDetails($('#groom_member'), $('#input_groom_member'), $('#groom_first_name'), $('#groom_mid_name'), $('#groom_last_name')))
+
+        if ($('#bride_mother_none').is(':checked')){
+          data.brideMother = null
+        } else {
+          data.brideMother = JSON.stringify(getDetails($('#bride_mother_member'), $('#input_bride_mother_member'), $('#bride_mother_first_name'), $('#bride_mother_mid_name'), $('#bride_mother_last_name')))
+        }
+
+        if ($('#bride_father_none').is(':checked')){
+          data.brideFather = null
+        } else {
+          data.brideFather = JSON.stringify(getDetails($('#bride_father_member'), $('#input_bride_father_member'), $('#bride_father_first_name'), $('#bride_father_mid_name'), $('#bride_father_last_name')))
+        }
+
+        if ($('#groom_mother_none').is(':checked')){
+          data.groomMother = null
+        } else {
+          data.groomMother = JSON.stringify(getDetails($('#groom_mother_member'), $('#input_groom_mother_member'), $('#groom_mother_first_name'), $('#groom_mother_mid_name'), $('#groom_mother_last_name')))
+        }
+
+        if ($('#groom_father_none').is(':checked')){
+          data.groomFather = null
+        } else {
+          data.groomFather = JSON.stringify(getDetails($('#groom_mother_member'), $('#input_groom_father_member'), $('#groom_father_first_name'), $('#groom_father_mid_name'), $('#groom_father_last_name')))
+        }
+
+        data.addressLine1 = $('#address_line').val()
+        data.addressLine2 = $('#address_line2').val()
+        data.city = $('#city').val()
+        data.province = $('#province').val()
+        data.postalCode = $('#postal_code').val()
+        data.country = $('#country').val()
+
+        data.date = new Date($('#current_date').val()).toISOString()
+
+        data.witnessMale = []
+        data.witnessFemale = []
+
+        const witnesses = $('.witness')
+        for (witness of witnesses) {
+          const currWitness = {}
+          const isMale = $(witness).hasClass('male')
+          currWitness.type = isMale ? 'Godfather' : 'Godmother'
+  
+          if($(witness).attr('data-member-info') !== null && $(witness).attr('data-member-info') !== undefined) {
+            currWitness.person_id = $(witness).attr('data-member-info').split(', ')[1]
+            currWitness.isMember = true
+          } else {
+            currWitness.first_name = $(witness).find('.first_name').text()
+            currWitness.mid_name = $(witness).find('.mid_name').text()
+            currWitness.last_name = $(witness).find('.last_name').text()
+          }
+  
+          if (isMale) {
+            data.witnessMale.push(currWitness)
+          } else {
+            data.witnessFemale.push(currWitness)
+          }
+        }
+
+        data.witnessMale = JSON.stringify(data.witnessMale)
+        data.witnessFemale = JSON.stringify(data.witnessFemale)
+
+        $.ajax({
+          type: 'POST',
+          data: data,
+          url: /* add route */,
+          success: function (result){
+            if (result) {
+              location.href = '/view_wedding/' + result
+            } else {
+              $('#create-wedding-registry').prop('disabled', false)
+              alert('An error occured')
+            }
+          }
+        })
+
+
       } else {
         $('#create-wedding-registry').prop('disabled', false)
       }
     })
+
+      /**
+   * 
+   * @param {jQuery Object} memberBox the member checkfield
+   * @param {jQuery Object} selectField the select field
+   * @param {jQuery Object} firstNameField the first name field
+   * @param {jQuery Object} midNameField the middle name field
+   * @param {jQuery Object} lastNameField  the last name field
+   * @returns 
+   */
+  function getDetails(memberBox, selectField, firstNameField, midNameField, lastNameField) {
+    const person = {}
+
+    person.isMember = $(memberBox).is(':checked')
+
+    if (person.isMember) {
+      const info = $(selectField).find(':selected').val().split(', ')
+      person.person_id = info[1]
+    } else {
+      person.first_name = $(firstNameField).val()
+      person.mid_name = $(midNameField).val()
+      person.last_name = $(lastNameField).val()
+    }
+    return person
+  }
 
     function validateFields() {
       var isValid = true
