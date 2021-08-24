@@ -413,6 +413,7 @@ function initDatabase (file) {
     'bride_parents_id INTEGER,' +
     'groom_parents_id INTEGER,' +
     'location TEXT, ' +
+    'wedding_officiant TEXT,' +
     'solemnizing_officer TEXT,' +
     'contract_no TEXT, ' +
     'FOREIGN KEY(couple_id) REFERENCES couples(couple_id)' +
