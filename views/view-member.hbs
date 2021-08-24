@@ -168,6 +168,15 @@
           <a href="/edit_member/{{member.member_id}}/add_prenup" id="add_prenup" type="button" class="btn btn-secondary">Add
             Prenup</a>
         {{/if}}
+
+        {{#if member.wedding_reg_id}}
+          <a href="/view_wedding/{{member.wedding_reg_id}}" id="view_wedding" type="button" class="btn btn-secondary">View
+            Wedding</a>
+          {{else}}
+          <a href="/add_wedding/" id="add_wedding" type="button" class="btn btn-secondary">Add
+            Wedding</a>
+        {{/if}}
+
       </div>
       <div class="col d-flex justify-content-end">
         <a href="/edit_member/{{member.member_id}}"> <button class="btn btn-secondary mb-4">Edit Member</button> </a>
