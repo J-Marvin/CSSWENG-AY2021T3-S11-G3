@@ -192,6 +192,7 @@ const weddingController = {
         db.tables.WEDDING_TABLE + '.' + weddingRegFields.GROOM_PARENTS + ' as groom_parents_id',
         db.tables.WEDDING_TABLE + '.' + weddingRegFields.LOCATION + ' as location',
         db.tables.WEDDING_TABLE + '.' + weddingRegFields.SOLEMNIZER + ' as solemnizer',
+        db.tables.WEDDING_TABLE + '.' + weddingRegFields.WEDDING_OFFICIANT + ' as officiant',
         db.tables.WEDDING_TABLE + '.' + weddingRegFields.CONTRACT + ' as contract_no',
         // bride's name
         'bride.' + personFields.FIRST_NAME + ' as bride_first_name',
