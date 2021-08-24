@@ -339,7 +339,8 @@ const weddingController = {
     data[weddingRegFields.DATE_OF_WEDDING] = req.body.weddingDate
     data[weddingRegFields.DATE] = req.body.date
     data[weddingRegFields.LOCATION] = req.body.location
-    data[weddingRegFields.SOLEMNIZER] = req.body.officiant
+    data[weddingRegFields.SOLEMNIZER] = req.body.solemnizer
+    data[weddingRegFields.WEDDING_OFFICIANT] = req.body.officiant
 
     console.log(people)
 
