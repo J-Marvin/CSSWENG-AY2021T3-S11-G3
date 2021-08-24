@@ -267,6 +267,7 @@ $(document).ready(function() {
         }
 
         data.officiant = $('#officiant').val()
+        data.solemnizer = $('#solemnizer').val()
         data.location = $('#location').val()
         data.contract = $('#contract').val()
         data.weddingDate = new Date($('#current_date').val()).toISOString()
@@ -422,6 +423,7 @@ $(document).ready(function() {
       var location = $('#location').val() === ''
       var contract = $('#contract').val() === ''
       var officiant = $('#officiant').val() === ''
+      var solemnizer = $('#solemnizer').val() === ''
   
       var dateField = $('#current_date').val() === ''
   
@@ -610,6 +612,13 @@ $(document).ready(function() {
         $('#officiant_info_error').text('Please accomplish')
       } else {
         $('#officiant_info_error').text('')
+      }
+
+      if (solemnizer) {
+        isValid = false
+        $('#solemnizer_info_error').text('Please accomplish')
+      } else {
+        $('#solemnizer_info_error').text('')
       }
   
       if (GMotherWitnessCtr === 0 && GFatherWitnessCtr === 0) {

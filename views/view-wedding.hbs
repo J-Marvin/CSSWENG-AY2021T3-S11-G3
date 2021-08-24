@@ -13,17 +13,19 @@
     <h1 class="my-3"> View Wedding Registry </h1>
     <hr>
     <div class="row">
-      <div class="col-6">
+      <div class="col-4">
+        <legend>Date Created</legend>
+        <p>{{dateView date}}</p>
+      </div>
+      <div class="col-4">
         <legend>Wedding Date</legend>
-        <hr>
         <p>{{dateView wedding_date}}</p>
       </div>
-      <div class="col-6">
+      <div class="col-4">
         <legend> Contract No. </legend>
-        <hr>
         <p>{{contract_no}}</p>
-        </div>
     </div>
+    <hr>
     <div class="row">
       <legend>Bride's Name</legend>
       <div class="col">
@@ -188,6 +190,10 @@
         <div class="col-4">
             <u> Solemnizer</u>
             <p>{{solemnizer}}</p>
+        </div>
+        <div class="col-4">
+            <u> Officiant</u>
+            <p>{{officiant}}</p>
         </div>
         <div class="col-4">
             <u> Location </u>

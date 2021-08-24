@@ -192,6 +192,7 @@ const weddingController = {
         db.tables.WEDDING_TABLE + '.' + weddingRegFields.GROOM_PARENTS + ' as groom_parents_id',
         db.tables.WEDDING_TABLE + '.' + weddingRegFields.LOCATION + ' as location',
         db.tables.WEDDING_TABLE + '.' + weddingRegFields.SOLEMNIZER + ' as solemnizer',
+        db.tables.WEDDING_TABLE + '.' + weddingRegFields.WEDDING_OFFICIANT + ' as officiant',
         db.tables.WEDDING_TABLE + '.' + weddingRegFields.CONTRACT + ' as contract_no',
         // bride's name
         'bride.' + personFields.FIRST_NAME + ' as bride_first_name',
@@ -339,7 +340,8 @@ const weddingController = {
     data[weddingRegFields.DATE_OF_WEDDING] = req.body.weddingDate
     data[weddingRegFields.DATE] = req.body.date
     data[weddingRegFields.LOCATION] = req.body.location
-    data[weddingRegFields.SOLEMNIZER] = req.body.officiant
+    data[weddingRegFields.SOLEMNIZER] = req.body.solemnizer
+    data[weddingRegFields.WEDDING_OFFICIANT] = req.body.officiant
 
     console.log(people)
 
