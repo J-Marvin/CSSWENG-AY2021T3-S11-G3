@@ -28,7 +28,7 @@ function createWindow () {
     mainWindow = null
   })
 
-  mainWindow.removeMenu()
+  // mainWindow.removeMenu()
 
   console.log(hostname + ' ' + port)
 }

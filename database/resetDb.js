@@ -406,18 +406,19 @@ function initDatabase (file) {
    */
   const createWeddingReg =
     'CREATE TABLE IF NOT EXISTS wedding_reg (' +
-    'reg_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,' +
-    'prenup_record_id INTEGER NOT NULL,' +
+    'wedding_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,' +
     'couple_id INTEGER NOT NULL,' +
     'date TEXT, ' +
     'date_of_wedding TEXT,' +
     'bride_parents_id INTEGER,' +
     'groom_parents_id INTEGER,' +
     'location TEXT, ' +
+    'wedding_officiant TEXT,' +
     'solemnizing_officer TEXT,' +
     'contract_no TEXT, ' +
-    'contract_img BLOB,' +
-    'FOREIGN KEY(prenup_record_id) REFERENCES pre_nuptial(record_id)' +
+    'FOREIGN KEY(couple_id) REFERENCES couples(couple_id)' +
+    'FOREIGN KEY(bride_parents_id) REFERENCES couples(couple_id)' +
+    'FOREIGN KEY(groom_parents_id) REFERENCES couples(couple_id)' +
     ')'
 
   /* This statement creates the Donation Record table

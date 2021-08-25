@@ -21,6 +21,8 @@ body {
 
 .logo {
     position: fixed;
+    height: 8em;
+    width: 8em;
     top: 20;
     left: 20;
     /* mix-blend-mode: multiply; */

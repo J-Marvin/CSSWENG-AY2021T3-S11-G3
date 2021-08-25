@@ -49,3 +49,4 @@
 - [FontAwesome](https://fontawesome.com)
 - [JQuery](https://jquery.com)
 - [Selectize.js](https://selectize.dev/)
+- [DataTables](https://datatables.net)

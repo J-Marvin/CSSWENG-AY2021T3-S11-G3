@@ -9,6 +9,7 @@ const prenupController = require('../controllers/prenupController')
 const churchController = require('../controllers/churchController')
 const observationController = require('../controllers/observationController')
 const dedicationController = require('../controllers/dedicationController')
+const weddingController = require('../controllers/weddingController')
 
 const app = express()
 app.set('views', path.join(__dirname, '../views'))
@@ -21,6 +22,8 @@ app.get('/member_main_page', indexController.getMemberMainPage)
 app.get('/add_member', memberController.getAddMemberPage)
 app.get('/add_dedication', dedicationController.getAddDedicationPage)
 app.get('/view_dedication/:dedication_id', dedicationController.getViewDedication)
+app.get('/add_wedding', weddingController.getAddWeddingPage)
+app.get('/view_wedding/:wedding_id', weddingController.getViewWeddingPage)
 app.get('/edit_member/:member_id', memberController.getEditMember)
 app.get('/edit_prenup/:prenup_id', prenupController.getEditPrenup)
 app.get('/forms_main_page', indexController.getFormsMainPage)
@@ -34,10 +37,14 @@ app.get('/view_prenup/:prenup_id', prenupController.getViewPrenup)
 app.get('/edit_prenup/:prenup_id', prenupController.getEditPrenup)
 
 app.get('/dedication_main_page', indexController.getDedicationMainPage)
+app.get('/wedding_main_page', indexController.getWeddingMainPage)
 
 app.post('/login', loginController.postLogIn)
 app.post('/add_member', validation.addMemberValidation(), memberController.createMember)
-// next four (4) routes for add prenuptial
+
+// app.post('/create_wedding_registry'/* validation function */, weddingController.createWedding)
+app.post('/add_wedding_reg', weddingController.postAddWedding)
+
 app.post('/create_prenup', validation.addPrenupValidation(), prenupController.createPrenup)
 app.post('/create_prenup_member', validation.addMemberPrenupValid(), prenupController.createMemberPrenup)
 app.post('/addPrenupBrideNonMember', validation.addPrenupBrideNonMember(), prenupController.createPrenupBrideNonMember)

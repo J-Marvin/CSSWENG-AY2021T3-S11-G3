@@ -15,7 +15,7 @@
     padding-right: 0;
 }
 
-p {
+p th td {
     white-space: nowrap; 
     font-family: Helvetica;
 }
@@ -29,16 +29,17 @@ hr {
     margin: 0 !important;
 }
 
-.toprow p {
+.toprow p{
     font-weight: bold;
     border-bottom: 3px black double;
 }
 
-.indivmember {
-    padding: 8px;
+td, .indivmember{
+    padding-top: 8px;
+    padding-bottom:8px;
 }
 
-.indivmember:hover {
+.indivmember:hover, tbody>tr:hover {
     background-color: #ececff;
     cursor: pointer;
   }
