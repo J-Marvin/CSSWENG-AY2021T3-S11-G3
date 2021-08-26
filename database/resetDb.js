@@ -320,6 +320,7 @@ function initDatabase (file) {
     'CREATE TABLE IF NOT EXISTS bap_reg (' +
     'reg_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
     'date TEXT, ' +
+    'date_created TEXT,' +
     'location TEXT, ' +
     'officiant TEXT' +
     ')'
