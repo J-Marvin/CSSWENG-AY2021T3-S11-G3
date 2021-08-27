@@ -280,9 +280,14 @@ const controller = {
       })
     }
   },
-
+  /**
+   * This function renders the baptismal record main page
+   * @param req - the incoming request containing either the query or body
+   * @param res - the result to be sent out after processing the request
+   */
   getBapRecordsMainPage: function (req, res) {
     const level = req.session.level
+    req.session.editId = null
 
     if (level === undefined || level === null || parseInt(level) === 1) {
       res.status(401)

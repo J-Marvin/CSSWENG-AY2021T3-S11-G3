@@ -68,7 +68,6 @@ const baptismalController = {
             record: result[0]
           }
           data.canSee = (parseInt(req.session.editId) === parseInt(bapId)) || (parseInt(req.session.level) >= 2)
-          // add backlink
           data.backLink = parseInt(req.session.level) >= 2 ? '/baptismal_main_page' : '/forms_main_page'
           res.render('view-baptismal', data)
         } else {

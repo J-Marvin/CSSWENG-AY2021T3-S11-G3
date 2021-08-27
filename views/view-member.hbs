@@ -177,6 +177,14 @@
             Wedding</a>
         {{/if}}
 
+        {{#if member.bap_reg_id}}
+          <a href="/view_baptismal/{{member.bap_reg_id}}" id="view_baptismal" type="button" class="btn btn-secondary">View
+            Baptismal</a>
+          {{else}}
+          <a href="/view_baptismal/{{member.bap_reg_id}}" id="view_baptismal" type="button" class="btn btn-secondary">Add
+            Baptismal</a>
+        {{/if}}
+
       </div>
       <div class="col d-flex justify-content-end">
         <a href="/edit_member/{{member.member_id}}"> <button class="btn btn-secondary mb-4">Edit Member</button> </a>
