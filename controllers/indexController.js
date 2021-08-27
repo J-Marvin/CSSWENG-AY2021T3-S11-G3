@@ -6,6 +6,7 @@ const prenupRecordFields = require('../models/prenupRecord')
 const coupleFields = require('../models/couple')
 const weddingRegFields = require('../models/weddingRegistry')
 const infDedFields = require('../models/infantDedication')
+const bapRegFields = require('../models/baptismalRegistry.js')
 
 const controller = {
   /**
@@ -278,6 +279,26 @@ const controller = {
         })
       })
     }
+  },
+
+  getBapRecordsMainPage: function (req, res) {
+    const joinTables = [
+      {
+        tableName: db.tables.MEMBER_TABLE,
+        sourceCol: db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.ID,
+        destCol: db.tables.MEMBER_TABLE + '.' + memberFields.BAPTISMAL_REG
+      }
+    ]
+    db.find(db.tables.BAPTISMAL_TABLE, [], joinTables, '*', function (result) {
+      if (result) {
+        const data = {}
+        data.records = result
+        data.scripts = ['convertDataTable']
+        data.styles = ['lists']
+
+        res.render('temp', data)
+      } // add error
+    })
   }
 }
 
