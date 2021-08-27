@@ -5,11 +5,31 @@ const memberFields = require('../models/members')
 const personFields = require('../models/person')
 
 const baptismalController = {
-
+  /**
+   * This function renders a specific baptismal record
+   * @param req - the incoming request containing either the query or body
+   * @param res - the result to be sent out after processing the request
+   */
   getViewBaptismalRecord: function (req, res) {
+    /*
+      This local function renders the error page
+    */
+    function sendError (title, code) {
+      const msg = title
+      res.status(code)
+      res.render('error', {
+        title: title,
+        css: ['global', 'error'],
+        status: {
+          code: parseInt(code),
+          message: msg
+        },
+        backLink: '/main_page'
+      })
+    }
     const bapId = req.params.bap_id
 
-    req.session.level = 3
+    // req.session.level = 3
     if (parseInt(req.session.editId) === parseInt(bapId) || parseInt(req.session.level) >= 2) {
       const joinTables = [
         {
@@ -49,21 +69,23 @@ const baptismalController = {
           }
           data.canSee = (parseInt(req.session.editId) === parseInt(bapId)) || (parseInt(req.session.level) >= 2)
           // add backlink
+          data.backLink = parseInt(req.session.level) >= 2 ? '/baptismal_main_page' : '/forms_main_page'
           res.render('view-baptismal', data)
         } else {
-          res.send(false) // change to error page
+          sendError('404 Baptismal Record Not Found', 404)
         }
       })
     } else {
-      // add error page
-      res.send("ADD ERROR PAGE")
+      sendError('401 Unauthorized Access', 401)
     }
   },
-
+  /**
+   * This function renders the add baptismal record page
+   * @param req - the incoming request containing either the query or body
+   * @param res - the result to be sent out after processing the request
+   */
   getAddBaptismalRecordPage: function (req, res) {
     const data = {}
-    data.scripts = []
-    data.styles = []
 
     const noBapRegCond = new Condition(queryTypes.whereNull)
     noBapRegCond.setField(memberFields.BAPTISMAL_REG)
@@ -82,14 +104,16 @@ const baptismalController = {
         data.members = result
         data.scripts = ['addBaptismal']
         data.styles = ['forms']
+        data.backLink = parseInt(req.session.level) >= 2 ? '/baptismal_main_page' : '/forms_main_page'
         res.render('add-baptismal', data)
-      } else {
-        // change to error page
-        res.send(false)
       }
     })
   },
-
+  /**
+   * This function processes the creation of the baptismal record
+   * @param req - the incoming request containing either the query or body
+   * @param res - the result to be sent out after processing the request
+   */
   postAddBaptismalRecord: function (req, res) {
     const data = {}
     const memberCond = new Condition(queryTypes.where)

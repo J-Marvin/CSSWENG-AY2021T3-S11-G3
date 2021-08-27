@@ -1,6 +1,6 @@
 $(document).ready(function() {
   const member = $('#input_member').selectize()
-
+  initSelectize()
   $('#input_member').change(function () {
 
     const prev = $(this).data('prev')
@@ -31,7 +31,8 @@ $(document).ready(function() {
         data: data,
         success: function (result) {
           if (result) {
-            alert(result)
+            // alert(result)
+            location.href = '/view_baptismal/' + result
           } else {
             $('#create-baptismal').prop('disabled', false)
             $('#create_error').text('Error Adding Baptismal Record')
