@@ -46,7 +46,7 @@ app.on('activate', function () {
   }
 })
 
-app.on('uncaughtException', function(error) {
+app.on('uncaughtException', function (error) {
   const log = require('electron-log')
   log.error(error)
 })
