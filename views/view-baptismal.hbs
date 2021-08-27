@@ -1,0 +1,60 @@
+<style>
+  @import url(/css/fonts.css);
+
+  #header {
+    font-family: JuliusSansPro;
+  }
+</style>
+
+{{>navbar}}
+
+<div id="prenup_info" style="display: none" data-dedication="{{infant_dedication_id}}"></div>
+<div class="container" style="padding-left: 18%; padding-right: 10%;">
+  <h1 class="my-3"> View Baptismal Record </h1>
+  <hr>
+  <div class="row">
+    <div class="col">
+      <legend>Date Created</legend>
+      <u for='date_created'>{{dateView record.date_created}}</u>
+    </div>
+    <div class="col">
+      <legend>Baptismal Date</legend>
+      <u for='date'>{{dateView record.date}}</u>
+    </div>
+  </div>
+  <div class="row">
+    <legend>Member</legend>
+    <div class="col">
+      <u for="first_name">First Name</u>
+      <p>{{record.first_name}}</p>
+      {{#if record.member_id}}
+        <a href="/member/{{record.member_id}}"><button class="btn btn-secondary mb-4">Member Profile</button></a>
+      {{/if}}
+    </div>
+    <div class="col">
+      <u for="mid_name">Middle Initial</u>
+      <p>{{record.middle_name}}</p>
+    </div>
+    <div class="col">
+      <u for="last_name">Last Name</u>
+      <p>{{record.last_name}}</p>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-4">
+      <u> Officiant </u>
+      <p>{{record.officiant}}</p>
+    </div>
+    <div class="col-4">
+      <u> Address of Baptism</u>
+      <p>{{record.place}}</p>
+    </div>
+  </div>
+  {{#if canSee}}
+  <div class="row my-3">
+    <div class="col">
+      <a><button class="btn btn-secondary mb-4">Edit Baptismal Form</button></a>
+    </div>
+  </div>
+  {{/if}}

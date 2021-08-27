@@ -1,0 +1,54 @@
+{{>navbar}}
+<form id="wedding_form" action="/create_wedding_registry" method="POST" class="container">
+  <div class="container" style="padding-left: 20%; padding-right: 20%;">
+    <h1 class="my-3">Add Baptismal Record</h1>
+    <hr>
+    <div class="row">
+      <div class="col">
+        <legend>Member</legend>
+        <hr>
+        <div id="member_div">
+          <label>Select Member</label>
+          <select name="input_member" id="input_member">
+            {{>dropdown members}}
+          </select>
+        </div>
+        <p id="member_error" class="error_codes"> </p>
+      </div>
+    </div>
+    {{!-- Place --}}
+    <hr>
+    <fieldset class="form-group">
+      <div class="row">
+        {{!-- <legend>Baptism Location</legend> --}}
+        <div class="col">
+          <label for="location">Baptism Location</label>
+          <input type="text" id="location" name="location" class="form-control">
+          <p id="location_error" class="error_codes"> </p>
+        </div>
+    </fieldset>
+    {{!-- Date --}}
+    <hr>
+    <div class="row">
+      <div class="col">
+        <div class="col">
+          <label for="current_date">Baptism Date</label>
+          <input type="date" id="date" name="date" class="form-control">
+          <p id="date_error" class="error_codes"> </p>
+        </div>
+      </div>
+    </div>
+    {{!-- Officiant--}}
+    <hr>
+    <div class="row">
+      <div class="col-6">
+        <label>Officiant</label>
+        <input type="text" id="officiant" class="form-control">
+        <p id="officiant_error" class="error_codes"> </p>
+      </div>
+    </div>
+
+    <button id="create-baptismal" type="button" class="btn btn-primary">Submit</button>
+    <p id="create_error" class="error_codes"></p>
+
+</form>

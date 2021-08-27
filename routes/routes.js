@@ -10,6 +10,7 @@ const churchController = require('../controllers/churchController')
 const observationController = require('../controllers/observationController')
 const dedicationController = require('../controllers/dedicationController')
 const weddingController = require('../controllers/weddingController')
+const baptismalController = require('../controllers/baptismalController')
 
 const app = express()
 app.set('views', path.join(__dirname, '../views'))
@@ -27,6 +28,8 @@ app.get('/view_wedding/:wedding_id', weddingController.getViewWeddingPage)
 app.get('/edit_member/:member_id', memberController.getEditMember)
 app.get('/edit_prenup/:prenup_id', prenupController.getEditPrenup)
 app.get('/forms_main_page', indexController.getFormsMainPage)
+app.get('/add_baptismal', baptismalController.getAddBaptismalRecordPage)
+app.get('/view_baptismal/:bap_id', baptismalController.getViewBaptismalRecord)
 
 app.get('/member/:member_id', memberController.getViewMember)
 
@@ -56,6 +59,7 @@ app.post('/postUpdatePrenupBrideMember', prenupController.postUpdatePrenupBrideM
 app.post('/postUpdatePrenupGroomMember', prenupController.postUpdatePrenupGroomMember)
 
 app.post('/add_dedication', dedicationController.postAddDedication)
+app.post('/add_baptismal', baptismalController.postAddBaptismalRecord)
 
 app.post('/update_member', validation.addMemberValidation(), memberController.postUpdateMember)
 app.post('/add_church', validation.churchValidation(), churchController.postAddChurch)

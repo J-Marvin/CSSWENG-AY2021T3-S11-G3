@@ -158,7 +158,7 @@ const dedicationController = {
           const data = {
             ...result[0]
           }
-          data.canSee = (parseInt(req.session.dedicationId) === parseInt(dedicationId)) || (parseInt(req.session.level) >= 2)
+          data.canSee = (parseInt(req.session.editId) === parseInt(dedicationId)) || (parseInt(req.session.level) >= 2)
           if ((parseInt(req.session.level) <= 2)) {
             data.canSee = false
           }
