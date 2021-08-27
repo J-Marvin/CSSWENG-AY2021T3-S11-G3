@@ -282,24 +282,55 @@ const controller = {
   },
 
   getBapRecordsMainPage: function (req, res) {
-    const joinTables = [
-      {
-        tableName: db.tables.MEMBER_TABLE,
-        sourceCol: db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.ID,
-        destCol: db.tables.MEMBER_TABLE + '.' + memberFields.BAPTISMAL_REG
-      }
-    ]
-    db.find(db.tables.BAPTISMAL_TABLE, [], joinTables, '*', function (result) {
-      if (result) {
+    const level = req.session.level
+
+    if (level === undefined || level === null || parseInt(level) === 1) {
+      res.status(401)
+      res.render('error', {
+        title: '401 Unauthorized Access',
+        css: ['global', 'error'],
+        status: {
+          code: '401',
+          message: 'Unauthorized access'
+        }
+      })
+    } else {
+      const joinTables = [
+        {
+          tableName: db.tables.MEMBER_TABLE,
+          sourceCol: db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.ID,
+          destCol: db.tables.MEMBER_TABLE + '.' + memberFields.BAPTISMAL_REG
+        },
+        {
+          tableName: db.tables.PERSON_TABLE,
+          sourceCol: db.tables.MEMBER_TABLE + '.' + memberFields.PERSON,
+          destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
+        }
+      ]
+
+      const columns = [
+        db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.ID + ' as reg_id',
+        db.tables.MEMBER_TABLE + '.' + memberFields.ID + ' as member_id',
+        db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.DATE + ' as date',
+        db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.DATE_CREATED + ' as date_created',
+        db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.LOCATION + ' as place',
+        db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.OFFICIANT + ' as officiant',
+        db.tables.PERSON_TABLE + '.' + personFields.FIRST_NAME + ' as first_name',
+        db.tables.PERSON_TABLE + '.' + personFields.MID_NAME + ' as middle_name',
+        db.tables.PERSON_TABLE + '.' + personFields.LAST_NAME + ' as last_name'
+      ]
+
+      db.find(db.tables.BAPTISMAL_TABLE, [], joinTables, columns, function (result) {
         const data = {}
         data.records = result
         data.scripts = ['convertDataTable']
         data.styles = ['lists']
 
-        res.render('temp', data)
-      } // add error
-    })
+        res.render('baptismal-main-page', data)
+      })
+    }
   }
+
 }
 
 module.exports = controller

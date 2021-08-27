@@ -53,9 +53,10 @@ const baptismalController = {
         } else {
           res.send(false) // change to error page
         }
-      }) 
+      })
     } else {
       // add error page
+      res.send("ADD ERROR PAGE")
     }
   },
 
