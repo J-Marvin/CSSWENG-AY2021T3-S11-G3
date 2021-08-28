@@ -98,4 +98,27 @@ $(document).ready(function() {
     return isValid
   }
 
+  $('#input_member').blur(function() {
+    if (validator.isEmpty($('#member_error').val())) {
+      $('#member_error').text('')
+    }
+  })
+
+  $('#location').blur(function() {
+    if (validator.isEmpty($('#location_error').val())) {
+      $('#location_error').text('')
+    }
+  })
+
+  $('#date').blur(function() {
+    if (validator.isEmpty($('#date_error').val())) {
+      $('#date_error').text('')
+    }
+  })
+
+  $('#officiant').blur(function() {
+    if (validator.isEmpty($('#officiant_error').val())) {
+      $('#officiant_error').text('')
+    }
+  })
 })
