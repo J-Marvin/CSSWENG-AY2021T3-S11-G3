@@ -264,11 +264,11 @@ const weddingController = {
             }
           })
         } else {
-          sendError(req, res, '404 Wedding Record Not Found', 404)
+          sendError(req, res, 404, '404 Wedding Record Not Found')
         }
       })
     } else {
-      sendError(req, res, '401 Unauthorized Access', 401)
+      sendError(req, res, 401)
     }
   },
   /**

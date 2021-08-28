@@ -1,15 +1,25 @@
+const messages = {
+  401: 'Unauthorized Access',
+  404: 'Page Not Found'
+}
+
 const errorController = {
-  sendError: function (req, res, title, code) {
+  sendError: function (req, res, code, msg = null) {
     res.status(code)
-    res.render('error', {
-      title: title,
-      css: ['global', 'error'],
-      status: {
-        code: parseInt(code),
-        message: title
-      },
-      backLink: '/main_page'
-    })
+    msg = msg === null ? messages[code] : msg
+    try {
+      res.render('error', {
+        title: msg,
+        css: ['global', 'error'],
+        status: {
+          code: parseInt(code),
+          message: msg
+        },
+        backLink: '/main_page'
+      })
+    } catch (error) {
+      res.send(false)
+    }
   }
 }
 
