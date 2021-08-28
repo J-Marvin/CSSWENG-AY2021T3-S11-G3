@@ -60,7 +60,7 @@ const baptismalController = {
           data.backLink = parseInt(req.session.level) >= 2 ? '/baptismal_main_page' : '/forms_main_page'
           res.render('view-baptismal', data)
         } else {
-          sendError('404 Baptismal Record Not Found', 404)
+          sendError(req, res, '404 Baptismal Record Not Found', 404)
         }
       })
     } else {

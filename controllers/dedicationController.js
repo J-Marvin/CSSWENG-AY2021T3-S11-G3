@@ -177,11 +177,11 @@ const dedicationController = {
             }
           })
         } else {
-          sendError('404 Record Not Found at Child Dedication Table', 404)
+          sendError(req, res, '404 Record Not Found at Child Dedication Table', 404)
         }
       })
     } else {
-      sendError('401 Unauthorized Access', 401)
+      sendError(req, res, '401 Unauthorized Access', 401)
     }
   },
   /**
