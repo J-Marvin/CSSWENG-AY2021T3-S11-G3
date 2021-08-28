@@ -10,7 +10,7 @@
         <div id="member_div">
           <label>Select Member</label>
           <select name="input_member" id="input_member">
-            {{>dropdown members}}
+            {{>dropdown noBapMembers}}
           </select>
         </div>
         <p id="member_error" class="error_codes"> </p>
@@ -41,9 +41,35 @@
     {{!-- Officiant--}}
     <hr>
     <div class="row">
-      <div class="col-6">
-        <label>Officiant</label>
-        <input type="text" id="officiant" class="form-control">
+     <div class="col">
+        <legend>Officiant</legend>
+        <hr>
+        <input type="checkbox" id="officiant_non_member"> Non-member
+        <input class="mb-3" type="checkbox" id="officiant_member" checked disabled> Member
+        <div id="officiant_member_div" style="display:block">
+          <label>Select Officiant</label>
+          <select name="input_officiant_member" id="input_officiant_member">
+            {{>dropdown members}}
+          </select>
+        </div>
+        <fieldset class="form-group" id="officiant_non_member_div" style="display:none">
+          <div class="div">
+            <div class="row">
+              <div class="col-12">
+                <label for="first_name">First Name</label>
+                <input type="text" id="officiant_first_name" name="officiant_first_name" class="form-control">
+              </div>
+              <div class="col-12">
+                <label for="officiant_mid_name">Middle Initial</label>
+                <input type="text" id="officiant_mid_name" name="officiant_mid_name" class="form-control">
+              </div>
+              <div class="col-12">
+                <label for="officiant_last_name">Last Name</label>
+                <input type="text" id="officiant_last_name" name="officiant_last_name"class="form-control">
+              </div>
+            </div>
+          </div>
+        </fieldset>
         <p id="officiant_error" class="error_codes"> </p>
       </div>
     </div>

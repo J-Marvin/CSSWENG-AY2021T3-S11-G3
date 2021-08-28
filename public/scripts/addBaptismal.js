@@ -1,7 +1,10 @@
 $(document).ready(function() {
   const member = $('#input_member').selectize()
+  const officiant = $('#input_officiant_member').selectize()
+
   initSelectize()
-  $('#input_member').change(function () {
+
+  $('select').change(function () {
 
     const prev = $(this).data('prev')
 
@@ -9,8 +12,30 @@ $(document).ready(function() {
       selectizeEnable(prev)
     }
     
-    selectizeDisable($('#input_member').val())
-    $(this).data('prev', $('#input_member').val())
+    selectizeDisable($(this).val())
+    $(this).data('prev', $(this).val())
+  })
+
+  $('#officiant_member').click( function () {
+    $(this).prop('disabled', true)
+    $('#officiant_non_member').prop('checked', false)
+    $('#officiant_non_member').prop('disabled', false)
+    $('#officiant_non_member_div').hide()
+    $('#officiant_member_div').show()
+    $('#officiant_first_name').val('')
+    $('#officiant_middle_name').val('')
+    $('#officiant_last_name').val('')
+
+  })
+
+  $('#officiant_non_member').click(function () {
+    $(this).prop('disabled', true)
+    $('#officiant_member').prop('checked', false)
+    $('#officiant_member').prop('disabled', false)
+    $('#officiant_member_div').hide()
+    $('#officiant_non_member_div').show()
+    selectizeEnable($('#input_officiant_member').val())
+    $(officiant)[0].selectize.setValue('0')
   })
 
   $('#create-baptismal').click( function () {
@@ -19,12 +44,13 @@ $(document).ready(function() {
     if (validateFields()) {
       const data = {}
       const member = $('#input_member').val().split(', ')
-      data.memberId = member[0]
+      data.personId = member[1]
       data.date = new Date($('#date').val()).toISOString()
       data.currentDate = new Date().toISOString()
-      data.officiant = $('#officiant').val()
       data.location = $('#location').val()
 
+      data.officiant = JSON.stringify(getDetails($('#officiant_member'), null, $('#input_officiant_member'), $('#officiant_first_name'), $('#officiant_mid_name'), $('#officiant_last_name')))
+      console.log(data.officiant)
       $.ajax({
         type: 'POST',
         url: '/add_baptismal',
@@ -46,14 +72,17 @@ $(document).ready(function() {
 
   function selectizeEnable(data) {
     $('#input_member').parent().find('.option[data-value="' + data + '"]').attr('data-selectable', true)
+    $('#input_officiant_member').parent().find('.option[data-value="' + data + '"]').attr('data-selectable', true)
   }
 
   function selectizeDisable(data) {
     $('#input_member').parent().find('.option[data-value="' + data + '"]').removeAttr('data-selectable')
+    $('#input_officiant_member').parent().find('.option[data-value="' + data + '"]').removeAttr('data-selectable')
   }
 
   function initSelectize() {
     $(member)[0].selectize.refreshOptions()
+    $(officiant)[0].selectize.refreshOptions()
 
     $('.selectize-dropdown').hide();
     $('.selectize-input').removeClass('focus input-active dropdown-active');
@@ -65,7 +94,13 @@ $(document).ready(function() {
     var hasMember = $('#input_member').val() !== '' && $('#input_member').val() !== '0'
     var hasLocation = !validator.isEmpty($('#location').val())
     var hasDate = !validator.isEmpty($('#date').val())
-    var hasOfficiant = !validator.isEmpty($('#officiant').val())
+    
+    var officiantIsMember = $('#officiant_member').is(':checked')
+    var officiantHasMember = $('#input_officiant_member').val() !== '' && $('#input_officiant_member').val() !== '0'
+    var officiantHasFirstName = !validator.isEmpty($('#officiant_first_name').val())
+    var officiantHasMidName = !validator.isEmpty($('#officiant_mid_name').val())
+    var officiantIsValidMidName = validator.isLength($('#officiant_mid_name').val(), {min: 1, max: 1})
+    var officiantHasLastName = !validator.isEmpty($('#officiant_last_name').val())
 
     if (!hasMember) {
       isValid = false
@@ -88,14 +123,57 @@ $(document).ready(function() {
       $('#location_error').text('')
     }
 
-    if (!hasOfficiant) {
-      isValid = false
-      $('#officiant_error').text('Please add officiant')
+    if (officiantIsMember) {
+      if (!officiantHasMember) {
+        isValid = false
+        $('#officiant_error').text('Please select member')
+      } else {
+        $('#officiant_error').text('')
+      }
     } else {
-      $('#officiant_error').text('')
+      if (!officiantHasFirstName || !officiantHasLastName || !officiantHasLastName) {
+        isValid = false
+        $('#officiant_error').text('Please fill up all fields')
+      } else if(!officiantIsValidMidName) {
+        isValid = false
+        $('#officiant_error').text('Middle initial should only contain one letter')
+      } else {
+        $('#officiant_error').text('')
+      }
     }
 
+
     return isValid
+  }
+
+  function getDetails(memberBox, noneBox, selectField, firstNameField, midNameField, lastNameField) {
+    if (noneBox !== null && $(noneBox).is(':checked')) {
+      return null
+    } else {
+      const person = {}
+
+      person.isMember = $(memberBox).is(':checked')
+
+      if (person.isMember) {
+        const info = $(selectField).find(':selected').val().split(', ')
+        person.person_id = info[1]
+        person.member_id = info[0]
+      } else {
+        person.first_name = toTitleCase($(firstNameField).val())
+        person.mid_name = $(midNameField).val().toUpperCase()
+        person.last_name = toTitleCase($(lastNameField).val())
+      }
+      return person
+    }
+  }
+
+  function toTitleCase(str) {
+    return str.replace(
+      /\w\S*/g,
+      function (txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+      }
+    );
   }
 
   $('#input_member').blur(function() {

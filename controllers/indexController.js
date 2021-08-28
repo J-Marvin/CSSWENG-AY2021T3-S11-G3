@@ -302,27 +302,30 @@ const controller = {
     } else {
       const joinTables = [
         {
-          tableName: db.tables.MEMBER_TABLE,
-          sourceCol: db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.ID,
-          destCol: db.tables.MEMBER_TABLE + '.' + memberFields.BAPTISMAL_REG
+          tableName: { member: db.tables.PERSON_TABLE },
+          sourceCol: db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.PERSON,
+          destCol: 'member.' + personFields.ID
         },
         {
-          tableName: db.tables.PERSON_TABLE,
-          sourceCol: db.tables.MEMBER_TABLE + '.' + memberFields.PERSON,
-          destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
+          tableName: { officiant: db.tables.PERSON_TABLE },
+          sourceCol: db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.OFFICIANT,
+          destCol: 'officiant.' + personFields.ID
         }
       ]
 
       const columns = [
         db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.ID + ' as reg_id',
-        db.tables.MEMBER_TABLE + '.' + memberFields.ID + ' as member_id',
         db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.DATE + ' as date',
         db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.DATE_CREATED + ' as date_created',
         db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.LOCATION + ' as place',
-        db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.OFFICIANT + ' as officiant',
-        db.tables.PERSON_TABLE + '.' + personFields.FIRST_NAME + ' as first_name',
-        db.tables.PERSON_TABLE + '.' + personFields.MID_NAME + ' as middle_name',
-        db.tables.PERSON_TABLE + '.' + personFields.LAST_NAME + ' as last_name'
+        'member.' + personFields.FIRST_NAME + ' as member_first_name',
+        'member.' + personFields.MID_NAME + ' as member_mid_name',
+        'member.' + personFields.LAST_NAME + ' as member_last_name',
+        'member.' + personFields.MEMBER + ' as member_id',
+        'officiant.' + personFields.FIRST_NAME + ' as officiant_first_name',
+        'officiant.' + personFields.MID_NAME + ' as officiant_mid_name',
+        'officiant.' + personFields.LAST_NAME + ' as officiant_last_name',
+        'officiant.' + personFields.MEMBER + ' as officiant_id'
       ]
 
       db.find(db.tables.BAPTISMAL_TABLE, [], joinTables, columns, function (result) {

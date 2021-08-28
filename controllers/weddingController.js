@@ -5,6 +5,7 @@ const weddingRegFields = require('../models/weddingRegistry')
 const witnessFields = require('../models/witness.js')
 const memberFields = require('../models/members')
 const { Condition, queryTypes } = require('../models/condition')
+const { sendError } = require('../controllers/errorController')
 
 const weddingController = {
   /**
@@ -53,22 +54,6 @@ const weddingController = {
    * @param res - the result to be sent out after processing the request
    */
   getViewWeddingPage: function (req, res) {
-    /*
-      This local function renders the error page
-    */
-    function sendError (title, code) {
-      const msg = title
-      res.status(code)
-      res.render('error', {
-        title: title,
-        css: ['global', 'error'],
-        status: {
-          code: parseInt(code),
-          message: msg
-        },
-        backLink: '/main_page'
-      })
-    }
     // function execution starts here
     const weddingId = parseInt(req.params.wedding_id)
     if (parseInt(req.session.level) >= 2 || parseInt(req.session.editId) === weddingId) {
@@ -279,11 +264,11 @@ const weddingController = {
             }
           })
         } else {
-          sendError('404 Wedding Record Not Found', 404)
+          sendError(req, res, '404 Wedding Record Not Found', 404)
         }
       })
     } else {
-      sendError('401 Unauthorized Access', 401)
+      sendError(req, res, '401 Unauthorized Access', 401)
     }
   },
   /**

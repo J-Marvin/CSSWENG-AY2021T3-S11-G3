@@ -322,7 +322,10 @@ function initDatabase (file) {
     'date TEXT, ' +
     'date_created TEXT,' +
     'location TEXT, ' +
-    'officiant TEXT' +
+    'officiant INT,' +
+    'person INT,' +
+    'FOREIGN KEY(officiant) REFERENCES people(person_id),' +
+    'FOREIGN KEY(person) REFERENCES people(person_id)' +
     ')'
 
   /* This statement creates the Infant Dedication table

@@ -3,6 +3,7 @@ const db = require('../models/db')
 const { Condition, queryTypes } = require('../models/condition')
 const memberFields = require('../models/members')
 const personFields = require('../models/person')
+const { sendError } = require('../controllers/errorController')
 
 const baptismalController = {
   /**
@@ -11,49 +12,36 @@ const baptismalController = {
    * @param res - the result to be sent out after processing the request
    */
   getViewBaptismalRecord: function (req, res) {
-    /*
-      This local function renders the error page
-    */
-    function sendError (title, code) {
-      const msg = title
-      res.status(code)
-      res.render('error', {
-        title: title,
-        css: ['global', 'error'],
-        status: {
-          code: parseInt(code),
-          message: msg
-        },
-        backLink: '/main_page'
-      })
-    }
     const bapId = req.params.bap_id
 
     // req.session.level = 3
     if (parseInt(req.session.editId) === parseInt(bapId) || parseInt(req.session.level) >= 2) {
       const joinTables = [
         {
-          tableName: db.tables.MEMBER_TABLE,
-          sourceCol: db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.ID,
-          destCol: db.tables.MEMBER_TABLE + '.' + memberFields.BAPTISMAL_REG
+          tableName: { member: db.tables.PERSON_TABLE },
+          sourceCol: db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.PERSON,
+          destCol: 'member.' + personFields.ID
         },
         {
-          tableName: db.tables.PERSON_TABLE,
-          sourceCol: db.tables.MEMBER_TABLE + '.' + memberFields.PERSON,
-          destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
+          tableName: { officiant: db.tables.PERSON_TABLE },
+          sourceCol: db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.OFFICIANT,
+          destCol: 'officiant.' + personFields.ID
         }
       ]
 
       const columns = [
         db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.ID + ' as reg_id',
-        db.tables.MEMBER_TABLE + '.' + memberFields.ID + ' as member_id',
         db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.DATE + ' as date',
         db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.DATE_CREATED + ' as date_created',
         db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.LOCATION + ' as place',
-        db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.OFFICIANT + ' as officiant',
-        db.tables.PERSON_TABLE + '.' + personFields.FIRST_NAME + ' as first_name',
-        db.tables.PERSON_TABLE + '.' + personFields.MID_NAME + ' as middle_name',
-        db.tables.PERSON_TABLE + '.' + personFields.LAST_NAME + ' as last_name'
+        'member.' + personFields.FIRST_NAME + ' as member_first_name',
+        'member.' + personFields.MID_NAME + ' as member_mid_name',
+        'member.' + personFields.LAST_NAME + ' as member_last_name',
+        'member.' + personFields.MEMBER + ' as member_id',
+        'officiant.' + personFields.FIRST_NAME + ' as officiant_first_name',
+        'officiant.' + personFields.MID_NAME + ' as officiant_mid_name',
+        'officiant.' + personFields.LAST_NAME + ' as officiant_last_name',
+        'officiant.' + personFields.MEMBER + ' as officiant_id'
       ]
 
       const condition = new Condition(queryTypes.where)
@@ -61,7 +49,8 @@ const baptismalController = {
       condition.setKeyValue(bapRegFields.ID, bapId)
 
       db.find(db.tables.BAPTISMAL_TABLE, condition, joinTables, columns, function (result) {
-        if (result) {
+        if (result.length > 0) {
+          console.log(result)
           const data = {
             scripts: [],
             styles: ['view'],
@@ -84,11 +73,8 @@ const baptismalController = {
    * @param res - the result to be sent out after processing the request
    */
   getAddBaptismalRecordPage: function (req, res) {
+    // TODO: ADD SESSION CHECKING
     const data = {}
-
-    const noBapRegCond = new Condition(queryTypes.whereNull)
-    noBapRegCond.setField(memberFields.BAPTISMAL_REG)
-
     const joinTables = [
       {
         tableName: db.tables.PERSON_TABLE,
@@ -96,11 +82,14 @@ const baptismalController = {
         destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
       }
     ]
-
-    // Find members with no baptismal record
-    db.find(db.tables.MEMBER_TABLE, noBapRegCond, joinTables, '*', function (result) {
+    db.find(db.tables.MEMBER_TABLE, [], joinTables, '*', function (result) {
       if (result) {
         data.members = result
+
+          // Find members with no baptismal record
+        data.noBapMembers = result.filter(function (elem) {
+          return elem[memberFields.BAPTISMAL_REG] === null
+        })
         data.scripts = ['addBaptismal']
         data.styles = ['forms']
         data.backLink = parseInt(req.session.level) >= 2 ? '/baptismal_main_page' : '/forms_main_page'
@@ -114,28 +103,52 @@ const baptismalController = {
    * @param res - the result to be sent out after processing the request
    */
   postAddBaptismalRecord: function (req, res) {
+    // TODO: Add session checking
     const data = {}
     const memberCond = new Condition(queryTypes.where)
     let bapId = null
-    memberCond.setKeyValue(memberFields.ID, req.body.memberId)
+    memberCond.setKeyValue(memberFields.PERSON, req.body.personId)
 
     data[bapRegFields.DATE_CREATED] = req.body.currentDate
     data[bapRegFields.DATE] = req.body.date
     data[bapRegFields.LOCATION] = req.body.location
-    data[bapRegFields.OFFICIANT] = req.body.officiant
+    data[bapRegFields.PERSON] = req.body.personId
+
+    const officiant = JSON.parse(req.body.officiant)
+    const peopleInfo = {}
+
+    if (officiant.isMember) {
+      data[bapRegFields.OFFICIANT] = officiant.person_id
+    } else {
+      peopleInfo[personFields.FIRST_NAME] = officiant.first_name
+      peopleInfo[personFields.MID_NAME] = officiant.mid_name
+      peopleInfo[personFields.LAST_NAME] = officiant.last_name
+    }
 
     console.log(data)
 
-    db.insert(db.tables.BAPTISMAL_TABLE, data, function (result) {
+    db.insert(db.tables.PERSON_TABLE, peopleInfo, function (result) {
       if (result) {
-        bapId = result[0]
-        const memberData = {}
-        memberData[memberFields.BAPTISMAL_REG] = bapId
+        if (!officiant.isMember) {
+          console.log('test')
+          data[bapRegFields.OFFICIANT] = result[0]
+        }
 
-        db.update(db.tables.MEMBER_TABLE, memberData, memberCond, function (result) {
+        console.log(data)
+        db.insert(db.tables.BAPTISMAL_TABLE, data, function (result) {
           if (result) {
-            req.session.editId = bapId
-            res.send(JSON.stringify(bapId))
+            bapId = result[0]
+            const memberData = {}
+            memberData[memberFields.BAPTISMAL_REG] = bapId
+
+            db.update(db.tables.MEMBER_TABLE, memberData, memberCond, function (result) {
+              if (result) {
+                req.session.editId = bapId
+                res.send(JSON.stringify(bapId))
+              } else {
+                res.send(false)
+              }
+            })
           } else {
             res.send(false)
           }

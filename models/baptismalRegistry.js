@@ -4,6 +4,7 @@ const bapRegFields = {
   DATE: 'date',
   DATE_CREATED: 'date_created',
   LOCATION: 'location',
-  OFFICIANT: 'officiant'
+  OFFICIANT: 'officiant',
+  PERSON: 'person'
 }
 module.exports = bapRegFields

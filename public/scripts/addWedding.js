@@ -471,11 +471,6 @@ $(document).ready(function() {
       } else {
         $('#groom_middle_error').text('')
       }
-      
-      // BRIDE'S MOTHER
-      console.log("NONE IS " + !brideMotherNone)
-      console.log("member is " + brideMotherFieldMember)
-      console.log("nonmember is " + brideMotherFieldNonMember)
       if(!brideMotherNone && brideMotherFieldMember && brideMotherFieldNonMember) {
         isValid = false
         $('#bride_mother_info_error').text('Please provide name')

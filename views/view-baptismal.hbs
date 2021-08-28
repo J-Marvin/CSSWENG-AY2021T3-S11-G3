@@ -26,29 +26,37 @@
     <legend>Member</legend>
     <div class="col">
       <u for="first_name">First Name</u>
-      <p>{{record.first_name}}</p>
+      <p>{{record.member_first_name}}</p>
       {{#if record.member_id}}
         <a href="/member/{{record.member_id}}"><button class="btn btn-secondary mb-4">Member Profile</button></a>
       {{/if}}
     </div>
     <div class="col">
       <u for="mid_name">Middle Initial</u>
-      <p>{{record.middle_name}}</p>
+      <p>{{record.member_mid_name}}</p>
     </div>
     <div class="col">
       <u for="last_name">Last Name</u>
-      <p>{{record.last_name}}</p>
+      <p>{{record.member_last_name}}</p>
     </div>
   </div>
   <hr>
   <div class="row">
-    <div class="col-4">
-      <u> Officiant </u>
-      <p>{{record.officiant}}</p>
+    <legend>Officiant</legend>
+    <div class="col">
+      <u for="first_name">First Name</u>
+      <p>{{record.officiant_first_name}}</p>
+      {{#if record.officiant_id}}
+      <a href="/member/{{record.officiant_id}}"><button class="btn btn-secondary mb-4">Member Profile</button></a>
+      {{/if}}
     </div>
-    <div class="col-4">
-      <u> Address of Baptism</u>
-      <p>{{record.place}}</p>
+    <div class="col">
+      <u for="mid_name">Middle Initial</u>
+      <p>{{record.officiant_mid_name}}</p>
+    </div>
+    <div class="col">
+      <u for="last_name">Last Name</u>
+      <p>{{record.officiant_last_name}}</p>
     </div>
   </div>
   {{#if canSee}}
