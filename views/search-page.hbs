@@ -8,3 +8,112 @@
 
 {{>navbar}}
 
+<form id="add_dedication_form" class="container">
+  <div class="container" style="padding-left: 20%; padding-right: 20%;">
+    <h1 class="my-3">Advanced Search</h1>
+    <hr>
+    <div class="row">
+      <div class="col">
+        <legend>Search for...</legend>
+        <select name="record-type" id="record-type" class="form-select">
+          <option value="member-option">Member</option>
+          <option value="prenup-option">Prenuptial Record</option>
+          <option value="wedding-option">Wedding Registry</option>
+          <option value="baptismal-option">Baptismal Record</option>
+          <option value="dedication-option">Child Dedication Record</option>
+        </select>
+      </div>
+    </div>
+    <hr>
+    <div id="member-record">
+      <div class="row mb-3">
+        <div class="col">
+          <label>First Name</label>
+          <input type="text" class="form-control">
+        </div>
+        <div class="col">
+          <label>Middle Initial</label>
+          <input type="text" class="form-control">
+        </div>
+        <div class="col">
+          <label>Last Name</label>
+          <input type="text" class="form-control">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col">
+          <label>Sex</label>
+          <select id="sex" name="sex" class="form-select">
+            <option selected> Male </option>
+            <option> Female </option>
+          </select>
+        </div>
+        <div class="col">
+          <label>Age</label>
+          <input type="text" class="form-control">
+        </div>
+        <div class="col">
+          <label>Birthday</label>
+          <input type="date" class="form-control">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col">
+          <label>Membership Status</label>
+          <select id="membership_status" name="membership_status" class="form-select">
+            <option selected> Active </option>
+            <option> Inactive </option>
+            <option> Deceased </option>
+          </select>
+        </div>
+        <div class="col">
+          <label>Civil Status</label>
+          <select id="civil_status" name="civil_status" class="form-select">
+            <option selected> Single </option>
+            <option> Married </option>
+            <option> Others </option>
+          </select>
+        </div>
+        <div class="col" style="display: none;">
+          <label for="civil_status">If others, specify</label>
+          <input type="text" id="civil_status_others" name="civil_status_others" class="form-control" >
+          <p id="civil_status_others_error" class="error_codes">  </p>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col">
+          <label>City</label>
+          <input type="text" id="city" name="city" class="form-control">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <label>Educational Attainment</label>
+          <input type="text" id="educational_attainment" name="educational_attainment" class="form-control">
+        </div>
+        <div class="col">
+          <label>Last School Attended</label>
+          <input type="text" id="alma_mater" name="alma_mater" class="form-control">
+        </div>
+      </div>
+      <hr>
+    </div>
+    <div id="prenup-record" style="display: none;">
+      <legend>prenup</legend>
+      <hr>
+    </div>
+    <div id="wedding-record" style="display: none;">
+      <legend>wedding</legend>
+      <hr>
+    </div>
+    <div id="baptismal-record" style="display: none;">
+      <legend>baptismal</legend>
+      <hr>
+    </div>
+    <div id="dedication-record" style="display: none;">
+      <legend>dedication</legend>
+      <hr>
+    </div>
+    <button id="advanced-search-submit" type="button" class="btn btn-primary">Submit</button>
+  </div>
+</form>

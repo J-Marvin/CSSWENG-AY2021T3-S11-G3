@@ -16,7 +16,10 @@ const witnessFields = require('../models/witness')
 const searchController = {
 
   getAdvancedSearch: function (req, res) {
-    res.render('search-page')
+    const data = {}
+    data.scripts = ['advancedSearch']
+    data.styles = ['forms']
+    res.render('search-page', data)
   },
 
   postSearchMember: function (req, res) {
