@@ -12,6 +12,7 @@ const prenupRecordFields = require('../models/prenupRecord')
 const observationFields = require('../models/observation')
 const weddingRegFields = require('../models/weddingRegistry')
 const witnessFields = require('../models/witness')
+const { sendError } = require('../controllers/errorController')
 
 const searchController = {
 
@@ -45,22 +46,73 @@ const searchController = {
 
     const joinTables = [
       {
-        tableName: db.tables.PERSON_TABLE,
+        tableName: { person: db.tables.PERSON_TABLE },
         sourceCol: db.tables.MEMBER_TABLE + '.' + memberFields.PERSON,
-        destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
+        destCol: 'person.' + personFields.ID
       },
       {
-        tableName: db.tables.ADDRESS_TABLE,
+        tableName: { address: db.tables.ADDRESS_TABLE },
         sourceCol: db.tables.MEMBER_TABLE + '.' + memberFields.ADDRESS,
-        destCol: db.tables.ADDRESS_TABLE + '.' + addressFields.ID
+        destCol: 'address.' + addressFields.ID
       }
     ]
-    const cond = new Condition(queryTypes.where)
-    cond.setKeyValue()
-    db.find(db.tables.MEMBER_TABLE, [], joinTables, '*', function (result) {
-      // continue here
+    const conditions = [] // array of conditions
+    // first name
+    let cond = new Condition(queryTypes.where)
+    cond.setKeyValue('person.' + personFields.FIRST_NAME, '%' + data.person[personFields.FIRST_NAME] + '%', 'LIKE')
+    conditions.append(cond)
+
+    // middle name
+    cond = new Condition(queryTypes.where)
+    cond.setKeyValue('person.' + personFields.FIRST_NAME, '%' + data.person[personFields.MID_NAME] + '%', 'LIKE')
+    conditions.append(cond)
+
+    // last name
+    cond = new Condition(queryTypes.where)
+    cond.setKeyValue('person.' + personFields.FIRST_NAME, '%' + data.person[personFields.MID_NAME] + '%', 'LIKE')
+    conditions.append(cond)
+
+    // address
+    cond = new Condition(queryTypes.where)
+    cond.setKeyValue('address.' + addressFields.CITY, '%' + data.address[addressFields.CITY] + '%', 'LIKE')
+    conditions.append(cond)
+
+    // sex
+    cond = new Condition(queryTypes.where)
+    cond.setKeyValue('member.' + memberFields.SEX, data.member[memberFields.SEX], '=')
+    conditions.append(cond)
+
+    // birthday
+    cond = new Condition(queryTypes.where)
+    cond.setKeyValue('member.' + memberFields.BIRTHDAY, data.member[memberFields.BIRTHDAY], '=')
+    conditions.append(cond)
+
+    // civil status
+    cond = new Condition(queryTypes.where)
+    cond.setKeyValue('member.' + memberFields.CIVIL_STATUS, data.member[memberFields.CIVIL_STATUS], '=')
+    conditions.append(cond)
+
+    // educational attainment
+    cond = new Condition(queryTypes.where)
+    cond.setKeyValue('member.' + memberFields.EDUCATIONAL_ATTAINMENT, '%' + data.member[memberFields.EDUCATIONAL_ATTAINMENT] + '%', 'LIKE')
+    conditions.append(cond)
+
+    // occupation
+    cond = new Condition(queryTypes.where)
+    cond.setKeyValue('member.' + memberFields.OCCUPATION, '%' + data.member[memberFields.OCCUPATION] + '%', 'LIKE')
+    conditions.append(cond)
+
+    // member status
+    cond = new Condition(queryTypes.where)
+    cond.setKeyValue('member.' + memberFields.MEMBER_STATUS, data.member[memberFields.MEMBER_STATUS], '=')
+    conditions.append(cond)
+
+    db.find(db.tables.MEMBER_TABLE, conditions, joinTables, '*', function (result) {
+      console.log(result)
+      if (result !== null && result.length > 0) {
+        res.send(result)
+      }
     })
-    res.render('')
   },
 
   postSearchPrenup: function (req, res) {
