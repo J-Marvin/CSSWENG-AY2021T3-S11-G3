@@ -14,6 +14,11 @@ const weddingRegFields = require('../models/weddingRegistry')
 const witnessFields = require('../models/witness')
 
 const searchController = {
+
+  getAdvancedSearch: function (req, res) {
+    res.render('search-page')
+  },
+
   postSearchMember: function (req, res) {
     /*
     The advanced search for member profiles allows you to search based

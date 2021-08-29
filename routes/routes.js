@@ -11,6 +11,7 @@ const observationController = require('../controllers/observationController')
 const dedicationController = require('../controllers/dedicationController')
 const weddingController = require('../controllers/weddingController')
 const baptismalController = require('../controllers/baptismalController')
+const searchController = require('../controllers/searchController')
 
 const app = express()
 app.set('views', path.join(__dirname, '../views'))
@@ -30,6 +31,8 @@ app.get('/edit_prenup/:prenup_id', prenupController.getEditPrenup)
 app.get('/forms_main_page', indexController.getFormsMainPage)
 app.get('/add_baptismal', baptismalController.getAddBaptismalRecordPage)
 app.get('/view_baptismal/:bap_id', baptismalController.getViewBaptismalRecord)
+
+app.get('/advanced_search', searchController.getAdvancedSearch)
 
 app.get('/member/:member_id', memberController.getViewMember)
 
