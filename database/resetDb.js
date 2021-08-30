@@ -364,8 +364,8 @@ function initDatabase (file) {
     'wedding_id INTEGER,' +
     'type TEXT,' +
     'person_id INTEGER NOT NULL,' +
-    'FOREIGN KEY(dedication_id) REFERENCES inf_dedication(dedication_id),' +
-    'FOREIGN KEY(wedding_id) REFERENCES wedding_reg(reg_id),' +
+    'CONSTRAINT fk_inf_dedications FOREIGN KEY(dedication_id) REFERENCES inf_dedication(dedication_id) ON DELETE SET NULL,' +
+    'CONSTRAINT fk_wedding FOREIGN KEY(wedding_id) REFERENCES wedding_reg(reg_id) ON DELETE SET NULL,' +
     'FOREIGN KEY(person_id) REFERENCES people(person_id)' +
     ')'
 
@@ -440,7 +440,7 @@ function initDatabase (file) {
     'type TEXT, ' +
     'amount REAL, ' +
     'date TEXT,' +
-    'FOREIGN KEY(member_id) REFERENCES members(member_id) ' +
+    'CONSTRAINT fk_member FOREIGN KEY(member_id) REFERENCES members(member_id) ON DELETE SET NULL' +
     ')'
 
   /* This statement creates the Address table
@@ -510,11 +510,11 @@ function initDatabase (file) {
     'sex TEXT,' +
     'family_members TEXT,' +
     'parents_id INTEGER,' +
-    'FOREIGN KEY(address_id) REFERENCES address(address_id),' +
-    'FOREIGN KEY(bap_reg_id) REFERENCES bap_reg(reg_id), ' +
-    'FOREIGN KEY(wedding_reg_id) REFERENCES wedding_reg(reg_id),' +
-    'FOREIGN KEY(prenup_record_id) REFERENCES pre_nuptial(record_id),' +
-    'FOREIGN KEY(parents_id) REFERENCES couple(couple_id),' +
+    'CONSTRAINT fk_address FOREIGN KEY(address_id) REFERENCES address(address_id) ON DELETE SET NULL,' +
+    'CONSTRAINT fk_bap_reg FOREIGN KEY(bap_reg_id) REFERENCES bap_reg(reg_id)  ON DELETE SET NULL, ' +
+    'CONSTRAINT fk_wedding_reg FOREIGN KEY(wedding_reg_id) REFERENCES wedding_reg(reg_id)  ON DELETE SET NULL,' +
+    'CONSTRAINT fk_prenup FOREIGN KEY(prenup_record_id) REFERENCES pre_nuptial(record_id)  ON DELETE SET NULL,' +
+    'CONSTRAINT fk_parents FOREIGN KEY(parents_id) REFERENCES couple(couple_id)  ON DELETE SET NULL,' +
     'FOREIGN KEY(person_id) REFERENCES people(person_id)' +
     ')'
 
@@ -533,7 +533,7 @@ function initDatabase (file) {
     'first_name TEXT,' +
     'middle_name TEXT,' +
     'last_name TEXT,' +
-    'FOREIGN KEY(member_id) references members(member_id)' +
+    'CONSTRAINT fk_member FOREIGN KEY(member_id) references members(member_id) ON DELETE SET NULL' +
     ')'
 
   /* This statement creates the couple table
@@ -565,7 +565,7 @@ function initDatabase (file) {
     'observee_id INTEGER NOT NULL,' +
     'observer TEXT NOT NULL,' +
     'date TEXT NOT NULL,' +
-    'FOREIGN KEY(observee_id) REFERENCES members(member_id)' +
+    'CONSTRAINT fk_member FOREIGN KEY(observee_id) REFERENCES members(member_id) ON DELETE CASCADE' +
     ')'
 
   const createChurches =
@@ -574,7 +574,7 @@ function initDatabase (file) {
     'church_name TEXT NOT NULL, ' +
     'member_id INTEGER NOT NULL, ' +
     'address_id INTEGER NOT NULL,' +
-    'FOREIGN KEY(member_id) REFERENCES members(member_id), ' +
+    'CONSTRAINT fk_member FOREIGN KEY(member_id) REFERENCES members(member_id) ON DELETE CASCADE, ' +
     'FOREIGN KEY(address_id) REFERENCES address(address_id)' +
     ')'
 

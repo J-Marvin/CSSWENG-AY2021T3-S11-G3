@@ -138,7 +138,7 @@ const database = {
    * @param {String} projection - the columns to be retrieved
    * @param {function} callback - the callback function
    */
-  find: function (table, conditions = null, join = null, projection = '*', callback) {
+  find: function (table, conditions, join, projection, callback, rawSelect = [], having = []) {
     const tableClient = knexClient(table)
     if (join !== null) {
       if (!Array.isArray(join)) {
@@ -175,83 +175,139 @@ const database = {
       }
     }
 
+    if (having !== null) {
+      if (!Array.isArray(having)) {
+        having = [having]
+      }
+
+      async.each(having, function (condition, callback) {
+        switch (condition.type) {
+          case 'having':
+            if (condition.conditionType === 'keyValue') {
+              tableClient.having(condition.condition.key, condition.condition.operator, condition.condition.value)
+            }
+            break
+          case 'havingIn':
+            if (condition.conditionType === 'array') {
+              tableClient.havingIn(condition.field, condition.data)
+            }
+            break
+          case 'havingNotIn':
+            if (condition.conditionType === 'array') {
+              tableClient.havingNotIn(condition.field, condition.data)
+            }
+            break
+          case 'havingNull':
+            if (condition.conditionType === 'field') {
+              tableClient.havingNull(condition.field)
+            }
+            break
+          case 'havingNotNull':
+            if (condition.conditionType === 'field') {
+              tableClient.havingNotNull(condition.field)
+            }
+            break
+          case 'havingBetween':
+            if (condition.conditionType === 'range') {
+              tableClient.havingBetween(condition.condition.field, [condition.condition.lowerBound, condition.condition.upperBound])
+            }
+            break
+          case 'havingNotBetween':
+            if (condition.conditionType === 'range') {
+              tableClient.havingNotBetween(condition.condition.field, [condition.condition.lowerBound, condition.condition.upperBound])
+            }
+            break
+          case 'havingRaw':
+            if (condition.conditionType === 'query') {
+              tableClient.havingRaw(condition.query, condition.bindings)
+            }
+            break
+        }
+      })
+    }
+
     tableClient
       .select(projection)
-      .where(function (builder) {
-        if (conditions !== null && conditions !== undefined) {
-          if (!Array.isArray(conditions)) {
-            conditions = [conditions]
-          }
-          async.each(conditions, function (condition, callback) {
-            switch (condition.type) {
-              case 'where':
-                if (condition.conditionType === 'object') {
-                  builder.where(condition.condition)
-                } else if (condition.conditionType === 'keyValue') {
-                  builder.where(condition.condition.key, condition.condition.operator, condition.condition.value)
-                }
-                break
-              case 'orWhere':
-                if (condition.conditionType === 'object') {
-                  builder.orWhere(condition.condition)
-                } else if (condition.conditionType === 'keyValue') {
-                  builder.orWhere(condition.condition.key, condition.condition.operator, condition.condition.value)
-                }
-                break
-              case 'whereNot':
-                if (condition.conditionType === 'object') {
-                  builder.whereNot(condition.condition)
-                } else if (condition.conditionType === 'keyValue') {
-                  builder.whereNot(condition.condition.key, condition.condition.operator, condition.condition.value)
-                }
-                break
-              case 'whereIn':
-                if (condition.conditionType === 'array') {
-                  builder.whereIn(condition.field, condition.data)
-                }
-                break
-              case 'whereNotIn':
-                if (condition.conditionType === 'array') {
-                  builder.whereNotIn(condition.field, condition.data)
-                }
-                break
-              case 'whereNull':
-                if (condition.conditionType === 'field') {
-                  builder.whereNull(condition.field)
-                }
-                break
-              case 'whereNotNull':
-                if (condition.conditionType === 'field') {
-                  builder.whereNotNull(condition.field)
-                }
-                break
-              case 'whereBetween':
-                if (condition.conditionType === 'range') {
-                  builder.whereBetween(condition.condition.field, [condition.condition.lowerBound, condition.condition.upperBound])
-                }
-                break
-              case 'whereNotBetween':
-                if (condition.conditionType === 'range') {
-                  builder.whereNotBetween(condition.condition.field, [condition.condition.lowerBound, condition.condition.upperBound])
-                }
-                break
-              case 'whereRaw':
-                if (condition.conditionType === 'query') {
-                  builder.whereRaw(condition.query, condition.bindings)
-                }
-                break
-              default:
-                throw console.error('Unknown query')
-            }
-          })
+
+    for (const select of rawSelect) {
+      tableClient.select(tableClient.raw(select))
+    }
+
+    tableClient.where(function (builder) {
+      if (conditions !== null && conditions !== undefined) {
+        if (!Array.isArray(conditions)) {
+          conditions = [conditions]
         }
-      }).then(function (result) {
-        callback(result)
-      }).catch((err) => {
-        console.log(err)
-        const flag = false
-        callback(flag)
-      })
+        async.each(conditions, function (condition, callback) {
+          switch (condition.type) {
+            case 'where':
+              if (condition.conditionType === 'object') {
+                builder.where(condition.condition)
+              } else if (condition.conditionType === 'keyValue') {
+                builder.where(condition.condition.key, condition.condition.operator, condition.condition.value)
+              }
+              break
+            case 'orWhere':
+              if (condition.conditionType === 'object') {
+                builder.orWhere(condition.condition)
+              } else if (condition.conditionType === 'keyValue') {
+                builder.orWhere(condition.condition.key, condition.condition.operator, condition.condition.value)
+              }
+              break
+            case 'whereNot':
+              if (condition.conditionType === 'object') {
+                builder.whereNot(condition.condition)
+              } else if (condition.conditionType === 'keyValue') {
+                builder.whereNot(condition.condition.key, condition.condition.operator, condition.condition.value)
+              }
+              break
+            case 'whereIn':
+              if (condition.conditionType === 'array') {
+                builder.whereIn(condition.field, condition.data)
+              }
+              break
+            case 'whereNotIn':
+              if (condition.conditionType === 'array') {
+                builder.whereNotIn(condition.field, condition.data)
+              }
+              break
+            case 'whereNull':
+              if (condition.conditionType === 'field') {
+                builder.whereNull(condition.field)
+              }
+              break
+            case 'whereNotNull':
+              if (condition.conditionType === 'field') {
+                builder.whereNotNull(condition.field)
+              }
+              break
+            case 'whereBetween':
+              if (condition.conditionType === 'range') {
+                builder.whereBetween(condition.condition.field, [condition.condition.lowerBound, condition.condition.upperBound])
+              }
+              break
+            case 'whereNotBetween':
+              if (condition.conditionType === 'range') {
+                builder.whereNotBetween(condition.condition.field, [condition.condition.lowerBound, condition.condition.upperBound])
+              }
+              break
+            case 'whereRaw':
+              if (condition.conditionType === 'query') {
+                builder.whereRaw(condition.query, condition.bindings)
+              }
+              break
+            default:
+              throw console.error('Unknown query')
+          }
+        })
+      }
+    }).then(function (result) {
+      callback(result)
+    }).catch((err) => {
+      console.log(err)
+      const flag = false
+      callback(flag)
+    })
   },
 
   /**

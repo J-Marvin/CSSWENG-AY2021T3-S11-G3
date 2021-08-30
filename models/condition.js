@@ -10,12 +10,22 @@ const queryTypes = {
   // whereNotExists: 'whereNotExists',
   whereBetween: 'whereBetween',
   whereNotBetween: 'whereNotBetween',
-  whereRaw: 'whereRaw'
+  whereRaw: 'whereRaw',
+  having: 'having',
+  havingIn: 'havingIn',
+  havingNotIn: 'havingNotIn',
+  havingNull: 'havingNull',
+  havingNotNull: 'havingNotNull',
+  // havingExists: 'havingExists',
+  // havingNotExists: 'havingNotExists',
+  havingBetween: 'havingBetween',
+  havingNotBetween: 'havingNotBetween',
+  havingRaw: 'havingRaw'
 }
 
 const types = Object.keys(queryTypes)
 
-/** This blueprint represents a WHERE condition in sqlite
+/** This blueprint represents a WHERE or HAVING condition in sqlite
  *  @param {String} type of where statement based on Knex.js
 */
 function Condition (type) {
@@ -35,7 +45,7 @@ Condition.prototype = {
   },
 
   /**
-  * This function sets the condition for where, whereNot, orWhere
+  * This function sets the condition for where, whereNot, orWhere, having
   * @param {String} key - the field/column name
   * @param {*} value - the corresponding value
   * @param {*} operator = the operator to be used. Default is '='
@@ -50,7 +60,7 @@ Condition.prototype = {
   },
 
   /**
-   * This function sets the condition for whereIn, whereNotIn
+   * This function sets the condition for whereIn, whereNotIn, havingIn, havingNotIn
    * @param {String} field - the field/column name
    * @param {Array} data - the array of values
    */
@@ -61,7 +71,7 @@ Condition.prototype = {
   },
 
   /**
-   * This function sets the condition for whereBetween, whereNotBetween
+   * This function sets the condition for whereBetween, whereNotBetween, having, havingBetween
    * @param {String} field - the field/column name
    * @param {*} lowerBound - the lowerBound of the range
    * @param {*} upperBound - the upperBound of the range
@@ -76,7 +86,7 @@ Condition.prototype = {
   },
 
   /**
-   * This function sets the condition for whereNull and whereNotNull
+   * This function sets the condition for whereNull and whereNotNull, havingNull, havingNotNull
    * @param {String} field - the field/column name
    */
   setField: function (field) {
