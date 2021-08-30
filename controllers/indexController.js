@@ -7,6 +7,8 @@ const coupleFields = require('../models/couple')
 const weddingRegFields = require('../models/weddingRegistry')
 const infDedFields = require('../models/infantDedication')
 const bapRegFields = require('../models/baptismalRegistry.js')
+const { sendError } = require('./errorController')
+const moment = require('moment')
 
 const controller = {
   /**
@@ -70,16 +72,23 @@ const controller = {
       ]
 
       db.find(db.tables.MEMBER_TABLE, null, joinTables, '*', function (result) {
-        result.forEach(function (member) {
-          member.address = member[addressFields.ADDRESS_LINE] + ', ' + member[addressFields.CITY] + ', ' + member[addressFields.COUNTRY]
-        })
+        if (result) {
+          const data = {
+            styles: ['lists'],
+            scripts: ['convertDataTable'],
+            canSee: parseInt(req.session.level) === 3
+          }
 
-        res.render('member-main-page', {
-          styles: ['lists'],
-          scripts: ['convertDataTable'],
-          members: result,
-          canSee: parseInt(req.session.level) === 3
-        })
+          result.forEach(function (member) {
+            member.address = member[addressFields.ADDRESS_LINE] + ', ' + member[addressFields.CITY] + ', ' + member[addressFields.COUNTRY]
+            member.age = moment().diff(moment(member[memberFields.BIRTHDAY]), 'years')
+          })
+
+          data.members = result
+          res.render('member-main-page', data)
+        } else {
+          sendError(req, res, 404)
+        }
       })
     }
   },
