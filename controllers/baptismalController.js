@@ -73,29 +73,33 @@ const baptismalController = {
    * @param res - the result to be sent out after processing the request
    */
   getAddBaptismalRecordPage: function (req, res) {
-    // TODO: ADD SESSION CHECKING
-    const data = {}
-    const joinTables = [
-      {
-        tableName: db.tables.PERSON_TABLE,
-        sourceCol: db.tables.MEMBER_TABLE + '.' + memberFields.PERSON,
-        destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
-      }
-    ]
-    db.find(db.tables.MEMBER_TABLE, [], joinTables, '*', function (result) {
-      if (result) {
-        data.members = result
+    const bapId = req.params.bap_id
+    if (parseInt(req.session.level) >= 2 || parseInt(req.session.editId) === bapId) {
+      const data = {}
+      const joinTables = [
+        {
+          tableName: db.tables.PERSON_TABLE,
+          sourceCol: db.tables.MEMBER_TABLE + '.' + memberFields.PERSON,
+          destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
+        }
+      ]
+      db.find(db.tables.MEMBER_TABLE, [], joinTables, '*', function (result) {
+        if (result) {
+          data.members = result
 
           // Find members with no baptismal record
-        data.noBapMembers = result.filter(function (elem) {
-          return elem[memberFields.BAPTISMAL_REG] === null
-        })
-        data.scripts = ['addBaptismal']
-        data.styles = ['forms']
-        data.backLink = parseInt(req.session.level) >= 2 ? '/baptismal_main_page' : '/forms_main_page'
-        res.render('add-baptismal', data)
-      }
-    })
+          data.noBapMembers = result.filter(function (elem) {
+            return elem[memberFields.BAPTISMAL_REG] === null
+          })
+          data.scripts = ['addBaptismal']
+          data.styles = ['forms']
+          data.backLink = parseInt(req.session.level) >= 2 ? '/baptismal_main_page' : '/forms_main_page'
+          res.render('add-baptismal', data)
+        }
+      })
+    } else {
+      sendError(req, res, 401, '401 Unauthorized Access')
+    }
   },
   /**
    * This function processes the creation of the baptismal record
@@ -103,7 +107,7 @@ const baptismalController = {
    * @param res - the result to be sent out after processing the request
    */
   postAddBaptismalRecord: function (req, res) {
-    // TODO: Add session checking
+    const bapId = req.params.bap_id
     if (parseInt(req.session.editId) === parseInt(bapId) || parseInt(req.session.level) >= 2) {
       const data = {}
       const memberCond = new Condition(queryTypes.where)
