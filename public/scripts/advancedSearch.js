@@ -2,30 +2,35 @@ $(document).ready(function () {
     $('#record-type').change(function() {
         var selectedValue = $(this).val()
         if(selectedValue === 'member-option') {
+            $("#search_form").attr('action', '/search_member')
             $('#member-record').show()
             $('#prenup-record').hide()
             $('#wedding-record').hide()
             $('#baptismal-record').hide()
             $('#dedication-record').hide()
         } else if(selectedValue === 'prenup-option') {
+            $("#search_form").attr('action', '/search_prenup')
             $('#prenup-record').show()
             $('#member-record').hide()
             $('#wedding-record').hide()
             $('#baptismal-record').hide()
             $('#dedication-record').hide()
         } else if(selectedValue === 'wedding-option') {
+            $("#search_form").attr('action', '/search_wedding')
             $('#wedding-record').show()
             $('#prenup-record').hide()
             $('#member-record').hide()
             $('#baptismal-record').hide()
             $('#dedication-record').hide()
         } else if(selectedValue === 'baptismal-option') {
+            $("#search_form").attr('action', '/search_baptismal')
             $('#baptismal-record').show()
             $('#prenup-record').hide()
             $('#wedding-record').hide()
             $('#member-record').hide()
             $('#dedication-record').hide()
         } else if(selectedValue === 'dedication-option') {
+            $("#search_form").attr('action', '/search_dedication')
             $('#dedication-record').show()
             $('#prenup-record').hide()
             $('#wedding-record').hide()
@@ -35,8 +40,7 @@ $(document).ready(function () {
     })
 
     /*
-      This function validates the member search fields and sends the
-      search POST request through ajax
+      This function validates the member search fields
     */
     function searchMember () {
         const data = {}
@@ -52,49 +56,30 @@ $(document).ready(function () {
         data.occupation = $('#occupation').val()
         data.membership_status = $('#membership_status').val()
         data.city = $('#city').val()
-        
-        $.ajax({
-            type: 'POST',
-            url: '/advanced_search',
-            data: data,
-            success: function (result) {
-              if (result) {
-                // alert(result)
-                location.href = '/view_member/' + result
-              } else {
-                $('#advanced-search-submit').prop('disabled', false)
-                $('#create_error').text('Error Adding Baptismal Record')
-              }
-            }
-        })
     }
     /*
-      This function validates the prenup search fields and sends the
-      search POST request through ajax
+      This function validates the prenup search fields
     */
     function searchPrenup () {
-        // place validation and ajax here
+        // place validation
     }
     /*
-      This function validates the wedding search fields and sends the
-      search POST request through ajax
+      This function validates the wedding search fields
     */
     function searchWedding () {
-        // place validation and ajax here
+        // place validation
     }
     /*
-      This function validates the baptismal search fields and sends the
-      search POST request through ajax
+      This function validates the baptismal search fields
     */
     function searchBaptismal () {
-        // place validation and ajax here
+        // place validation
     }
     /*
-      This function validates the dedication search fields and sends the
-      search POST request through ajax
+      This function validates the dedication search fields
     */
     function searchDedication () {
-        // place validation and ajax here
+        // place validation
     }
     
     /* 
@@ -102,7 +87,6 @@ $(document).ready(function () {
       calls the corresponding function for that search option type
     */
     $('#advanced-search-submit').click(function () {
-        $('#advanced-search-submit').prop('disabled', true)
         const selectedValue = $('#record-type').val()
         switch (selectedValue) {
             case 'member-option': searchMember(); break

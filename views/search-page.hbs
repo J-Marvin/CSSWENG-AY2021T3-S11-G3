@@ -8,15 +8,18 @@
 
 {{>navbar}}
 
-<form id="add_dedication_form" class="container">
-  <div class="container" style="padding-left: 20%; padding-right: 20%;">
+<form id="search_form" class="container" action="/search_member">
+  {{!-- for #if insert display css to show and {{else}} display css to hide --}}
+  <div class="container" style="padding-left: 20%; padding-right: 20%; {{#if canSee}}{{/if}}">
     <h1 class="my-3">Advanced Search</h1>
     <hr>
     <div class="row">
       <div class="col">
         <legend>Search for...</legend>
         <select name="record-type" id="record-type" class="form-select">
+          {{#if canSee}}
           <option value="member-option">Member</option>
+          {{/if}}
           <option value="prenup-option">Prenuptial Record</option>
           <option value="wedding-option">Wedding Registry</option>
           <option value="baptismal-option">Baptismal Record</option>
@@ -92,13 +95,14 @@
           <input type="text" id="educational_attainment" name="educational_attainment" class="form-control">
         </div>
         <div class="col">
-          <label>Last School Attended</label>
-          <input type="text" id="alma_mater" name="alma_mater" class="form-control">
+          <label>Occupation</label>
+          <input type="text" id="occupation" name="occupation" class="form-control">
         </div>
       </div>
       <hr>
     </div>
-    <div id="prenup-record" style="display: none;">
+    {{!-- insert display css to hide in {{else}} --}}
+    <div id="prenup-record" style="{{#if canSee}}display: none;{{else}}{{/if}}">
       <legend>prenup</legend>
       <hr>
     </div>

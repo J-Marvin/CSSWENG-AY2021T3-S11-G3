@@ -33,6 +33,11 @@ app.get('/add_baptismal', baptismalController.getAddBaptismalRecordPage)
 app.get('/view_baptismal/:bap_id', baptismalController.getViewBaptismalRecord)
 
 app.get('/advanced_search', searchController.getAdvancedSearch)
+app.get('/search_member', searchController.getSearchMember)
+app.get('/search_prenup', searchController.getSearchPrenup)
+app.get('/search_wedding', searchController.getSearchWedding)
+app.get('/search_baptismal', searchController.getSearchBaptismal)
+app.get('/search_dedication', searchController.getSearchDedication)
 
 app.get('/member/:member_id', memberController.getViewMember)
 
