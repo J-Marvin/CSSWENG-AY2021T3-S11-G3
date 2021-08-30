@@ -30,6 +30,7 @@
     <hr>
     <div id="member-record">
       <div class="row mb-3">
+        <legend> Personal Information: </legend>
         <div class="col">
           <label>First Name</label>
           <input type="text" id="first_name" class="form-control">
@@ -44,22 +45,34 @@
         </div>
       </div>
       <div class="row mb-3">
-        <div class="col">
+        <div class="col-4">
           <label>Sex</label>
           <select id="sex" name="sex" class="form-select">
             <option selected> Male </option>
             <option> Female </option>
           </select>
         </div>
-        <div class="col">
-          <label>Age</label>
-          <input type="text" id="age" class="form-control">
+      </div>
+      <hr>
+      <div class="row mb-3">
+        <legend> Age: </legend>
+        <div class="col-12 mb-2">
+          <input type="checkbox" id="age-checkbox" disabled checked> Age
+          <input type="checkbox" id="birthday-checkbox"> Birthday Range
         </div>
-        <div class="col">
-          <label>Birthday</label>
-          <input type="date" id="birthday" class="form-control">
+        <div class="col-2" id="age-div">
+          <input type="number" id="age-input" class="form-control">
+        </div>
+        <div class="col-4 birthday-range" style="display: none;">
+          <label> From </label>
+          <input type="date" id="birthdayFrom" class="form-control">
+        </div>
+        <div class="col-4 birthday-range" style="display: none;">
+          <label> To </label>
+          <input type="date" id="birthdayTo" class="form-control">
         </div>
       </div>
+      <hr>
       <div class="row mb-3">
         <div class="col">
           <label>Membership Status</label>

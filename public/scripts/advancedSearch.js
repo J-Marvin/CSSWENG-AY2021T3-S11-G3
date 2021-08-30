@@ -39,6 +39,22 @@ $(document).ready(function () {
         }
     })
 
+    $('#birthday-checkbox').change(function() {
+        $(this).attr('disabled', true)
+        $('#age-checkbox').removeAttr('disabled')
+        $('#age-checkbox').prop('checked', false)
+        $('#age-div').hide()
+        $('.birthday-range').show()
+    })
+
+    $('#age-checkbox').change(function() {
+        $(this).attr('disabled', true)
+        $('#birthday-checkbox').removeAttr('disabled')
+        $('#birthday-checkbox').prop('checked', false)
+        $('.birthday-range').hide()
+        $('#age-div').show()
+    })
+
     /*
       This function validates the member search fields
     */
