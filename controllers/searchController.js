@@ -1,6 +1,6 @@
 const db = require('../models/db')
 const { Condition, queryTypes } = require('../models/condition')
-const { validationResult } = require('express-validator')
+const { validationResult, query } = require('express-validator')
 const addressFields = require('../models/address')
 const bapRegFields = require('../models/baptismalRegistry')
 const churchFields = require('../models/church')
@@ -16,7 +16,11 @@ const { sendError } = require('../controllers/errorController')
 const { tables } = require('../models/db')
 
 const searchController = {
-
+  /**
+   * This function renders the advanced search page
+   * @param req - the incoming request containing the query
+   * @param res - the result to be sent out after processing the request
+  */
   getAdvancedSearch: function (req, res) {
     const data = {}
     if (parseInt(req.session.level) === 2) {
@@ -28,7 +32,12 @@ const searchController = {
     data.styles = ['forms']
     res.render('search-page', data)
   },
-
+  /**
+   * This function processes the search text fields and returns a number of
+   * search results on members
+   * @param req - the incoming request containing the search queries
+   * @param res - the result to be sent out after processing the request
+   */
   getSearchMember: function (req, res) {
     /*
     The advanced search for member profiles allows you to search based
@@ -41,14 +50,22 @@ const searchController = {
       member: {},
       address: {}
     }
-    data.person[personFields.FIRST_NAME] = req.query.first_name
-    data.person[personFields.MID_NAME] = req.query.middle_name
-    data.person[personFields.LAST_NAME] = req.query.last_name
+    data.person[personFields.FIRST_NAME] = req.query.member_first_name
+    data.person[personFields.MID_NAME] = req.query.member_middle_name
+    data.person[personFields.LAST_NAME] = req.query.member_last_name
 
-    data.member.age = req.query.age
     data.member[memberFields.SEX] = req.query.sex
-    // data.member.lower_birthday = req.query.lower_birthday
-    // data.member.higher_birthday = req.query.higher_birthday
+
+    const ageFrom = req.query.ageFrom
+    const ageTo = req.query.ageTo
+    let ageChecked = false
+    if (ageFrom !== null && ageTo !== undefined) {
+      ageChecked = true
+    } else {
+      data.member.birthdayFrom = req.query.birthdayFrom
+      data.member.birthdayTo = req.query.birthdayTo
+    }
+
     data.member[memberFields.CIVIL_STATUS] = req.query.civil_status
     data.member[memberFields.EDUCATIONAL_ATTAINMENT] = req.query.educational_attainment
     data.member[memberFields.OCCUPATION] = req.query.occupation
@@ -68,10 +85,6 @@ const searchController = {
         destCol: 'address.' + addressFields.ID
       }
     ]
-    // gets the age of the member
-    const ageColumn = ['cast(strftime(\' % Y.% m % d\', \'now\') - strftime(\' % Y.% m % d\', person.' + memberFields.BIRTHDAY + ') as int) AS age']
-    const havingCond = new Condition(queryTypes.havingBetween)
-    havingCond.setRange('age', 0, 100) // change to range
 
     const conditions = [] // array of conditions
     // first name
@@ -99,11 +112,21 @@ const searchController = {
     cond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.SEX, data.member[memberFields.SEX], '=')
     conditions.push(cond)
 
-    // birthday YYYY-MM-DD
-    cond = new Condition(queryTypes.whereBetween)
-    // cond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.BIRTHDAY, '%' + data.member[memberFields.BIRTHDAY] + '%', 'LIKE')
-    // cond.setRange(memberFields.BIRTHDAY, )
-    conditions.push(cond)
+    const ageColumn = ['cast(strftime(\' % Y.% m % d\', \'now\') - strftime(\' % Y.% m % d\', person.' + memberFields.BIRTHDAY + ') as int) AS age']
+    const havingCond = []
+    // age is only provided do the date maths
+    if (ageChecked) {
+      // age
+      const havingCond1 = new Condition(queryTypes.havingBetween)
+      havingCond1.setRange('age', 0, 100) // change to range
+      havingCond.push(havingCond1)
+    } else {
+      // if age is not provided
+      // birthday YYYY-MM-DD
+      cond = new Condition(queryTypes.whereBetween)
+      cond.setRange(memberFields.BIRTHDAY, data.member.birthdayFrom, data.member.birthdayTo)
+      conditions.push(cond)
+    }
 
     // civil status
     cond = new Condition(queryTypes.where)
@@ -125,14 +148,20 @@ const searchController = {
     cond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.MEMBER_STATUS, data.member[memberFields.MEMBER_STATUS], '=')
     conditions.push(cond)
 
+    console.log(data)
     db.find(db.tables.MEMBER_TABLE, conditions, joinTables, '*', function (result) {
       console.log(result)
       if (result !== null && result.length > 0) {
         res.send(result)
       }
-    }, ageColumn)
+    }, ageColumn, havingCond)
   },
-
+  /**
+   * This function processes the search text fields and returns a number of
+   * search results on prenuptial records
+   * @param req - the incoming request containing the search queries
+   * @param res - the result to be sent out after processing the request
+   */
   getSearchPrenup: function (req, res) {
     /*
     The advanced search for the prenuptial record allows you to search based
@@ -239,7 +268,12 @@ const searchController = {
       }
     })
   },
-
+  /**
+   * This function processes the search text fields and returns a number of
+   * search results on wedding records
+   * @param req - the incoming request containing the search queries
+   * @param res - the result to be sent out after processing the request
+   */
   getSearchWedding: function (req, res) {
     /*
     The advanced search for the wedding record allows you to search based
@@ -250,7 +284,12 @@ const searchController = {
     */
     // continue here
   },
-
+  /**
+   * This function processes the search text fields and returns a number of
+   * search results on child dedication records
+   * @param req - the incoming request containing the search queries
+   * @param res - the result to be sent out after processing the request
+   */
   getSearchDedication: function (req, res) {
     /*
     The advanced search for the child dedication record allows you to search based on the following:
@@ -259,7 +298,12 @@ const searchController = {
     */
     // continue here
   },
-
+  /**
+   * This function processes the search text fields and returns a number of
+   * search results on baptismal records
+   * @param req - the incoming request containing the search queries
+   * @param res - the result to be sent out after processing the request
+   */
   getSearchBaptismal: function (req, res) {
     /*
     The advanced search for the baptismal record allows you to search based on the following:
