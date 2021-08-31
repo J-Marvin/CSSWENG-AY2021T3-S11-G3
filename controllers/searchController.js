@@ -13,6 +13,7 @@ const observationFields = require('../models/observation')
 const weddingRegFields = require('../models/weddingRegistry')
 const witnessFields = require('../models/witness')
 const { sendError } = require('../controllers/errorController')
+const { tables } = require('../models/db')
 
 const searchController = {
 
@@ -139,7 +140,104 @@ const searchController = {
     proposed date of the wedding.
 
     */
+    const people = {
+      bride: {
+        first_name: req.body.prenup_bride_first_name,
+        mid_name: req.body.prenup_bride_mid_name,
+        last_name: req.body.prenup_bride_last_name
+      },
+      groom: {
+        first_name: req.body.prenup_groom_first_name,
+        mid_name: req.body.prenup_groom_mid_name,
+        last_name: req.body.prenup_groom_last_name
+      }
+    }
+
+    const joinTables = [
+      {
+        tableName: tables.COUPLE_TABLE,
+        sourceCol: tables.PRENUPTIAL_TABLE + '.' + tables.PRENUPTIAL_TABLE,
+        destCol: tables.COUPLE_TABLE + '.' + coupleFields.ID
+      },
+      {
+        tableName: { groom: tables.PERSON_TABLE },
+        sourceCol: 'groom.' + personFields.ID,
+        destCol: tables.COUPLE_TABLE + '.' + coupleFields.MALE
+      },
+      {
+        tableName: { bride: tables.PERSON_TABLE },
+        sourceCol: 'bride.' + personFields.ID,
+        destCol: tables.COUPLE_TABLE + '.' + coupleFields.FEMALE
+      }
+    ]
+
+    const columns = [
+      db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.ID,
+      db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.DATE_OF_WEDDING,
+      'bride.' + personFields.FIRST_NAME + ' as bride_first_name',
+      'bride.' + personFields.MID_NAME + ' as bride_mid_name',
+      'bride.' + personFields.LAST_NAME + ' as bride_last_name',
+      'groom.' + personFields.FIRST_NAME + ' as groom_first_name',
+      'groom.' + personFields.MID_NAME + ' as groom_mid_name',
+      'groom.' + personFields.LAST_NAME + ' as groom_last_name'
+    ]
+    const conditions = []
+    let tempCondition = null
+
+    // Bride First Name Condition
+    if (people.bride.first_name !== null && people.bride.first_name !== '') {
+      const condition = new Condition(queryTypes.where)
+      condition.setKeyValue('bride.' + personFields.FIRST_NAME, people.bride.first_name, 'LIKE')
+      conditions.push(condition)
+    }
+
+    // Bride Middle Name Condition
+    if (people.bride.mid_name !== null && people.bride.mid_name !== '') {
+      const condition = new Condition(queryTypes.where)
+      condition.setKeyValue('bride.' + personFields.MID_NAME, people.bride.mid_name, 'LIKE')
+      conditions.push(condition)
+    }
+
+    // Bride Last Name Condition
+    if (people.bride.last_name !== null && people.bride.last_name !== '') {
+      const condition = new Condition(queryTypes.where)
+      condition.setKeyValue('bride.' + personFields.LAST_NAME, people.bride.last_name, 'LIKE')
+      conditions.push(condition)
+    }
+
+    // Groom First Name Condition
+    if (people.groom.first_name !== null && people.groom.first_name !== '') {
+      const condition = new Condition(queryTypes.where)
+      condition.setKeyValue('bride.' + personFields.FIRST_NAME, people.bride.first_name, 'LIKE')
+      conditions.push(condition)
+    }
+
+    //
+    if (people.groom.mid_name !== null && people.groom.mid_name !== '') {
+      const condition = new Condition(queryTypes.where)
+      condition.setKeyValue('bride.' + personFields.MID_NAME, people.bride.mid_name, 'LIKE')
+      conditions.push(condition)
+    }
+
+    if (people.groom.last_name !== null && people.groom.last_name !== '') {
+      const condition = new Condition(queryTypes.where)
+      condition.setKeyValue('bride.' + personFields.LAST_NAME, people.bride.last_name, 'LIKE')
+      conditions.push(condition)
+    }
     // continue here
+    // Insert date conditions here
+
+    db.find(tables.PRENUPTIAL_TABLE, conditions, joinTables, columns, function (result) {
+      if (result) {
+        res.render('prenup-main-page', {
+          styles: ['lists'],
+          scripts: ['convertDataTable'],
+          prenup: result
+        })
+      } else {
+        sendError(req, res, 404)
+      }
+    })
   },
 
   getSearchWedding: function (req, res) {
