@@ -289,10 +289,12 @@ const resetDb = {
           console.log(err)
         } else {
           initDatabase(file)
+          insertAccounts()
         }
       })
     } else {
       initDatabase(file)
+      insertAccounts()
     }
   },
   knexClient: null
@@ -600,8 +602,7 @@ function initDatabase (file) {
   db.close()
 }
 
-function insertData () {
-  // insert accounts
+function insertAccounts(level1 = 'NormandyN7', level2 = 'HelloSweng', level3 = 'Coffee118') {
   resetDb.knexClient('accounts').select().then(function (res) {
     if (res.length === 0) {
       bcrypt.hash('NormandyN7', saltRounds, (err, hash) => {
@@ -640,6 +641,10 @@ function insertData () {
       })
     }
   })
+}
+
+function insertData () {
+  // insert accounts
 
   data.forEach((record) => {
     resetDb.knexClient('people').insert(record.person).then((person) => {
@@ -656,6 +661,7 @@ function insertData () {
                 }).then((result) => {
                   if (result) {
                     console.log('Filled up database with dummy data')
+                    insertAccounts()
                   }
                 })
               } else {

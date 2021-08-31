@@ -63,7 +63,7 @@ const database = {
   initDB: async function (file) {
     currFile = file
     if (!fse.existsSync(file)) {
-      resetDb.reset(file)
+      resetDb.initialize(file)
       knexClient = resetDb.knexClient
     } else {
       knexClient = knex({
