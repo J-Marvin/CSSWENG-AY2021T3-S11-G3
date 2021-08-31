@@ -41,7 +41,7 @@ const data = [
       workplace: 'Quezon City',
       email: 'jonathan@gmail.com',
       telephone: null,
-      mobile: '922',
+      mobile: '09221112222',
       educ_attainment: 'College',
       alma_mater: 'DLSU-Manila',
       sex: 'Male'
@@ -68,7 +68,7 @@ const data = [
       workplace: 'Manila',
       email: 'joseph@gmail.com',
       telephone: null,
-      mobile: '912',
+      mobile: '09124444555',
       educ_attainment: 'High School',
       alma_mater: 'DLSZ',
       sex: 'Male'
@@ -95,7 +95,7 @@ const data = [
       workplace: 'DLSU',
       email: 'isaac_clarke@gmail.com',
       telephone: null,
-      mobile: '988',
+      mobile: '09887561234',
       educ_attainment: 'High School',
       alma_mater: 'DLSZ',
       sex: 'Male'
@@ -122,7 +122,7 @@ const data = [
       workplace: 'Therum',
       email: 'liara_broker@gmail.com',
       telephone: null,
-      mobile: '988',
+      mobile: '09880123456',
       educ_attainment: 'Doctorate',
       alma_mater: 'Grissom Academy',
       sex: 'Female'
@@ -149,7 +149,7 @@ const data = [
       workplace: 'Citadel',
       email: 'garrus@csec.com',
       telephone: null,
-      mobile: '945',
+      mobile: '09451010202',
       educ_attainment: 'College',
       alma_mater: 'Palaven Academy',
       sex: 'Male'
