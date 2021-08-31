@@ -38,6 +38,7 @@
         <div class="col">
           <label>Middle Initial</label>
           <input type="text" id="member_middle_name" name="member_middle_name" class="form-control">
+          <p id="member_middle_name_error" class="error_codes"></p>
         </div>
         <div class="col">
           <label>Last Name</label>
@@ -62,8 +63,8 @@
           <input type="checkbox" id="birthday-checkbox"> Birthday Range
         </div>
         <div class="col-2" id="age-div">
-          <input type="number" id="ageFrom" name="ageFrom" class="form-control">
-          <input type="number" id="ageTo" name="ageTo" class="form-control">
+          <input type="number" id="ageFrom" name="ageFrom" class="form-control" min="1">
+          <input type="number" id="ageTo" name="ageTo" class="form-control" min="1">
         </div>
         <div class="col-4 birthday-range" style="display: none;">
           <label> From </label>
@@ -73,6 +74,9 @@
           <label> To </label>
           <input type="date" id="birthdayTo" name="birthdayTo" class="form-control">
         </div>
+        
+        <p id="age_error" class="error_codes"></p>
+        <p id="birthday_error" class="error_codes"></p>
       </div>
       <hr>
       <div class="row mb-3">

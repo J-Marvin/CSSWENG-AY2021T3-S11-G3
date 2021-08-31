@@ -58,7 +58,7 @@ const searchController = {
     const ageFrom = req.query.ageFrom
     const ageTo = req.query.ageTo
     let ageChecked = false
-    if (ageFrom !== null && ageTo !== undefined) {
+    if (ageFrom !== '' && ageTo !== '') {
       ageChecked = true
     } else {
       data.member.birthdayFrom = req.query.birthdayFrom
@@ -107,18 +107,20 @@ const searchController = {
     conditions.push(cond)
 
     // sex
-    cond = new Condition(queryTypes.where)
-    cond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.SEX, data.member[memberFields.SEX], '=')
-    conditions.push(cond)
-
-    const ageColumn = ['cast(strftime(\' % Y.% m % d\', \'now\') - strftime(\' % Y.% m % d\', person.' + memberFields.BIRTHDAY + ') as int) AS age']
+    if (data.member[memberFields.SEX] !== 'none') {
+      cond = new Condition(queryTypes.where)
+      cond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.SEX, data.member[memberFields.SEX], '=')
+      conditions.push(cond)
+    }
+    const ageColumn = ['cast(strftime(\' % Y.% m % d\', \'now\') - strftime(\' % Y.% m % d\', members.' + memberFields.BIRTHDAY + ') as int) AS age']
     const havingCond = []
-    // age is only provided do the date maths
+    // age is only provided
     if (ageChecked) {
       // age
-      const havingCond1 = new Condition(queryTypes.havingBetween)
-      havingCond1.setRange('age', 0, 100) // change to range
-      havingCond.push(havingCond1)
+      cond = new Condition(queryTypes.whereBetween)
+      cond.setRange('age', ageFrom, ageTo)
+      // havingCond.push(cond)
+      conditions.push(cond)
     } else {
       // if age is not provided
       // birthday YYYY-MM-DD
@@ -128,9 +130,11 @@ const searchController = {
     }
 
     // civil status
-    cond = new Condition(queryTypes.where)
-    cond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.CIVIL_STATUS, data.member[memberFields.CIVIL_STATUS], '=')
-    conditions.push(cond)
+    if (data.member[memberFields.CIVIL_STATUS] !== 'none') {
+      cond = new Condition(queryTypes.where)
+      cond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.CIVIL_STATUS, data.member[memberFields.CIVIL_STATUS], '=')
+      conditions.push(cond)
+    }
 
     // educational attainment
     cond = new Condition(queryTypes.where)
@@ -143,11 +147,12 @@ const searchController = {
     conditions.push(cond)
 
     // member status
-    cond = new Condition(queryTypes.where)
-    cond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.MEMBER_STATUS, data.member[memberFields.MEMBER_STATUS], '=')
-    conditions.push(cond)
-
-    console.log(data)
+    if (data.member[memberFields.MEMBER_STATUS] !== 'none') {
+      cond = new Condition(queryTypes.where)
+      cond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.MEMBER_STATUS, data.member[memberFields.MEMBER_STATUS], '=')
+      conditions.push(cond)
+    }
+    console.log(conditions)
     db.find(db.tables.MEMBER_TABLE, conditions, joinTables, '*', function (result) {
       console.log(result)
       if (result !== null && result.length > 0) {

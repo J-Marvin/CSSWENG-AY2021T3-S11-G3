@@ -63,7 +63,8 @@ const database = {
   initDB: async function (file) {
     currFile = file
     if (!fse.existsSync(file)) {
-      resetDb.initialize(file)
+      resetDb.reset(file)
+      // resetDb.initialize(file)
       knexClient = resetDb.knexClient
     } else {
       knexClient = knex({
@@ -230,7 +231,7 @@ const database = {
       .select(projection)
 
     for (const select of rawSelect) {
-      tableClient.select(tableClient.raw(select))
+      tableClient.select(knexClient.raw(select))
     }
 
     tableClient.where(function (builder) {
