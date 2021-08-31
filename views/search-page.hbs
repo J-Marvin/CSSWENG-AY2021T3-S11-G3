@@ -8,9 +8,8 @@
 
 {{>navbar}}
 
-<form id="search_form" class="container" action="/search_member">
-  {{!-- for #if insert display css to show and {{else}} display css to hide --}}
-  <div class="container" style="padding-left: 20%; padding-right: 20%; {{#if canSee}}{{/if}}">
+<form id="search_form" class="container" action="{{#if canSee}}/search_member{{else}}/search_prenup{{/if}}">
+  <div class="container" style="padding-left: 20%; padding-right: 20%;">
     <h1 class="my-3">Advanced Search</h1>
     <hr>
     <div class="row">
@@ -28,20 +27,20 @@
       </div>
     </div>
     <hr>
-    <div id="member-record">
+    <div id="member-record" style="{{#if canSee}}display: block;{{else}}display: none;{{/if}}">
       <div class="row mb-3">
         <legend> Personal Information </legend>
         <div class="col">
           <label>First Name</label>
-          <input type="text" id="member_first_name" class="form-control">
+          <input type="text" id="member_first_name" name="member_first_name" class="form-control">
         </div>
         <div class="col">
           <label>Middle Initial</label>
-          <input type="text" id="member_middle_name" class="form-control">
+          <input type="text" id="member_middle_name" name="member_middle_name" class="form-control">
         </div>
         <div class="col">
           <label>Last Name</label>
-          <input type="text" id="member_last_name" class="form-control">
+          <input type="text" id="member_last_name" name="member_last_name" class="form-control">
         </div>
       </div>
       <div class="row mb-3">
@@ -61,15 +60,15 @@
           <input type="checkbox" id="birthday-checkbox"> Birthday Range
         </div>
         <div class="col-2" id="age-div">
-          <input type="number" id="age-input" class="form-control">
+          <input type="number" id="age_input" name="age_input" class="form-control">
         </div>
         <div class="col-4 birthday-range" style="display: none;">
           <label> From </label>
-          <input type="date" id="birthdayFrom" class="form-control">
+          <input type="date" id="birthdayFrom" name="birthdayFrom" class="form-control">
         </div>
         <div class="col-4 birthday-range" style="display: none;">
           <label> To </label>
-          <input type="date" id="birthdayTo" class="form-control">
+          <input type="date" id="birthdayTo" name="birthdayTo" class="form-control">
         </div>
       </div>
       <hr>
@@ -114,21 +113,20 @@
       </div>
       <hr>
     </div>
-    {{!-- insert display css to hide in {{else}} --}}
-    <div id="prenup-record" style="{{#if canSee}}display: none;{{else}}{{/if}}">
+    <div id="prenup-record" style="{{#if canSee}}display: none;{{else}}display: block;{{/if}}">
       <legend>Bride Name</legend>
       <div class="row">
          <div class="col">
           <label>First Name</label>
-          <input type="text" id="prenup_bride_first_name" class="form-control">
+          <input type="text" id="prenup_bride_first_name" name="prenup_bride_first_name" class="form-control">
         </div>
         <div class="col">
           <label>Middle Initial</label>
-          <input type="text" id="prenup_bride_mid_name" class="form-control">
+          <input type="text" id="prenup_bride_mid_name" name="prenup_bride_mid_name" class="form-control">
         </div>
         <div class="col">
           <label>Last Name</label>
-          <input type="text" id="prenup_bride_last_name" class="form-control">
+          <input type="text" id="prenup_bride_last_name" name="prenup_bride_last_name" class="form-control">
         </div>
       </div>
       <hr>
@@ -136,26 +134,26 @@
       <div class="row">
          <div class="col">
           <label>First Name</label>
-          <input type="text" id="prenup_groom_first_name" class="form-control">
+          <input type="text" id="prenup_groom_first_name" name="prenup_groom_first_name" class="form-control">
         </div>
         <div class="col">
           <label>Middle Initial</label>
-          <input type="text" id="prenup_groom_mid_name" class="form-control">
+          <input type="text" id="prenup_groom_mid_name" name="prenup_groom_mid_name" class="form-control">
         </div>
         <div class="col">
           <label>Last Name</label>
-          <input type="text" id="prenup_groom_last_name" class="form-control">
+          <input type="text" id="prenup_groom_last_name" name="prenup_groom_last_name" class="form-control">
         </div>
       </div>
       <hr>
       <div class="row">
         <div class="col">
           <label>Date Created</label>
-          <input type="date" id="prenup_date_created" class="form-control">
+          <input type="date" id="prenup_date_created" name="prenup_date_created" class="form-control">
         </div>
         <div class="col">
           <label>Wedding Date</label>
-          <input type="date" id="prenup_date_wedding" class="form-control">
+          <input type="date" id="prenup_date_wedding" name="prenup_date_wedding" class="form-control">
         </div>
       </div>
       <hr>
@@ -165,30 +163,30 @@
         <legend> Bride Name </legend>
         <div class="col">
           <label>First Name</label>
-          <input type="text" id="wedding_bride_first_name" class="form-control">
+          <input type="text" id="wedding_bride_first_name" name="wedding_bride_first_name" class="form-control">
         </div>
         <div class="col">
           <label>Middle Initial</label>
-          <input type="text" id="wedding_bride_middle_name" class="form-control">
+          <input type="text" id="wedding_bride_middle_name" name="wedding_bride_middle_name" class="form-control">
         </div>
         <div class="col">
           <label>Last Name</label>
-          <input type="text" id="wedding_bride_last_name" class="form-control">
+          <input type="text" id="wedding_bride_last_name" name="wedding_bride_last_name" class="form-control">
         </div>
       </div>
       <div class="row mb-3">
         <legend> Groom Name </legend>
         <div class="col">
           <label>First Name</label>
-          <input type="text" id="wedding_groom_first_name" class="form-control">
+          <input type="text" id="wedding_groom_first_name" name="wedding_groom_first_name" class="form-control">
         </div>
         <div class="col">
           <label>Middle Initial</label>
-          <input type="text" id="wedding_groom_middle_name" class="form-control">
+          <input type="text" id="wedding_groom_middle_name" name="wedding_groom_middle_name" class="form-control">
         </div>
         <div class="col">
           <label>Last Name</label>
-          <input type="text" id="wedding_groom_last_name" class="form-control">
+          <input type="text" id="wedding_groom_last_name" name="wedding_groom_last_name" class="form-control">
         </div>
       </div>
       <hr>
@@ -197,30 +195,30 @@
         <legend> Mother: </legend>
         <div class="col">
           <label>First Name</label>
-          <input type="text" id="wedding_bride_mother_first_name" class="form-control">
+          <input type="text" id="wedding_bride_mother_first_name" name="wedding_bride_mother_first_name" class="form-control">
         </div>
         <div class="col">
           <label>Middle Initial</label>
-          <input type="text" id="wedding_bride_mother_middle_name" class="form-control">
+          <input type="text" id="wedding_bride_mother_middle_name" name="wedding_bride_mother_middle_name" class="form-control">
         </div>
         <div class="col">
           <label>Last Name</label>
-          <input type="text" id="wedding_bride_mother_last_name" class="form-control">
+          <input type="text" id="wedding_bride_mother_last_name" name="wedding_bride_mother_last_name" class="form-control">
         </div>
       </div>
       <div class="row mb-3">
         <legend> Father: </legend>
         <div class="col">
           <label>First Name</label>
-          <input type="text" id="wedding_bride_father_first_name" class="form-control">
+          <input type="text" id="wedding_bride_father_first_name" name="wedding_bride_father_first_name" class="form-control">
         </div>
         <div class="col">
           <label>Middle Initial</label>
-          <input type="text" id="wedding_bride_father_middle_name" class="form-control">
+          <input type="text" id="wedding_bride_father_middle_name" name="wedding_bride_father_middle_name" class="form-control">
         </div>
         <div class="col">
           <label>Last Name</label>
-          <input type="text" id="wedding_bride_father_last_name" class="form-control">
+          <input type="text" id="wedding_bride_father_last_name" name="wedding_bride_father_last_name" class="form-control">
         </div>
       </div>
       <hr>
@@ -229,57 +227,57 @@
         <legend> Mother: </legend>
         <div class="col">
           <label>First Name</label>
-          <input type="text" id="wedding_groom_mother_first_name" class="form-control">
+          <input type="text" id="wedding_groom_mother_first_name" name="wedding_groom_mother_first_name" class="form-control">
         </div>
         <div class="col">
           <label>Middle Initial</label>
-          <input type="text" id="wedding_groom_mother_middle_name" class="form-control">
+          <input type="text" id="wedding_groom_mother_middle_name" name="wedding_groom_mother_middle_name" class="form-control">
         </div>
         <div class="col">
           <label>Last Name</label>
-          <input type="text" id="wedding_groom_mother_last_name" class="form-control">
+          <input type="text" id="wedding_groom_mother_last_name" name="wedding_groom_mother_last_name" class="form-control">
         </div>
       </div>
       <div class="row mb-3">
         <legend> Father: </legend>
         <div class="col">
           <label>First Name</label>
-          <input type="text" id="wedding_groom_father_first_name" class="form-control">
+          <input type="text" id="wedding_groom_father_first_name" name="wedding_groom_father_first_name" class="form-control">
         </div>
         <div class="col">
           <label>Middle Initial</label>
-          <input type="text" id="wedding_groom_father_middle_name" class="form-control">
+          <input type="text" id="wedding_groom_father_middle_name" name="wedding_groom_father_middle_name" class="form-control">
         </div>
         <div class="col">
           <label>Last Name</label>
-          <input type="text" id="wedding_groom_father_last_name" class="form-control">
+          <input type="text" id="wedding_groom_father_last_name" name="wedding_groom_father_last_name" class="form-control">
         </div>
       </div>
       <hr>
       <div class="row mb-3">
         <div class="col">
           <label>Wedding Date</label>
-          <input type="date" id="wedding_date" class="form-control">
+          <input type="date" id="wedding_date" name="wedding_date" class="form-control">
         </div>
         <div class="col">
           <label> City </label>
-          <input type="text" id="wedding_city" class="form-control">
+          <input type="text" id="wedding_city" name="wedding_city" class="form-control">
         </div>
       </div>
       <div class="row mb-3">
         <div class="col">
           <label>Wedding Officiant</label>
-          <input type="text" id="wedding_officiant" class="form-control">
+          <input type="text" id="wedding_officiant" name="wedding_officiant" class="form-control">
         </div>
         <div class="col">
           <label> Solemnizing Officer </label>
-          <input type="text" id="wedding_officer" class="form-control">
+          <input type="text" id="wedding_officer" name="wedding_officer" class="form-control">
         </div>
       </div>
       <div class="row mb-3">
         <div class="col">
-          <label> Regitration Number </label>
-          <input type="number" class="form-control">
+          <label> Registration Number </label>
+          <input type="number" id="reg_num" name="reg_num" class="form-control">
         </div>
       </div>
       <hr>
@@ -289,30 +287,30 @@
         <legend> Baptized Person </legend>
         <div class="col">
           <label>First Name</label>
-          <input type="text" id="baptism_first_name" class="form-control">
+          <input type="text" id="baptism_first_name" name="baptism_first_name" class="form-control">
         </div>
         <div class="col">
           <label>Middle Initial</label>
-          <input type="text" id="baptism_middle_name" class="form-control">
+          <input type="text" id="baptism_middle_name" name="baptism_middle_name" class="form-control">
         </div>
         <div class="col">
           <label>Last Name</label>
-          <input type="text" id="baptism_last_name" class="form-control">
+          <input type="text" id="baptism_last_name" name="baptism_last_name" class="form-control">
         </div>
       </div>
       <hr>
       <div class="row">
         <div class="col">
           <label> Date </label>
-          <input type="date" id="baptismal_date" class="form-control">
+          <input type="date" id="baptismal_date" name="baptismal_date" class="form-control">
         </div>
         <div class="col">
           <label> Location </label>
-          <input type="text" id="baptismal_location" class="form-control">
+          <input type="text" id="baptismal_location" name="baptismal_location" class="form-control">
         </div>
         <div class="col">
           <label> Officiant </label>
-          <input type="text" id="baptismal_officiant" class="form-control">
+          <input type="text" id="baptismal_officiant" name="baptismal_officiant" class="form-control">
         </div>
       </div>
       <hr>
@@ -322,15 +320,15 @@
         <legend> Child </legend>
         <div class="col">
           <label>First Name</label>
-          <input type="text" id="dedication_first_name" class="form-control">
+          <input type="text" id="dedication_first_name" name="dedication_first_name" class="form-control">
         </div>
         <div class="col">
           <label>Middle Initial</label>
-          <input type="text" id="dedication_middle_name" class="form-control">
+          <input type="text" id="dedication_middle_name" name="dedication_middle_name" class="form-control">
         </div>
         <div class="col">
           <label>Last Name</label>
-          <input type="text" id="dedication_last_name" class="form-control">
+          <input type="text" id="dedication_last_name" name="dedication_last_name" class="form-control">
         </div>
       </div>
       <hr>
@@ -338,49 +336,49 @@
         <legend> Mother </legend>
         <div class="col">
           <label>First Name</label>
-          <input type="text" id="dedication_mother_first_name" class="form-control">
+          <input type="text" id="dedication_mother_first_name" name="dedication_mother_first_name" class="form-control">
         </div>
         <div class="col">
           <label>Middle Initial</label>
-          <input type="text" id="dedication_mother_middle_name" class="form-control">
+          <input type="text" id="dedication_mother_middle_name" name="dedication_mother_middle_name" class="form-control">
         </div>
         <div class="col">
           <label>Last Name</label>
-          <input type="text" id="dedication_mother_last_name" class="form-control">
+          <input type="text" id="dedication_mother_last_name" name="dedication_mother_last_name" class="form-control">
         </div>
       </div>
       <div class="row">
         <legend> Father </legend>
         <div class="col">
           <label>First Name</label>
-          <input type="text" id="dedication_father_first_name" class="form-control">
+          <input type="text" id="dedication_father_first_name" name="dedication_father_first_name" class="form-control">
         </div>
         <div class="col">
           <label>Middle Initial</label>
-          <input type="text" id="dedication_father_middle_name" class="form-control">
+          <input type="text" id="dedication_father_middle_name" name="dedication_father_middle_name" class="form-control">
         </div>
         <div class="col">
           <label>Last Name</label>
-          <input type="text" id="dedication_father_last_name" class="form-control">
+          <input type="text" id="dedication_father_last_name" name="dedication_father_last_name" class="form-control">
         </div>
       </div>
       <hr>
       <div class="row">
         <div class="col">
           <label> Date </label>
-          <input type="date" id="dedication_date" class="form-control">
+          <input type="date" id="dedication_date" name="dedication_date" class="form-control">
         </div>
         <div class="col">
           <label> Location </label>
-          <input type="text" id="dedication_location" class="form-control">
+          <input type="text" id="dedication_location" name="dedication_location" class="form-control">
         </div>
         <div class="col">
           <label> Minister </label>
-          <input type="text" id="dedication_minister" class="form-control">
+          <input type="text" id="dedication_minister" name="dedication_minister" class="form-control">
         </div>
       </div>
       <hr>
     </div>
-    <button id="advanced-search-submit" type="button" class="btn btn-primary">Submit</button>
+    <button id="advanced-search-submit" type="submit" class="btn btn-primary">Submit</button>
   </div>
 </form>
