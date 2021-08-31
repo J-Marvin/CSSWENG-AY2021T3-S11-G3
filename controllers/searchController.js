@@ -171,14 +171,14 @@ const searchController = {
     */
     const people = {
       bride: {
-        first_name: req.body.prenup_bride_first_name,
-        mid_name: req.body.prenup_bride_mid_name,
-        last_name: req.body.prenup_bride_last_name
+        first_name: req.query.prenup_bride_first_name,
+        mid_name: req.query.prenup_bride_mid_name,
+        last_name: req.query.prenup_bride_last_name
       },
       groom: {
-        first_name: req.body.prenup_groom_first_name,
-        mid_name: req.body.prenup_groom_mid_name,
-        last_name: req.body.prenup_groom_last_name
+        first_name: req.query.prenup_groom_first_name,
+        mid_name: req.query.prenup_groom_mid_name,
+        last_name: req.query.prenup_groom_last_name
       }
     }
 
@@ -211,57 +211,57 @@ const searchController = {
       'groom.' + personFields.LAST_NAME + ' as groom_last_name'
     ]
     const conditions = []
-    let tempCondition = null
 
     // Bride First Name Condition
     if (people.bride.first_name !== null && people.bride.first_name !== '') {
       const condition = new Condition(queryTypes.where)
-      condition.setKeyValue('bride.' + personFields.FIRST_NAME, people.bride.first_name, 'LIKE')
+      condition.setKeyValue('bride.' + personFields.FIRST_NAME, '%' + people.bride.first_name + '%', 'LIKE')
       conditions.push(condition)
     }
 
     // Bride Middle Name Condition
     if (people.bride.mid_name !== null && people.bride.mid_name !== '') {
       const condition = new Condition(queryTypes.where)
-      condition.setKeyValue('bride.' + personFields.MID_NAME, people.bride.mid_name, 'LIKE')
+      condition.setKeyValue('bride.' + personFields.MID_NAME, '%' + people.bride.mid_name + '%', 'LIKE')
       conditions.push(condition)
     }
 
     // Bride Last Name Condition
     if (people.bride.last_name !== null && people.bride.last_name !== '') {
       const condition = new Condition(queryTypes.where)
-      condition.setKeyValue('bride.' + personFields.LAST_NAME, people.bride.last_name, 'LIKE')
+      condition.setKeyValue('bride.' + personFields.LAST_NAME, '%' + people.bride.last_name + '%', 'LIKE')
       conditions.push(condition)
     }
 
     // Groom First Name Condition
     if (people.groom.first_name !== null && people.groom.first_name !== '') {
       const condition = new Condition(queryTypes.where)
-      condition.setKeyValue('bride.' + personFields.FIRST_NAME, people.bride.first_name, 'LIKE')
+      condition.setKeyValue('bride.' + personFields.FIRST_NAME, '%' + people.bride.first_name + '%', 'LIKE')
       conditions.push(condition)
     }
 
-    //
+    // Groom Middle Name Condition
     if (people.groom.mid_name !== null && people.groom.mid_name !== '') {
       const condition = new Condition(queryTypes.where)
-      condition.setKeyValue('bride.' + personFields.MID_NAME, people.bride.mid_name, 'LIKE')
+      condition.setKeyValue('bride.' + personFields.MID_NAME, '%' + people.bride.mid_name + '%', 'LIKE')
       conditions.push(condition)
     }
 
+    // Groom Last Name Condition
     if (people.groom.last_name !== null && people.groom.last_name !== '') {
       const condition = new Condition(queryTypes.where)
-      condition.setKeyValue('bride.' + personFields.LAST_NAME, people.bride.last_name, 'LIKE')
+      condition.setKeyValue('bride.' + personFields.LAST_NAME, '%' + people.bride.last_name + '%', 'LIKE')
       conditions.push(condition)
     }
-    // continue here
-    // Insert date conditions here
+    // TODO: Insert Date Conditions
 
     db.find(tables.PRENUPTIAL_TABLE, conditions, joinTables, columns, function (result) {
       if (result) {
         res.render('prenup-main-page', {
           styles: ['lists'],
           scripts: ['convertDataTable'],
-          prenup: result
+          prenup: result,
+          backLink: '/advanced_search'
         })
       } else {
         sendError(req, res, 404)
@@ -296,7 +296,57 @@ const searchController = {
     name of the child, name of the parents, date of dedication, place of dedication (string matching),
     minister, and witnesses.
     */
-    // continue here
+    const joinTables = [
+      {
+        tableName: db.tables.COUPLE_TABLE,
+        sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.ID,
+        destCol: db.tables.INFANT_TABLE + '.' + infDedFields.PARENTS
+      },
+      {
+        tableName: { infant: db.tables.PERSON_TABLE },
+        sourceCol: db.tables.INFANT_TABLE + '.' + infDedFields.PERSON,
+        destCol: 'infant.' + personFields.ID
+      },
+      {
+        type: 'leftJoin',
+        tableName: { guardianOne: db.tables.PERSON_TABLE },
+        sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE,
+        destCol: 'guardianOne.' + personFields.ID
+      },
+      {
+        type: 'leftJoin',
+        tableName: { guardianTwo: db.tables.PERSON_TABLE },
+        sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.MALE,
+        destCol: 'guardianTwo.' + personFields.ID
+      }
+    ]
+
+    const columns = [
+      db.tables.INFANT_TABLE + '.' + infDedFields.ID,
+      'infant.' + personFields.FIRST_NAME + ' as infant_first_name',
+      'infant.' + personFields.MID_NAME + ' as infant_mid_name',
+      'infant.' + personFields.LAST_NAME + ' as infant_last_name',
+      'guardianOne.' + personFields.FIRST_NAME + ' as guardianOne_first_name',
+      'guardianOne.' + personFields.MID_NAME + ' as guardianOne_mid_name',
+      'guardianOne.' + personFields.LAST_NAME + ' as guardianOne_last_name',
+      'guardianTwo.' + personFields.FIRST_NAME + ' as guardianTwo_first_name',
+      'guardianTwo.' + personFields.MID_NAME + ' as guardianTwo_mid_name',
+      'guardianTwo.' + personFields.LAST_NAME + ' as guardianTwo_last_name'
+    ]
+
+    const conditions = []
+    let tempCondition = null
+
+    tempCondition = new Condition()
+    tempCondition.setKeyValue()
+    db.find(db.tables.INFANT_TABLE, null, joinTables, columns, function (result) {
+      // console.log(result)
+      res.render('dedication-main-page', {
+        styles: ['lists'],
+        scripts: ['convertDataTable'],
+        dedication: result
+      })
+    })
   },
   /**
    * This function processes the search text fields and returns a number of
@@ -309,7 +359,63 @@ const searchController = {
     The advanced search for the baptismal record allows you to search based on the following:
     name of the baptized person, date of baptism, place of baptism (string matching), and officiant.
     */
-    // continue here
+    const joinTables = [
+      {
+        tableName: { member: db.tables.PERSON_TABLE },
+        sourceCol: db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.PERSON,
+        destCol: 'member.' + personFields.ID
+      },
+      {
+        tableName: { officiant: db.tables.PERSON_TABLE },
+        sourceCol: db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.OFFICIANT,
+        destCol: 'officiant.' + personFields.ID
+      }
+    ]
+
+    const columns = [
+      db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.ID + ' as reg_id',
+      db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.DATE + ' as date',
+      db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.DATE_CREATED + ' as date_created',
+      db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.LOCATION + ' as place',
+      'member.' + personFields.FIRST_NAME + ' as member_first_name',
+      'member.' + personFields.MID_NAME + ' as member_mid_name',
+      'member.' + personFields.LAST_NAME + ' as member_last_name',
+      'member.' + personFields.MEMBER + ' as member_id',
+      'officiant.' + personFields.FIRST_NAME + ' as officiant_first_name',
+      'officiant.' + personFields.MID_NAME + ' as officiant_mid_name',
+      'officiant.' + personFields.LAST_NAME + ' as officiant_last_name',
+      'officiant.' + personFields.MEMBER + ' as officiant_id'
+    ]
+
+    const conditions = []
+    let tempCondition = null
+
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue('member.' + personFields.FIRST_NAME, req.query.baptism_first_name, 'LIKE')
+    conditions.push(tempCondition)
+
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue('member.' + personFields.MID_NAME, req.query.baptism_middle_name, 'LIKE')
+    conditions.push(tempCondition)
+
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue('member.' + personFields.LAST_NAME, req.query.baptism_last_name, 'LIKE')
+    conditions.push(tempCondition)
+
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue(db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.LOCATION, req.query.location, 'LIKE')
+    conditions.push(tempCondition)
+    // TODO: Add Officiant
+    // TODO: Add Date Range
+
+    db.find(db.tables.BAPTISMAL_TABLE, [], joinTables, columns, function (result) {
+      const data = {}
+      data.records = result
+      data.scripts = ['convertDataTable']
+      data.styles = ['lists']
+
+      res.render('baptismal-main-page', data)
+    })
   }
 }
 
