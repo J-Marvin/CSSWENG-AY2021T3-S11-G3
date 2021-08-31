@@ -38,7 +38,7 @@ $(document).ready(function () {
         $(this).attr('disabled', true)
         $('#age-checkbox').removeAttr('disabled')
         $('#age-checkbox').prop('checked', false)
-        $('#age-div').hide()
+        $('.age-div').hide()
         $('.birthday-range').show()
     })
 
@@ -47,7 +47,7 @@ $(document).ready(function () {
         $('#birthday-checkbox').removeAttr('disabled')
         $('#birthday-checkbox').prop('checked', false)
         $('.birthday-range').hide()
-        $('#age-div').show()
+        $('.age-div').show()
     })
     
     $('#member-search-submit').click(function () {
