@@ -55,9 +55,10 @@ const searchController = {
 
     data.member[memberFields.SEX] = req.query.sex
 
-    const age = req.query.age_input
+    const ageFrom = req.query.ageFrom
+    const ageTo = req.query.ageTo
     let ageChecked = false
-    if (age !== null && age !== undefined) {
+    if (ageFrom !== null && ageTo !== undefined) {
       ageChecked = true
     } else {
       data.member.birthdayFrom = req.query.birthdayFrom
@@ -83,10 +84,6 @@ const searchController = {
         destCol: 'address.' + addressFields.ID
       }
     ]
-    // gets the age of the member
-    const ageColumn = ['cast(strftime(\' % Y.% m % d\', \'now\') - strftime(\' % Y.% m % d\', person.' + memberFields.BIRTHDAY + ') as int) AS age']
-    const havingCond = new Condition(queryTypes.havingBetween)
-    havingCond.setRange('age', 0, 100) // change to range
 
     const conditions = [] // array of conditions
     // first name
@@ -114,22 +111,14 @@ const searchController = {
     cond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.SEX, data.member[memberFields.SEX], '=')
     conditions.push(cond)
 
+    const ageColumn = ['cast(strftime(\' % Y.% m % d\', \'now\') - strftime(\' % Y.% m % d\', person.' + memberFields.BIRTHDAY + ') as int) AS age']
+    const havingCond = []
     // age is only provided do the date maths
     if (ageChecked) {
       // age
-      // get the current date i.e. today
-      const dateNow = new Date()
-      // get the date (age) years ago
-      const dateBefore = new Date()
-      dateBefore.setFullYear(dateNow.getFullYear() - age)
-
-      // these get the day difference and year difference, keep these 3 lines of code
-      // const diffTime = dateNow.getTime() - dateBefore.getTime()
-      // const diffDays = diffTime / (1000 * 3600 * 24)
-      // const diffYears = Math.round(diffDays / 365)
-
-      cond = new Condition(queryTypes.whereBetween)
-      cond.setRange(memberFields.BIRTHDAY, dateBefore, dateNow)
+      const havingCond1 = new Condition(queryTypes.havingBetween)
+      havingCond1.setRange('age', 0, 100) // change to range
+      havingCond.push(havingCond1)
     } else {
       // if age is not provided
       // birthday YYYY-MM-DD
@@ -164,7 +153,7 @@ const searchController = {
       if (result !== null && result.length > 0) {
         res.send(result)
       }
-    }, ageColumn)
+    }, ageColumn, havingCond)
   },
   /**
    * This function processes the search text fields and returns a number of

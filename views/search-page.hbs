@@ -27,7 +27,8 @@
       </div>
     </div>
     <hr>
-    <form id="member-record" method="GET" action="/search_member" style="{{#if canSee}}display: block;{{else}}display: none;{{/if}}">
+
+  <form id="member-record" method="GET" action="/search_member" style="{{#if canSee}}display: block;{{else}}display: none;{{/if}}">
       <div class="row mb-3">
         <legend> Personal Information </legend>
         <div class="col">
@@ -47,8 +48,9 @@
         <div class="col-4">
           <label>Sex</label>
           <select id="sex" name="sex" class="form-select">
-            <option selected> Male </option>
-            <option> Female </option>
+            <option selected value='none'> Any </option>
+            <option value='Male'> Male </option>
+            <option value='Female'> Female </option>
           </select>
         </div>
       </div>
@@ -60,7 +62,8 @@
           <input type="checkbox" id="birthday-checkbox"> Birthday Range
         </div>
         <div class="col-2" id="age-div">
-          <input type="number" id="age_input" name="age_input" class="form-control">
+          <input type="number" id="ageFrom" name="ageFrom" class="form-control">
+          <input type="number" id="ageTo" name="ageTo" class="form-control">
         </div>
         <div class="col-4 birthday-range" style="display: none;">
           <label> From </label>
@@ -76,17 +79,19 @@
         <div class="col">
           <label>Membership Status</label>
           <select id="membership_status" name="membership_status" class="form-select">
-            <option selected> Active </option>
-            <option> Inactive </option>
-            <option> Deceased </option>
+            <option selected value="none"> Any </option>
+            <option value="Active"> Active </option>
+            <option value="Inactive"> Inactive </option>
+            <option value="Deceased"> Deceased </option>
           </select>
         </div>
         <div class="col">
           <label>Civil Status</label>
           <select id="civil_status" name="civil_status" class="form-select">
-            <option selected> Single </option>
-            <option> Married </option>
-            <option> Others </option>
+            <option selected value="none"> Any</option>
+            <option value="Single"> Single </option>
+            <option value="Married"> Married </option>
+            <option value="Others"> Others </option>
           </select>
         </div>
         <div class="col" style="display: none;">
@@ -114,6 +119,7 @@
       <hr>
       <button id="member-search-submit" type="submit" class="btn btn-primary">Submit</button>
     </form>
+
     <form id="prenup-record" method="GET" action="/search_prenup" style="{{#if canSee}}display: none;{{else}}display: block;{{/if}}">
       <legend>Bride Name</legend>
       <div class="row">
@@ -160,6 +166,7 @@
       <hr>
       <button id="prenup-search-submit" type="submit" class="btn btn-primary">Submit</button>
     </form>
+
     <form id="wedding-record" method="GET" action="/search_wedding" style="display: none;">
       <div class="row mb-3">
         <legend> Bride Name </legend>
@@ -285,6 +292,7 @@
       <hr>
       <button id="wedding-search-submit" type="submit" class="btn btn-primary">Submit</button>
     </form>
+
     <form id="baptismal-record"  method="GET" action="/search_baptismal" style="display: none;">
       <div class="row mb-3">
         <legend> Baptized Person </legend>
@@ -319,6 +327,7 @@
       <hr>
       <button id="baptismal-search-submit" type="submit" class="btn btn-primary">Submit</button>
     </form>
+
     <form id="dedication-record" method="GET" action="/search_dedication" style="display: none;">
       <div class="row mb-3">
         <legend> Child </legend>
@@ -384,5 +393,6 @@
       <hr>
       <button id="dedication-search-submit" type="submit" class="btn btn-primary">Submit</button>
     </form>
+
   </div>
 </div>
