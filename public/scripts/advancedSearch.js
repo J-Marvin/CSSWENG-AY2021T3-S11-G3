@@ -49,62 +49,89 @@ $(document).ready(function () {
         $('.birthday-range').hide()
         $('.age-div').show()
     })
-
-    /*
-      This function validates the member search fields
-    */
-    function searchMember () {
-        const data = {}
-        // validation here
-
-        data.first_name = $('#first_name').val()
-        data.middle_name = $('#middle_name').val()
-        data.last_name = $('#last_name').val()
-        data.sex = $('#sex').val()
-        data.birthday = $('#birthday').val()
-        data.civil_status = $('#civil_status').val()
-        data.educational_attainment = $('#educational_attainment').val()
-        data.occupation = $('#occupation').val()
-        data.membership_status = $('#membership_status').val()
-        data.city = $('#city').val()
-    }
-    /*
-      This function validates the prenup search fields
-    */
-    function searchPrenup () {
-        // place validation
-    }
-    /*
-      This function validates the wedding search fields
-    */
-    function searchWedding () {
-        // place validation
-    }
-    /*
-      This function validates the baptismal search fields
-    */
-    function searchBaptismal () {
-        // place validation
-    }
-    /*
-      This function validates the dedication search fields
-    */
-    function searchDedication () {
-        // place validation
-    }
     
-    /* 
-      Whenever the search button is clicked, checks the selected search option value
-      calls the corresponding function for that search option type
-    */
-    $('#advanced-search-submit').click(function () {
-        const selectedValue = $('#record-type').val()
-        switch (selectedValue) {
-            case 'member-option': searchMember(); break
-            case 'prenup-option': searchPrenup(); break
-            case 'wedding-option': searchWedding(); break
-            case 'baptismal-option': searchBaptismal(); break
-            case 'dedication-option': searchDedication(); break
+    $('#member-search-submit').click(function () {
+        var isValid = true
+        const ageChecked = $('#age-checkbox').is(':checked')
+        const birthdayChecked = $('#birthday-checkbox').is(':checked')
+
+        if(ageChecked && $('#ageFrom').val() > $('#ageTo').val()) {
+            isValid = false
+            $('#age_error').text('Age range start should not be greater than age range end')
+        } else {
+            $('#age_error').text('')
         }
+
+        if(birthdayChecked && $('#birthdayFrom').val() > $('#birthdayTo').val()) {
+            isValid = false
+            $('#birthday_error').text('Birthday range start should not be later than Birthday range end')
+        } else {
+            $('#birthday_error').text('')
+        }
+
+        if($('#member_middle_name').val().length > 1) {
+            isValid = false
+            $('#member_middle_name_error').text('Middle initial should only contain 1 letter')
+        } else {
+            $('#member_middle_name_error').text('')
+        }
+
+        if(isValid === false) {
+            $('#member-search-submit').prop('disabled', true)
+        } else {
+            $('#member-search-submit').prop('disabled', false)
+        }
+    })
+    
+    /* inside member form */
+    $('#member_middle_name').blur(function () {
+        if (validator.isEmpty($('#member_middle_name_error').val())) {
+            $('#member_middle_name_error').text('')
+            $('#member-search-submit').prop('disabled', false)
+        }
+    })
+
+    $('#ageFrom').blur(function () {
+        if (validator.isEmpty($('#age_error').val())) {
+            $('#age_error').text('')
+            $('#member-search-submit').prop('disabled', false)
+        }
+    })
+
+    $('#ageTo').blur(function () {
+        if (validator.isEmpty($('#age_error').val())) {
+            $('#age_error').text('')
+            $('#member-search-submit').prop('disabled', false)
+        }
+    })
+
+    $('#birthdayFrom').blur(function () {
+        if (validator.isEmpty($('#birthday_error').val())) {
+            $('#birthday_error').text('')
+            $('#member-search-submit').prop('disabled', false)
+        }
+    })
+
+    $('#birthdayTo').blur(function () {
+        if (validator.isEmpty($('#birthday_error').val())) {
+            $('#birthday_error').text('')
+            $('#member-search-submit').prop('disabled', false)
+        }
+    })
+
+    $('#prenup-search-submit').click(function () {
+        // place validation on dates and middle initials
+    })
+
+    $('#wedding-search-submit').click(function () {
+        // place validation on dates and middle initials
+    })
+
+    $('#baptismal-search-submit').click(function () {
+       // place validation on dates and middle initials
+    })
+
+    $('#dedication-search-submit').click(function () {
+        // place validation on dates and middle initials
     })
 })
