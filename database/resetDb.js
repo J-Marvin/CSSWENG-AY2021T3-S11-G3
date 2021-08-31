@@ -602,7 +602,7 @@ function initDatabase (file) {
   db.close()
 }
 
-function insertAccounts(level1 = 'NormandyN7', level2 = 'HelloSweng', level3 = 'Coffee118') {
+function insertAccounts (level1 = 'NormandyN7', level2 = 'HelloSweng', level3 = 'Coffee118') {
   resetDb.knexClient('accounts').select().then(function (res) {
     if (res.length === 0) {
       bcrypt.hash('NormandyN7', saltRounds, (err, hash) => {
