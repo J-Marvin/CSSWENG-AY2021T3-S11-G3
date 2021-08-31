@@ -83,6 +83,11 @@ const searchController = {
         destCol: 'address.' + addressFields.ID
       }
     ]
+    // gets the age of the member
+    const ageColumn = ['cast(strftime(\' % Y.% m % d\', \'now\') - strftime(\' % Y.% m % d\', person.' + memberFields.BIRTHDAY + ') as int) AS age']
+    const havingCond = new Condition(queryTypes.havingBetween)
+    havingCond.setRange('age', 0, 100) // change to range
+
     const conditions = [] // array of conditions
     // first name
     let cond = new Condition(queryTypes.where)
@@ -159,7 +164,7 @@ const searchController = {
       if (result !== null && result.length > 0) {
         res.send(result)
       }
-    })
+    }, ageColumn)
   },
   /**
    * This function processes the search text fields and returns a number of
