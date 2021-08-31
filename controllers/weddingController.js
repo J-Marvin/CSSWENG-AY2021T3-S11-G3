@@ -1,8 +1,8 @@
 const db = require('../models/db.js')
 const personFields = require('../models/person')
-const coupleFields = require('../models/Couple.js')
+const coupleFields = require('../models/couple')
 const weddingRegFields = require('../models/weddingRegistry')
-const witnessFields = require('../models/witness.js')
+const witnessFields = require('../models/witness')
 const memberFields = require('../models/members')
 const { Condition, queryTypes } = require('../models/condition')
 
