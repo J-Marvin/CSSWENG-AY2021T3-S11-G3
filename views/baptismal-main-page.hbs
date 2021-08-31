@@ -12,29 +12,31 @@
   <div class="row">
     <div class="col d-flex justify-content-between">
       <h1> Baptismal Records </h1>
-      <a href="/add_baptismal"><i style="width: 3em; height: 3em; color:black;" class="far fa-plus-square"></i></a>
+      <a href="/add_baptismal"><i class="far fa-plus-square"></i></a>
     </div>
   </div>
-  <table id="dataTable" class="display table" width="100%">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Date of Baptism</th>
-        <th>Location</th>
-        <th>Officiant</th> 
-      </tr>
-    </thead>
-    <tbody>
-      {{#each records}}
-      <tr data-href="/view_baptismal/{{this.reg_id}}">
-        <td>{{this.reg_id}}</td>
-        <td>{{this.member_first_name}} {{this.member_last_name}}</td>
-        <td>{{dateView this.date}}</td>
-        <td>{{this.place}}</td>
-        <td>{{this.officiant_first_name}} {{this.officiant_last_name}}</td>
-      </tr>
-      {{/each}}
-    </tbody>
-  </table>
+  <div class="row">
+    <table id="dataTable" class="display table" width="100%">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Date of Baptism</th>
+          <th>Location</th>
+          <th>Officiant</th> 
+        </tr>
+      </thead>
+      <tbody>
+        {{#each records}}
+        <tr data-href="/view_baptismal/{{this.reg_id}}">
+          <td>{{this.reg_id}}</td>
+          <td>{{this.member_first_name}} {{this.member_last_name}}</td>
+          <td>{{dateView this.date}}</td>
+          <td>{{this.place}}</td>
+          <td>{{this.officiant_first_name}} {{this.officiant_last_name}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
 </div>

@@ -1,11 +1,14 @@
 @import url(fonts.css);
 
 body {
-    background-image: url(../images/sky.jpg);
+    background: url(../images/sky.jpg) no-repeat center center fixed;
+    -moz-background-size: cover;
+    -webkit-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }
 
 #card {
-    background-color: transparent;
     max-width: 38em; 
     border:none;
 }
@@ -20,12 +23,24 @@ body {
 }
 
 .logo {
-    position: fixed;
     height: 8em;
     width: 8em;
-    top: 20;
-    left: 20;
-    /* mix-blend-mode: multiply; */
+}
+
+.col {
+    padding: 0;
+}
+
+.row {
+    margin: 0;
+}
+
+.logocol {
+    width: fit-content;
+}
+
+.cardrow {
+    margin-top: 8%;
 }
 
 .logoText {
@@ -33,9 +48,6 @@ body {
     font-size: 24pt;
     color: aliceblue;
     text-shadow: 2px 2px 5px #000000;
-    position: fixed;
-    top: 40;
-    left: 160;
     width: 10em;
     line-height: 1.2;
 }

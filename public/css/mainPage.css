@@ -8,7 +8,7 @@
     font-family: JuliusSansPro;
 }
 
-.mainBtn {
+.mainBtns {
     border-radius: 6px;
     box-shadow: 1px 1px 5px #858585;
 }
@@ -26,4 +26,8 @@
 
 img {
     height: 16em;
+}
+
+.card {
+    box-shadow: 0px 0px 3px #cfcfcf
 }
