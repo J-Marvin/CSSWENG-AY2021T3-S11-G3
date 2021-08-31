@@ -8,7 +8,7 @@
 
 {{>navbar}}
 
-<form id="search_form" class="container" action="{{#if canSee}}/search_member{{else}}/search_prenup{{/if}}">
+<div id="search_form" class="container">
   <div class="container" style="padding-left: 20%; padding-right: 20%;">
     <h1 class="my-3">Advanced Search</h1>
     <hr>
@@ -27,7 +27,7 @@
       </div>
     </div>
     <hr>
-    <div id="member-record" style="{{#if canSee}}display: block;{{else}}display: none;{{/if}}">
+    <form id="member-record" method="GET" action="/search_member" style="{{#if canSee}}display: block;{{else}}display: none;{{/if}}">
       <div class="row mb-3">
         <legend> Personal Information </legend>
         <div class="col">
@@ -112,8 +112,9 @@
         </div>
       </div>
       <hr>
-    </div>
-    <div id="prenup-record" style="{{#if canSee}}display: none;{{else}}display: block;{{/if}}">
+      <button id="member-search-submit" type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <form id="prenup-record" method="GET" action="/search_prenup" style="{{#if canSee}}display: none;{{else}}display: block;{{/if}}">
       <legend>Bride Name</legend>
       <div class="row">
          <div class="col">
@@ -157,8 +158,9 @@
         </div>
       </div>
       <hr>
-    </div>
-    <div id="wedding-record" style="display: none;">
+      <button id="prenup-search-submit" type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <form id="wedding-record" method="GET" action="/search_wedding" style="display: none;">
       <div class="row mb-3">
         <legend> Bride Name </legend>
         <div class="col">
@@ -281,8 +283,9 @@
         </div>
       </div>
       <hr>
-    </div>
-    <div id="baptismal-record" style="display: none;">
+      <button id="wedding-search-submit" type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <form id="baptismal-record"  method="GET" action="/search_baptismal" style="display: none;">
       <div class="row mb-3">
         <legend> Baptized Person </legend>
         <div class="col">
@@ -314,8 +317,9 @@
         </div>
       </div>
       <hr>
-    </div>
-    <div id="dedication-record" style="display: none;">
+      <button id="baptismal-search-submit" type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <form id="dedication-record" method="GET" action="/search_dedication" style="display: none;">
       <div class="row mb-3">
         <legend> Child </legend>
         <div class="col">
@@ -378,7 +382,7 @@
         </div>
       </div>
       <hr>
-    </div>
-    <button id="advanced-search-submit" type="submit" class="btn btn-primary">Submit</button>
+      <button id="dedication-search-submit" type="submit" class="btn btn-primary">Submit</button>
+    </form>
   </div>
-</form>
+</div>
