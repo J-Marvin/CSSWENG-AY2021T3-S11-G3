@@ -52,12 +52,9 @@
     </div>
     <hr>
     <div class="row my-3">
-      <div class="col">
-        <a><button class="btn btn-secondary mb-4">Wedding Record</button></a>
-      </div>
-      <div class="col d-flex justify-content-end">
-          {{#if canSee}}
-          <a href="/edit_prenup/{{prenupId}}"> <button class="btn btn-secondary mb-4">Edit Prenup Form</button> </a>
-          {{/if}}
-      </div>
+      {{#if canSee}}
+        <div class="col d-flex justify-content-end">
+            <a href="/edit_prenup/{{prenupId}}"> <button class="btn btn-secondary mb-4">Edit Prenup Form</button> </a>
+        </div>
+      {{/if}}
     </div>
