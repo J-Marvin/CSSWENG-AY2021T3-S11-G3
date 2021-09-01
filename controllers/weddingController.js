@@ -18,11 +18,11 @@ const weddingController = {
       res.render('error', {
         title: '401 Unauthorized Access',
         css: ['global', 'error'],
+        backLink: '/forms_main_page',
         status: {
           code: '401',
           message: 'Unauthorized access'
-        },
-        backLink: '/forms_main_page'
+        }
       })
     } else {
       const joinTables = [

@@ -136,14 +136,12 @@ const baptismalController = {
             console.log('test')
             data[bapRegFields.OFFICIANT] = result[0]
           }
-  
           console.log(data)
           db.insert(db.tables.BAPTISMAL_TABLE, data, function (result) {
             if (result) {
               bapId = result[0]
               const memberData = {}
               memberData[memberFields.BAPTISMAL_REG] = bapId
-  
               db.update(db.tables.MEMBER_TABLE, memberData, memberCond, function (result) {
                 if (result) {
                   req.session.editId = bapId

@@ -5,7 +5,7 @@
     <h1 class="my-3"> Add Member </h1>
     <hr>
     <div class="row">
-      <legend>Personal Information:</legend>
+      <legend>Personal Information</legend>
       <div class="col">
         <label for="first_name">First Name</label>
         <input type="text" id="first_name" name="first_name" class="form-control" >
@@ -20,18 +20,6 @@
         <label for="last_name">Last Name</label>
         <input type="text" id="last_name" name="last_name" class="form-control" >
         <p id="last_name_error" class="error_codes">  </p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-5">
-        <label for="birthday">Birthday</label>
-        <input type="date" id="birthday" name="birthday" class="form-control" >
-        <p id="birthday_error" class="error_codes">  </p>
-      </div>
-      <div class="col-7">
-        <label for="occupation">Occupation</label>
-        <input type="text" id="occupation" name="occupation" class="form-control" >
-        <p id="occupation_error" class="error_codes">  </p>
       </div>
     </div>
     <div class="row">
@@ -67,10 +55,22 @@
         <p id="sex_error" class="error_codes">  </p>
       </div>
     </div>
+    <div class="row">
+      <div class="col">
+        <label for="birthday">Birthday</label>
+        <input type="date" id="birthday" name="birthday" class="form-control" >
+        <p id="birthday_error" class="error_codes">  </p>
+      </div>
+      <div class="col">
+        <label for="occupation">Occupation</label>
+        <input type="text" id="occupation" name="occupation" class="form-control" >
+        <p id="occupation_error" class="error_codes">  </p>
+      </div>
+    </div>
     <hr>
     <fieldset class="form-group">
       <div class="row">
-        <legend>Address:</legend>
+        <legend>Address</legend>
         <div class="col">
           <label for="adress_line">Address Line 1</label>
           <input type="text" id="address_line" name="address_line" class="form-control" >
@@ -83,7 +83,7 @@
       </div>
       <div class="row">
         <div class="col">
-          <label for="city">City</label>
+          <label for="city" class="mb-4 mb-md-0">City</label>
           <input type="text" id="city" name="city" class="form-control" >
           <p id="city_error" class="error_codes">  </p>
         </div>
@@ -91,6 +91,8 @@
           <label for="province">Province / State / Region</label>
           <input type="text" id="provin ce" name="province" class="form-control" >
         </div>
+      </div>
+      <div class="row">
         <div class="col">
           <label for="postal_code">Postal Code</label>
           <input type="text" id="postal_code" name="postal_code" class="form-control" >
@@ -103,7 +105,7 @@
       </div>
     </fieldset>
     <hr>
-    <legend>Contacts:</legend>
+    <legend>Contacts</legend>
     <div class="row">
       <div class="col">
         <label for="mobile">Mobile</label>
