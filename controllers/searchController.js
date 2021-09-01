@@ -643,9 +643,11 @@ const searchController = {
       'infant.' + personFields.FIRST_NAME + ' as infant_first_name',
       'infant.' + personFields.MID_NAME + ' as infant_mid_name',
       'infant.' + personFields.LAST_NAME + ' as infant_last_name',
+      'guardianOne.' + personFields.ID + ' as guardianOne_person_id',
       'guardianOne.' + personFields.FIRST_NAME + ' as guardianOne_first_name',
       'guardianOne.' + personFields.MID_NAME + ' as guardianOne_mid_name',
       'guardianOne.' + personFields.LAST_NAME + ' as guardianOne_last_name',
+      'guardianTwo.' + personFields.ID + ' as guardianTwo_person_id',
       'guardianTwo.' + personFields.FIRST_NAME + ' as guardianTwo_first_name',
       'guardianTwo.' + personFields.MID_NAME + ' as guardianTwo_mid_name',
       'guardianTwo.' + personFields.LAST_NAME + ' as guardianTwo_last_name'
@@ -669,6 +671,11 @@ const searchController = {
     tempCondition.setKeyValue('infant.' + personFields.LAST_NAME, '%' + data.infant.last_name + '%', 'LIKE')
     conditions.push(tempCondition)
 
+    // check if guardianOne's id is not null
+    tempCondition = new Condition(queryTypes.whereNotNull)
+    tempCondition.setField('guardianOne.' + personFields.ID)
+    conditions.push(tempCondition)
+
     // guardianOne's first name
     tempCondition = new Condition(queryTypes.where)
     tempCondition.setKeyValue('guardianOne.' + personFields.FIRST_NAME, '%' + data.guardianOne.first_name + '%', 'LIKE')
@@ -684,18 +691,23 @@ const searchController = {
     tempCondition.setKeyValue('guardianOne.' + personFields.LAST_NAME, '%' + data.guardianOne.last_name + '%', 'LIKE')
     conditions.push(tempCondition)
 
+    // check if guardianTwo's id is not null
+    tempCondition = new Condition(queryTypes.orWhere)
+    tempCondition.setField('guardianTwo.' + personFields.ID)
+    conditions.push(tempCondition)
+
     // guardianTwo's first name
-    tempCondition = new Condition(queryTypes.where)
+    tempCondition = new Condition(queryTypes.orWhere)
     tempCondition.setKeyValue('guardianTwo.' + personFields.FIRST_NAME, '%' + data.guardianTwo.first_name + '%', 'LIKE')
     conditions.push(tempCondition)
 
     // guardianTwo's middle name
-    tempCondition = new Condition(queryTypes.where)
+    tempCondition = new Condition(queryTypes.orWhere)
     tempCondition.setKeyValue('guardianTwo.' + personFields.MID_NAME, '%' + data.guardianTwo.middle_name + '%', 'LIKE')
     conditions.push(tempCondition)
 
     // guardianTwo's last name
-    tempCondition = new Condition(queryTypes.where)
+    tempCondition = new Condition(queryTypes.orWhere)
     tempCondition.setKeyValue('guardianTwo.' + personFields.LAST_NAME, '%' + data.guardianTwo.last_name + '%', 'LIKE')
     conditions.push(tempCondition)
 
