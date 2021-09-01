@@ -138,8 +138,9 @@ const database = {
    * @param {Array<Object>} join - an array of objects containing the join conditions
    * @param {String} projection - the columns to be retrieved
    * @param {function} callback - the callback function
+   * @param {Array<String>} - an array of raw select statements
    */
-  find: function (table, conditions = null, join = null, projection = '*', callback) {
+  find: function (table, conditions = null, join = null, projection = '*', callback, rawSelect = []) {
     const tableClient = knexClient(table)
     if (join !== null) {
       if (!Array.isArray(join)) {
@@ -178,81 +179,86 @@ const database = {
 
     tableClient
       .select(projection)
-      .where(function (builder) {
-        if (conditions !== null && conditions !== undefined) {
-          if (!Array.isArray(conditions)) {
-            conditions = [conditions]
-          }
-          async.each(conditions, function (condition, callback) {
-            switch (condition.type) {
-              case 'where':
-                if (condition.conditionType === 'object') {
-                  builder.where(condition.condition)
-                } else if (condition.conditionType === 'keyValue') {
-                  builder.where(condition.condition.key, condition.condition.operator, condition.condition.value)
-                }
-                break
-              case 'orWhere':
-                if (condition.conditionType === 'object') {
-                  builder.orWhere(condition.condition)
-                } else if (condition.conditionType === 'keyValue') {
-                  builder.orWhere(condition.condition.key, condition.condition.operator, condition.condition.value)
-                }
-                break
-              case 'whereNot':
-                if (condition.conditionType === 'object') {
-                  builder.whereNot(condition.condition)
-                } else if (condition.conditionType === 'keyValue') {
-                  builder.whereNot(condition.condition.key, condition.condition.operator, condition.condition.value)
-                }
-                break
-              case 'whereIn':
-                if (condition.conditionType === 'array') {
-                  builder.whereIn(condition.field, condition.data)
-                }
-                break
-              case 'whereNotIn':
-                if (condition.conditionType === 'array') {
-                  builder.whereNotIn(condition.field, condition.data)
-                }
-                break
-              case 'whereNull':
-                if (condition.conditionType === 'field') {
-                  builder.whereNull(condition.field)
-                }
-                break
-              case 'whereNotNull':
-                if (condition.conditionType === 'field') {
-                  builder.whereNotNull(condition.field)
-                }
-                break
-              case 'whereBetween':
-                if (condition.conditionType === 'range') {
-                  builder.whereBetween(condition.condition.field, [condition.condition.lowerBound, condition.condition.upperBound])
-                }
-                break
-              case 'whereNotBetween':
-                if (condition.conditionType === 'range') {
-                  builder.whereNotBetween(condition.condition.field, [condition.condition.lowerBound, condition.condition.upperBound])
-                }
-                break
-              case 'whereRaw':
-                if (condition.conditionType === 'query') {
-                  builder.whereRaw(condition.query, condition.bindings)
-                }
-                break
-              default:
-                throw console.error('Unknown query')
-            }
-          })
+
+    for (const select of rawSelect) {
+      tableClient.select(knexClient.raw(select))
+    }
+
+    tableClient.where(function (builder) {
+      if (conditions !== null && conditions !== undefined) {
+        if (!Array.isArray(conditions)) {
+          conditions = [conditions]
         }
-      }).then(function (result) {
-        callback(result)
-      }).catch((err) => {
-        console.log(err)
-        const flag = false
-        callback(flag)
-      })
+        async.each(conditions, function (condition, callback) {
+          switch (condition.type) {
+            case 'where':
+              if (condition.conditionType === 'object') {
+                builder.where(condition.condition)
+              } else if (condition.conditionType === 'keyValue') {
+                builder.where(condition.condition.key, condition.condition.operator, condition.condition.value)
+              }
+              break
+            case 'orWhere':
+              if (condition.conditionType === 'object') {
+                builder.orWhere(condition.condition)
+              } else if (condition.conditionType === 'keyValue') {
+                builder.orWhere(condition.condition.key, condition.condition.operator, condition.condition.value)
+              }
+              break
+            case 'whereNot':
+              if (condition.conditionType === 'object') {
+                builder.whereNot(condition.condition)
+              } else if (condition.conditionType === 'keyValue') {
+                builder.whereNot(condition.condition.key, condition.condition.operator, condition.condition.value)
+              }
+              break
+            case 'whereIn':
+              if (condition.conditionType === 'array') {
+                builder.whereIn(condition.field, condition.data)
+              }
+              break
+            case 'whereNotIn':
+              if (condition.conditionType === 'array') {
+                builder.whereNotIn(condition.field, condition.data)
+              }
+              break
+            case 'whereNull':
+              if (condition.conditionType === 'field') {
+                builder.whereNull(condition.field)
+              }
+              break
+            case 'whereNotNull':
+              if (condition.conditionType === 'field') {
+                builder.whereNotNull(condition.field)
+              }
+              break
+            case 'whereBetween':
+              if (condition.conditionType === 'range') {
+                builder.whereBetween(condition.condition.field, [condition.condition.lowerBound, condition.condition.upperBound])
+              }
+              break
+            case 'whereNotBetween':
+              if (condition.conditionType === 'range') {
+                builder.whereNotBetween(condition.condition.field, [condition.condition.lowerBound, condition.condition.upperBound])
+              }
+              break
+            case 'whereRaw':
+              if (condition.conditionType === 'query') {
+                builder.whereRaw(condition.query, condition.bindings)
+              }
+              break
+            default:
+              throw console.error('Unknown query')
+          }
+        })
+      }
+    }).then(function (result) {
+      callback(result)
+    }).catch((err) => {
+      console.log(err)
+      const flag = false
+      callback(flag)
+    })
 
     console.log(tableClient.toString())
   },
