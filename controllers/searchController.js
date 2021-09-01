@@ -116,7 +116,7 @@ const searchController = {
       conditions.push(cond)
     }
     const ageColumn = ['cast(strftime(\'%Y-%m-%d\', \'now\') - strftime(\'%Y-%m-%d\', ' + tables.MEMBER_TABLE + '.' + memberFields.BIRTHDAY + ') as int) AS age']
-    const havingCond = []
+
     // age is only provided
     if (ageChecked) {
       // age
@@ -124,11 +124,11 @@ const searchController = {
       cond.setRange('age', parseInt(ageFrom), parseInt(ageTo))
       // havingCond.push(cond)
       conditions.push(cond)
-    } else {
+    } else if (data.member.birthdayFrom !== '' && data.member.birthdayTo !== '') { 
       // if age is not provided
       // birthday YYYY-MM-DD
       cond = new Condition(queryTypes.whereBetween)
-      cond.setRange(memberFields.BIRTHDAY, data.member.birthdayFrom, data.member.birthdayTo)
+      cond.setRange(memberFields.BIRTHDAY, helper.formatDate(data.member.birthdayFrom), helper.formatDate(data.member.birthdayTo))
       conditions.push(cond)
     }
 
