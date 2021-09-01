@@ -1,8 +1,11 @@
 {{>navbar}}
 <form id="wedding_form" action="/create_wedding_registry" method="POST" class="container"> 
   <div class="container" style="padding-left: 20%; padding-right: 20%;">
-    <h1 class="my-3">Add Wedding Registry</h1>
-    <hr>
+    <div class="row d-flex justify-content-between">
+      <div class="col-8"><h1 class="my-3"> Add Wedding Registry </h1></div>
+      <div class="col-4 align-self-end"><p style="text-align:end; margin:0;">* - required</p></div>
+    </div>
+    <hr style="margin-top: 0;">
     <div class="row">
       <div class="col">
         <legend>Bride</legend>
@@ -10,7 +13,7 @@
         <input type="checkbox" id="bride_non_member" onclick="display_div_bride('bride_non_member')"> Non-member
         <input class="mb-3" type="checkbox" id="bride_member" onclick="display_div_bride('bride_member')" checked disabled> Member
         <div id="bride_member_div" style="display:block">
-          <label>Select Bride</label>
+          <label>Select Bride*</label>
           <select name="input_bride_member" id="input_bride_member">
             {{>dropdown singleFemales}}
           </select>
@@ -44,7 +47,7 @@
         <input class="mb-3" type="checkbox" id="groom_member" onclick="display_div_groom('groom_member')" checked disabled> Member
 
         <div id="groom_member_div" style="display:block">
-          <label>Select Groom</label>
+          <label>Select Groom*</label>
           <select name="input_groom_member" id="input_groom_member" >
             {{>dropdown singleMales}}
           </select>
@@ -225,72 +228,38 @@
     <hr>
     <fieldset class="form-group">
       <div class="row">
-        {{!-- <legend>Wedding Location</legend> --}}
         <div class="col">
-          <label for="location">Wedding Location</label>
+          <label for="location">Wedding Location*</label>
           <input type="text" id="location" name="location" class="form-control">
           <p id="location_error" class="error_codes"> </p>
         </div>
-
-        {{!-- <div class="col">
-          <label for="address_line">Address Line 1</label>
-          <input type="text" id="address_line" name="address_line" class="form-control" >
-          <p id="address_line_error" class="error_codes">  </p>
-        </div>
-        <div class="col">
-          <label for="address_line2">Address Line 2</label>
-          <input type="text" id="address_line2" name="address_line2" class="form-control" >
-        </div>
-      </div> --}}
-      {{!-- <div class="row">
-        <div class="col">
-          <label for="city">City</label>
-          <input type="text" id="city" name="city" class="form-control" >
-          <p id="city_error" class="error_codes">  </p>
-        </div>
-        <div class="col">
-          <label for="province">Province / State / Region</label>
-          <input type="text" id="province" name="province" class="form-control" >
-        </div>
-        <div class="col">
-          <label for="postal_code">Postal Code</label>
-          <input type="text" id="postal_code" name="postal_code" class="form-control" >
-        </div>
-        <div class="col">
-          <label for="country">Country</label>
-          <input type="text" id="country" name="country" class="form-control" >
-          <p id="country_error" class="error_codes">  </p>
-        </div>
-      </div> --}}
+      </div>
     </fieldset>
-    {{!-- Date --}}
     <hr>
     <div class="row">
       <div class="col">
-        <div class="col">
-          <label for="current_date">Wedding Date</label>
-          <input type="date" id="current_date" name="current_date" class="form-control">
-          <p id="current_date_error" class="error_codes"> </p>
-        </div>
+        <label for="current_date">Wedding Date*</label>
+        <input type="date" id="current_date" name="current_date" class="form-control">
+        <p id="current_date_error" class="error_codes"> </p>
       </div>
     </div>
     {{!-- Officiant and contract no. --}}
     <hr>
     <div class="row">
       <div class="col">
-        <label>Officiant</label>
+        <label>Officiant*</label>
         <input type="text" id="officiant" class="form-control">
         <p id="officiant_info_error" class="error_codes"> </p>
       </div>
       <div class="col">
-        <label>Solemnizing Officer</label>
+        <label>Solemnizing Officer*</label>
         <input type="text" id="solemnizer" class="form-control">
         <p id="solemnizer_info_error" class="error_codes"> </p>
       </div>
     </div>
     <div class="row">
       <div class="col-6">
-        <label>Contract No.</label>
+        <label>Contract No.*</label>
         <input type="text" id="contract" class="form-control">
         <p id="contract_info_error" class="error_codes"> </p>
       </div>

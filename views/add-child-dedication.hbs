@@ -1,17 +1,20 @@
 {{>navbar}}
 <form id="add_dedication_form" class="container">
   <div class="container" style="padding-left: 20%; padding-right: 20%;">
-    <h1 class="my-3">Add Child Dedication Form</h1>
-    <hr>
+    <div class="row d-flex justify-content-between">
+      <div class="col-8"><h1 class="my-3"> Add Child Dedication Form </h1></div>
+      <div class="col-4 align-self-end"><p style="text-align:end; margin:0;">* - required</p></div>
+    </div>
+    <hr style="margin-top: 0;">
     <div class="row">
-      <div class="col">
+      <div class="col-6">
         <legend>Child</legend>
-        <hr>
+        <hr>        
         <input type="checkbox" id="child_non_member"> Non-member
         <input class="mb-3" type="checkbox" id="child_member" checked disabled> Member
       
         <div id="child_member_div" style="display:block">
-          <label>Select Child</label>
+          <label>Select Child*</label>
           <select name="input_child_member" id="input_child_member" >
             {{>dropdown members}}
           </select>
@@ -42,13 +45,13 @@
     </div>
     <div class="row">
       <div class="col">
-        <legend>Parent / Guardian</legend>
+        <legend>Parent / Guardian </legend>
         <hr>
         <input type="checkbox" id="parent1_non_member"> Non Member
 
         <input class="mb-3" type="checkbox" id="parent1_member" checked disabled> Member
         <div id="parent1_member_div" style="display:block">
-          <label>Select Parent / Guardian</label>
+          <label>Select Parent / Guardian*</label>
           <select name="input_parent1" id="input_parent1_member">
             {{>dropdown members}}
           </select>
@@ -117,19 +120,19 @@
         <hr>
       </div>
       <div class="col">
-        <label for="officiant">Officiant</label>
+        <label for="officiant">Officiant*</label>
         <input type="text" id="officiant" name="officiant" class="form-control">
         <p id="officiant_info_error" class="error_codes"> </p>
       </div>
       <div class="col">
-        <label for="address">Address of Dedication</label>
+        <label for="address">Address of Dedication*</label>
         <input type="text" id="address" name="address" class="form-control">
         <p id="address_info_error" class="error_codes"> </p>
       </div>
     </div>
     <div class="row">
       <div class="col-6">
-        <label for="address">Date of Dedication</label>
+        <label for="address">Date of Dedication*</label>
         <input type="date" id="date" name="date" class="form-control">
         <p id="date_info_error" class="error_codes"> </p>
       </div>

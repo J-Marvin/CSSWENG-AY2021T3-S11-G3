@@ -1,14 +1,17 @@
 {{>navbar}}
 <form id="wedding_form" action="/create_wedding_registry" method="POST" class="container">
   <div class="container" style="padding-left: 20%; padding-right: 20%;">
-    <h1 class="my-3">Add Baptismal Record</h1>
-    <hr>
+    <div class="row d-flex justify-content-between">
+      <div class="col-8"><h1 class="my-3"> Add Baptismal Record </h1></div>
+      <div class="col-4 align-self-end"><p style="text-align:end; margin:0;">* - required</p></div>
+    </div>
+    <hr style="margin-top: 0;">
     <div class="row">
       <div class="col">
         <legend>Member</legend>
         <hr>
         <div id="member_div">
-          <label>Select Member</label>
+          <label>Select Member*</label>
           <select name="input_member" id="input_member">
             {{>dropdown noBapMembers}}
           </select>
@@ -22,7 +25,7 @@
       <div class="row">
         {{!-- <legend>Baptism Location</legend> --}}
         <div class="col">
-          <label for="location">Baptism Location</label>
+          <label for="location">Baptism Location*</label>
           <input type="text" id="location" name="location" class="form-control">
           <p id="location_error" class="error_codes"> </p>
         </div>
@@ -32,7 +35,7 @@
     <div class="row">
       <div class="col">
         <div class="col">
-          <label for="current_date">Baptism Date</label>
+          <label for="current_date">Baptism Date*</label>
           <input type="date" id="date" name="date" class="form-control">
           <p id="date_error" class="error_codes"> </p>
         </div>
@@ -47,7 +50,7 @@
         <input type="checkbox" id="officiant_non_member"> Non-member
         <input class="mb-3" type="checkbox" id="officiant_member" checked disabled> Member
         <div id="officiant_member_div" style="display:block">
-          <label>Select Officiant</label>
+          <label>Select Officiant*</label>
           <select name="input_officiant_member" id="input_officiant_member">
             {{>dropdown members}}
           </select>

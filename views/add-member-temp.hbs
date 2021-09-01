@@ -2,22 +2,25 @@
 
 <form action="/add_member" method="POST" class="container" id="create-member-form">
   <div class="container" style="padding-left: 20%; padding-right: 20%;">
-    <h1 class="my-3"> Add Member </h1>
-    <hr>
+    <div class="row d-flex justify-content-between">
+      <div class="col"><h1 class="my-3"> Add Member </h1></div>
+      <div class="col align-self-end"><p style="text-align:end; margin:0;">* - required</p></div>
+    </div>
+    <hr style="margin-top: 0;">
     <div class="row">
       <legend>Personal Information</legend>
       <div class="col">
-        <label for="first_name">First Name</label>
+        <label for="first_name">First Name*</label>
         <input type="text" id="first_name" name="first_name" class="form-control" >
         <p id="first_name_error" class="error_codes">  </p>
       </div>
       <div class="col">
-        <label for="mid_name">Middle Initial</label>
+        <label for="mid_name">Middle Initial*</label>
         <input type="text" id="mid_name" name="middle_name" class="form-control" >
         <p id="mid_name_error" class="error_codes">  </p>
       </div>
       <div class="col">
-        <label for="last_name">Last Name</label>
+        <label for="last_name">Last Name*</label>
         <input type="text" id="last_name" name="last_name" class="form-control" >
         <p id="last_name_error" class="error_codes">  </p>
       </div>
@@ -56,13 +59,13 @@
       </div>
     </div>
     <div class="row">
-      <div class="col">
-        <label for="birthday">Birthday</label>
+      <div class="col-4">
+        <label for="birthday">Birthday*</label>
         <input type="date" id="birthday" name="birthday" class="form-control" >
         <p id="birthday_error" class="error_codes">  </p>
       </div>
       <div class="col">
-        <label for="occupation">Occupation</label>
+        <label for="occupation">Occupation*</label>
         <input type="text" id="occupation" name="occupation" class="form-control" >
         <p id="occupation_error" class="error_codes">  </p>
       </div>
@@ -72,7 +75,7 @@
       <div class="row">
         <legend>Address</legend>
         <div class="col">
-          <label for="adress_line">Address Line 1</label>
+          <label for="adress_line">Address Line 1*</label>
           <input type="text" id="address_line" name="address_line" class="form-control" >
           <p id="address_line_error" class="error_codes">  </p>
         </div>
@@ -83,7 +86,7 @@
       </div>
       <div class="row">
         <div class="col">
-          <label for="city" class="mb-4 mb-md-0">City</label>
+          <label for="city" class="mb-4 mb-md-0">City*</label>
           <input type="text" id="city" name="city" class="form-control" >
           <p id="city_error" class="error_codes">  </p>
         </div>
@@ -98,7 +101,7 @@
           <input type="text" id="postal_code" name="postal_code" class="form-control" >
         </div>
         <div class="col">
-          <label for="country">Country</label>
+          <label for="country">Country*</label>
           <input type="text" id="country" name="country" class="form-control" >
           <p id="country_error" class="error_codes">  </p>
         </div>
