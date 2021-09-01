@@ -661,7 +661,7 @@ const searchController = {
 
     // infant's middle name
     tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue('infant.' + personFields.MID_NAME, '%' + data.infant.first_name + '%', 'LIKE')
+    tempCondition.setKeyValue('infant.' + personFields.MID_NAME, '%' + data.infant.middle_name + '%', 'LIKE')
     conditions.push(tempCondition)
 
     // infant's last name
