@@ -28,7 +28,7 @@ process.on('uncaughtException', function (error) {
   log.transports.file.resolvePath = () => errorLogPath
 
   log.error(error)
-  dialog.showErrorBox('Failed to start application', 'Something went wrong! A log of the error has been made and can be located at \n' + errorLogPath.replace(/\\/g, '\n'))
+  dialog.showErrorBox('Failed to start application', 'Something went wrong! A log of the error has been made and can be located at \n' + errorLogPath.replace(/\\/g, '\\\n'))
   app.quit()
 })
 
@@ -53,8 +53,6 @@ function createWindow () {
 
   mainWindow.removeMenu()
   mainWindow.maximize()
-
-  console.log(hostname + ' ' + port)
 }
 
 app.on('ready', createWindow)

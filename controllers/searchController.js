@@ -14,6 +14,7 @@ const weddingRegFields = require('../models/weddingRegistry')
 const witnessFields = require('../models/witness')
 const { sendError } = require('../controllers/errorController')
 const { tables } = require('../models/db')
+const helper = require('../helpers/helper')
 
 const searchController = {
   /**
@@ -190,7 +191,7 @@ const searchController = {
     const joinTables = [
       {
         tableName: tables.COUPLE_TABLE,
-        sourceCol: tables.PRENUPTIAL_TABLE + '.' + tables.PRENUPTIAL_TABLE,
+        sourceCol: tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.COUPLE,
         destCol: tables.COUPLE_TABLE + '.' + coupleFields.ID
       },
       {
@@ -258,7 +259,26 @@ const searchController = {
       condition.setKeyValue('bride.' + personFields.LAST_NAME, '%' + people.bride.last_name + '%', 'LIKE')
       conditions.push(condition)
     }
-    // TODO: Insert Date Conditions
+
+    // Date Created Condition
+    if (req.query.prenup_date_created_from !== '' && req.query.prenup_date_created_to !== '') {
+      const start = helper.formatDate(req.query.prenup_date_created_from)
+      const end = helper.formatDate(req.query.prenup_date_created_to)
+
+      const condition = new Condition(queryTypes.whereBetween)
+      condition.setRange(prenupRecordFields.DATE, start, end)
+      conditions.push(condition)
+    }
+
+    // Wedding Date Condition
+    if (req.query.prenup_date_wedding_from !== '' && req.query.prenup_date_wedding_to !== '') {
+      const start = helper.formatDate(req.query.prenup_date_wedding_from)
+      const end = helper.formatDate(req.query.prenup_date_wedding_to)
+
+      const condition = new Condition(queryTypes.whereBetween)
+      condition.setRange(prenupRecordFields.DATE, start, end)
+      conditions.push(condition)
+    }
 
     db.find(tables.PRENUPTIAL_TABLE, conditions, joinTables, columns, function (result) {
       if (result) {
