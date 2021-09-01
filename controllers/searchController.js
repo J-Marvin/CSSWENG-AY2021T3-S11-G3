@@ -115,7 +115,7 @@ const searchController = {
       cond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.SEX, data.member[memberFields.SEX], '=')
       conditions.push(cond)
     }
-    const ageColumn = ['cast(strftime(\' % Y.% m % d\', \'now\') - strftime(\' % Y.% m % d\', members.' + memberFields.BIRTHDAY + ') as int) AS age']
+    const ageColumn = ["cast(strftime('%Y.%m %d', 'now') - strftime('%Y.%m %d', members.' + memberFields.BIRTHDAY + ') as int) AS age"]
     const havingCond = []
     // age is only provided
     if (ageChecked) {
@@ -173,7 +173,7 @@ const searchController = {
         data.members = result
         res.render('member-main-page', data)
       }
-    }, ageColumn, havingCond)
+    }, ageColumn)
   },
   /**
    * This function processes the search text fields and returns a number of
