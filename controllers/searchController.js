@@ -156,7 +156,7 @@ const searchController = {
       conditions.push(cond)
     }
     console.log(conditions)
-    db.find(db.tables.MEMBER_TABLE, [], joinTables, '*', function (result) {
+    db.find(db.tables.MEMBER_TABLE, conditions, joinTables, '*', function (result) {
       console.log(result)
       if (result) {
         const data = {
