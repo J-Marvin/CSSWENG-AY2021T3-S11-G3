@@ -115,12 +115,13 @@ const searchController = {
       cond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.SEX, data.member[memberFields.SEX], '=')
       conditions.push(cond)
     }
-    const ageColumn = ["cast(strftime('%Y.%m %d', 'now') - strftime('%Y.%m %d', members.birthday) as int) AS age"]
+    const ageColumn = ['cast(strftime(\'%Y-%m-%d\', \'now\') - strftime(\'%Y-%m-%d\', ' + tables.MEMBER_TABLE + '.' + memberFields.BIRTHDAY + ') as int) AS age']
+    const havingCond = []
     // age is only provided
     if (ageChecked) {
       // age
       cond = new Condition(queryTypes.whereBetween)
-      cond.setRange('age', ageFrom, ageTo)
+      cond.setRange('age', parseInt(ageFrom), parseInt(ageTo))
       // havingCond.push(cond)
       conditions.push(cond)
     } else {
@@ -709,9 +710,14 @@ const searchController = {
     conditions.push(tempCondition)
 
     // dedication date range
-    tempCondition = new Condition(queryTypes.whereBetween)
-    tempCondition.setRange(infDedFields.DEDICATION_DATE, data.dateFrom, data.dateTo)
-    conditions.push(tempCondition)
+    if (data.dateFrom !== '' && data.dateTo !== '') {
+      const start = helper.formatDate(data.dateFrom)
+      const end = helper.formatDate(data.dateTo)
+
+      tempCondition = new Condition(queryTypes.whereBetween)
+      tempCondition.setRange(infDedFields.DEDICATION_DATE, start, end)
+      conditions.push(tempCondition)
+    }
 
     db.find(db.tables.INFANT_TABLE, conditions, joinTables, columns, function (result) {
       console.log(result)
@@ -781,14 +787,27 @@ const searchController = {
     conditions.push(tempCondition)
 
     tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue(db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.OFFICIANT, '%' + req.query.baptismal_officiant + '%', 'LIKE')
+    tempCondition.setKeyValue('officiant.' + personFields.FIRST_NAME, '%' + req.query.baptism_officiant_first_name + '%', 'LIKE')
     conditions.push(tempCondition)
 
-    tempCondition = new Condition(queryTypes.whereBetween)
-    tempCondition.setRange(bapRegFields.DATE, req.query.baptismal_date_from, req.query.baptismal_date_to)
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue('officiant.' + personFields.MID_NAME, '%' + req.query.baptism_officiant_middle_name + '%', 'LIKE')
     conditions.push(tempCondition)
 
-    db.find(db.tables.BAPTISMAL_TABLE, conditions, joinTables, columns, function (result) {
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue('officiant.' + personFields.LAST_NAME, '%' + req.query.baptism_officiant_last_name + '%', 'LIKE')
+    conditions.push(tempCondition)
+
+    if (req.query.baptismal_date_from !== '' && req.query.baptismal_date_to !== '') {
+      const start = helper.formatDate(req.query.baptismal_date_from)
+      const end = helper.formatDate(req.query.baptismal_date_to)
+
+      const condition = new Condition(queryTypes.whereBetween)
+      condition.setRange(weddingRegFields.DATE_OF_WEDDING, start, end)
+      conditions.push(condition)
+    }
+
+    db.find(db.tables.BAPTISMAL_TABLE, [], joinTables, columns, function (result) {
       const data = {}
       data.records = result
       data.scripts = ['convertDataTable']
