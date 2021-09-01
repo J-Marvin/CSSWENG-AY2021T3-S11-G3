@@ -124,7 +124,7 @@ const searchController = {
       cond.setRange('age', parseInt(ageFrom), parseInt(ageTo))
       // havingCond.push(cond)
       conditions.push(cond)
-    } else if (data.member.birthdayFrom !== '' && data.member.birthdayTo !== '') { 
+    } else if (data.member.birthdayFrom !== '' && data.member.birthdayTo !== '') {
       // if age is not provided
       // birthday YYYY-MM-DD
       cond = new Condition(queryTypes.whereBetween)
@@ -221,6 +221,7 @@ const searchController = {
 
     const columns = [
       db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.ID,
+      db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.DATE,
       db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.DATE_OF_WEDDING,
       'bride.' + personFields.FIRST_NAME + ' as bride_first_name',
       'bride.' + personFields.MID_NAME + ' as bride_mid_name',
@@ -295,11 +296,13 @@ const searchController = {
 
     db.find(tables.PRENUPTIAL_TABLE, conditions, joinTables, columns, function (result) {
       if (result) {
+        console.log(result)
         res.render('prenup-main-page', {
           styles: ['lists'],
           scripts: ['convertDataTable'],
           prenup: result,
-          backLink: '/advanced_search'
+          backLink: '/advanced_search',
+          fromSearch: true
         })
       } else {
         sendError(req, res, 404)
