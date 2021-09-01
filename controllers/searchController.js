@@ -115,13 +115,13 @@ const searchController = {
       cond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.SEX, data.member[memberFields.SEX], '=')
       conditions.push(cond)
     }
-    const ageColumn = ['cast(strftime(\' % Y.% m % d\', \'now\') - strftime(\' % Y.% m % d\', members.' + memberFields.BIRTHDAY + ') as int) AS age']
+    const ageColumn = ['cast(strftime(\'%Y-%m-%d\', \'now\') - strftime(\'%Y-%m-%d\', ' + tables.MEMBER_TABLE + '.' + memberFields.BIRTHDAY + ') as int) AS age']
     const havingCond = []
     // age is only provided
     if (ageChecked) {
       // age
       cond = new Condition(queryTypes.whereBetween)
-      cond.setRange('age', ageFrom, ageTo)
+      cond.setRange('age', parseInt(ageFrom), parseInt(ageTo))
       // havingCond.push(cond)
       conditions.push(cond)
     } else {
@@ -156,7 +156,7 @@ const searchController = {
       conditions.push(cond)
     }
     console.log(conditions)
-    db.find(db.tables.MEMBER_TABLE, conditions, joinTables, '*', function (result) {
+    db.find(db.tables.MEMBER_TABLE, [], joinTables, '*', function (result) {
       console.log(result)
       if (result) {
         const data = {
@@ -173,7 +173,7 @@ const searchController = {
         data.members = result
         res.render('member-main-page', data)
       }
-    }, ageColumn, havingCond)
+    }, ageColumn)
   },
   /**
    * This function processes the search text fields and returns a number of
