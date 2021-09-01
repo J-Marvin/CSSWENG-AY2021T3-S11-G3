@@ -14,6 +14,7 @@ const weddingRegFields = require('../models/weddingRegistry')
 const witnessFields = require('../models/witness')
 const { sendError } = require('../controllers/errorController')
 const { tables } = require('../models/db')
+const moment = require('moment')
 
 const searchController = {
   /**
@@ -156,8 +157,20 @@ const searchController = {
     console.log(conditions)
     db.find(db.tables.MEMBER_TABLE, conditions, joinTables, '*', function (result) {
       console.log(result)
-      if (result !== null && result.length > 0) {
-        res.send(result)
+      if (result) {
+        const data = {
+          styles: ['lists'],
+          scripts: ['convertDataTable'],
+          canSee: parseInt(req.session.level) === 3
+        }
+
+        result.forEach(function (member) {
+          member.address = member[addressFields.ADDRESS_LINE] + ', ' + member[addressFields.CITY] + ', ' + member[addressFields.COUNTRY]
+          member.age = moment().diff(moment(member[memberFields.BIRTHDAY]), 'years')
+        })
+
+        data.members = result
+        res.render('member-main-page', data)
       }
     }, ageColumn, havingCond)
   },
