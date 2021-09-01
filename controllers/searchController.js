@@ -115,8 +115,7 @@ const searchController = {
       cond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.SEX, data.member[memberFields.SEX], '=')
       conditions.push(cond)
     }
-    const ageColumn = ["cast(strftime('%Y.%m %d', 'now') - strftime('%Y.%m %d', members.' + memberFields.BIRTHDAY + ') as int) AS age"]
-    const havingCond = []
+    const ageColumn = ["cast(strftime('%Y.%m %d', 'now') - strftime('%Y.%m %d', members.birthday) as int) AS age"]
     // age is only provided
     if (ageChecked) {
       // age
@@ -592,6 +591,27 @@ const searchController = {
     name of the child, name of the parents, date of dedication, place of dedication (string matching),
     minister, and witnesses.
     */
+    const data = {
+      infant: {
+        first_name: req.query.dedication_first_name,
+        middle_name: req.query.dedication_middle_name,
+        last_name: req.query.dedication_last_name
+      },
+      guardianOne: {
+        first_name: req.query.dedication_mother_first_name,
+        middle_name: req.query.dedication_mother_middle_name,
+        last_name: req.query.dedication_mother_last_name
+      },
+      guardianTwo: {
+        first_name: req.query.dedication_father_first_name,
+        middle_name: req.query.dedication_father_middle_name,
+        last_name: req.query.dedication_father_last_name
+      },
+      dateFrom: req.query.dedication_date_from,
+      dateTo: req.query.dedication_date_to,
+      location: req.query.dedication_location,
+      officiant: req.query.dedication_officiant
+    }
     const joinTables = [
       {
         tableName: db.tables.COUPLE_TABLE,
@@ -633,10 +653,68 @@ const searchController = {
     const conditions = []
     let tempCondition = null
 
-    tempCondition = new Condition()
-    tempCondition.setKeyValue()
-    db.find(db.tables.INFANT_TABLE, null, joinTables, columns, function (result) {
-      // console.log(result)
+    // infant's first name
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue('infant.' + personFields.FIRST_NAME, '%' + data.infant.first_name + '%', 'LIKE')
+    conditions.push(tempCondition)
+
+    // infant's middle name
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue('infant.' + personFields.MID_NAME, '%' + data.infant.first_name + '%', 'LIKE')
+    conditions.push(tempCondition)
+
+    // infant's last name
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue('infant.' + personFields.LAST_NAME, '%' + data.infant.last_name + '%', 'LIKE')
+    conditions.push(tempCondition)
+
+    // guardianOne's first name
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue('guardianOne.' + personFields.FIRST_NAME, '%' + data.guardianOne.first_name + '%', 'LIKE')
+    conditions.push(tempCondition)
+
+    // guardianOne's middle name
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue('guardianOne.' + personFields.MID_NAME, '%' + data.guardianOne.middle_name + '%', 'LIKE')
+    conditions.push(tempCondition)
+
+    // guardianOne's last name
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue('guardianOne.' + personFields.LAST_NAME, '%' + data.guardianOne.last_name + '%', 'LIKE')
+    conditions.push(tempCondition)
+
+    // guardianTwo's first name
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue('guardianTwo.' + personFields.FIRST_NAME, '%' + data.guardianTwo.first_name + '%', 'LIKE')
+    conditions.push(tempCondition)
+
+    // guardianTwo's middle name
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue('guardianTwo.' + personFields.MID_NAME, '%' + data.guardianTwo.middle_name + '%', 'LIKE')
+    conditions.push(tempCondition)
+
+    // guardianTwo's last name
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue('guardianTwo.' + personFields.LAST_NAME, '%' + data.guardianTwo.last_name + '%', 'LIKE')
+    conditions.push(tempCondition)
+
+    // location
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue(db.tables.INFANT_TABLE + '.' + infDedFields.PLACE, '%' + data.location + '%', 'LIKE')
+    conditions.push(tempCondition)
+
+    // officiant
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue(db.tables.INFANT_TABLE + '.' + infDedFields.OFFICIANT, '%' + data.officiant + '%', 'LIKE')
+    conditions.push(tempCondition)
+
+    // dedication date range
+    tempCondition = new Condition(queryTypes.whereBetween)
+    tempCondition.setRange(infDedFields.DEDICATION_DATE, data.dateFrom, data.dateTo)
+    conditions.push(tempCondition)
+
+    db.find(db.tables.INFANT_TABLE, conditions, joinTables, columns, function (result) {
+      console.log(result)
       res.render('dedication-main-page', {
         styles: ['lists'],
         scripts: ['convertDataTable'],
@@ -687,24 +765,30 @@ const searchController = {
     let tempCondition = null
 
     tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue('member.' + personFields.FIRST_NAME, req.query.baptism_first_name, 'LIKE')
+    tempCondition.setKeyValue('member.' + personFields.FIRST_NAME, '%' + req.query.baptism_first_name + '%', 'LIKE')
     conditions.push(tempCondition)
 
     tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue('member.' + personFields.MID_NAME, req.query.baptism_middle_name, 'LIKE')
+    tempCondition.setKeyValue('member.' + personFields.MID_NAME, '%' + req.query.baptism_middle_name + '%', 'LIKE')
     conditions.push(tempCondition)
 
     tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue('member.' + personFields.LAST_NAME, req.query.baptism_last_name, 'LIKE')
+    tempCondition.setKeyValue('member.' + personFields.LAST_NAME, '%' + req.query.baptism_last_name + '%', 'LIKE')
     conditions.push(tempCondition)
 
     tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue(db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.LOCATION, req.query.location, 'LIKE')
+    tempCondition.setKeyValue(db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.LOCATION, '%' + req.query.baptismal_location + '%', 'LIKE')
     conditions.push(tempCondition)
-    // TODO: Add Officiant
-    // TODO: Add Date Range
 
-    db.find(db.tables.BAPTISMAL_TABLE, [], joinTables, columns, function (result) {
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue(db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.OFFICIANT, '%' + req.query.baptismal_officiant + '%', 'LIKE')
+    conditions.push(tempCondition)
+
+    tempCondition = new Condition(queryTypes.whereBetween)
+    tempCondition.setRange(bapRegFields.DATE, req.query.baptismal_date_from, req.query.baptismal_date_to)
+    conditions.push(tempCondition)
+
+    db.find(db.tables.BAPTISMAL_TABLE, conditions, joinTables, columns, function (result) {
       const data = {}
       data.records = result
       data.scripts = ['convertDataTable']
