@@ -702,7 +702,28 @@ const searchController = {
     tempCondition.setKeyValue(db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.LOCATION, req.query.location, 'LIKE')
     conditions.push(tempCondition)
     // TODO: Add Officiant
+
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue('officiant.' + personFields.FIRST_NAME, req.query.baptism_officiant_first_name, 'LIKE')
+    conditions.push(tempCondition)
+
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue('officiant.' + personFields.MID_NAME, req.query.baptism_officiant_middle_name, 'LIKE')
+    conditions.push(tempCondition)
+
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue('officiant.' + personFields.LAST_NAME, req.query.baptism_officiant_last_name, 'LIKE')
+    conditions.push(tempCondition)
     // TODO: Add Date Range
+
+    if (req.query.baptismal_date_from !== '' && req.query.baptismal_date_to !== '') {
+      const start = helper.formatDate(req.query.baptismal_date_from)
+      const end = helper.formatDate(req.query.baptismal_date_to)
+
+      const condition = new Condition(queryTypes.whereBetween)
+      condition.setRange(weddingRegFields.DATE_OF_WEDDING, start, end)
+      conditions.push(condition)
+    }
 
     db.find(db.tables.BAPTISMAL_TABLE, [], joinTables, columns, function (result) {
       const data = {}
