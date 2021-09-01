@@ -12,6 +12,7 @@ const fse = require('fs-extra')
 
 const app = express()
 const routes = require('./routes/routes.js')
+const { dialog } = require('electron')
 
 const hbs = exphbs.create({
   defaultLayout: 'main',
@@ -25,13 +26,25 @@ dotenv.config({ path: path.join(__dirname, '.env') })
 
 const port = process.env.PORT
 const hostname = process.env.HOSTNAME
-const file = path.join('database', 'church.db')
+let dbPath = 'database'
+let file = path.join('database', 'church.db')
+let logPath = 'logs'
 
-if (fse.existsSync('database')) {
+if (process.env.PORTABLE_EXECUTABLE_DIR !== undefined) {
+  dbPath = path.join(process.env.PORTABLE_EXECUTABLE_DIR, dbPath)
+  logPath = path.join(process.env.PORTABLE_EXECUTABLE_DIR, logPath)
+  file = path.join(dbPath, 'church.db')
+}
+
+if (fse.existsSync(dbPath)) {
   db.initDB(file)
 } else {
-  fse.mkdirSync('database')
+  fse.mkdirSync(dbPath)
   db.initDB(file)
+}
+
+if (!fse.existsSync(logPath)) {
+  fse.mkdirSync(logPath)
 }
 
 app.engine('hbs', hbs.engine)

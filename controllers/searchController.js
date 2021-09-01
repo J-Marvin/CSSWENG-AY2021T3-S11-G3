@@ -14,6 +14,7 @@ const weddingRegFields = require('../models/weddingRegistry')
 const witnessFields = require('../models/witness')
 const { sendError } = require('../controllers/errorController')
 const { tables } = require('../models/db')
+const helper = require('../helpers/helper')
 
 const searchController = {
   /**
@@ -190,7 +191,7 @@ const searchController = {
     const joinTables = [
       {
         tableName: tables.COUPLE_TABLE,
-        sourceCol: tables.PRENUPTIAL_TABLE + '.' + tables.PRENUPTIAL_TABLE,
+        sourceCol: tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.COUPLE,
         destCol: tables.COUPLE_TABLE + '.' + coupleFields.ID
       },
       {
@@ -258,7 +259,26 @@ const searchController = {
       condition.setKeyValue('bride.' + personFields.LAST_NAME, '%' + people.bride.last_name + '%', 'LIKE')
       conditions.push(condition)
     }
-    // TODO: Insert Date Conditions
+
+    // Date Created Condition
+    if (req.query.prenup_date_created_from !== '' && req.query.prenup_date_created_to !== '') {
+      const start = helper.formatDate(req.query.prenup_date_created_from)
+      const end = helper.formatDate(req.query.prenup_date_created_to)
+
+      const condition = new Condition(queryTypes.whereBetween)
+      condition.setRange(prenupRecordFields.DATE, start, end)
+      conditions.push(condition)
+    }
+
+    // Wedding Date Condition
+    if (req.query.prenup_date_wedding_from !== '' && req.query.prenup_date_wedding_to !== '') {
+      const start = helper.formatDate(req.query.prenup_date_wedding_from)
+      const end = helper.formatDate(req.query.prenup_date_wedding_to)
+
+      const condition = new Condition(queryTypes.whereBetween)
+      condition.setRange(prenupRecordFields.DATE, start, end)
+      conditions.push(condition)
+    }
 
     db.find(tables.PRENUPTIAL_TABLE, conditions, joinTables, columns, function (result) {
       if (result) {
@@ -285,9 +305,267 @@ const searchController = {
     on the following: bride’s name, groom’s name, bride and groom’s parents,
     date of marriage, place of marriage (city), wedding officiant, solemnizing minister,
     and the registration number of the wedding contract.
-
     */
     // continue here
+    const joinTables = [
+      // joins wedding_reg.couple_id = couples.couple_id
+      {
+        tableName: db.tables.COUPLE_TABLE,
+        sourceCol: db.tables.WEDDING_TABLE + '.' + weddingRegFields.COUPLE,
+        destCol: db.tables.COUPLE_TABLE + '.' + coupleFields.ID
+      },
+      // joins bride's person record
+      {
+        tableName: { bride: db.tables.PERSON_TABLE },
+        sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE,
+        destCol: 'bride.' + personFields.ID
+      },
+      // joins groom's person record
+      {
+        tableName: { groom: db.tables.PERSON_TABLE },
+        sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.MALE,
+        destCol: 'groom.' + personFields.ID
+      },
+      // join bride parents
+      {
+        type: 'leftJoin',
+        tableName: { bride_parents: db.tables.COUPLE_TABLE },
+        sourceCol: db.tables.WEDDING_TABLE + '.' + weddingRegFields.BRIDE_PARENTS,
+        destCol: 'bride_parents.' + coupleFields.ID
+      },
+      // join groom parents
+      {
+        type: 'leftJoin',
+        tableName: { groom_parents: db.tables.COUPLE_TABLE },
+        sourceCol: db.tables.WEDDING_TABLE + '.' + weddingRegFields.GROOM_PARENTS,
+        destCol: 'groom_parents.' + coupleFields.ID
+      },
+      // bride_parents (mother)
+      {
+        type: 'leftJoin',
+        tableName: { bride_mother: db.tables.PERSON_TABLE },
+        sourceCol: 'bride_parents.' + coupleFields.FEMALE,
+        destCol: 'bride_mother.' + personFields.ID
+      },
+      // bride_parents (father)
+      {
+        type: 'leftJoin',
+        tableName: { bride_father: db.tables.PERSON_TABLE },
+        sourceCol: 'bride_parents.' + coupleFields.MALE,
+        destCol: 'bride_father.' + personFields.ID
+      },
+      // groom_parents (mother)
+      {
+        type: 'leftJoin',
+        tableName: { groom_mother: db.tables.PERSON_TABLE },
+        sourceCol: 'groom_parents.' + coupleFields.FEMALE,
+        destCol: 'groom_mother.' + personFields.ID
+      },
+      // groom_parents (father)
+      {
+        type: 'leftJoin',
+        tableName: { groom_father: db.tables.PERSON_TABLE },
+        sourceCol: 'groom_parents.' + coupleFields.MALE,
+        destCol: 'groom_father.' + personFields.ID
+      }
+    ]
+    // columns to be retrieved
+    const columns = [
+      db.tables.WEDDING_TABLE + '.' + weddingRegFields.ID + ' as wedding_id',
+      db.tables.WEDDING_TABLE + '.' + weddingRegFields.DATE_OF_WEDDING + ' as date_of_wedding',
+      // bride's name
+      'bride.' + personFields.FIRST_NAME + ' as bride_first_name',
+      'bride.' + personFields.MID_NAME + ' as bride_mid_name',
+      'bride.' + personFields.LAST_NAME + ' as bride_last_name',
+      // groom's name
+      'groom.' + personFields.FIRST_NAME + ' as groom_first_name',
+      'groom.' + personFields.MID_NAME + ' as groom_mid_name',
+      'groom.' + personFields.LAST_NAME + ' as groom_last_name',
+      // name of the bride's mother
+      'bride_mother.' + personFields.FIRST_NAME + ' as bride_mother_first_name',
+      'bride_mother.' + personFields.MID_NAME + ' as bride_mother_mid_name',
+      'bride_mother.' + personFields.LAST_NAME + ' as bride_mother_last_name',
+      // name of the bride's father
+      'bride_father.' + personFields.FIRST_NAME + ' as bride_father_first_name',
+      'bride_father.' + personFields.MID_NAME + ' as bride_father_mid_name',
+      'bride_father.' + personFields.LAST_NAME + ' as bride_father_last_name',
+      // name of the groom's mother
+      'groom_mother.' + personFields.FIRST_NAME + ' as groom_mother_first_name',
+      'groom_mother.' + personFields.MID_NAME + ' as groom_mother_mid_name',
+      'groom_mother.' + personFields.LAST_NAME + ' as groom_mother_last_name',
+      // name of the groom's father
+      'groom_father.' + personFields.FIRST_NAME + ' as groom_father_first_name',
+      'groom_father.' + personFields.MID_NAME + ' as groom_father_mid_name',
+      'groom_father.' + personFields.LAST_NAME + ' as groom_father_last_name'
+    ]
+
+    const people = {
+      bride: {
+        first_name: req.query.wedding_bride_first_name,
+        mid_name: req.query.wedding_bride_middle_name,
+        last_name: req.query.wedding_bride_last_name
+      },
+      groom: {
+        first_name: req.query.wedding_groom_first_name,
+        mid_name: req.query.wedding_groom_middle_name,
+        last_name: req.query.wedding_groom_last_name
+      },
+      bride_mother: {
+        first_name: req.query.wedding_bride_mother_first_name,
+        mid_name: req.query.wedding_bride_mother_middle_name,
+        last_name: req.query.wedding_bride_mother_last_name
+      },
+      bride_father: {
+        first_name: req.query.wedding_bride_father_first_name,
+        mid_name: req.query.wedding_bride_father_middle_name,
+        last_name: req.query.wedding_bride_father_last_name
+      },
+      groom_mother: {
+        first_name: req.query.wedding_groom_mother_first_name,
+        mid_name: req.query.wedding_groom_mother_middle_name,
+        last_name: req.query.wedding_groom_mother_last_name
+      },
+      groom_father: {
+        first_name: req.query.wedding_groom_father_first_name,
+        mid_name: req.query.wedding_groom_father_middle_name,
+        last_name: req.query.wedding_groom_father_last_name
+      }
+    }
+    const conditions = []
+    let tempCondition = null
+
+    // Bride First Name Condition
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue('bride.' + personFields.FIRST_NAME, '%' + people.bride.first_name + '%', 'LIKE')
+    conditions.push(tempCondition)
+
+    // Bride Middle Name Condition
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue('bride.' + personFields.MID_NAME, '%' + people.bride.mid_name + '%', 'LIKE')
+    conditions.push(tempCondition)
+
+    // Bride Last Name Condition
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue('bride.' + personFields.LAST_NAME, '%' + people.bride.last_name + '%', 'LIKE')
+    conditions.push(tempCondition)
+
+    // Groom First Name Condition
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue('groom.' + personFields.FIRST_NAME, '%' + people.groom.first_name + '%', 'LIKE')
+    conditions.push(tempCondition)
+
+    // Groom Middle Name Condition
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue('groom.' + personFields.MID_NAME, '%' + people.groom.mid_name + '%', 'LIKE')
+    conditions.push(tempCondition)
+
+    // Groom Last Name Condition
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue('groom.' + personFields.LAST_NAME, '%' + people.groom.last_name + '%', 'LIKE')
+    conditions.push(tempCondition)
+
+    // Bride Mother First Name Condition
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue('bride_mother.' + personFields.FIRST_NAME, '%' + people.bride_mother.first_name + '%', 'LIKE')
+    conditions.push(tempCondition)
+
+    // Bride Mother Middle Name Condition
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue('bride_mother.' + personFields.MID_NAME, '%' + people.bride_mother.mid_name + '%', 'LIKE')
+    conditions.push(tempCondition)
+
+    // Bride Mother Last Name Condition
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue('bride_mother.' + personFields.LAST_NAME, '%' + people.bride_mother.last_name + '%', 'LIKE')
+    conditions.push(tempCondition)
+
+    // Bride Father First Name Condition
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue('bride_mother.' + personFields.FIRST_NAME, '%' + people.bride_mother.first_name + '%', 'LIKE')
+    conditions.push(tempCondition)
+
+    // Bride Father Middle Name Condition
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue('bride_mother.' + personFields.MID_NAME, '%' + people.bride_mother.mid_name + '%', 'LIKE')
+    conditions.push(tempCondition)
+
+    // Bride Father Last Name Condition
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue('bride_mother.' + personFields.LAST_NAME, '%' + people.bride_mother.last_name + '%', 'LIKE')
+    conditions.push(tempCondition)
+
+    // Groom Mother First Name Condition
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue('groom_mother.' + personFields.FIRST_NAME, '%' + people.groom_mother.first_name + '%', 'LIKE')
+    conditions.push(tempCondition)
+
+    // Groom Mother Middle Name Condition
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue('groom_mother.' + personFields.MID_NAME, '%' + people.groom_mother.mid_name + '%', 'LIKE')
+    conditions.push(tempCondition)
+
+    // Groom Mother Last Name Condition
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue('groom_mother.' + personFields.LAST_NAME, '%' + people.groom_mother.last_name + '%', 'LIKE')
+    conditions.push(tempCondition)
+
+    // Groom First Father Name Condition
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue('groom_father.' + personFields.FIRST_NAME, '%' + people.groom_father.first_name + '%', 'LIKE')
+    conditions.push(tempCondition)
+
+    // Groom Middle Father Name Condition
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue('groom_father.' + personFields.MID_NAME, '%' + people.groom_father.mid_name + '%', 'LIKE')
+    conditions.push(tempCondition)
+
+    // Groom Last Father Name Condition
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue('groom_father.' + personFields.LAST_NAME, '%' + people.groom_father.last_name + '%', 'LIKE')
+    conditions.push(tempCondition)
+
+    // Wedding Date Condition
+    if (req.query.wedding_date_from !== '' && req.query.wedding_date_to !== '') {
+      const start = helper.formatDate(req.query.wedding_date_from)
+      const end = helper.formatDate(req.query.wedding_date_to)
+
+      const condition = new Condition(queryTypes.whereBetween)
+      condition.setRange(weddingRegFields.DATE_OF_WEDDING, start, end)
+      conditions.push(condition)
+    }
+
+    // Location Condition
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue(tables.WEDDING_TABLE + '.' + weddingRegFields.LOCATION, '%' + req.query.wedding_location + '%', 'LIKE')
+    conditions.push(tempCondition)
+
+    // Wedding Officiant Condition
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue(tables.WEDDING_TABLE + '.' + weddingRegFields.WEDDING_OFFICIANT, '%' + req.query.wedding_officiant + '%', 'LIKE')
+    conditions.push(tempCondition)
+
+    // Solemnizing Officer Condition
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue(tables.WEDDING_TABLE + '.' + weddingRegFields.SOLEMNIZER, '%' + req.query.wedding_officer + '%', 'LIKE')
+    conditions.push(tempCondition)
+
+    // Registration Number Condition
+    tempCondition = new Condition(queryTypes.where)
+    tempCondition.setKeyValue(tables.WEDDING_TABLE + '.' + weddingRegFields.CONTRACT, '%' + req.query.reg_num + '%', 'LIKE')
+    conditions.push(tempCondition)
+
+    db.find(db.tables.WEDDING_TABLE, conditions, joinTables, columns, function (result) {
+      if (result) {
+        console.log(result)
+        res.render('wedding-main-page', {
+          styles: ['lists'],
+          scripts: ['convertDataTable'],
+          prenup: result
+        })
+      } else {
+        sendError(req, res, 404)
+      }
+    })
   },
   /**
    * This function processes the search text fields and returns a number of

@@ -559,6 +559,30 @@ const database = {
         callback(flag)
       }
     }
+  },
+
+  /**
+   *  This method backups the current database
+   * @param {String} backupFile the path for the backup file
+   * @param {Function} callback the function to be called after executing the statement
+   */
+  backup: function(backupFile, callback = null) {
+    const db = sqlite3(currFile)
+    db.backup(backupFile)
+      .then(function () {
+        const isSuccess = true
+        if (callback !== null) {
+          callback(isSuccess)
+        }
+      })
+      .catch((err) => {
+        if (err) {
+          const isSuccess = false
+          if (callback !== null) {
+            callback(isSuccess)
+          }
+        }
+      })
   }
 }
 

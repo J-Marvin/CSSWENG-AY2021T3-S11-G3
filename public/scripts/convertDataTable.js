@@ -12,7 +12,7 @@ $(document).ready(function() {
       }
     ],
     buttons: [
-      'copy', 'excel', 'csv', 'print', 'pdf', 'colvis'
+      'copy', 'excel', 'csv', 'pdf', 'colvis'
     ],
     "lengthMenu": [10, 15, 25]
   })
