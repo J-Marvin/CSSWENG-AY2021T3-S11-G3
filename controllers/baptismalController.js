@@ -74,7 +74,7 @@ const baptismalController = {
    */
   getAddBaptismalRecordPage: function (req, res) {
     const bapId = req.params.bap_id
-    if (parseInt(req.session.level) >= 2 || parseInt(req.session.editId) === bapId) {
+    if (parseInt(req.session.level) !== null || parseInt(req.session.editId) === bapId) {
       const data = {}
       const joinTables = [
         {
@@ -107,60 +107,55 @@ const baptismalController = {
    * @param res - the result to be sent out after processing the request
    */
   postAddBaptismalRecord: function (req, res) {
-    const bapId = req.params.bap_id
-    if (parseInt(req.session.editId) === parseInt(bapId) || parseInt(req.session.level) >= 2) {
-      const data = {}
-      const memberCond = new Condition(queryTypes.where)
-      let bapId = null
-      memberCond.setKeyValue(memberFields.PERSON, req.body.personId)
+    const data = {}
+    const memberCond = new Condition(queryTypes.where)
+    let bapId = req.params.bap_id
+    memberCond.setKeyValue(memberFields.PERSON, req.body.personId)
 
-      data[bapRegFields.DATE_CREATED] = req.body.currentDate
-      data[bapRegFields.DATE] = req.body.date
-      data[bapRegFields.LOCATION] = req.body.location
-      data[bapRegFields.PERSON] = req.body.personId
+    data[bapRegFields.DATE_CREATED] = req.body.currentDate
+    data[bapRegFields.DATE] = req.body.date
+    data[bapRegFields.LOCATION] = req.body.location
+    data[bapRegFields.PERSON] = req.body.personId
 
-      const officiant = JSON.parse(req.body.officiant)
-      const peopleInfo = {}
+    const officiant = JSON.parse(req.body.officiant)
+    const peopleInfo = {}
 
-      if (officiant.isMember) {
-        data[bapRegFields.OFFICIANT] = officiant.person_id
-      } else {
-        peopleInfo[personFields.FIRST_NAME] = officiant.first_name
-        peopleInfo[personFields.MID_NAME] = officiant.mid_name
-        peopleInfo[personFields.LAST_NAME] = officiant.last_name
-      }
-
-      db.insert(db.tables.PERSON_TABLE, peopleInfo, function (result) {
-        if (result) {
-          if (!officiant.isMember) {
-            console.log('test')
-            data[bapRegFields.OFFICIANT] = result[0]
-          }
-          console.log(data)
-          db.insert(db.tables.BAPTISMAL_TABLE, data, function (result) {
-            if (result) {
-              bapId = result[0]
-              const memberData = {}
-              memberData[memberFields.BAPTISMAL_REG] = bapId
-              db.update(db.tables.MEMBER_TABLE, memberData, memberCond, function (result) {
-                if (result) {
-                  req.session.editId = bapId
-                  res.send(JSON.stringify(bapId))
-                } else {
-                  res.send(false)
-                }
-              })
-            } else {
-              res.send(false)
-            }
-          })
-        } else {
-          res.send(false)
-        }
-      })
+    if (officiant.isMember) {
+      data[bapRegFields.OFFICIANT] = officiant.person_id
     } else {
-      sendError(req, res, 401)
+      peopleInfo[personFields.FIRST_NAME] = officiant.first_name
+      peopleInfo[personFields.MID_NAME] = officiant.mid_name
+      peopleInfo[personFields.LAST_NAME] = officiant.last_name
     }
+
+    db.insert(db.tables.PERSON_TABLE, peopleInfo, function (result) {
+      if (result) {
+        if (!officiant.isMember) {
+          console.log('test')
+          data[bapRegFields.OFFICIANT] = result[0]
+        }
+        console.log(data)
+        db.insert(db.tables.BAPTISMAL_TABLE, data, function (result) {
+          if (result) {
+            bapId = result[0]
+            const memberData = {}
+            memberData[memberFields.BAPTISMAL_REG] = bapId
+            db.update(db.tables.MEMBER_TABLE, memberData, memberCond, function (result) {
+              if (result) {
+                req.session.editId = bapId
+                res.send(JSON.stringify(bapId))
+              } else {
+                res.send(false)
+              }
+            })
+          } else {
+            res.send(false)
+          }
+        })
+      } else {
+        res.send(false)
+      }
+    })
   }
 }
 
