@@ -25,14 +25,18 @@ const searchController = {
   */
   getAdvancedSearch: function (req, res) {
     const data = {}
-    if (parseInt(req.session.level) === 2) {
-      data.canSee = false // cannot see the member option type in advanced search
-    } else if (parseInt(req.session.level) === 3) {
-      data.canSee = true // can see the member option type in advanced search
+    if (parseInt(req.session.level) === 2 || parseInt(req.session.level) === 3) {
+      if (parseInt(req.session.level) === 2) {
+        data.canSee = false // cannot see the member option type in advanced search
+      } else if (parseInt(req.session.level) === 3) {
+        data.canSee = true // can see the member option type in advanced search
+      }
+      data.scripts = ['advancedSearch']
+      data.styles = ['forms']
+      res.render('search-page', data)
+    } else {
+      sendError(req, res, 401, '401 Unauthorized Access')
     }
-    data.scripts = ['advancedSearch']
-    data.styles = ['forms']
-    res.render('search-page', data)
   },
   /**
    * This function processes the search text fields and returns a number of
