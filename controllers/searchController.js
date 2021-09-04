@@ -822,11 +822,11 @@ const searchController = {
       const end = helper.formatDate(req.query.baptismal_date_to)
 
       const condition = new Condition(queryTypes.whereBetween)
-      condition.setRange(weddingRegFields.DATE_OF_WEDDING, start, end)
+      condition.setRange(bapRegFields.DATE, start, end)
       conditions.push(condition)
     }
 
-    db.find(db.tables.BAPTISMAL_TABLE, [], joinTables, columns, function (result) {
+    db.find(db.tables.BAPTISMAL_TABLE, conditions, joinTables, columns, function (result) {
       const data = {}
       data.records = result
       data.scripts = ['convertDataTable']
