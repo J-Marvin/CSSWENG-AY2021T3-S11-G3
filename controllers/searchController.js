@@ -240,42 +240,42 @@ const searchController = {
 
     // Bride First Name Condition
     if (people.bride.first_name !== null && people.bride.first_name !== '') {
-      const condition = new Condition(queryTypes.orWhere)
+      const condition = new Condition(queryTypes.where)
       condition.setKeyValue('bride.' + personFields.FIRST_NAME, '%' + people.bride.first_name + '%', 'LIKE')
       conditions.push(condition)
     }
 
     // Bride Middle Name Condition
     if (people.bride.mid_name !== null && people.bride.mid_name !== '') {
-      const condition = new Condition(queryTypes.orWhere)
+      const condition = new Condition(queryTypes.where)
       condition.setKeyValue('bride.' + personFields.MID_NAME, '%' + people.bride.mid_name + '%', 'LIKE')
       conditions.push(condition)
     }
 
     // Bride Last Name Condition
     if (people.bride.last_name !== null && people.bride.last_name !== '') {
-      const condition = new Condition(queryTypes.orWhere)
+      const condition = new Condition(queryTypes.where)
       condition.setKeyValue('bride.' + personFields.LAST_NAME, '%' + people.bride.last_name + '%', 'LIKE')
       conditions.push(condition)
     }
 
     // Groom First Name Condition
     if (people.groom.first_name !== null && people.groom.first_name !== '') {
-      const condition = new Condition(queryTypes.orWhere)
+      const condition = new Condition(queryTypes.where)
       condition.setKeyValue('groom.' + personFields.FIRST_NAME, '%' + people.groom.first_name + '%', 'LIKE')
       conditions.push(condition)
     }
 
     // Groom Middle Name Condition
     if (people.groom.mid_name !== null && people.groom.mid_name !== '') {
-      const condition = new Condition(queryTypes.orWhere)
+      const condition = new Condition(queryTypes.where)
       condition.setKeyValue('groom.' + personFields.MID_NAME, '%' + people.groom.mid_name + '%', 'LIKE')
       conditions.push(condition)
     }
 
     // Groom Last Name Condition
     if (people.groom.last_name !== null && people.groom.last_name !== '') {
-      const condition = new Condition(queryTypes.orWhere)
+      const condition = new Condition(queryTypes.where)
       condition.setKeyValue('groom.' + personFields.LAST_NAME, '%' + people.groom.last_name + '%', 'LIKE')
       conditions.push(condition)
     }
