@@ -33,6 +33,7 @@ const searchController = {
       }
       data.scripts = ['advancedSearch']
       data.styles = ['forms']
+      data.backLink = '/main-page'
       res.render('search-page', data)
     } else {
       sendError(req, res, 401, '401 Unauthorized Access')
@@ -166,7 +167,8 @@ const searchController = {
         const data = {
           styles: ['lists'],
           scripts: ['convertDataTable'],
-          canSee: parseInt(req.session.level) === 3
+          canSee: parseInt(req.session.level) === 3,
+          backLink: '/advanced_search'
         }
 
         result.forEach(function (member) {
@@ -455,94 +457,130 @@ const searchController = {
     let tempCondition = null
 
     // Bride First Name Condition
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue('bride.' + personFields.FIRST_NAME, '%' + people.bride.first_name + '%', 'LIKE')
-    conditions.push(tempCondition)
+    if (people.bride.first_name !== '') {
+      tempCondition = new Condition(queryTypes.where)
+      tempCondition.setKeyValue('bride.' + personFields.FIRST_NAME, '%' + people.bride.first_name + '%', 'LIKE')
+      conditions.push(tempCondition)
+    }
 
     // Bride Middle Name Condition
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue('bride.' + personFields.MID_NAME, '%' + people.bride.mid_name + '%', 'LIKE')
-    conditions.push(tempCondition)
+    if (people.bride.mid_name) {
+      tempCondition = new Condition(queryTypes.where)
+      tempCondition.setKeyValue('bride.' + personFields.MID_NAME, '%' + people.bride.mid_name + '%', 'LIKE')
+      conditions.push(tempCondition)
+    }
 
     // Bride Last Name Condition
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue('bride.' + personFields.LAST_NAME, '%' + people.bride.last_name + '%', 'LIKE')
-    conditions.push(tempCondition)
+    if (people.bride.last_name) {
+      tempCondition = new Condition(queryTypes.where)
+      tempCondition.setKeyValue('bride.' + personFields.LAST_NAME, '%' + people.bride.last_name + '%', 'LIKE')
+      conditions.push(tempCondition)
+    }
 
     // Groom First Name Condition
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue('groom.' + personFields.FIRST_NAME, '%' + people.groom.first_name + '%', 'LIKE')
-    conditions.push(tempCondition)
+    if (people.groom.first_name) {
+      tempCondition = new Condition(queryTypes.where)
+      tempCondition.setKeyValue('groom.' + personFields.FIRST_NAME, '%' + people.groom.first_name + '%', 'LIKE')
+      conditions.push(tempCondition)
+    }
 
     // Groom Middle Name Condition
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue('groom.' + personFields.MID_NAME, '%' + people.groom.mid_name + '%', 'LIKE')
-    conditions.push(tempCondition)
+    if (people.groom.mid_name) {
+      tempCondition = new Condition(queryTypes.where)
+      tempCondition.setKeyValue('groom.' + personFields.MID_NAME, '%' + people.groom.mid_name + '%', 'LIKE')
+      conditions.push(tempCondition)
+    }
 
     // Groom Last Name Condition
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue('groom.' + personFields.LAST_NAME, '%' + people.groom.last_name + '%', 'LIKE')
-    conditions.push(tempCondition)
+    if (people.groom.last_name) {
+      tempCondition = new Condition(queryTypes.where)
+      tempCondition.setKeyValue('groom.' + personFields.LAST_NAME, '%' + people.groom.last_name + '%', 'LIKE')
+      conditions.push(tempCondition)
+    }
 
     // Bride Mother First Name Condition
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue('bride_mother.' + personFields.FIRST_NAME, '%' + people.bride_mother.first_name + '%', 'LIKE')
-    conditions.push(tempCondition)
+    if (people.bride_mother.first_name) {
+      tempCondition = new Condition(queryTypes.where)
+      tempCondition.setKeyValue('bride_mother.' + personFields.FIRST_NAME, '%' + people.bride_mother.first_name + '%', 'LIKE')
+      conditions.push(tempCondition)
+    }
 
     // Bride Mother Middle Name Condition
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue('bride_mother.' + personFields.MID_NAME, '%' + people.bride_mother.mid_name + '%', 'LIKE')
-    conditions.push(tempCondition)
+    if (people.bride_mother.mid_name) {
+      tempCondition = new Condition(queryTypes.where)
+      tempCondition.setKeyValue('bride_mother.' + personFields.MID_NAME, '%' + people.bride_mother.mid_name + '%', 'LIKE')
+      conditions.push(tempCondition)
+    }
 
     // Bride Mother Last Name Condition
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue('bride_mother.' + personFields.LAST_NAME, '%' + people.bride_mother.last_name + '%', 'LIKE')
-    conditions.push(tempCondition)
+    if (people.bride_mother.last_name) {
+      tempCondition = new Condition(queryTypes.where)
+      tempCondition.setKeyValue('bride_mother.' + personFields.LAST_NAME, '%' + people.bride_mother.last_name + '%', 'LIKE')
+      conditions.push(tempCondition)
+    }
 
     // Bride Father First Name Condition
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue('bride_mother.' + personFields.FIRST_NAME, '%' + people.bride_mother.first_name + '%', 'LIKE')
-    conditions.push(tempCondition)
+    if (people.bride_father.first_name) {
+      tempCondition = new Condition(queryTypes.where)
+      tempCondition.setKeyValue('bride_father.' + personFields.FIRST_NAME, '%' + people.bride_father.first_name + '%', 'LIKE')
+      conditions.push(tempCondition)
+    }
 
     // Bride Father Middle Name Condition
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue('bride_mother.' + personFields.MID_NAME, '%' + people.bride_mother.mid_name + '%', 'LIKE')
-    conditions.push(tempCondition)
+    if (people.bride_father.mid_name) {
+      tempCondition = new Condition(queryTypes.where)
+      tempCondition.setKeyValue('bride_father.' + personFields.MID_NAME, '%' + people.bride_father.mid_name + '%', 'LIKE')
+      conditions.push(tempCondition)
+    }
 
     // Bride Father Last Name Condition
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue('bride_mother.' + personFields.LAST_NAME, '%' + people.bride_mother.last_name + '%', 'LIKE')
-    conditions.push(tempCondition)
+    if (people.bride_father.last_name) {
+      tempCondition = new Condition(queryTypes.where)
+      tempCondition.setKeyValue('bride_father.' + personFields.LAST_NAME, '%' + people.bride_father.last_name + '%', 'LIKE')
+      conditions.push(tempCondition)
+    }
 
     // Groom Mother First Name Condition
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue('groom_mother.' + personFields.FIRST_NAME, '%' + people.groom_mother.first_name + '%', 'LIKE')
-    conditions.push(tempCondition)
+    if (people.groom_mother.first_name) {
+      tempCondition = new Condition(queryTypes.where)
+      tempCondition.setKeyValue('groom_mother.' + personFields.FIRST_NAME, '%' + people.groom_mother.first_name + '%', 'LIKE')
+      conditions.push(tempCondition)
+    }
 
     // Groom Mother Middle Name Condition
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue('groom_mother.' + personFields.MID_NAME, '%' + people.groom_mother.mid_name + '%', 'LIKE')
-    conditions.push(tempCondition)
+    if (people.groom_mother.mid_name) {
+      tempCondition = new Condition(queryTypes.where)
+      tempCondition.setKeyValue('groom_mother.' + personFields.MID_NAME, '%' + people.groom_mother.mid_name + '%', 'LIKE')
+      conditions.push(tempCondition)
+    }
 
     // Groom Mother Last Name Condition
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue('groom_mother.' + personFields.LAST_NAME, '%' + people.groom_mother.last_name + '%', 'LIKE')
-    conditions.push(tempCondition)
+    if (people.groom_mother.last_name) {
+      tempCondition = new Condition(queryTypes.where)
+      tempCondition.setKeyValue('groom_mother.' + personFields.LAST_NAME, '%' + people.groom_mother.last_name + '%', 'LIKE')
+      conditions.push(tempCondition)
+    }
 
     // Groom First Father Name Condition
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue('groom_father.' + personFields.FIRST_NAME, '%' + people.groom_father.first_name + '%', 'LIKE')
-    conditions.push(tempCondition)
+    if (people.groom_father.first_name) {
+      tempCondition = new Condition(queryTypes.where)
+      tempCondition.setKeyValue('groom_father.' + personFields.FIRST_NAME, '%' + people.groom_father.first_name + '%', 'LIKE')
+      conditions.push(tempCondition)
+    }
 
     // Groom Middle Father Name Condition
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue('groom_father.' + personFields.MID_NAME, '%' + people.groom_father.mid_name + '%', 'LIKE')
-    conditions.push(tempCondition)
+    if (people.groom_father.mid_name) {
+      tempCondition = new Condition(queryTypes.where)
+      tempCondition.setKeyValue('groom_father.' + personFields.MID_NAME, '%' + people.groom_father.mid_name + '%', 'LIKE')
+      conditions.push(tempCondition)
+    }
 
     // Groom Last Father Name Condition
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue('groom_father.' + personFields.LAST_NAME, '%' + people.groom_father.last_name + '%', 'LIKE')
-    conditions.push(tempCondition)
+    if (people.groom_father.last_name) {
+      tempCondition = new Condition(queryTypes.where)
+      tempCondition.setKeyValue('groom_father.' + personFields.LAST_NAME, '%' + people.groom_father.last_name + '%', 'LIKE')
+      conditions.push(tempCondition)
+    }
 
     // Wedding Date Condition
     if (req.query.wedding_date_from !== '' && req.query.wedding_date_to !== '') {
@@ -555,24 +593,32 @@ const searchController = {
     }
 
     // Location Condition
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue(tables.WEDDING_TABLE + '.' + weddingRegFields.LOCATION, '%' + req.query.wedding_location + '%', 'LIKE')
-    conditions.push(tempCondition)
+    if (req.query.wedding_location) {
+      tempCondition = new Condition(queryTypes.where)
+      tempCondition.setKeyValue(tables.WEDDING_TABLE + '.' + weddingRegFields.LOCATION, '%' + req.query.wedding_location + '%', 'LIKE')
+      conditions.push(tempCondition)
+    }
 
     // Wedding Officiant Condition
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue(tables.WEDDING_TABLE + '.' + weddingRegFields.WEDDING_OFFICIANT, '%' + req.query.wedding_officiant + '%', 'LIKE')
-    conditions.push(tempCondition)
+    if (req.query.wedding_officiant) {
+      tempCondition = new Condition(queryTypes.where)
+      tempCondition.setKeyValue(tables.WEDDING_TABLE + '.' + weddingRegFields.WEDDING_OFFICIANT, '%' + req.query.wedding_officiant + '%', 'LIKE')
+      conditions.push(tempCondition)
+    }
 
     // Solemnizing Officer Condition
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue(tables.WEDDING_TABLE + '.' + weddingRegFields.SOLEMNIZER, '%' + req.query.wedding_officer + '%', 'LIKE')
-    conditions.push(tempCondition)
+    if (req.query.wedding_officer) {
+      tempCondition = new Condition(queryTypes.where)
+      tempCondition.setKeyValue(tables.WEDDING_TABLE + '.' + weddingRegFields.SOLEMNIZER, '%' + req.query.wedding_officer + '%', 'LIKE')
+      conditions.push(tempCondition)
+    }
 
     // Registration Number Condition
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue(tables.WEDDING_TABLE + '.' + weddingRegFields.CONTRACT, '%' + req.query.reg_num + '%', 'LIKE')
-    conditions.push(tempCondition)
+    if (req.query.reg_num) {
+      tempCondition = new Condition(queryTypes.where)
+      tempCondition.setKeyValue(tables.WEDDING_TABLE + '.' + weddingRegFields.CONTRACT, '%' + req.query.reg_num + '%', 'LIKE')
+      conditions.push(tempCondition)
+    }
 
     db.find(db.tables.WEDDING_TABLE, conditions, joinTables, columns, function (result) {
       if (result) {
@@ -580,7 +626,8 @@ const searchController = {
         res.render('wedding-main-page', {
           styles: ['lists'],
           scripts: ['convertDataTable'],
-          prenup: result
+          prenup: result,
+          backLink: '/advanced_search'
         })
       } else {
         sendError(req, res, 404)
@@ -743,7 +790,8 @@ const searchController = {
       res.render('dedication-main-page', {
         styles: ['lists'],
         scripts: ['convertDataTable'],
-        dedication: result
+        dedication: result,
+        backLink: '/advanced_search'
       })
     })
   },
@@ -831,6 +879,7 @@ const searchController = {
       data.records = result
       data.scripts = ['convertDataTable']
       data.styles = ['lists']
+      data.backLink = '/advanced_search'
 
       res.render('baptismal-main-page', data)
     })
