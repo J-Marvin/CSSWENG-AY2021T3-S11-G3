@@ -144,6 +144,8 @@
           <label>Last Name</label>
           <input type="text" id="prenup_bride_last_name" name="prenup_bride_last_name" class="form-control">
         </div>
+
+        <p id="prenup_bride_middle_error" class="error_codes" style="margin: 0;"></p>
       </div>
       <hr>
       <legend>Groom Name</legend>
@@ -160,6 +162,8 @@
           <label>Last Name</label>
           <input type="text" id="prenup_groom_last_name" name="prenup_groom_last_name" class="form-control">
         </div>
+        
+        <p id="prenup_groom_middle_error" class="error_codes" style="margin: 0;"></p>
       </div>
       <hr>
       <div class="row">
@@ -187,6 +191,9 @@
           <label> To </label>
           <input type="date" id="prenup_date_wedding_to" name="prenup_date_wedding_to" class="form-control">
         </div>
+
+        <p id="prenup_date_created_error" class="error_codes" style="margin: 0;"></p>
+        <p id="prenup_date_wedding_error" class="error_codes" style="margin: 0;"></p>
       </div>
       <hr>
       <button id="prenup-search-submit" type="submit" class="btn btn-primary">Submit</button>
@@ -222,6 +229,8 @@
           <label>Last Name</label>
           <input type="text" id="wedding_groom_last_name" name="wedding_groom_last_name" class="form-control">
         </div>
+
+        <p id="wedding_groom_middle_error" class="error_codes" style="margin: 0;"></p>
       </div>
       <hr>
       <div class="row mb-3">
@@ -239,6 +248,8 @@
           <label>Last Name</label>
           <input type="text" id="wedding_bride_mother_last_name" name="wedding_bride_mother_last_name" class="form-control">
         </div>
+
+        <p id="wedding_bride_mother_middle_error" class="error_codes" style="margin: 0;"></p>
       </div>
       <div class="row mb-3">
         <legend> Father: </legend>
@@ -254,6 +265,8 @@
           <label>Last Name</label>
           <input type="text" id="wedding_bride_father_last_name" name="wedding_bride_father_last_name" class="form-control">
         </div>
+
+        <p id="wedding_bride_father_middle_error" class="error_codes" style="margin: 0;"></p>
       </div>
       <hr>
       <div class="row mb-3">
@@ -271,6 +284,8 @@
           <label>Last Name</label>
           <input type="text" id="wedding_groom_mother_last_name" name="wedding_groom_mother_last_name" class="form-control">
         </div>
+
+        <p id="wedding_groom_mother_middle_error" class="error_codes" style="margin: 0;"></p>
       </div>
       <div class="row mb-3">
         <legend> Father: </legend>
@@ -286,6 +301,8 @@
           <label>Last Name</label>
           <input type="text" id="wedding_groom_father_last_name" name="wedding_groom_father_last_name" class="form-control">
         </div>
+
+        <p id="wedding_groom_father_middle_error" class="error_codes" style="margin: 0;"></p>
       </div>
       <hr>
       <div class="row">
@@ -300,6 +317,8 @@
           <label>To</label>
           <input type="date" id="wedding_date_to" name="wedding_date_to" class="form-control">
         </div>
+        
+        <p id="wedding_date_error" class="error_codes" style="margin: 0;"></p>
       </div>
       <hr>
       <div class="row mb-3">
@@ -344,6 +363,8 @@
           <label>Last Name</label>
           <input type="text" id="baptism_last_name" name="baptism_last_name" class="form-control">
         </div>
+
+        <p id="baptism_middle_error" class="error_codes" style="margin: 0;"></p>
       </div>
       <hr>
       <div class="row mb-3">
@@ -360,6 +381,8 @@
           <label>Last Name</label>
           <input type="text" id="baptism_officiant_last_name" name="baptism_officiant_last_name" class="form-control">
         </div>
+
+        <p id="baptism_officiant_middle_error" class="error_codes" style="margin: 0;"></p>
       </div>
       <hr>
       <div class="row">
@@ -374,6 +397,8 @@
           <label> To </label>
           <input type="date" id="baptismal_date_to" name="baptismal_date_to" class="form-control">
         </div>
+
+        <p id="baptismal_date_error" class="error_codes" style="margin: 0;"></p>
       </div>
       <hr>
       <div class="row">
@@ -385,6 +410,7 @@
       <hr>
       <button id="baptismal-search-submit" type="submit" class="btn btn-primary">Submit</button>
     </form>
+
     <form id="dedication-record" method="GET" action="/search_dedication" style="display: none;">
       <div class="row mb-3">
         <legend> Child </legend>
@@ -416,6 +442,8 @@
           <label>Last Name</label>
           <input type="text" id="dedication_mother_last_name" name="dedication_mother_last_name" class="form-control">
         </div>
+
+        <p id="dedication_mother_middle_error" class="error_codes" style="margin: 0;"></p>
       </div>
       <div class="row">
         <legend> Father </legend>
@@ -431,6 +459,8 @@
           <label>Last Name</label>
           <input type="text" id="dedication_father_last_name" name="dedication_father_last_name" class="form-control">
         </div>
+
+        <p id="dedication_father_middle_error" class="error_codes" style="margin: 0;"></p>
       </div>
       <hr>
       <div class="row">
@@ -445,6 +475,8 @@
           <label> To </label>
           <input type="date" id="dedication_date_to" name="dedication_date_to" class="form-control">
         </div>
+
+        <p id="dedication_date_error" class="error_codes" style="margin: 0;"></p>
       </div>
       <hr>
       <div class="row">
