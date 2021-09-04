@@ -168,7 +168,8 @@ const searchController = {
           styles: ['lists'],
           scripts: ['convertDataTable'],
           canSee: parseInt(req.session.level) === 3,
-          backLink: '/advanced_search'
+          backLink: '/advanced_search',
+          fromSearch: true
         }
 
         result.forEach(function (member) {
@@ -627,7 +628,8 @@ const searchController = {
           styles: ['lists'],
           scripts: ['convertDataTable'],
           prenup: result,
-          backLink: '/advanced_search'
+          backLink: '/advanced_search',
+          fromSearch: true
         })
       } else {
         sendError(req, res, 404)
@@ -791,7 +793,8 @@ const searchController = {
         styles: ['lists'],
         scripts: ['convertDataTable'],
         dedication: result,
-        backLink: '/advanced_search'
+        backLink: '/advanced_search',
+        fromSearch: true
       })
     })
   },
@@ -880,6 +883,7 @@ const searchController = {
       data.scripts = ['convertDataTable']
       data.styles = ['lists']
       data.backLink = '/advanced_search'
+      data.fromSearch = true
 
       res.render('baptismal-main-page', data)
     })
