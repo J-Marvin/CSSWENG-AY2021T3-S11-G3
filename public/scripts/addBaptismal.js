@@ -106,7 +106,7 @@ $(document).ready(function() {
       isValid = false
       $('#member_error').text('Please select member')
     } else {
-      $('member_error').text('')
+      $('#member_error').text('')
     }
 
     if (!hasDate) {

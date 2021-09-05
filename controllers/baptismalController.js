@@ -101,6 +101,16 @@ const baptismalController = {
       sendError(req, res, 401, '401 Unauthorized Access')
     }
   },
+
+  getEditBaptismal: function (req, res) {
+    const data = {
+      scripts: ['editBaptismal'],
+      styles: ['forms']
+    }
+
+    res.render('edit-baptismal', data)
+  },
+
   /**
    * This function processes the creation of the baptismal record
    * @param req - the incoming request containing either the query or body
