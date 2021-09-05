@@ -168,7 +168,8 @@ const searchController = {
           styles: ['lists'],
           scripts: ['convertDataTable'],
           canSee: parseInt(req.session.level) === 3,
-          backLink: '/advanced_search'
+          backLink: '/advanced_search',
+          fromSearch: true
         }
 
         result.forEach(function (member) {
@@ -227,8 +228,8 @@ const searchController = {
 
     const columns = [
       db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.ID,
-      db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.DATE,
-      db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.DATE_OF_WEDDING,
+      db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.DATE + ' as date',
+      db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.DATE_OF_WEDDING + ' as date_of_wedding',
       'bride.' + personFields.FIRST_NAME + ' as bride_first_name',
       'bride.' + personFields.MID_NAME + ' as bride_mid_name',
       'bride.' + personFields.LAST_NAME + ' as bride_last_name',
@@ -262,21 +263,21 @@ const searchController = {
     // Groom First Name Condition
     if (people.groom.first_name !== null && people.groom.first_name !== '') {
       const condition = new Condition(queryTypes.where)
-      condition.setKeyValue('bride.' + personFields.FIRST_NAME, '%' + people.bride.first_name + '%', 'LIKE')
+      condition.setKeyValue('groom.' + personFields.FIRST_NAME, '%' + people.groom.first_name + '%', 'LIKE')
       conditions.push(condition)
     }
 
     // Groom Middle Name Condition
     if (people.groom.mid_name !== null && people.groom.mid_name !== '') {
       const condition = new Condition(queryTypes.where)
-      condition.setKeyValue('bride.' + personFields.MID_NAME, '%' + people.bride.mid_name + '%', 'LIKE')
+      condition.setKeyValue('groom.' + personFields.MID_NAME, '%' + people.groom.mid_name + '%', 'LIKE')
       conditions.push(condition)
     }
 
     // Groom Last Name Condition
     if (people.groom.last_name !== null && people.groom.last_name !== '') {
       const condition = new Condition(queryTypes.where)
-      condition.setKeyValue('bride.' + personFields.LAST_NAME, '%' + people.bride.last_name + '%', 'LIKE')
+      condition.setKeyValue('groom.' + personFields.LAST_NAME, '%' + people.groom.last_name + '%', 'LIKE')
       conditions.push(condition)
     }
 
@@ -296,7 +297,7 @@ const searchController = {
       const end = helper.formatDate(req.query.prenup_date_wedding_to)
 
       const condition = new Condition(queryTypes.whereBetween)
-      condition.setRange(prenupRecordFields.DATE, start, end)
+      condition.setRange(prenupRecordFields.DATE_OF_WEDDING, start, end)
       conditions.push(condition)
     }
 
@@ -627,7 +628,8 @@ const searchController = {
           styles: ['lists'],
           scripts: ['convertDataTable'],
           prenup: result,
-          backLink: '/advanced_search'
+          backLink: '/advanced_search',
+          fromSearch: true
         })
       } else {
         sendError(req, res, 404)
@@ -791,7 +793,8 @@ const searchController = {
         styles: ['lists'],
         scripts: ['convertDataTable'],
         dedication: result,
-        backLink: '/advanced_search'
+        backLink: '/advanced_search',
+        fromSearch: true
       })
     })
   },
@@ -880,6 +883,7 @@ const searchController = {
       data.scripts = ['convertDataTable']
       data.styles = ['lists']
       data.backLink = '/advanced_search'
+      data.fromSearch = true
 
       res.render('baptismal-main-page', data)
     })
