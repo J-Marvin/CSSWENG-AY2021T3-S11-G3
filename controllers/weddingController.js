@@ -271,6 +271,16 @@ const weddingController = {
       sendError(req, res, 401)
     }
   },
+
+  getEditWedding: function (req, res) {
+    const data = {
+      scripts: ['editWedding'],
+      styles: ['forms']
+    }
+    console.log('error')
+    res.render('edit-wedding', data)
+  },
+
   /**
   * This function inserts a new row in the wedding table
   * @param req - the incoming request containing either the query or body

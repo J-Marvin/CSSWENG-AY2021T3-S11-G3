@@ -28,6 +28,7 @@ app.get('/edit_dedication/:dedication_id', dedicationController.getEditDedicatio
 
 app.get('/add_wedding', weddingController.getAddWeddingPage)
 app.get('/view_wedding/:wedding_id', weddingController.getViewWeddingPage)
+app.get('/edit_wedding/:wedding_id', weddingController.getEditWedding)
 app.get('/edit_member/:member_id', memberController.getEditMember)
 app.get('/edit_prenup/:prenup_id', prenupController.getEditPrenup)
 app.get('/forms_main_page', indexController.getFormsMainPage)
