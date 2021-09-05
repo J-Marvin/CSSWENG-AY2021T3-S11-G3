@@ -24,6 +24,8 @@ app.get('/member_main_page', indexController.getMemberMainPage)
 app.get('/add_member', memberController.getAddMemberPage)
 app.get('/add_dedication', dedicationController.getAddDedicationPage)
 app.get('/view_dedication/:dedication_id', dedicationController.getViewDedication)
+app.get('/edit_dedication/:dedication_id', dedicationController.getEditDedication)
+
 app.get('/add_wedding', weddingController.getAddWeddingPage)
 app.get('/view_wedding/:wedding_id', weddingController.getViewWeddingPage)
 app.get('/edit_member/:member_id', memberController.getEditMember)

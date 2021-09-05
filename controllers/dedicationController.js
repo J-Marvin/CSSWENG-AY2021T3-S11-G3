@@ -385,6 +385,14 @@ const dedicationController = {
     })
   },
 
+  getEditDedication: function (req, res) {
+    const data = {
+      scripts: ['editDedication'],
+      styles: ['forms']
+    }
+    res.render('edit-dedication', data)
+  },
+
   putUpdateDedication: function (req, res) {
     // If Child non-member to member
     // If parent1 non-member to member

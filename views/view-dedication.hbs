@@ -1,24 +1,3 @@
-{{!-- {{>navbar}}
-DedicationId: {{infant_dedication_id}}<br>
-Child memberId: {{infant_member_id}}<br>
-Child personId: {{infant_person_id}}<br>
-Child: {{infant_first_name}}, {{infant_middle_name}}, {{infant_last_name}}<br>
-
-ParentsId: {{parents_id}}<br>
-Guardian1: {{guardianOne_first_name}}, {{guardianOne_mid_name}}, {{guardianOne_last_name}}<br>
-Guardian1 personId: {{guardianOne_person_id}}, Parent1 memberId: {{guardianOne_member_id}}<br>
-
-Guardian2: {{guardianTwo_first_name}}, {{guardianTwo_mid_name}}, {{guardianTwo_last_name}}<br>
-Guardian2 personId: {{guardianTwo_person_id}}, Parent2 memberId: {{guardianTwo_member_id}}<br>
-
-Officiant: {{officiant}}<br>
-Date: {{dateView date}}<br>
-Place: {{place}}<br>
-Witnesses (Ninong/Ninang):<br>
-{{#each witnesses}}
-    {{this.witness_person_id}}, {{this.witness_first_name}} {{this.witness_middle_name}} {{this.witness_last_name}}<br>
-{{/each}} --}}
-
 <style>
   @import url(/css/fonts.css);
 
@@ -147,25 +126,7 @@ Witnesses (Ninong/Ninang):<br>
     {{#if canSee}}
     <div class="row my-3">
       <div class="col">
-        <a><button class="btn btn-secondary mb-4">Edit Dedication Form</button></a>
+        <a href="/edit_dedication/{{dedication_id}}"><button class="btn btn-secondary mb-4">Edit Dedication Form</button></a>
       </div>
     </div>
     {{/if}}
-{{!-- 
-    Male
-    <br>
-    {{#each witnessMale}} 
-    {{this.witness_first_name}},
-    {{this.witness_middle_name}},
-    {{this.witness_last_name}}
-    <br>
-    {{/each}}
-    <br>
-    Female
-    <br>
-    {{#each witnessFemale}}
-    {{this.witness_first_name}} ,
-    {{this.witness_middle_name}} ,
-    {{this.witness_last_name}} 
-    <br>
-    {{/each}} --}}
