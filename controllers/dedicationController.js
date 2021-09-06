@@ -35,6 +35,7 @@ const dedicationController = {
       db.find(db.tables.MEMBER_TABLE, [], join, '*', function (result) {
         if (result) {
           const data = {}
+          data.noDedicationMembers = result.filter(elem => elem[memberFields.CHILD_DEDICATION] === null)
           data.members = result
           data.styles = ['forms']
           data.scripts = ['addDedication']
@@ -354,8 +355,37 @@ const dedicationController = {
 
                           db.insert(db.tables.WITNESS_TABLE, allWitnesses, function (result) {
                             if (result) {
-                              req.session.editId = dedicationId
-                              res.send(JSON.stringify(dedicationId))
+                              const memberUpdateData = {}
+                              memberUpdateData[memberFields.CHILD_DEDICATION] = dedicationId
+
+                              const updateConditions = []
+
+                              if (people.child.isMember) {
+                                const condition = new Condition(queryTypes.where)
+                                condition.setKeyValue(memberFields.ID, people.child.member_id)
+                                updateConditions.push(condition)
+                              }
+
+                              if (updateConditions.length === 0) {
+                                const condition = new Condition(queryTypes.whereNull)
+                                condition.setField(memberFields.ID)
+                                updateConditions.push(condition)
+                              }
+
+                              db.update(db.tables.MEMBER_TABLE, memberUpdateData, updateConditions, function (result) {
+                                console.log(result)
+                                if (result === 0) {
+                                  result = true
+                                }
+
+                                if (result) {
+                                  req.session.editId = dedicationId
+                                  res.send(JSON.stringify(dedicationId))
+                                } else {
+                                  console.log('error updating into Child Dedication Member table')
+                                  res.send(false)
+                                }
+                              })
                             } else {
                               res.send(false)
                             }
@@ -383,6 +413,14 @@ const dedicationController = {
         res.send(false)
       }
     })
+  },
+
+  getEditDedication: function (req, res) {
+    const data = {
+      scripts: ['editDedication'],
+      styles: ['forms']
+    }
+    res.render('edit-dedication', data)
   },
 
   putUpdateDedication: function (req, res) {

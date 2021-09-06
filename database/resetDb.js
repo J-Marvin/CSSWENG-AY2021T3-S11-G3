@@ -500,6 +500,7 @@ function initDatabase (file) {
     'wedding_reg_id INTEGER,' +
     'prenup_record_id INTEGER,' +
     'person_id INTEGER NOT NULL,' +
+    'child_dedication_id INTEGER, ' +
     'member_status TEXT,' +
     'civil_status TEXT,' +
     'birthday TEXT,' +
@@ -520,6 +521,7 @@ function initDatabase (file) {
     'CONSTRAINT fk_wedding_reg FOREIGN KEY(wedding_reg_id) REFERENCES wedding_reg(reg_id)  ON DELETE SET NULL,' +
     'CONSTRAINT fk_prenup FOREIGN KEY(prenup_record_id) REFERENCES pre_nuptial(record_id)  ON DELETE SET NULL,' +
     'CONSTRAINT fk_parents FOREIGN KEY(parents_id) REFERENCES couple(couple_id)  ON DELETE SET NULL,' +
+    'CONSTRAINT fk_child_ded FOREIGN KEY(child_dedication_id) REFERENCES inf_dedication(dedication_id) ON DELETE SET NULL,' +
     'FOREIGN KEY(person_id) REFERENCES people(person_id)' +
     ')'
 

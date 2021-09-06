@@ -1,8 +1,9 @@
 {{>navbar}}
-<form id="add_dedication_form" class="container">
+
+<form id="edit_dedication_form" class="container">
   <div class="container" style="padding-left: 20%; padding-right: 20%;">
     <div class="row d-flex justify-content-between">
-      <div class="col-8"><h1 class="my-3"> Add Child Dedication Form </h1></div>
+      <div class="col-8"><h1 class="my-3"> Edit Child Dedication Form </h1></div>
       <div class="col-4 align-self-end"><p style="text-align:end; margin:0;">* - required</p></div>
     </div>
     <hr style="margin-top: 0;">
@@ -16,7 +17,7 @@
         <div id="child_member_div" style="display:block">
           <label>Select Child*</label>
           <select name="input_child_member" id="input_child_member" >
-            {{>dropdown noDedicationMembers}}
+            {{>dropdown members}}
           </select>
         </div>
       
@@ -165,7 +166,7 @@
     <div class="row" id="gfather_witness_row">
       <p id="witness_gfather_info_error" class="error_codes"> </p>
     </div>
-    <button id="create-dedication" type="button" class="btn btn-primary">Submit</button>
+    <button id="edit-dedication" type="button" class="btn btn-primary">Submit</button>
   </div>
 </form>
 
