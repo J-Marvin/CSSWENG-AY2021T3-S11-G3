@@ -34,6 +34,7 @@ app.get('/edit_prenup/:prenup_id', prenupController.getEditPrenup)
 app.get('/forms_main_page', indexController.getFormsMainPage)
 app.get('/add_baptismal', baptismalController.getAddBaptismalRecordPage)
 app.get('/edit_baptismal', baptismalController.getEditBaptismal)
+app.get('/add_baptismal/:member_id', baptismalController.getAddBaptismalRecordPage)
 app.get('/view_baptismal/:bap_id', baptismalController.getViewBaptismalRecord)
 
 app.get('/advanced_search', searchController.getAdvancedSearch)

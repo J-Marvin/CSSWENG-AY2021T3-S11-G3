@@ -15,7 +15,8 @@ const errorController = {
           code: parseInt(code),
           message: msg
         },
-        backLink: '/main_page'
+        backLink: '/main_page',
+        level: req.session.level
       })
     } catch (error) {
       res.send(false)

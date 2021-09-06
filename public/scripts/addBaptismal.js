@@ -2,7 +2,13 @@ $(document).ready(function() {
   const member = $('#input_member').selectize()
   const officiant = $('#input_officiant_member').selectize()
 
+  
   initSelectize()
+  if ($('#input_member').data('member-id')) {
+    const value = $('div [data-value^="' + $('#input_member').data('member-id')+ '"]').data('value')
+    $(member)[0].selectize.setValue(value)
+    initSelectize()
+  } 
 
   $('select').change(function () {
 
