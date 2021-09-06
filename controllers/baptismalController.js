@@ -73,8 +73,9 @@ const baptismalController = {
    * @param res - the result to be sent out after processing the request
    */
   getAddBaptismalRecordPage: function (req, res) {
-    const bapId = req.params.bap_id
-    if (parseInt(req.session.level) !== null || parseInt(req.session.editId) === bapId) {
+    const memberId = req.params.member_id
+
+    if (parseInt(req.session.level) >= 2) {
       const data = {}
       const joinTables = [
         {
@@ -94,6 +95,7 @@ const baptismalController = {
           data.scripts = ['addBaptismal']
           data.styles = ['forms']
           data.backLink = parseInt(req.session.level) >= 2 ? '/baptismal_main_page' : '/forms_main_page'
+          data.memberId = memberId
           res.render('add-baptismal', data)
         }
       })
@@ -110,6 +112,7 @@ const baptismalController = {
     const data = {}
     const memberCond = new Condition(queryTypes.where)
     let bapId = req.params.bap_id
+
     memberCond.setKeyValue(memberFields.PERSON, req.body.personId)
 
     data[bapRegFields.DATE_CREATED] = req.body.currentDate
