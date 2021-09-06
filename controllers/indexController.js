@@ -351,12 +351,20 @@ const controller = {
     }
   },
   /**
-   * This function renders the advanced search page
+   * This function
    * @param req - the incoming request containing either the query or body
    * @param res - the result to be sent out after processing the request
    */
-  getSearchPage: function (req, res) {
-    res.render('search-page')
+  getChangePassword: function (req, res) {
+    if (parseInt(req.session.level) === 3) {
+      res.render('') // insert hbs filename
+    } else {
+      sendError(req, res, 401)
+    }
+  },
+
+  postChangePassword: function (req, res) {
+    // process passwords
   }
 }
 
