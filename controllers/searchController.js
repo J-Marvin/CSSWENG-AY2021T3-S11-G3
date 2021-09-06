@@ -1,17 +1,13 @@
 const db = require('../models/db')
 const { Condition, queryTypes } = require('../models/condition')
-const { validationResult, query } = require('express-validator')
 const addressFields = require('../models/address')
 const bapRegFields = require('../models/baptismalRegistry')
-const churchFields = require('../models/church')
 const coupleFields = require('../models/couple')
 const infDedFields = require('../models/infantDedication')
 const memberFields = require('../models/members')
 const personFields = require('../models/person')
 const prenupRecordFields = require('../models/prenupRecord')
-const observationFields = require('../models/observation')
 const weddingRegFields = require('../models/weddingRegistry')
-const witnessFields = require('../models/witness')
 const { sendError } = require('../controllers/errorController')
 const { tables } = require('../models/db')
 const moment = require('moment')
@@ -133,7 +129,7 @@ const searchController = {
       // if age is not provided
       // birthday YYYY-MM-DD
       cond = new Condition(queryTypes.whereBetween)
-      cond.setRange(memberFields.BIRTHDAY, helper.formatDate(data.member.birthdayFrom), helper.formatDate(data.member.birthdayTo))
+      cond.setRange(memberFields.BIRTHDAY, helper.formatDate(data.member.birthdayFrom), helper.formatDateTomorrow(data.member.birthdayTo))
       conditions.push(cond)
     }
 
@@ -284,7 +280,7 @@ const searchController = {
     // Date Created Condition
     if (req.query.prenup_date_created_from !== '' && req.query.prenup_date_created_to !== '') {
       const start = helper.formatDate(req.query.prenup_date_created_from)
-      const end = helper.formatDate(req.query.prenup_date_created_to)
+      const end = helper.formatDateTomorrow(req.query.prenup_date_created_to)
 
       const condition = new Condition(queryTypes.whereBetween)
       condition.setRange(prenupRecordFields.DATE, start, end)
@@ -294,7 +290,7 @@ const searchController = {
     // Wedding Date Condition
     if (req.query.prenup_date_wedding_from !== '' && req.query.prenup_date_wedding_to !== '') {
       const start = helper.formatDate(req.query.prenup_date_wedding_from)
-      const end = helper.formatDate(req.query.prenup_date_wedding_to)
+      const end = helper.formatDateTomorrow(req.query.prenup_date_wedding_to)
 
       const condition = new Condition(queryTypes.whereBetween)
       condition.setRange(prenupRecordFields.DATE_OF_WEDDING, start, end)
@@ -419,8 +415,7 @@ const searchController = {
       // name of the groom's father
       'groom_father.' + personFields.FIRST_NAME + ' as groom_father_first_name',
       'groom_father.' + personFields.MID_NAME + ' as groom_father_mid_name',
-      'groom_father.' + personFields.LAST_NAME + ' as groom_father_last_name',
-      db.tables.WEDDING_TABLE + '.' + weddingRegFields.DATE + ' as date'
+      'groom_father.' + personFields.LAST_NAME + ' as groom_father_last_name'
     ]
 
     const people = {
@@ -587,7 +582,7 @@ const searchController = {
     // Wedding Date Condition
     if (req.query.wedding_date_from !== '' && req.query.wedding_date_to !== '') {
       const start = helper.formatDate(req.query.wedding_date_from)
-      const end = helper.formatDate(req.query.wedding_date_to)
+      const end = helper.formatDateTomorrow(req.query.wedding_date_to)
 
       const condition = new Condition(queryTypes.whereBetween)
       condition.setRange(weddingRegFields.DATE_OF_WEDDING, start, end)
@@ -707,8 +702,7 @@ const searchController = {
       'guardianTwo.' + personFields.ID + ' as guardianTwo_person_id',
       'guardianTwo.' + personFields.FIRST_NAME + ' as guardianTwo_first_name',
       'guardianTwo.' + personFields.MID_NAME + ' as guardianTwo_mid_name',
-      'guardianTwo.' + personFields.LAST_NAME + ' as guardianTwo_last_name',
-      db.tables.INFANT_TABLE + '.' + infDedFields.DATE + ' as date'
+      'guardianTwo.' + personFields.LAST_NAME + ' as guardianTwo_last_name'
     ]
 
     const conditions = []
@@ -782,7 +776,7 @@ const searchController = {
     // dedication date range
     if (data.dateFrom !== '' && data.dateTo !== '') {
       const start = helper.formatDate(data.dateFrom)
-      const end = helper.formatDate(data.dateTo)
+      const end = helper.formatDateTomorrow(data.dateTo)
 
       tempCondition = new Condition(queryTypes.whereBetween)
       tempCondition.setRange(infDedFields.DEDICATION_DATE, start, end)
@@ -872,7 +866,7 @@ const searchController = {
 
     if (req.query.baptismal_date_from !== '' && req.query.baptismal_date_to !== '') {
       const start = helper.formatDate(req.query.baptismal_date_from)
-      const end = helper.formatDate(req.query.baptismal_date_to)
+      const end = helper.formatDateTomorrow(req.query.baptismal_date_to)
 
       const condition = new Condition(queryTypes.whereBetween)
       condition.setRange(bapRegFields.DATE, start, end)
