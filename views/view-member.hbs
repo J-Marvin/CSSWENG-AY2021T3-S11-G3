@@ -185,6 +185,13 @@
             Baptismal</a>
         {{/if}}
 
+        {{#if member.child_dedication_id}}
+          <a href="/view_dedication/{{member.child_dedication_id}}" id="view_dedication" type="button" class="btn btn-secondary mt-1">View Child Dedication</a>
+        {{else}}
+        <a href="/add_dedication/{{member.child_dedication_id}}" id="add_dedication" type="button"
+          class="btn btn-secondary mt-1">Add Child Dedication</a>
+        {{/if}}
+
       </div>
     </div>
     <hr>

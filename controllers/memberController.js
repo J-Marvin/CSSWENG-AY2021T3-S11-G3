@@ -132,7 +132,6 @@ const memberController = {
                   const today = moment()
                   const b = moment(data.member.birthday)
 
-                  console.log(data.member)
                   data.member.age = moment.duration(today.diff(b)).years()
                   data.styles = ['view']
                   data.scripts = ['removeButtons']
