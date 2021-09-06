@@ -708,72 +708,74 @@ const searchController = {
 
     const conditions = []
     let tempCondition = null
-    console.log(data)
 
     // infant's first name
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue('infant.' + personFields.FIRST_NAME, '%' + data.infant.first_name + '%', 'LIKE')
-    conditions.push(tempCondition)
+    if (data.infant.first_name !== '') {
+      tempCondition = new Condition(queryTypes.where)
+      tempCondition.setKeyValue('infant.' + personFields.FIRST_NAME, '%' + data.infant.first_name + '%', 'LIKE')
+      conditions.push(tempCondition)
+    }
 
     // infant's middle name
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue('infant.' + personFields.MID_NAME, '%' + data.infant.middle_name + '%', 'LIKE')
-    conditions.push(tempCondition)
+    if (data.infant.middle_name !== '') {
+      tempCondition = new Condition(queryTypes.where)
+      tempCondition.setKeyValue('infant.' + personFields.MID_NAME, '%' + data.infant.middle_name + '%', 'LIKE')
+      conditions.push(tempCondition)
+    }
 
     // infant's last name
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue('infant.' + personFields.LAST_NAME, '%' + data.infant.last_name + '%', 'LIKE')
-    conditions.push(tempCondition)
+    if (data.infant.last_name !== '') {
+      tempCondition = new Condition(queryTypes.where)
+      tempCondition.setKeyValue('infant.' + personFields.LAST_NAME, '%' + data.infant.last_name + '%', 'LIKE')
+      conditions.push(tempCondition)
+    }
 
-    // check if guardianOne's id is not null
-    tempCondition = new Condition(queryTypes.whereNotNull)
-    tempCondition.setField('guardianOne.' + personFields.ID)
-    conditions.push(tempCondition)
+    if (data.guardianOne.first_name !== '' || data.guardianOne.middle_name !== '' || data.guardianOne.last_name !== '') {
+      const guardianQuery = []
+      guardianQuery.push('((')
+      guardianQuery.push('guardianOne.' + personFields.FIRST_NAME + ' LIKE ' + '\'%' + data.guardianOne.first_name + '%\' AND ')
+      guardianQuery.push('guardianOne.' + personFields.MID_NAME + ' LIKE ' + '\'%' + data.guardianOne.middle_name + '%\' AND ')
+      guardianQuery.push('guardianOne.' + personFields.LAST_NAME + ' LIKE ' + '\'%' + data.guardianOne.last_name + '%\'')
+      guardianQuery.push(') OR (')
+      guardianQuery.push('guardianTwo.' + personFields.FIRST_NAME + ' LIKE ' + '\'%' + data.guardianOne.first_name + '%\' AND ')
+      guardianQuery.push('guardianTwo.' + personFields.MID_NAME + ' LIKE ' + '\'%' + data.guardianOne.middle_name + '%\' AND ')
+      guardianQuery.push('guardianTwo.' + personFields.LAST_NAME + ' LIKE ' + '\'%' + data.guardianOne.last_name + '%\'')
+      guardianQuery.push('))')
 
-    // guardianOne's first name
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue('guardianOne.' + personFields.FIRST_NAME, '%' + data.guardianOne.first_name + '%', 'LIKE')
-    conditions.push(tempCondition)
+      tempCondition = new Condition(queryTypes.whereRaw)
+      tempCondition.setQuery(guardianQuery.join(''), [])
+      conditions.push(tempCondition)
+    }
 
-    // guardianOne's middle name
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue('guardianOne.' + personFields.MID_NAME, '%' + data.guardianOne.middle_name + '%', 'LIKE')
-    conditions.push(tempCondition)
-
-    // guardianOne's last name
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue('guardianOne.' + personFields.LAST_NAME, '%' + data.guardianOne.last_name + '%', 'LIKE')
-    conditions.push(tempCondition)
-
-    // check if guardianTwo's id is not null
-    tempCondition = new Condition(queryTypes.orWhere)
-    tempCondition.setField('guardianTwo.' + personFields.ID)
-    conditions.push(tempCondition)
-
-    // guardianTwo's first name
-    tempCondition = new Condition(queryTypes.orWhere)
-    tempCondition.setKeyValue('guardianTwo.' + personFields.FIRST_NAME, '%' + data.guardianTwo.first_name + '%', 'LIKE')
-    conditions.push(tempCondition)
-
-    // guardianTwo's middle name
-    tempCondition = new Condition(queryTypes.orWhere)
-    tempCondition.setKeyValue('guardianTwo.' + personFields.MID_NAME, '%' + data.guardianTwo.middle_name + '%', 'LIKE')
-    conditions.push(tempCondition)
-
-    // guardianTwo's last name
-    tempCondition = new Condition(queryTypes.orWhere)
-    tempCondition.setKeyValue('guardianTwo.' + personFields.LAST_NAME, '%' + data.guardianTwo.last_name + '%', 'LIKE')
-    conditions.push(tempCondition)
+    if (data.guardianTwo.first_name !== '' || data.guardianTwo.middle_name !== '' || data.guardianTwo.last_name !== '') {
+      const guardianQuery = []
+      guardianQuery.push('((')
+      guardianQuery.push('guardianOne.' + personFields.FIRST_NAME + ' LIKE ' + '\'%' + data.guardianTwo.first_name + '%\'AND ')
+      guardianQuery.push('guardianOne.' + personFields.MID_NAME + ' LIKE ' + '\'%' + data.guardianTwo.middle_name + '%\' AND ')
+      guardianQuery.push('guardianOne.' + personFields.LAST_NAME + ' LIKE ' + '\'%' + data.guardianTwo.last_name + '%\'')
+      guardianQuery.push(') OR (')
+      guardianQuery.push('guardianTwo.' + personFields.FIRST_NAME + ' LIKE ' + '\'%' + data.guardianTwo.first_name + '%\' AND ')
+      guardianQuery.push('guardianTwo.' + personFields.MID_NAME + ' LIKE ' + '\'%' + data.guardianTwo.middle_name + '%\' AND ')
+      guardianQuery.push('guardianTwo.' + personFields.LAST_NAME + ' LIKE ' + '\'%' + data.guardianTwo.last_name + '%\'')
+      guardianQuery.push('))')
+      tempCondition = new Condition(queryTypes.whereRaw)
+      tempCondition.setQuery(guardianQuery.join(''), [])
+      conditions.push(tempCondition)
+    }
 
     // location
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue(db.tables.INFANT_TABLE + '.' + infDedFields.PLACE, '%' + data.location + '%', 'LIKE')
-    conditions.push(tempCondition)
+    if (data.location !== '') {
+      tempCondition = new Condition(queryTypes.where)
+      tempCondition.setKeyValue(db.tables.INFANT_TABLE + '.' + infDedFields.PLACE, '%' + data.location + '%', 'LIKE')
+      conditions.push(tempCondition)
+    }
 
     // officiant
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue(db.tables.INFANT_TABLE + '.' + infDedFields.OFFICIANT, '%' + data.officiant + '%', 'LIKE')
-    conditions.push(tempCondition)
+    if (data.officiant !== '') {
+      tempCondition = new Condition(queryTypes.where)
+      tempCondition.setKeyValue(db.tables.INFANT_TABLE + '.' + infDedFields.OFFICIANT, '%' + data.officiant + '%', 'LIKE')
+      conditions.push(tempCondition)
+    }
 
     // dedication date range
     if (data.dateFrom !== '' && data.dateTo !== '') {
