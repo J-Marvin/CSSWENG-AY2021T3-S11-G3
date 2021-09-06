@@ -138,7 +138,16 @@ const searchController = {
     }
 
     // civil status
-    if (data.member[memberFields.CIVIL_STATUS] !== 'none') {
+    if (data.member[memberFields.CIVIL_STATUS] === 'Others') {
+      // where not civil_status = 'Single'
+      cond = new Condition(queryTypes.whereNot)
+      cond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.CIVIL_STATUS, 'Single', '=')
+      conditions.push(cond)
+      // where not civil_status = 'Married'
+      cond = new Condition(queryTypes.whereNot)
+      cond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.CIVIL_STATUS, 'Married', '=')
+      conditions.push(cond)
+    } else if (data.member[memberFields.CIVIL_STATUS] !== 'none') {
       cond = new Condition(queryTypes.where)
       cond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.CIVIL_STATUS, data.member[memberFields.CIVIL_STATUS], '=')
       conditions.push(cond)
