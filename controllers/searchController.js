@@ -419,7 +419,8 @@ const searchController = {
       // name of the groom's father
       'groom_father.' + personFields.FIRST_NAME + ' as groom_father_first_name',
       'groom_father.' + personFields.MID_NAME + ' as groom_father_mid_name',
-      'groom_father.' + personFields.LAST_NAME + ' as groom_father_last_name'
+      'groom_father.' + personFields.LAST_NAME + ' as groom_father_last_name',
+      db.tables.WEDDING_TABLE + '.' + weddingRegFields.DATE + ' as date'
     ]
 
     const people = {
@@ -706,7 +707,8 @@ const searchController = {
       'guardianTwo.' + personFields.ID + ' as guardianTwo_person_id',
       'guardianTwo.' + personFields.FIRST_NAME + ' as guardianTwo_first_name',
       'guardianTwo.' + personFields.MID_NAME + ' as guardianTwo_mid_name',
-      'guardianTwo.' + personFields.LAST_NAME + ' as guardianTwo_last_name'
+      'guardianTwo.' + personFields.LAST_NAME + ' as guardianTwo_last_name',
+      db.tables.INFANT_TABLE + '.' + infDedFields.DATE + ' as date'
     ]
 
     const conditions = []

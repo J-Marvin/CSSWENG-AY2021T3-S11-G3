@@ -162,7 +162,8 @@ const controller = {
         'guardianOne.' + personFields.LAST_NAME + ' as guardianOne_last_name',
         'guardianTwo.' + personFields.FIRST_NAME + ' as guardianTwo_first_name',
         'guardianTwo.' + personFields.MID_NAME + ' as guardianTwo_mid_name',
-        'guardianTwo.' + personFields.LAST_NAME + ' as guardianTwo_last_name'
+        'guardianTwo.' + personFields.LAST_NAME + ' as guardianTwo_last_name',
+        db.tables.INFANT_TABLE + '.' + infDedFields.DATE + ' as date'
       ]
       db.find(db.tables.INFANT_TABLE, null, joinTables, columns, function (result) {
         // console.log(result)
@@ -215,12 +216,13 @@ const controller = {
       const columns = [
         db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.ID,
         db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.DATE_OF_WEDDING,
+        db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.DATE,
         'bride.' + personFields.FIRST_NAME + ' as bride_first_name',
         'bride.' + personFields.MID_NAME + ' as bride_mid_name',
         'bride.' + personFields.LAST_NAME + ' as bride_last_name',
         'groom.' + personFields.FIRST_NAME + ' as groom_first_name',
         'groom.' + personFields.MID_NAME + ' as groom_mid_name',
-        'groom.' + personFields.LAST_NAME + ' as groom_last_name'
+        'groom.' + personFields.LAST_NAME + ' as groom_last_name',
       ]
 
       db.find(db.tables.COUPLE_TABLE, null, joinTables, columns, function (result) {
@@ -272,6 +274,7 @@ const controller = {
       const columns = [
         db.tables.WEDDING_TABLE + '.' + weddingRegFields.ID,
         db.tables.WEDDING_TABLE + '.' + weddingRegFields.DATE_OF_WEDDING,
+        db.tables.WEDDING_TABLE + '.' + weddingRegFields.DATE + ' as date',
         'bride.' + personFields.FIRST_NAME + ' as bride_first_name',
         'bride.' + personFields.MID_NAME + ' as bride_mid_name',
         'bride.' + personFields.LAST_NAME + ' as bride_last_name',

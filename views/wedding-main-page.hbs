@@ -23,6 +23,7 @@
           <th>Groom</th>
           <th>Bride</th>
           <th>Date of Wedding</th>
+          <th>Date Created</th>
         </tr>
       </thead>
       <tbody>
@@ -32,6 +33,7 @@
             <td>{{this.groom_first_name}} {{this.groom_mid_name}}. {{this.groom_last_name}}</td>
             <td>{{this.bride_first_name}} {{this.bride_mid_name}}. {{this.bride_last_name}}</td>
             <td>{{dateView this.date_of_wedding}}</td>
+            <td>{{dateView this.date}}</td>
           </tr>
         {{/each}}
       </tbody>

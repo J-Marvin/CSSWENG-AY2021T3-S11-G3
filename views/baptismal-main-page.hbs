@@ -23,7 +23,8 @@
           <th>Name</th>
           <th>Date of Baptism</th>
           <th>Location</th>
-          <th>Officiant</th> 
+          <th>Officiant</th>
+          <th>Date Created</th> 
         </tr>
       </thead>
       <tbody>
@@ -34,6 +35,7 @@
           <td>{{dateView this.date}}</td>
           <td>{{this.place}}</td>
           <td>{{this.officiant_first_name}} {{this.officiant_last_name}}</td>
+          <td>{{dateView this.date_created}}</td>
         </tr>
         {{/each}}
       </tbody>

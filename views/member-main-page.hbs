@@ -27,6 +27,7 @@
             <th>Contact Number</th>
             <th>Email Address</th>
             <th>Address</th>
+            <th>Date Created</th>
           {{/if}}
         </tr>
       </thead>
@@ -43,6 +44,7 @@
               <td>{{this.email}}</td>
               <td>{{this.address}}</td>
             {{/if}}
+            <td>{{dateView this.date_created}}</td>
           </tr>
         {{/each}}
       </tbody>

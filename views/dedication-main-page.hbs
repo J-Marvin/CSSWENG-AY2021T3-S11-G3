@@ -23,6 +23,7 @@
           <th>Child</th>
           <th>Parent/Guardian</th>
           <th>Parent/Guardian</th>
+          <th>Date Created</th>
         </tr>
       </thead>
       <tbody>
@@ -37,6 +38,7 @@
             {{else}}
             <td>N/A</td>
           {{/if}}
+          <td>{{dateView this.date}}</td>
         </tr>
         {{/each}}
       </tbody>
