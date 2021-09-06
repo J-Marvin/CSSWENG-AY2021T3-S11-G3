@@ -702,11 +702,13 @@ const searchController = {
       'guardianTwo.' + personFields.ID + ' as guardianTwo_person_id',
       'guardianTwo.' + personFields.FIRST_NAME + ' as guardianTwo_first_name',
       'guardianTwo.' + personFields.MID_NAME + ' as guardianTwo_mid_name',
-      'guardianTwo.' + personFields.LAST_NAME + ' as guardianTwo_last_name'
+      'guardianTwo.' + personFields.LAST_NAME + ' as guardianTwo_last_name',
+      db.tables.INFANT_TABLE + '.' + infDedFields.DATE + ' as date'
     ]
 
     const conditions = []
     let tempCondition = null
+    console.log(data)
 
     // infant's first name
     tempCondition = new Condition(queryTypes.where)
