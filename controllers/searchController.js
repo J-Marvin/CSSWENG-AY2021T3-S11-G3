@@ -33,7 +33,7 @@ const searchController = {
       }
       data.scripts = ['advancedSearch']
       data.styles = ['forms']
-      data.backLink = '/main-page'
+      data.backLink = '/main_page'
       res.render('search-page', data)
     } else {
       sendError(req, res, 401, '401 Unauthorized Access')
