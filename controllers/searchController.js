@@ -1,17 +1,13 @@
 const db = require('../models/db')
 const { Condition, queryTypes } = require('../models/condition')
-const { validationResult, query } = require('express-validator')
 const addressFields = require('../models/address')
 const bapRegFields = require('../models/baptismalRegistry')
-const churchFields = require('../models/church')
 const coupleFields = require('../models/couple')
 const infDedFields = require('../models/infantDedication')
 const memberFields = require('../models/members')
 const personFields = require('../models/person')
 const prenupRecordFields = require('../models/prenupRecord')
-const observationFields = require('../models/observation')
 const weddingRegFields = require('../models/weddingRegistry')
-const witnessFields = require('../models/witness')
 const { sendError } = require('../controllers/errorController')
 const { tables } = require('../models/db')
 const moment = require('moment')
@@ -133,7 +129,7 @@ const searchController = {
       // if age is not provided
       // birthday YYYY-MM-DD
       cond = new Condition(queryTypes.whereBetween)
-      cond.setRange(memberFields.BIRTHDAY, helper.formatDate(data.member.birthdayFrom), helper.formatDate(data.member.birthdayTo))
+      cond.setRange(memberFields.BIRTHDAY, helper.formatDate(data.member.birthdayFrom), helper.formatDateTomorrow(data.member.birthdayTo))
       conditions.push(cond)
     }
 
@@ -293,7 +289,7 @@ const searchController = {
     // Date Created Condition
     if (req.query.prenup_date_created_from !== '' && req.query.prenup_date_created_to !== '') {
       const start = helper.formatDate(req.query.prenup_date_created_from)
-      const end = helper.formatDate(req.query.prenup_date_created_to)
+      const end = helper.formatDateTomorrow(req.query.prenup_date_created_to)
 
       const condition = new Condition(queryTypes.whereBetween)
       condition.setRange(prenupRecordFields.DATE, start, end)
@@ -303,7 +299,7 @@ const searchController = {
     // Wedding Date Condition
     if (req.query.prenup_date_wedding_from !== '' && req.query.prenup_date_wedding_to !== '') {
       const start = helper.formatDate(req.query.prenup_date_wedding_from)
-      const end = helper.formatDate(req.query.prenup_date_wedding_to)
+      const end = helper.formatDateTomorrow(req.query.prenup_date_wedding_to)
 
       const condition = new Condition(queryTypes.whereBetween)
       condition.setRange(prenupRecordFields.DATE_OF_WEDDING, start, end)
@@ -428,8 +424,7 @@ const searchController = {
       // name of the groom's father
       'groom_father.' + personFields.FIRST_NAME + ' as groom_father_first_name',
       'groom_father.' + personFields.MID_NAME + ' as groom_father_mid_name',
-      'groom_father.' + personFields.LAST_NAME + ' as groom_father_last_name',
-      db.tables.WEDDING_TABLE + '.' + weddingRegFields.DATE + ' as date'
+      'groom_father.' + personFields.LAST_NAME + ' as groom_father_last_name'
     ]
 
     const people = {
@@ -596,7 +591,7 @@ const searchController = {
     // Wedding Date Condition
     if (req.query.wedding_date_from !== '' && req.query.wedding_date_to !== '') {
       const start = helper.formatDate(req.query.wedding_date_from)
-      const end = helper.formatDate(req.query.wedding_date_to)
+      const end = helper.formatDateTomorrow(req.query.wedding_date_to)
 
       const condition = new Condition(queryTypes.whereBetween)
       condition.setRange(weddingRegFields.DATE_OF_WEDDING, start, end)
@@ -724,74 +719,77 @@ const searchController = {
     let tempCondition = null
 
     // infant's first name
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue('infant.' + personFields.FIRST_NAME, '%' + data.infant.first_name + '%', 'LIKE')
-    conditions.push(tempCondition)
+    if (data.infant.first_name !== '') {
+      tempCondition = new Condition(queryTypes.where)
+      tempCondition.setKeyValue('infant.' + personFields.FIRST_NAME, '%' + data.infant.first_name + '%', 'LIKE')
+      conditions.push(tempCondition)
+    }
 
     // infant's middle name
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue('infant.' + personFields.MID_NAME, '%' + data.infant.middle_name + '%', 'LIKE')
-    conditions.push(tempCondition)
+    if (data.infant.middle_name !== '') {
+      tempCondition = new Condition(queryTypes.where)
+      tempCondition.setKeyValue('infant.' + personFields.MID_NAME, '%' + data.infant.middle_name + '%', 'LIKE')
+      conditions.push(tempCondition)
+    }
 
     // infant's last name
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue('infant.' + personFields.LAST_NAME, '%' + data.infant.last_name + '%', 'LIKE')
-    conditions.push(tempCondition)
+    if (data.infant.last_name !== '') {
+      tempCondition = new Condition(queryTypes.where)
+      tempCondition.setKeyValue('infant.' + personFields.LAST_NAME, '%' + data.infant.last_name + '%', 'LIKE')
+      conditions.push(tempCondition)
+    }
 
-    // check if guardianOne's id is not null
-    tempCondition = new Condition(queryTypes.whereNotNull)
-    tempCondition.setField('guardianOne.' + personFields.ID)
-    conditions.push(tempCondition)
+    if (data.guardianOne.first_name !== '' || data.guardianOne.middle_name !== '' || data.guardianOne.last_name !== '') {
+      const guardianQuery = []
+      guardianQuery.push('((')
+      guardianQuery.push('guardianOne.' + personFields.FIRST_NAME + ' LIKE ' + '\'%' + data.guardianOne.first_name + '%\' AND ')
+      guardianQuery.push('guardianOne.' + personFields.MID_NAME + ' LIKE ' + '\'%' + data.guardianOne.middle_name + '%\' AND ')
+      guardianQuery.push('guardianOne.' + personFields.LAST_NAME + ' LIKE ' + '\'%' + data.guardianOne.last_name + '%\'')
+      guardianQuery.push(') OR (')
+      guardianQuery.push('guardianTwo.' + personFields.FIRST_NAME + ' LIKE ' + '\'%' + data.guardianOne.first_name + '%\' AND ')
+      guardianQuery.push('guardianTwo.' + personFields.MID_NAME + ' LIKE ' + '\'%' + data.guardianOne.middle_name + '%\' AND ')
+      guardianQuery.push('guardianTwo.' + personFields.LAST_NAME + ' LIKE ' + '\'%' + data.guardianOne.last_name + '%\'')
+      guardianQuery.push('))')
 
-    // guardianOne's first name
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue('guardianOne.' + personFields.FIRST_NAME, '%' + data.guardianOne.first_name + '%', 'LIKE')
-    conditions.push(tempCondition)
+      tempCondition = new Condition(queryTypes.whereRaw)
+      tempCondition.setQuery(guardianQuery.join(''), [])
+      conditions.push(tempCondition)
+    }
 
-    // guardianOne's middle name
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue('guardianOne.' + personFields.MID_NAME, '%' + data.guardianOne.middle_name + '%', 'LIKE')
-    conditions.push(tempCondition)
-
-    // guardianOne's last name
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue('guardianOne.' + personFields.LAST_NAME, '%' + data.guardianOne.last_name + '%', 'LIKE')
-    conditions.push(tempCondition)
-
-    // check if guardianTwo's id is not null
-    tempCondition = new Condition(queryTypes.orWhere)
-    tempCondition.setField('guardianTwo.' + personFields.ID)
-    conditions.push(tempCondition)
-
-    // guardianTwo's first name
-    tempCondition = new Condition(queryTypes.orWhere)
-    tempCondition.setKeyValue('guardianTwo.' + personFields.FIRST_NAME, '%' + data.guardianTwo.first_name + '%', 'LIKE')
-    conditions.push(tempCondition)
-
-    // guardianTwo's middle name
-    tempCondition = new Condition(queryTypes.orWhere)
-    tempCondition.setKeyValue('guardianTwo.' + personFields.MID_NAME, '%' + data.guardianTwo.middle_name + '%', 'LIKE')
-    conditions.push(tempCondition)
-
-    // guardianTwo's last name
-    tempCondition = new Condition(queryTypes.orWhere)
-    tempCondition.setKeyValue('guardianTwo.' + personFields.LAST_NAME, '%' + data.guardianTwo.last_name + '%', 'LIKE')
-    conditions.push(tempCondition)
+    if (data.guardianTwo.first_name !== '' || data.guardianTwo.middle_name !== '' || data.guardianTwo.last_name !== '') {
+      const guardianQuery = []
+      guardianQuery.push('((')
+      guardianQuery.push('guardianOne.' + personFields.FIRST_NAME + ' LIKE ' + '\'%' + data.guardianTwo.first_name + '%\'AND ')
+      guardianQuery.push('guardianOne.' + personFields.MID_NAME + ' LIKE ' + '\'%' + data.guardianTwo.middle_name + '%\' AND ')
+      guardianQuery.push('guardianOne.' + personFields.LAST_NAME + ' LIKE ' + '\'%' + data.guardianTwo.last_name + '%\'')
+      guardianQuery.push(') OR (')
+      guardianQuery.push('guardianTwo.' + personFields.FIRST_NAME + ' LIKE ' + '\'%' + data.guardianTwo.first_name + '%\' AND ')
+      guardianQuery.push('guardianTwo.' + personFields.MID_NAME + ' LIKE ' + '\'%' + data.guardianTwo.middle_name + '%\' AND ')
+      guardianQuery.push('guardianTwo.' + personFields.LAST_NAME + ' LIKE ' + '\'%' + data.guardianTwo.last_name + '%\'')
+      guardianQuery.push('))')
+      tempCondition = new Condition(queryTypes.whereRaw)
+      tempCondition.setQuery(guardianQuery.join(''), [])
+      conditions.push(tempCondition)
+    }
 
     // location
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue(db.tables.INFANT_TABLE + '.' + infDedFields.PLACE, '%' + data.location + '%', 'LIKE')
-    conditions.push(tempCondition)
+    if (data.location !== '') {
+      tempCondition = new Condition(queryTypes.where)
+      tempCondition.setKeyValue(db.tables.INFANT_TABLE + '.' + infDedFields.PLACE, '%' + data.location + '%', 'LIKE')
+      conditions.push(tempCondition)
+    }
 
     // officiant
-    tempCondition = new Condition(queryTypes.where)
-    tempCondition.setKeyValue(db.tables.INFANT_TABLE + '.' + infDedFields.OFFICIANT, '%' + data.officiant + '%', 'LIKE')
-    conditions.push(tempCondition)
+    if (data.officiant !== '') {
+      tempCondition = new Condition(queryTypes.where)
+      tempCondition.setKeyValue(db.tables.INFANT_TABLE + '.' + infDedFields.OFFICIANT, '%' + data.officiant + '%', 'LIKE')
+      conditions.push(tempCondition)
+    }
 
     // dedication date range
     if (data.dateFrom !== '' && data.dateTo !== '') {
       const start = helper.formatDate(data.dateFrom)
-      const end = helper.formatDate(data.dateTo)
+      const end = helper.formatDateTomorrow(data.dateTo)
 
       tempCondition = new Condition(queryTypes.whereBetween)
       tempCondition.setRange(infDedFields.DEDICATION_DATE, start, end)
@@ -881,7 +879,7 @@ const searchController = {
 
     if (req.query.baptismal_date_from !== '' && req.query.baptismal_date_to !== '') {
       const start = helper.formatDate(req.query.baptismal_date_from)
-      const end = helper.formatDate(req.query.baptismal_date_to)
+      const end = helper.formatDateTomorrow(req.query.baptismal_date_to)
 
       const condition = new Condition(queryTypes.whereBetween)
       condition.setRange(bapRegFields.DATE, start, end)

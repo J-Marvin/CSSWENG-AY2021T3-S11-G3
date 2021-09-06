@@ -222,7 +222,7 @@ const controller = {
         'bride.' + personFields.LAST_NAME + ' as bride_last_name',
         'groom.' + personFields.FIRST_NAME + ' as groom_first_name',
         'groom.' + personFields.MID_NAME + ' as groom_mid_name',
-        'groom.' + personFields.LAST_NAME + ' as groom_last_name',
+        'groom.' + personFields.LAST_NAME + ' as groom_last_name'
       ]
 
       db.find(db.tables.COUPLE_TABLE, null, joinTables, columns, function (result) {
