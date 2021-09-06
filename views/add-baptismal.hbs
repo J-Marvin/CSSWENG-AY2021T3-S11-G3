@@ -12,7 +12,7 @@
         <hr>
         <div id="member_div">
           <label>Select Member*</label>
-          <select name="input_member" id="input_member">
+          <select name="input_member" id="input_member" {{#if memberId}} data-member-id="{{memberId}}" {{/if}}>
             {{>dropdown noBapMembers}}
           </select>
         </div>
