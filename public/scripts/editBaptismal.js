@@ -84,9 +84,9 @@ $(document).ready(function() {
       url: '/update_bap/member',
       data: data,
       success: function (result) {
-        alert(result)
+        // alert(result)
         if (result) {
-          $('#member_div').hide()
+          $('#editMemberModal').modal('hide')
           $('#member_div').data('member', info[0]) // member id
           $('#member_div').data('person', info[1]) // person id
           $('#first_name').text(info[2]) // first name
