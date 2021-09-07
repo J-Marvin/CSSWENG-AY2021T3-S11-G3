@@ -25,7 +25,7 @@ const updateController = {
    * This function updates a record's related person from a member to a non member
    * @param {Object} person - This object contains the following: firstName, midName, lastName
    * @param {Object} ids - This object contains the following: recordId (the id of the record to be udpated), oldMemberId
-   * @param {Object} fields - This object contains the following: recordId (the field to be updated), personFieldId
+   * @param {Object} fields - This object contains the following: recordId (the field to be updated), personFieldId, memberRecordField
    * @param {String} recordTable - The table to update the record
    * @param {Function} callback - The callback function to be called after updating the required information
    */
@@ -39,7 +39,7 @@ const updateController = {
     memberCondition.setKeyValue(memberFields.PERSON, ids.oldPersonId)
 
     const updateDataMember = {}
-    updateDataMember[memberFields.PRENUP_RECORD] = null
+    updateDataMember[fields.memberRecordField] = null
 
     db.update(db.tables.MEMBER_TABLE, updateDataMember, memberCondition, function (result) {
       if (result) {
