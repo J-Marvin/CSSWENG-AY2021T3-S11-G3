@@ -363,6 +363,7 @@ const controller = {
   getSettings: function (req, res) {
     if (parseInt(req.session.level) === 3) {
       const data = {
+        scripts: ['settings'],
         styles: ['settings']
       }
       res.render('settings-page', data) // insert hbs filename
