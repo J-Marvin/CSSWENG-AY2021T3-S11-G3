@@ -134,6 +134,7 @@ const baptismalController = {
         'member.' + personFields.MID_NAME + ' as member_mid_name',
         'member.' + personFields.LAST_NAME + ' as member_last_name',
         'member.' + personFields.MEMBER + ' as member_id',
+        'member.' + personFields.ID + ' as person_id',
         'officiant.' + personFields.FIRST_NAME + ' as officiant_first_name',
         'officiant.' + personFields.MID_NAME + ' as officiant_mid_name',
         'officiant.' + personFields.LAST_NAME + ' as officiant_last_name',
@@ -237,9 +238,25 @@ const baptismalController = {
   },
 
   putUpdateBaptismalMember: function (req, res) {
-    // check if used to be member or non_member
-
-    // if non member to non member change name
+    function sendReply (result) {
+      console.log(result)
+      if (result) {
+        res.send(req.body.recordId)
+      } else {
+        res.send(false)
+      }
+    }
+    const ids = {
+      oldPersonId: req.body.oldPersonId,
+      newPersonId: req.body.newPersonId,
+      recordId: req.body.recordId
+    }
+    const fields = {
+      recordId: tables.BAPTISMAL_TABLE + '.' + bapRegFields.ID,
+      memberRecordField: memberFields.BAPTISMAL_REG,
+      recordPersonField: bapRegFields.PERSON
+    }
+    updateMemberToMember(ids, fields, tables.BAPTISMAL_TABLE, sendReply)
   },
 
   putUpdateBaptismalOfficiant: function (req, res) {
