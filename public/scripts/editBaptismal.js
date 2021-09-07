@@ -67,6 +67,39 @@ $(document).ready(function() {
     $('#editOfficiantModal').modal('show')
   })
 
+  $('#save_edit_member').click(function () {
+    const oldMemberId = $('#member_div').data('member')
+    const oldPersonId = $('#member_div').data('person')
+    const recordId = $('#baptismal_info').data('baptismal')
+    const info = $('#input_member').find(':selected').val().split(', ')
+    const newPersonId = info[1]
+
+    data = {
+      oldPersonId: oldPersonId,
+      newPersonId: newPersonId,
+      recordId: recordId
+    }
+    $.ajax({
+      type: 'PUT',
+      url: '/update_bap/member',
+      data: data,
+      success: function (result) {
+        alert(result)
+        if (result) {
+          $('#member_div').hide()
+          $('#member_div').data('member', info[0]) // member id
+          $('#member_div').data('person', info[1]) // person id
+          $('#first_name').text(info[2]) // first name
+          $('#mid_name').text(info[3]) // middle name
+          $('#last_name').text(info[4]) // last name
+        } else {
+          $('#modal_error').text('Error Editing Member')
+        }
+      }
+    })
+
+  })
+
   $('#save_edit_officiant').click(function () {
     // insert validation
     let officiantId = $('#officiant_member_div').data('member')
