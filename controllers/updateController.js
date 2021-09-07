@@ -133,7 +133,7 @@ const updateController = {
 
     if (fields.memberRecordField !== null) {
       updateNewMemberData[fields.memberRecordField] = recordId
-      updateOldMemberData[fields.memberRecordField] = recordId
+      updateOldMemberData[fields.memberRecordField] = null
     }
 
     const updateRecordCondition = new Condition(queryTypes.where)
