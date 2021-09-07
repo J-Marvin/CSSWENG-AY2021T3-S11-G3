@@ -1,0 +1,21 @@
+h1, h4, p {
+    font-family: SourceSansPro;
+}
+
+h4 {
+    font-weight: 400;
+    margin-bottom: 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid black;
+    color: rgb(124, 124, 124);
+}
+
+.header-btn {
+    padding: 0;
+    background-color: white;
+    border: none;
+}
+
+.header-divider {
+    margin-top: 0;
+}

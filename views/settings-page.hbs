@@ -1,0 +1,40 @@
+{{>navbar}}
+<div class="container mt-5 mb-3" style="padding: 0">
+    <h1> Settings </h1>
+</div>
+<div class="container sample" style="box-shadow: 0px 0px 10px rgb(212, 212, 212);">
+    <div class="row">
+        <div class="col mt-3 col-header-btn" style="max-width: fit-content;">
+            <button class="header-btn"><h4> Edit Passwords </h4></button>
+        </div>
+        <div class="col mt-3 col-header-btn" style="max-width: fit-content;">
+            <button class="header-btn"><h4> Database </h4></button>
+        </div>
+    </div>
+    <hr class="header-divider">
+    <div class="row p-3" id="passords-div">
+        <div class="row mb-3">
+            <div class="col"><p>Low</p></div>
+            <div class="col"><input type="password" id="password-low" class="form-control" placeholder="Enter new password"></div>
+            <div class="col"><input type="password" id="password-low-conf" class="form-control" placeholder="Confirm password"></div>
+            <div class="col" style="max-width: fit-content;"><button id="edit-low" type="button" class="btn btn-secondary">Submit</button></div>
+        </div>
+        <hr>
+        <div class="row mb-3">
+            <div class="col"><p>Medium</p></div>
+            <div class="col"><input type="password" id="password-med" class="form-control" placeholder="Enter new password"></div>
+            <div class="col"><input type="password" id="password-med-conf" class="form-control" placeholder="Confirm password"></div>
+            <div class="col" style="max-width: fit-content;"><button id="edit-med" type="button" class="btn btn-secondary">Submit</button></div>
+        </div>
+        <hr>
+        <div class="row mb-3">
+            <div class="col"><p>High</p></div>
+            <div class="col"><input type="password" id="password-high" class="form-control" placeholder="Enter new password"></div>
+            <div class="col"><input type="password" id="password-high-conf" class="form-control" placeholder="Confirm password"></div>
+            <div class="col" style="max-width: fit-content;"><button id="edit-high" type="button" class="btn btn-secondary">Submit</button></div>
+        </div>
+    </div>
+    <div class="row" id="database-div" style="display: none;">
+        
+    </div>
+</div>

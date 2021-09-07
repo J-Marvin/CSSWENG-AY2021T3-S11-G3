@@ -360,9 +360,12 @@ const controller = {
    * @param req - the incoming request containing either the query or body
    * @param res - the result to be sent out after processing the request
    */
-  getChangePassword: function (req, res) {
+  getSettings: function (req, res) {
     if (parseInt(req.session.level) === 3) {
-      res.render('') // insert hbs filename
+      const data = {
+        styles: ['settings']
+      }
+      res.render('settings-page', data) // insert hbs filename
     } else {
       sendError(req, res, 401)
     }
@@ -390,7 +393,7 @@ const controller = {
             }
           })
         }
-      }) 
+      })
     } else {
       sendError(req, res, 401)
     }
