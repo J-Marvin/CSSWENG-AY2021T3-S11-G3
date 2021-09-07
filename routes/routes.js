@@ -33,7 +33,7 @@ app.get('/edit_member/:member_id', memberController.getEditMember)
 app.get('/edit_prenup/:prenup_id', prenupController.getEditPrenup)
 app.get('/forms_main_page', indexController.getFormsMainPage)
 app.get('/add_baptismal', baptismalController.getAddBaptismalRecordPage)
-app.get('/edit_baptismal', baptismalController.getEditBaptismal)
+app.get('/edit_baptismal/:bap_id', baptismalController.getEditBaptismal)
 app.get('/add_baptismal/:member_id', baptismalController.getAddBaptismalRecordPage)
 app.get('/view_baptismal/:bap_id', baptismalController.getViewBaptismalRecord)
 
@@ -82,6 +82,9 @@ app.post('/checkCredentials', loginController.checkCredentials)
 
 app.put('/update_observation', validation.observationValidation(), observationController.putUpdateObservation)
 app.put('/update_church', validation.churchValidation(), churchController.putUpdateChurch)
+app.put('/update_bap/member', baptismalController.putUpdateBaptismalMember)
+app.put('/update_bap/officiant', baptismalController.putUpdateBaptismalOfficiant)
+app.put('/update_bap')
 
 app.delete('/delete_observation', observationController.delObservation)
 app.delete('/delete_church', churchController.delChurch)
