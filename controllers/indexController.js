@@ -1,14 +1,19 @@
 const db = require('../models/db.js')
 const memberFields = require('../models/members')
-const personFields = require('../models/person.js')
-const addressFields = require('../models/address.js')
+const personFields = require('../models/person')
+const addressFields = require('../models/address')
 const prenupRecordFields = require('../models/prenupRecord')
 const coupleFields = require('../models/couple')
 const weddingRegFields = require('../models/weddingRegistry')
 const infDedFields = require('../models/infantDedication')
-const bapRegFields = require('../models/baptismalRegistry.js')
+const bapRegFields = require('../models/baptismalRegistry')
+const { Condition, queryTypes } = require('../models/condition')
 const { sendError } = require('./errorController')
 const moment = require('moment')
+const bcrypt = require('bcrypt')
+const accountFields = require('../models/accounts.js')
+const { tables } = require('../models/db.js')
+const saltRounds = 10
 
 const controller = {
   /**
@@ -365,6 +370,30 @@ const controller = {
 
   postChangePassword: function (req, res) {
     // process passwords
+    if (parseInt(req.session.level) === 3) {
+      const level = req.body.level
+      const password = req.body.password
+
+      bcrypt.hash(password, saltRounds, function (err, hash) {
+        if (err) {
+          res.send(false)
+        } else {
+          const levelCondition = new Condition(queryTypes.where)
+          levelCondition.setKeyValue(accountFields.ID, level)
+          const data = {}
+          data[accountFields.PASSWORD] = hash
+          db.update(tables.ACCOUNT_TABLE, data, levelCondition, function (result) {
+            if (result) {
+              res.send(true)
+            } else {
+              res.send(false)
+            }
+          })
+        }
+      }) 
+    } else {
+      sendError(req, res, 401)
+    }
   }
 }
 
