@@ -5,6 +5,7 @@ const coupleFields = require('../models/couple')
 const { Condition, queryTypes } = require('../models/condition')
 const { validationResult, query } = require('express-validator')
 const memberFields = require('../models/members')
+const { sendError } = require('./errorController')
 
 const prenupController = {
   /**
@@ -95,28 +96,11 @@ const prenupController = {
           data.backLink = parseInt(req.session.level) >= 2 ? '/forms_main_page' : '/main_page'
           res.render('view-prenup', data)
         } else {
-          res.status(401)
-          res.render('error', {
-            title: '404 Record Not Found',
-            css: ['global', 'error'],
-            status: {
-              code: '401',
-              message: 'Record Not Found'
-            }
-          })
+          sendError(req, res, 404, '404 Prenup Record Not Found')
         }
-        console.log(result)
       })
     } else {
-      res.status(401)
-      res.render('error', {
-        title: '401 Unauthorized Access',
-        css: ['global', 'error'],
-        status: {
-          code: '401',
-          message: 'Unauthorized access'
-        }
-      })
+      sendError(req, res, 401)
     }
   },
   /**

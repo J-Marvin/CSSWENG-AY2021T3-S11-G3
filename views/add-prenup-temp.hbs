@@ -1,8 +1,11 @@
 {{>navbar}}
 <form id="prenup_form" action="/create_prenup_member" method="POST" class="container"> 
   <div class="container" style="padding-left: 20%; padding-right: 20%;">
-    <h1 class="my-3">Add Prenup Form</h1>
-    <hr>
+    <div class="row d-flex justify-content-between">
+      <div class="col-8"><h1 class="my-3"> Add Prenup Form </h1></div>
+      <div class="col-4 align-self-end"><p style="text-align:end; margin:0;">* - required</p></div>
+    </div>
+    <hr style="margin-top: 0;">
     <div class="row">
       <div class="col">
         <legend>Bride</legend>
@@ -14,7 +17,7 @@
         {{/if}}
         <input class="mb-3" type="checkbox" id="bride_member" onclick="display_div_bride('bride_member')" checked disabled> Member
         <div id="bride_member_div" style="display:block">
-          <label>Select Bride</label>
+          <label>Select Bride*</label>
           <select name="input_bride_member" id="input_bride_member">
             {{>dropdown brideNames}}
           </select>
@@ -52,7 +55,7 @@
         <input class="mb-3" type="checkbox" id="groom_member" onclick="display_div_groom('groom_member')" checked disabled> Member
 
         <div id="groom_member_div" style="display:block">
-          <label>Select Groom</label>
+          <label>Select Groom*</label>
           <select name="input_groom_member" id="input_groom_member" >
             {{>dropdown groomNames}}
           </select>
@@ -81,6 +84,7 @@
         <p id="groom_middle_len_error" class="error_codes"> </p>
       </div>
     </div>
+    <hr>
     <div class="row">
       <div class="col">
         <label for="current_date">Current Date</label>
@@ -88,7 +92,7 @@
         <p id="current_date_error" class="error_codes"> </p>
       </div>
       <div class="col">
-        <label for="wedding_date">Planned Wedding Date</label>
+        <label for="wedding_date">Planned Wedding Date*</label>
         <input type="date" id="wedding_date" name="wedding_date" class="form-control">
         <p id="wedding_date_error" class="error_codes"> </p>
       </div>

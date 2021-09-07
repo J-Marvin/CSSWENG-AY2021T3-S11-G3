@@ -1,0 +1,83 @@
+{{>navbar}}
+<form id="wedding_form" action="/create_wedding_registry" method="POST" class="container">
+  <div class="container" style="padding-left: 20%; padding-right: 20%;">
+    <div class="row d-flex justify-content-between">
+      <div class="col-8"><h1 class="my-3"> Edit Baptismal Record </h1></div>
+      <div class="col-4 align-self-end"><p style="text-align:end; margin:0;">* - required</p></div>
+    </div>
+    <hr style="margin-top: 0;">
+    <div class="row">
+      <div class="col">
+        <legend>Member</legend>
+        <hr>
+        <div id="member_div">
+          <label>Select Member*</label>
+          <select name="input_member" id="input_member">
+            {{>dropdown noBapMembers}}
+          </select>
+        </div>
+        <p id="member_error" class="error_codes"> </p>
+      </div>
+    </div>
+    {{!-- Place --}}
+    <hr>
+    <fieldset class="form-group">
+      <div class="row">
+        {{!-- <legend>Baptism Location</legend> --}}
+        <div class="col">
+          <label for="location">Baptism Location*</label>
+          <input type="text" id="location" name="location" class="form-control">
+          <p id="location_error" class="error_codes"> </p>
+        </div>
+    </fieldset>
+    {{!-- Date --}}
+    <hr>
+    <div class="row">
+      <div class="col">
+        <div class="col">
+          <label for="current_date">Baptism Date*</label>
+          <input type="date" id="date" name="date" class="form-control">
+          <p id="date_error" class="error_codes"> </p>
+        </div>
+      </div>
+    </div>
+    {{!-- Officiant--}}
+    <hr>
+    <div class="row">
+     <div class="col">
+        <legend>Officiant</legend>
+        <hr>
+        <input type="checkbox" id="officiant_non_member"> Non-member
+        <input class="mb-3" type="checkbox" id="officiant_member" checked disabled> Member
+        <div id="officiant_member_div" style="display:block">
+          <label>Select Officiant*</label>
+          <select name="input_officiant_member" id="input_officiant_member">
+            {{>dropdown members}}
+          </select>
+        </div>
+        <fieldset class="form-group" id="officiant_non_member_div" style="display:none">
+          <div class="div">
+            <div class="row">
+              <div class="col-12">
+                <label for="first_name">First Name</label>
+                <input type="text" id="officiant_first_name" name="officiant_first_name" class="form-control">
+              </div>
+              <div class="col-12">
+                <label for="officiant_mid_name">Middle Initial</label>
+                <input type="text" id="officiant_mid_name" name="officiant_mid_name" class="form-control">
+              </div>
+              <div class="col-12">
+                <label for="officiant_last_name">Last Name</label>
+                <input type="text" id="officiant_last_name" name="officiant_last_name"class="form-control">
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <p id="officiant_error" class="error_codes"> </p>
+      </div>
+    </div>
+
+    <button id="edit-baptismal" type="button" class="btn btn-primary">Submit</button>
+    <p id="create_error" class="error_codes"></p>
+
+</form>

@@ -1,0 +1,497 @@
+<style>
+  @import url(/css/fonts.css);
+
+  #header {
+      font-family: JuliusSansPro;
+  }
+</style>
+
+{{>navbar}}
+
+<div id="search_form" class="container">
+  <div class="container" style="padding-left: 20%; padding-right: 20%;">
+    <h1 class="my-3">Advanced Search</h1>
+    <hr>
+    <div class="row">
+      <div class="col">
+        <legend>Search for...</legend>
+        <select name="record-type" id="record-type" class="form-select">
+          {{#if canSee}}
+          <option value="member-option">Member</option>
+          {{/if}}
+          <option value="prenup-option">Prenuptial Record</option>
+          <option value="wedding-option">Wedding Registry</option>
+          <option value="baptismal-option">Baptismal Record</option>
+          <option value="dedication-option">Child Dedication Record</option>
+        </select>
+      </div>
+    </div>
+    <hr>
+
+  <form id="member-record" method="GET" action="/search_member" style="{{#if canSee}}display: block;{{else}}display: none;{{/if}}">
+      <div class="row mb-3">
+        <legend> Personal Information </legend>
+        <div class="col">
+          <label>First Name</label>
+          <input type="text" id="member_first_name" name="member_first_name" class="form-control">
+        </div>
+        <div class="col">
+          <label>Middle Initial</label>
+          <input type="text" id="member_middle_name" name="member_middle_name" class="form-control">
+          <p id="member_middle_name_error" class="error_codes" style="margin: 0;"></p>
+        </div>
+        <div class="col">
+          <label>Last Name</label>
+          <input type="text" id="member_last_name" name="member_last_name" class="form-control">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-4">
+          <label>Sex</label>
+          <select id="sex" name="sex" class="form-select">
+            <option selected value='none'> Any </option>
+            <option value='Male'> Male </option>
+            <option value='Female'> Female </option>
+          </select>
+        </div>
+      </div>
+      <hr>
+      <div class="row mb-3">
+        <legend> Age </legend>
+        <div class="col-12 mb-2">
+          <input type="checkbox" id="age-checkbox" disabled checked> Age
+          <input type="checkbox" id="birthday-checkbox"> Birthday Range
+        </div>
+        <div class="col-2 age-div">
+          <label> From </label>
+          <input type="number" id="ageFrom" name="ageFrom" class="form-control" min="1">
+        </div>
+        <div class="col-2 age-div">
+          <label> To </label>
+          <input type="number" id="ageTo" name="ageTo" class="form-control" min="1">
+        </div>
+        <div class="col-4 birthday-range" style="display: none;">
+          <label> From </label>
+          <input type="date" id="birthdayFrom" name="birthdayFrom" class="form-control">
+        </div>
+        <div class="col-4 birthday-range" style="display: none;">
+          <label> To </label>
+          <input type="date" id="birthdayTo" name="birthdayTo" class="form-control">
+        </div>
+        
+        <p id="age_error" class="error_codes" style="margin: 0;"></p>
+        <p id="birthday_error" class="error_codes" style="margin: 0;"></p>
+      </div>
+      <hr>
+      <div class="row mb-3">
+        <legend> Others </legend>
+        <div class="col">
+          <label>Membership Status</label>
+          <select id="membership_status" name="membership_status" class="form-select">
+            <option selected value="none"> Any </option>
+            <option value="Active"> Active </option>
+            <option value="Inactive"> Inactive </option>
+            <option value="Deceased"> Deceased </option>
+          </select>
+        </div>
+        <div class="col">
+          <label>Civil Status</label>
+          <select id="civil_status" name="civil_status" class="form-select">
+            <option selected value="none"> Any</option>
+            <option value="Single"> Single </option>
+            <option value="Married"> Married </option>
+            <option value="Others"> Others </option>
+          </select>
+        </div>
+        <div class="col" style="display: none;">
+          <label for="civil_status">If others, specify</label>
+          <input type="text" id="civil_status_others" name="civil_status_others" class="form-control" >
+          <p id="civil_status_others_error" class="error_codes">  </p>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col">
+          <label>City</label>
+          <input type="text" id="city" name="city" class="form-control">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <label>Educational Attainment</label>
+          <input type="text" id="educational_attainment" name="educational_attainment" class="form-control">
+        </div>
+        <div class="col">
+          <label>Occupation</label>
+          <input type="text" id="occupation" name="occupation" class="form-control">
+        </div>
+      </div>
+      <hr>
+      <button id="member-search-submit" type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+    <form id="prenup-record" method="GET" action="/search_prenup" style="{{#if canSee}}display: none;{{else}}display: block;{{/if}}">
+      <legend>Bride Name</legend>
+      <div class="row">
+         <div class="col">
+          <label>First Name</label>
+          <input type="text" id="prenup_bride_first_name" name="prenup_bride_first_name" class="form-control">
+        </div>
+        <div class="col">
+          <label>Middle Initial</label>
+          <input type="text" id="prenup_bride_mid_name" name="prenup_bride_mid_name" class="form-control">
+        </div>
+        <div class="col">
+          <label>Last Name</label>
+          <input type="text" id="prenup_bride_last_name" name="prenup_bride_last_name" class="form-control">
+        </div>
+
+        <p id="prenup_bride_middle_error" class="error_codes" style="margin: 0;"></p>
+      </div>
+      <hr>
+      <legend>Groom Name</legend>
+      <div class="row">
+         <div class="col">
+          <label>First Name</label>
+          <input type="text" id="prenup_groom_first_name" name="prenup_groom_first_name" class="form-control">
+        </div>
+        <div class="col">
+          <label>Middle Initial</label>
+          <input type="text" id="prenup_groom_mid_name" name="prenup_groom_mid_name" class="form-control">
+        </div>
+        <div class="col">
+          <label>Last Name</label>
+          <input type="text" id="prenup_groom_last_name" name="prenup_groom_last_name" class="form-control">
+        </div>
+        
+        <p id="prenup_groom_middle_error" class="error_codes" style="margin: 0;"></p>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col">
+          <legend> Date Created</legend>
+        </div>
+        <div class="col">
+          <legend> Wedding Date </legend>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <label>From</label>
+          <input type="date" id="prenup_date_created_from" name="prenup_date_created_from" class="form-control">
+        </div>
+        <div class="col-3">
+          <label>To</label>
+          <input type="date" id="prenup_date_created_to" name="prenup_date_created_to" class="form-control">
+        </div>
+        <div class="col-3">
+          <label> From </label>
+          <input type="date" id="prenup_date_wedding_from" name="prenup_date_wedding_from" class="form-control">
+        </div>
+        <div class="col-3">
+          <label> To </label>
+          <input type="date" id="prenup_date_wedding_to" name="prenup_date_wedding_to" class="form-control">
+        </div>
+
+        <p id="prenup_date_created_error" class="error_codes" style="margin: 0;"></p>
+        <p id="prenup_date_wedding_error" class="error_codes" style="margin: 0;"></p>
+      </div>
+      <hr>
+      <button id="prenup-search-submit" type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+    <form id="wedding-record" method="GET" action="/search_wedding" style="display: none;">
+      <div class="row mb-3">
+        <legend> Bride Name </legend>
+        <div class="col">
+          <label>First Name</label>
+          <input type="text" id="wedding_bride_first_name" name="wedding_bride_first_name" class="form-control">
+        </div>
+        <div class="col">
+          <label>Middle Initial</label>
+          <input type="text" id="wedding_bride_middle_name" name="wedding_bride_middle_name" class="form-control">
+        </div>
+        <div class="col">
+          <label>Last Name</label>
+          <input type="text" id="wedding_bride_last_name" name="wedding_bride_last_name" class="form-control">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <legend> Groom Name </legend>
+        <div class="col">
+          <label>First Name</label>
+          <input type="text" id="wedding_groom_first_name" name="wedding_groom_first_name" class="form-control">
+        </div>
+        <div class="col">
+          <label>Middle Initial</label>
+          <input type="text" id="wedding_groom_middle_name" name="wedding_groom_middle_name" class="form-control">
+        </div>
+        <div class="col">
+          <label>Last Name</label>
+          <input type="text" id="wedding_groom_last_name" name="wedding_groom_last_name" class="form-control">
+        </div>
+
+        <p id="wedding_groom_middle_error" class="error_codes" style="margin: 0;"></p>
+      </div>
+      <hr>
+      <div class="row mb-3">
+        <legend> Bride's Parents </legend>
+        <legend> Mother: </legend>
+        <div class="col">
+          <label>First Name</label>
+          <input type="text" id="wedding_bride_mother_first_name" name="wedding_bride_mother_first_name" class="form-control">
+        </div>
+        <div class="col">
+          <label>Middle Initial</label>
+          <input type="text" id="wedding_bride_mother_middle_name" name="wedding_bride_mother_middle_name" class="form-control">
+        </div>
+        <div class="col">
+          <label>Last Name</label>
+          <input type="text" id="wedding_bride_mother_last_name" name="wedding_bride_mother_last_name" class="form-control">
+        </div>
+
+        <p id="wedding_bride_mother_middle_error" class="error_codes" style="margin: 0;"></p>
+      </div>
+      <div class="row mb-3">
+        <legend> Father: </legend>
+        <div class="col">
+          <label>First Name</label>
+          <input type="text" id="wedding_bride_father_first_name" name="wedding_bride_father_first_name" class="form-control">
+        </div>
+        <div class="col">
+          <label>Middle Initial</label>
+          <input type="text" id="wedding_bride_father_middle_name" name="wedding_bride_father_middle_name" class="form-control">
+        </div>
+        <div class="col">
+          <label>Last Name</label>
+          <input type="text" id="wedding_bride_father_last_name" name="wedding_bride_father_last_name" class="form-control">
+        </div>
+
+        <p id="wedding_bride_father_middle_error" class="error_codes" style="margin: 0;"></p>
+      </div>
+      <hr>
+      <div class="row mb-3">
+        <legend> Groom's Parents </legend>
+        <legend> Mother: </legend>
+        <div class="col">
+          <label>First Name</label>
+          <input type="text" id="wedding_groom_mother_first_name" name="wedding_groom_mother_first_name" class="form-control">
+        </div>
+        <div class="col">
+          <label>Middle Initial</label>
+          <input type="text" id="wedding_groom_mother_middle_name" name="wedding_groom_mother_middle_name" class="form-control">
+        </div>
+        <div class="col">
+          <label>Last Name</label>
+          <input type="text" id="wedding_groom_mother_last_name" name="wedding_groom_mother_last_name" class="form-control">
+        </div>
+
+        <p id="wedding_groom_mother_middle_error" class="error_codes" style="margin: 0;"></p>
+      </div>
+      <div class="row mb-3">
+        <legend> Father: </legend>
+        <div class="col">
+          <label>First Name</label>
+          <input type="text" id="wedding_groom_father_first_name" name="wedding_groom_father_first_name" class="form-control">
+        </div>
+        <div class="col">
+          <label>Middle Initial</label>
+          <input type="text" id="wedding_groom_father_middle_name" name="wedding_groom_father_middle_name" class="form-control">
+        </div>
+        <div class="col">
+          <label>Last Name</label>
+          <input type="text" id="wedding_groom_father_last_name" name="wedding_groom_father_last_name" class="form-control">
+        </div>
+
+        <p id="wedding_groom_father_middle_error" class="error_codes" style="margin: 0;"></p>
+      </div>
+      <hr>
+      <div class="row">
+        <legend> Wedding Date</legend>
+      </div>
+      <div class="row">
+        <div class="col">
+          <label>From</label>
+          <input type="date" id="wedding_date_from" name="wedding_date_from" class="form-control">
+        </div>
+        <div class="col">
+          <label>To</label>
+          <input type="date" id="wedding_date_to" name="wedding_date_to" class="form-control">
+        </div>
+        
+        <p id="wedding_date_error" class="error_codes" style="margin: 0;"></p>
+      </div>
+      <hr>
+      <div class="row mb-3">
+        <legend> Others </legend>
+        <div class="col">
+          <label> Location </label>
+          <input type="text" id="wedding_location" name="wedding_location" class="form-control">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col">
+          <label>Wedding Officiant</label>
+          <input type="text" id="wedding_officiant" name="wedding_officiant" class="form-control">
+        </div>
+        <div class="col">
+          <label> Solemnizing Officer </label>
+          <input type="text" id="wedding_officer" name="wedding_officer" class="form-control">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col">
+          <label> Registration Number </label>
+          <input type="number" id="reg_num" name="reg_num" class="form-control">
+        </div>
+      </div>
+      <hr>
+      <button id="wedding-search-submit" type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+    <form id="baptismal-record"  method="GET" action="/search_baptismal" style="display: none;">
+      <div class="row mb-3">
+        <legend> Baptized Person </legend>
+        <div class="col">
+          <label>First Name</label>
+          <input type="text" id="baptism_first_name" name="baptism_first_name" class="form-control">
+        </div>
+        <div class="col">
+          <label>Middle Initial</label>
+          <input type="text" id="baptism_middle_name" name="baptism_middle_name" class="form-control">
+        </div>
+        <div class="col">
+          <label>Last Name</label>
+          <input type="text" id="baptism_last_name" name="baptism_last_name" class="form-control">
+        </div>
+
+        <p id="baptism_middle_error" class="error_codes" style="margin: 0;"></p>
+      </div>
+      <hr>
+      <div class="row mb-3">
+        <legend> Officiant </legend>
+        <div class="col">
+          <label>First Name</label>
+          <input type="text" id="baptism_officiant_first_name" name="baptism_officiant_first_name" class="form-control">
+        </div>
+        <div class="col">
+          <label>Middle Initial</label>
+          <input type="text" id="baptism_officiant_middle_name" name="baptism_officiant_middle_name" class="form-control">
+        </div>
+        <div class="col">
+          <label>Last Name</label>
+          <input type="text" id="baptism_officiant_last_name" name="baptism_officiant_last_name" class="form-control">
+        </div>
+
+        <p id="baptism_officiant_middle_error" class="error_codes" style="margin: 0;"></p>
+      </div>
+      <hr>
+      <div class="row">
+        <legend> Date </legend>
+      </div>
+      <div class="row">
+        <div class="col">
+          <label> From </label>
+          <input type="date" id="baptismal_date_from" name="baptismal_date_from" class="form-control">
+        </div>
+        <div class="col">
+          <label> To </label>
+          <input type="date" id="baptismal_date_to" name="baptismal_date_to" class="form-control">
+        </div>
+
+        <p id="baptismal_date_error" class="error_codes" style="margin: 0;"></p>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col">
+          <label> Location </label>
+          <input type="text" id="baptismal_location" name="baptismal_location" class="form-control">
+        </div>
+      </div>
+      <hr>
+      <button id="baptismal-search-submit" type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+    <form id="dedication-record" method="GET" action="/search_dedication" style="display: none;">
+      <div class="row mb-3">
+        <legend> Child </legend>
+        <div class="col">
+          <label>First Name</label>
+          <input type="text" id="dedication_first_name" name="dedication_first_name" class="form-control">
+        </div>
+        <div class="col">
+          <label>Middle Initial</label>
+          <input type="text" id="dedication_middle_name" name="dedication_middle_name" class="form-control">
+        </div>
+        <div class="col">
+          <label>Last Name</label>
+          <input type="text" id="dedication_last_name" name="dedication_last_name" class="form-control">
+        </div>
+      </div>
+      <hr>
+      <div class="row mb-3">
+        <legend> Parent / Guardian </legend>
+        <div class="col">
+          <label>First Name</label>
+          <input type="text" id="dedication_mother_first_name" name="dedication_mother_first_name" class="form-control">
+        </div>
+        <div class="col">
+          <label>Middle Initial</label>
+          <input type="text" id="dedication_mother_middle_name" name="dedication_mother_middle_name" class="form-control">
+        </div>
+        <div class="col">
+          <label>Last Name</label>
+          <input type="text" id="dedication_mother_last_name" name="dedication_mother_last_name" class="form-control">
+        </div>
+
+        <p id="dedication_mother_middle_error" class="error_codes" style="margin: 0;"></p>
+      </div>
+      <div class="row">
+        <legend> Parent / Guardian </legend>
+        <div class="col">
+          <label>First Name</label>
+          <input type="text" id="dedication_father_first_name" name="dedication_father_first_name" class="form-control">
+        </div>
+        <div class="col">
+          <label>Middle Initial</label>
+          <input type="text" id="dedication_father_middle_name" name="dedication_father_middle_name" class="form-control">
+        </div>
+        <div class="col">
+          <label>Last Name</label>
+          <input type="text" id="dedication_father_last_name" name="dedication_father_last_name" class="form-control">
+        </div>
+
+        <p id="dedication_father_middle_error" class="error_codes" style="margin: 0;"></p>
+      </div>
+      <hr>
+      <div class="row">
+        <legend> Date </legend>
+      </div>
+      <div class="row">
+        <div class="col">
+          <label> From </label>
+          <input type="date" id="dedication_date_from" name="dedication_date_from" class="form-control">
+        </div>
+        <div class="col">
+          <label> To </label>
+          <input type="date" id="dedication_date_to" name="dedication_date_to" class="form-control">
+        </div>
+
+        <p id="dedication_date_error" class="error_codes" style="margin: 0;"></p>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col">
+          <label> Location </label>
+          <input type="text" id="dedication_location" name="dedication_location" class="form-control">
+        </div>
+        <div class="col">
+          <label> Officiant </label>
+          <input type="text" id="dedication_officiant" name="dedication_officiant" class="form-control">
+        </div>
+      </div>
+      <hr>
+      <button id="dedication-search-submit" type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+  </div>
+</div>

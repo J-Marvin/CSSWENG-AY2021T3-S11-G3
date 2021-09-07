@@ -1,23 +1,28 @@
-<section style="height: 100vh">
-    <div class="logo"> 
-      <img class="logo" src="../images/logo.png">
-      <p class="logoText"> Disciples Christian Church </p>
-    </div> 
-    <div id="card" class="card top-50 start-50 translate-middle" style="background-color: transparent;">
-      <div class="card-body p-3">
-        {{!-- <p> Level 1: NormandyN7</p>
-        <p> Level 2: HelloSweng</p>
-        <p> Level 3: Coffee118</p> --}}
-        <form action="/login" method="POST" id="login_form">
-          <div class="mb-0">
-            <h1 id="header" style="text-align: center;"> DISCIPLE</h1>
-            <hr style="color: aliceblue;">
-            <p style="text-align: center; color:aliceblue"> —In heart, in mind, in deed; Strengthened to Obey God's Will in this Fast Changing - Critical Time</p>
-            <input type="password" class="form-control p-2" id="password"  name="password" placeholder="Password" style="width: 15em; margin:auto; background-color: rgb(255, 255, 255, 0.5)" required>
-          </div>
-        </form>
+<section>
+
+    <div class="row mt-2 d-flex">
+      <div class="col-1 logocol">
+        <img class="logo" src="../images/logo.png">
+      </div>
+      <div class="col mt-4">
+        <p class="logoText"> Disciples Christian Church </p>
       </div>
     </div>
+    <div class="row cardrow d-flex justify-content-center">
+      <div id="card" class="card" style="background-color: transparent;">
+        <div class="card-body p-3">
+          <form action="/login" method="POST" id="login_form">
+            <div class="mb-0">
+              <h1 id="header" style="text-align: center;"> DISCIPLE</h1>
+              <hr style="color: aliceblue;">
+              <p style="text-align: center; color:aliceblue"> —In heart, in mind, in deed; Strengthened to Obey God's Will in this Fast Changing - Critical Time</p>
+              <input type="password" class="form-control p-2" id="password"  name="password" placeholder="Password" style="width: 15em; margin:auto; background-color: rgb(255, 255, 255, 0.5)" required>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
 </section>
 
 <div class="modal fade" id="errorModal" aria-hidden="true">

@@ -162,24 +162,42 @@
     <div class="row my-1">
       <div class="col">
         {{#if member.prenup_record_id}}
-          <a href="/view_prenup/{{member.prenup_record_id}}" id="view_prenup" type="button" class="btn btn-secondary">View
+          <a href="/view_prenup/{{member.prenup_record_id}}" id="view_prenup" type="button" class="btn btn-secondary mt-1">View
             Prenup</a>
         {{else}}
-          <a href="/edit_member/{{member.member_id}}/add_prenup" id="add_prenup" type="button" class="btn btn-secondary">Add
+          <a href="/edit_member/{{member.member_id}}/add_prenup" id="add_prenup" type="button" class="btn btn-secondary mt-1">Add
             Prenup</a>
         {{/if}}
 
         {{#if member.wedding_reg_id}}
-          <a href="/view_wedding/{{member.wedding_reg_id}}" id="view_wedding" type="button" class="btn btn-secondary">View
+          <a href="/view_wedding/{{member.wedding_reg_id}}" id="view_wedding" type="button" class="btn btn-secondary mt-1">View
             Wedding</a>
           {{else}}
-          <a href="/add_wedding/" id="add_wedding" type="button" class="btn btn-secondary">Add
+          <a href="/add_wedding/" id="add_wedding" type="button" class="btn btn-secondary mt-1">Add
             Wedding</a>
         {{/if}}
 
+        {{#if member.bap_reg_id}}
+          <a href="/view_baptismal/{{member.bap_reg_id}}" id="view_baptismal" type="button" class="btn btn-secondary mt-1">View
+            Baptismal</a>
+          {{else}}
+          <a href="/add_baptismal/{{member.member_id}}" id="add_baptismal" type="button" class="btn btn-secondary mt-1">Add
+            Baptismal</a>
+        {{/if}}
+
+        {{#if member.child_dedication_id}}
+          <a href="/view_dedication/{{member.child_dedication_id}}" id="view_dedication" type="button" class="btn btn-secondary mt-1">View Child Dedication</a>
+        {{else}}
+        <a href="/add_dedication/{{member.child_dedication_id}}" id="add_dedication" type="button"
+          class="btn btn-secondary mt-1">Add Child Dedication</a>
+        {{/if}}
+
       </div>
-      <div class="col d-flex justify-content-end">
-        <a href="/edit_member/{{member.member_id}}"> <button class="btn btn-secondary mb-4">Edit Member</button> </a>
-        <button class="btn btn-danger mb-4 ms-2">Delete Member</button>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col">
+        <a href="/edit_member/{{member.member_id}}" class="btn btn-secondary mb-4">Edit Member </a>
+        <button class="btn btn-danger mb-4">Delete Member</button>
       </div>
     </div>

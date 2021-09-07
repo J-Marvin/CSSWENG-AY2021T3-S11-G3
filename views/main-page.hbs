@@ -1,18 +1,23 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark d-flex justify-content-between">
+<nav class="navbar navbar-expand navbar-dark bg-dark d-flex justify-content-between">
   <div class="d-flex flex-row">
     <a id="header" class="navbar-brand mx-3" href="/main_page">Disciple Christian Church | Level {{ level }}</a>
   </div>
   <div class="d-flex justify-content-end" id="navbarSupportedContent">
     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-      <li class="nav-item dropdown">
-        <a class="nav-link mx-3" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          <i class="fas fa-bars"></i>
+      <li class="nav-item">
+        <a class="nav-link mx-1" href="/advanced_search" title="Advanced Search">
+          <i class="fas fa-search"></i>
         </a>
-        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-          <li><a class="dropdown-item" href="#">Settings</a></li>
-          <li><hr class="dropdown-divider"></li>
-          <li><a class="dropdown-item" href="/logout">Logout</a></li>
-        </ul>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link mx-1" href="#" title="Settings">
+          <i class="fas fa-user-cog"></i>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link mx-1" href="/logout" title="Logout">
+          <i class="fas fa-sign-out-alt"></i>
+        </a>
       </li>
     </ul>
   </div>
@@ -20,7 +25,7 @@
 
 <div id="maindiv" class="container maindiv d-flex justify-content-center align-items-center">
   <div class="row">
-    <div class="col mx-3">
+    <div class="col mx-3 pt-3 pt-xxl-0">
       <a href="{{#if canSee}}/member_main_page{{else}}/add_member{{/if}}" class="mainBtns">
         <div class="card" style="width: 18rem;">
           <img src="../images/people.png" class="card-img-top" alt="...">
@@ -31,7 +36,7 @@
         </div>
       </a>
     </div>
-    <div class="col mx-3">
+    <div class="col mx-3 pt-3 pt-xxl-0">
       <a href="/forms_main_page" class="mainBtns">
         <div class="card" style="width: 18rem;">
           <img src="../images/doc.jpg" class="card-img-top" alt="...">

@@ -5,6 +5,7 @@ const witnessFields = require('../models/witness')
 const memberFields = require('../models/members')
 const infDedFields = require('../models/infantDedication')
 const { Condition, queryTypes } = require('../models/condition')
+const { sendError } = require('../controllers/errorController')
 
 const dedicationController = {
   /**
@@ -34,6 +35,7 @@ const dedicationController = {
       db.find(db.tables.MEMBER_TABLE, [], join, '*', function (result) {
         if (result) {
           const data = {}
+          data.noDedicationMembers = result.filter(elem => elem[memberFields.CHILD_DEDICATION] === null)
           data.members = result
           data.styles = ['forms']
           data.scripts = ['addDedication']
@@ -51,22 +53,6 @@ const dedicationController = {
    * @param res - the result to be sent out after processing the request
    */
   getViewDedication: function (req, res) {
-    /*
-      This local function renders the error page
-    */
-    function sendError (title, code) {
-      const msg = title
-      res.status(code)
-      res.render('error', {
-        title: title,
-        css: ['global', 'error'],
-        status: {
-          code: parseInt(code),
-          message: msg
-        },
-        backLink: '/main_page'
-      })
-    }
     // function execution starts here
     const dedicationId = parseInt(req.params.dedication_id)
     if (parseInt(req.session.level) >= 2 || parseInt(req.session.editId) === dedicationId) {
@@ -158,7 +144,7 @@ const dedicationController = {
           const data = {
             ...result[0]
           }
-          data.canSee = (parseInt(req.session.dedicationId) === parseInt(dedicationId)) || (parseInt(req.session.level) >= 2)
+          data.canSee = (parseInt(req.session.editId) === parseInt(dedicationId)) || (parseInt(req.session.level) >= 2)
           if ((parseInt(req.session.level) <= 2)) {
             data.canSee = false
           }
@@ -177,11 +163,11 @@ const dedicationController = {
             }
           })
         } else {
-          sendError('404 Record Not Found at Child Dedication Table', 404)
+          sendError(req, res, 404, '404 Record Not Found at Child Dedication Table')
         }
       })
     } else {
-      sendError('401 Unauthorized Access', 401)
+      sendError(req, res, 401)
     }
   },
   /**
@@ -369,8 +355,37 @@ const dedicationController = {
 
                           db.insert(db.tables.WITNESS_TABLE, allWitnesses, function (result) {
                             if (result) {
-                              req.session.editId = dedicationId
-                              res.send(JSON.stringify(dedicationId))
+                              const memberUpdateData = {}
+                              memberUpdateData[memberFields.CHILD_DEDICATION] = dedicationId
+
+                              const updateConditions = []
+
+                              if (people.child.isMember) {
+                                const condition = new Condition(queryTypes.where)
+                                condition.setKeyValue(memberFields.ID, people.child.member_id)
+                                updateConditions.push(condition)
+                              }
+
+                              if (updateConditions.length === 0) {
+                                const condition = new Condition(queryTypes.whereNull)
+                                condition.setField(memberFields.ID)
+                                updateConditions.push(condition)
+                              }
+
+                              db.update(db.tables.MEMBER_TABLE, memberUpdateData, updateConditions, function (result) {
+                                console.log(result)
+                                if (result === 0) {
+                                  result = true
+                                }
+
+                                if (result) {
+                                  req.session.editId = dedicationId
+                                  res.send(JSON.stringify(dedicationId))
+                                } else {
+                                  console.log('error updating into Child Dedication Member table')
+                                  res.send(false)
+                                }
+                              })
                             } else {
                               res.send(false)
                             }
@@ -398,6 +413,14 @@ const dedicationController = {
         res.send(false)
       }
     })
+  },
+
+  getEditDedication: function (req, res) {
+    const data = {
+      scripts: ['editDedication'],
+      styles: ['forms']
+    }
+    res.render('edit-dedication', data)
   },
 
   putUpdateDedication: function (req, res) {

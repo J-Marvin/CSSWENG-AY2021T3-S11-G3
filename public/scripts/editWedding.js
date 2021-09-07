@@ -237,9 +237,9 @@ $(document).ready(function() {
       $('#input_witness_gfather_member').parent().find('.option[data-value="' + data + '"]').removeAttr('data-selectable')
     }
 
-    $('#create-wedding-registry').click(function (){
+    $('#edit-wedding-registry').click(function (){
 
-      $('#create-wedding-registry').prop('disabled', true)
+      $('#edit-wedding-registry').prop('disabled', true)
       if(validateFields()) {
         const data = {}
         data.witnessMale = []
@@ -344,9 +344,9 @@ $(document).ready(function() {
             }
           }
         })
-        $('#create-wedding-registry').prop('disabled', false)
+        $('#edit-wedding-registry').prop('disabled', false)
       } else {
-        $('#create-wedding-registry').prop('disabled', false)
+        $('#edit-wedding-registry').prop('disabled', false)
       }
     })
 

@@ -1,0 +1,44 @@
+<style>
+  @import url(/css/fonts.css);
+
+  #header {
+    font-family: JuliusSansPro;
+  }
+</style>
+
+{{>navbar}}
+
+<div class="container mt-4">
+  <div class="row">
+    <div class="col d-flex justify-content-between">
+      <h1>{{#if fromSearch}}Search Results Baptismal{{else}}Baptismal Records{{/if}}</h1>
+      <a href="/add_baptismal"><i class="far fa-plus-square"></i></a>
+    </div>
+  </div>
+  <div class="row">
+    <table id="dataTable" class="display table" width="100%">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Date of Baptism</th>
+          <th>Location</th>
+          <th>Officiant</th>
+          <th>Date Created</th> 
+        </tr>
+      </thead>
+      <tbody>
+        {{#each records}}
+        <tr data-href="/view_baptismal/{{this.reg_id}}">
+          <td>{{this.reg_id}}</td>
+          <td>{{this.member_first_name}} {{this.member_last_name}}</td>
+          <td>{{dateView this.date}}</td>
+          <td>{{this.place}}</td>
+          <td>{{this.officiant_first_name}} {{this.officiant_last_name}}</td>
+          <td>{{dateView this.date_created}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</div>

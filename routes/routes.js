@@ -10,6 +10,8 @@ const churchController = require('../controllers/churchController')
 const observationController = require('../controllers/observationController')
 const dedicationController = require('../controllers/dedicationController')
 const weddingController = require('../controllers/weddingController')
+const baptismalController = require('../controllers/baptismalController')
+const searchController = require('../controllers/searchController')
 
 const app = express()
 app.set('views', path.join(__dirname, '../views'))
@@ -22,11 +24,25 @@ app.get('/member_main_page', indexController.getMemberMainPage)
 app.get('/add_member', memberController.getAddMemberPage)
 app.get('/add_dedication', dedicationController.getAddDedicationPage)
 app.get('/view_dedication/:dedication_id', dedicationController.getViewDedication)
+app.get('/edit_dedication/:dedication_id', dedicationController.getEditDedication)
+
 app.get('/add_wedding', weddingController.getAddWeddingPage)
 app.get('/view_wedding/:wedding_id', weddingController.getViewWeddingPage)
+app.get('/edit_wedding/:wedding_id', weddingController.getEditWedding)
 app.get('/edit_member/:member_id', memberController.getEditMember)
 app.get('/edit_prenup/:prenup_id', prenupController.getEditPrenup)
 app.get('/forms_main_page', indexController.getFormsMainPage)
+app.get('/add_baptismal', baptismalController.getAddBaptismalRecordPage)
+app.get('/edit_baptismal', baptismalController.getEditBaptismal)
+app.get('/add_baptismal/:member_id', baptismalController.getAddBaptismalRecordPage)
+app.get('/view_baptismal/:bap_id', baptismalController.getViewBaptismalRecord)
+
+app.get('/advanced_search', searchController.getAdvancedSearch)
+app.get('/search_member', searchController.getSearchMember)
+app.get('/search_prenup', searchController.getSearchPrenup)
+app.get('/search_wedding', searchController.getSearchWedding)
+app.get('/search_baptismal', searchController.getSearchBaptismal)
+app.get('/search_dedication', searchController.getSearchDedication)
 
 app.get('/member/:member_id', memberController.getViewMember)
 
@@ -38,6 +54,7 @@ app.get('/edit_prenup/:prenup_id', prenupController.getEditPrenup)
 
 app.get('/dedication_main_page', indexController.getDedicationMainPage)
 app.get('/wedding_main_page', indexController.getWeddingMainPage)
+app.get('/baptismal_main_page', indexController.getBapRecordsMainPage)
 
 app.post('/login', loginController.postLogIn)
 app.post('/add_member', validation.addMemberValidation(), memberController.createMember)
@@ -56,6 +73,7 @@ app.post('/postUpdatePrenupBrideMember', prenupController.postUpdatePrenupBrideM
 app.post('/postUpdatePrenupGroomMember', prenupController.postUpdatePrenupGroomMember)
 
 app.post('/add_dedication', dedicationController.postAddDedication)
+app.post('/add_baptismal', baptismalController.postAddBaptismalRecord)
 
 app.post('/update_member', validation.addMemberValidation(), memberController.postUpdateMember)
 app.post('/add_church', validation.churchValidation(), churchController.postAddChurch)

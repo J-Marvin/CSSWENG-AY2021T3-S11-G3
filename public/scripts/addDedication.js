@@ -409,6 +409,7 @@ $(document).ready(function() {
     if (person.isMember) {
       const info = $(selectField).find(':selected').val().split(', ')
       person.person_id = info[1]
+      person.member_id = info[0]
     } else {
       person.first_name = $(firstNameField).val()
       person.mid_name = $(midNameField).val()

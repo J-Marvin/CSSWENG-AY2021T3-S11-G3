@@ -1,57 +1,42 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark d-flex justify-content-between">
-  <div class="d-flex flex-row">
-    <button style="background-color: transparent; border: none; padding: none"><a class="navbar-brand mt-1 ms-2" href="/main_page"><i class="fas fa-arrow-left"></i></a></button>
-    <a id="header" class="navbar-brand" href="/main_page">Disciple Christian Church</a>
-  </div>
-  <div class="d-flex justify-content-end" id="navbarSupportedContent">
-    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-      <li class="nav-item dropdown">
-        <a class="nav-link mx-3" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          <i class="fas fa-bars"></i>
-        </a>
-        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-          <li><a class="dropdown-item" href="#">Settings</a></li>
-          <li><hr class="dropdown-divider"></li>
-          <li><a class="dropdown-item" href="/logout">Logout</a></li>
-        </ul>
-      </li>
-    </ul>
-  </div>
-</nav>
+{{>navbar}}
 
 <div id="maindiv" class="container maindiv d-flex justify-content-center align-items-center">
   <div class="row">
-    <div class="col mx-3">
+    <div class="col pt-3 pt-xxl-0">
       <a href="{{#if canSee}}/dedication_main_page{{else}}/add_dedication{{/if}}" class="mainBtns">
-        <div class="card" style="width: 18rem; box-shadow: 2px 2px 5px #b3b3b3">
-          {{!-- <img src="../images/lineartone.png" class="card-img-top" alt="..."> --}}
+        <div class="card" style="width: 18rem;">
           <div class="card-body">
             <h5 class="card-title buttonText">Child Dedication</h5>
-            {{!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> --}}
           </div>
         </div>
       </a>
     </div>
 
-    <div class="col mx-3">
+    <div class="col pt-3 pt-xxl-0">
       <a href="{{#if canSee}}/prenup_main_page{{else}}/add_prenup{{/if}}" class="mainBtns">
-        <div class="card" style="width: 18rem; box-shadow: 2px 2px 5px #b3b3b3">
-          {{!-- <img src="../images/linearttwo.jfif" class="card-img-top" alt="..."> --}}
+        <div class="card" style="width: 18rem;">
           <div class="card-body">
             <h5 class="card-title buttonText">Prenuptial</h5>
-            {{!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> --}}
           </div>
         </div>
       </a>
     </div>
 
-    <div class="col">
+    <div class="col pt-3 pt-xxl-0">
       <a href="{{#if canSee}}/wedding_main_page{{else}}/add_wedding{{/if}}" class="mainBtns">
-        <div class="card" style="width: 18rem; box-shadow: 2px 2px 5px #b3b3b3">
-          {{!-- <img src="../images/linearttwo.jfif" class="card-img-top" alt="..."> --}}
+        <div class="card" style="width: 18rem;">
           <div class="card-body">
             <h5 class="card-title buttonText">Wedding Registry</h5>
-            {{!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> --}}
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="col pt-3 pt-xxl-0">
+      <a href="{{#if canSee}}/baptismal_main_page{{else}}/add_baptismal{{/if}}" class="mainBtns">
+        <div class="card" style="width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title buttonText">Baptismal Record</h5>
           </div>
         </div>
       </a>

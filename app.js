@@ -72,7 +72,7 @@ app.use(function (req, res) {
       code: '404',
       message: 'Not Found'
     },
-    Level: 'N/A'
+    Level: parseInt(req.session.level)
   })
 })
 

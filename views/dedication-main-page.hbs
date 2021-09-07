@@ -6,96 +6,42 @@
   }
 </style>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark d-flex justify-content-between">
-  <div class="d-flex flex-row">
-    <button style="background-color: transparent; border: none; padding: none"><a class="navbar-brand mt-1 ms-2" href="/forms_main_page"><i class="fas fa-arrow-left"></i></a></button>
-    <a id="header" class="navbar-brand" href="/main_page">Disciple Christian Church</a>
-  </div>
-  <div class="d-flex justify-content-end" id="navbarSupportedContent">
-    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-      <li class="nav-item dropdown">
-        <a class="nav-link mx-3" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          <i class="fas fa-bars"></i>
-        </a>
-        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-          <li><a class="dropdown-item" href="#">Settings</a></li>
-          <li><hr class="dropdown-divider"></li>
-          <li><a class="dropdown-item" href="/logout">Logout</a></li>
-        </ul>
-      </li>
-    </ul>
-  </div>
-</nav>
+{{>navbar}}
 
 <div class="container mt-4">
   <div class="row">
     <div class="col d-flex justify-content-between">
-      <h1> Child Dedication Forms </h1>
-      <a href="/add_dedication"><i style="width: 3em; height: 3em; color:black;" class="far fa-plus-square"></i></a>
+      <h1>{{#if fromSearch}}Search Results Child Dedication{{else}}Child Dedication Forms{{/if}}</h1>
+      <a href="/add_dedication"><i class="far fa-plus-square"></i></a>
     </div>
   </div>
-  {{!-- <div class="row listrow">
-      <div class="row mt-3 toprow" style="--bs-gutter-x: 0rem;">
-        <div class="col-2 tile">
-          <p class="variables"> Dedication ID </p>
-        </div>
-        <div class="col-4 tile">
-          <p class="variables"> Child Name </p>
-        </div>
-        <div class="col-3 tile">
-          <p class="variables"> Parent/Guardian </p>
-        </div>
-        <div class="col-3 tile">
-          <p class="variables"> Parent/Guardian </p>
-        </div>          
-      </div>
-      {{#each dedication}}
-      <a class="memberlink" href="/view_dedication/{{this.dedication_id}}">
-        <div class="row indivmember" style="--bs-gutter-x: 0rem;">
-          <div class="col-2 tile">
-            <p class="variables"> {{this.dedication_id}} </p>
-          </div>
-          <div class="col-4 tile">
-              <p class="variables"> {{this.infant_first_name}} {{this.infant_mid_name}}. {{this.infant_last_name}}</p>
-          </div>
-          <div class="col-3 tile">
-            <p class="variables"> {{this.guardianOne_first_name}} {{this.guardianOne_mid_name}}. {{this.guardianOne_last_name}} </p>
-          </div>
-          <div class="col-3 tile">
-            {{#if (isUndefined this.guardianTwo_first_name)}}
-              <p class="variables">N/A</p>
+  <div class="row">
+    <table id="dataTable" class="display table" width="100%">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Child</th>
+          <th>Parent/Guardian</th>
+          <th>Parent/Guardian</th>
+          <th>Date Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each dedication}}
+        <tr data-href="/view_dedication/{{this.dedication_id}}">
+          <td>{{this.dedication_id}}</td>
+          <td>{{this.infant_first_name}} {{this.infant_mid_name}}. {{this.infant_last_name}}</td>
+          <td>{{this.guardianOne_first_name}} {{this.guardianOne_mid_name}}. {{this.guardianOne_last_name}}</td>
+    
+          {{#if this.guardianTwo_first_name}}
+            <td>{{this.guardianTwo_first_name}} {{this.guardianTwo_mid_name}}. {{this.guardianTwo_last_name}}</td>
             {{else}}
-              <p class="variables"> {{this.guardianTwo_first_name}} {{this.guardianTwo_mid_name}}. {{this.guardianTwo_last_name}} </p>
-            {{/if}}
-          </div>
-        </div>
-      </a>
-     {{/each}}
-  </div> --}}
-
-  <table id="dataTable" class="display table" width="100%">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Child</th>
-        <th>Parent/Guardian</th>
-        <th>Parent/Guardian</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each dedication}}
-      <tr data-href="/view_dedication/{{this.dedication_id}}">
-        <td>{{this.dedication_id}}</td>
-        <td>{{this.infant_first_name}} {{this.infant_mid_name}}. {{this.infant_last_name}}</td>
-        <td>{{this.guardianOne_first_name}} {{this.guardianOne_mid_name}}. {{this.guardianOne_last_name}}</td>
-  
-        {{#if this.guardianTwo_first_name}}
-          <td>{{this.guardianTwo_first_name}} {{this.guardianTwo_mid_name}}. {{this.guardianTwo_last_name}}</td>
-          {{else}}
-          <td>N/A</td>
-        {{/if}}
-      </tr>
-      {{/each}}
-    </tbody>
-  </table>
+            <td>N/A</td>
+          {{/if}}
+          <td>{{dateView this.date}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
 </div>

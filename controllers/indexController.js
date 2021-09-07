@@ -6,6 +6,9 @@ const prenupRecordFields = require('../models/prenupRecord')
 const coupleFields = require('../models/couple')
 const weddingRegFields = require('../models/weddingRegistry')
 const infDedFields = require('../models/infantDedication')
+const bapRegFields = require('../models/baptismalRegistry.js')
+const { sendError } = require('./errorController')
+const moment = require('moment')
 
 const controller = {
   /**
@@ -69,16 +72,23 @@ const controller = {
       ]
 
       db.find(db.tables.MEMBER_TABLE, null, joinTables, '*', function (result) {
-        result.forEach(function (member) {
-          member.address = member[addressFields.ADDRESS_LINE] + ', ' + member[addressFields.CITY] + ', ' + member[addressFields.COUNTRY]
-        })
+        if (result) {
+          const data = {
+            styles: ['lists'],
+            scripts: ['convertDataTable'],
+            canSee: parseInt(req.session.level) === 3
+          }
 
-        res.render('member-main-page', {
-          styles: ['lists'],
-          scripts: ['convertDataTable'],
-          members: result,
-          canSee: parseInt(req.session.level) === 3
-        })
+          result.forEach(function (member) {
+            member.address = member[addressFields.ADDRESS_LINE] + ', ' + member[addressFields.CITY] + ', ' + member[addressFields.COUNTRY]
+            member.age = moment().diff(moment(member[memberFields.BIRTHDAY]), 'years')
+          })
+
+          data.members = result
+          res.render('member-main-page', data)
+        } else {
+          sendError(req, res, 404)
+        }
       })
     }
   },
@@ -152,7 +162,8 @@ const controller = {
         'guardianOne.' + personFields.LAST_NAME + ' as guardianOne_last_name',
         'guardianTwo.' + personFields.FIRST_NAME + ' as guardianTwo_first_name',
         'guardianTwo.' + personFields.MID_NAME + ' as guardianTwo_mid_name',
-        'guardianTwo.' + personFields.LAST_NAME + ' as guardianTwo_last_name'
+        'guardianTwo.' + personFields.LAST_NAME + ' as guardianTwo_last_name',
+        db.tables.INFANT_TABLE + '.' + infDedFields.DATE + ' as date'
       ]
       db.find(db.tables.INFANT_TABLE, null, joinTables, columns, function (result) {
         // console.log(result)
@@ -205,6 +216,7 @@ const controller = {
       const columns = [
         db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.ID,
         db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.DATE_OF_WEDDING,
+        db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.DATE,
         'bride.' + personFields.FIRST_NAME + ' as bride_first_name',
         'bride.' + personFields.MID_NAME + ' as bride_mid_name',
         'bride.' + personFields.LAST_NAME + ' as bride_last_name',
@@ -262,6 +274,7 @@ const controller = {
       const columns = [
         db.tables.WEDDING_TABLE + '.' + weddingRegFields.ID,
         db.tables.WEDDING_TABLE + '.' + weddingRegFields.DATE_OF_WEDDING,
+        db.tables.WEDDING_TABLE + '.' + weddingRegFields.DATE + ' as date',
         'bride.' + personFields.FIRST_NAME + ' as bride_first_name',
         'bride.' + personFields.MID_NAME + ' as bride_mid_name',
         'bride.' + personFields.LAST_NAME + ' as bride_last_name',
@@ -278,6 +291,72 @@ const controller = {
         })
       })
     }
+  },
+  /**
+   * This function renders the baptismal record main page
+   * @param req - the incoming request containing either the query or body
+   * @param res - the result to be sent out after processing the request
+   */
+  getBapRecordsMainPage: function (req, res) {
+    const level = req.session.level
+    req.session.editId = null
+
+    if (level === undefined || level === null || parseInt(level) === 1) {
+      res.status(401)
+      res.render('error', {
+        title: '401 Unauthorized Access',
+        css: ['global', 'error'],
+        status: {
+          code: '401',
+          message: 'Unauthorized access'
+        }
+      })
+    } else {
+      const joinTables = [
+        {
+          tableName: { member: db.tables.PERSON_TABLE },
+          sourceCol: db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.PERSON,
+          destCol: 'member.' + personFields.ID
+        },
+        {
+          tableName: { officiant: db.tables.PERSON_TABLE },
+          sourceCol: db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.OFFICIANT,
+          destCol: 'officiant.' + personFields.ID
+        }
+      ]
+
+      const columns = [
+        db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.ID + ' as reg_id',
+        db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.DATE + ' as date',
+        db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.DATE_CREATED + ' as date_created',
+        db.tables.BAPTISMAL_TABLE + '.' + bapRegFields.LOCATION + ' as place',
+        'member.' + personFields.FIRST_NAME + ' as member_first_name',
+        'member.' + personFields.MID_NAME + ' as member_mid_name',
+        'member.' + personFields.LAST_NAME + ' as member_last_name',
+        'member.' + personFields.MEMBER + ' as member_id',
+        'officiant.' + personFields.FIRST_NAME + ' as officiant_first_name',
+        'officiant.' + personFields.MID_NAME + ' as officiant_mid_name',
+        'officiant.' + personFields.LAST_NAME + ' as officiant_last_name',
+        'officiant.' + personFields.MEMBER + ' as officiant_id'
+      ]
+
+      db.find(db.tables.BAPTISMAL_TABLE, [], joinTables, columns, function (result) {
+        const data = {}
+        data.records = result
+        data.scripts = ['convertDataTable']
+        data.styles = ['lists']
+
+        res.render('baptismal-main-page', data)
+      })
+    }
+  },
+  /**
+   * This function renders the advanced search page
+   * @param req - the incoming request containing either the query or body
+   * @param res - the result to be sent out after processing the request
+   */
+  getSearchPage: function (req, res) {
+    res.render('search-page')
   }
 }
 
