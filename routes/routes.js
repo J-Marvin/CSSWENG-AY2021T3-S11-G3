@@ -80,6 +80,8 @@ app.post('/update_member', validation.addMemberValidation(), memberController.po
 app.post('/add_church', validation.churchValidation(), churchController.postAddChurch)
 app.post('/add_observation', validation.observationValidation(), observationController.postAddObservation)
 app.post('/checkCredentials', loginController.checkCredentials)
+app.post('/postComparePasswords', indexController.postComparePasswords)
+app.post('/postChangePassword', indexController.postChangePassword)
 
 app.put('/update_observation', validation.observationValidation(), observationController.putUpdateObservation)
 app.put('/update_church', validation.churchValidation(), churchController.putUpdateChurch)

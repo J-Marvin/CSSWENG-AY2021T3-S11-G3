@@ -364,9 +364,22 @@ const controller = {
     if (parseInt(req.session.level) === 3) {
       const data = {
         scripts: ['settings'],
-        styles: ['settings']
+        styles: ['settings'],
+        passwords: {}
       }
-      res.render('settings-page', data) // insert hbs filename
+      db.findAll(db.tables.ACCOUNT_TABLE, '*', function (result) {
+        // data.passwords = result
+        for (let i = 0; i < result.length; i++) {
+          if (result[i].level === '1') {
+            data.passwords.low = result[i].hashed_password
+          } else if (result[i].level === '2') {
+            data.passwords.med = result[i].hashed_password
+          } else if (result[i].level === '3') {
+            data.passwords.high = result[i].hashed_password
+          }
+        }
+        res.render('settings-page', data)
+      })
     } else {
       sendError(req, res, 401)
     }
@@ -398,6 +411,13 @@ const controller = {
     } else {
       sendError(req, res, 401)
     }
+  },
+
+  postComparePasswords: function (req, res) {
+    const confirmPass = req.body.confirmPass
+    const currPass = req.body.currPass
+    const same = bcrypt.compare(confirmPass, currPass)
+    res.send(same)
   }
 }
 
