@@ -1,55 +1,113 @@
 {{>navbar}}
-<form id="wedding_form" action="/create_wedding_registry" method="POST" class="container">
-  <div class="container" style="padding-left: 20%; padding-right: 20%;">
-    <div class="row d-flex justify-content-between">
-      <div class="col-8"><h1 class="my-3"> Edit Baptismal Record </h1></div>
-      <div class="col-4 align-self-end"><p style="text-align:end; margin:0;">* - required</p></div>
-    </div>
-    <hr style="margin-top: 0;">
+<form id="baptismal_form" action="/create_wedding_registry" method="POST" class="container">
+  <div id="baptismal_info" style="display: none" data-baptismal="{{record.reg_id}}"></div>
+  <div class="container" style="padding-left: 18%; padding-right: 10%;">
+    <h1 class="my-3"> Edit Baptismal Record </h1>
+    <hr>
     <div class="row">
-      <div class="col">
-        <legend>Member</legend>
-        <hr>
-        <div id="member_div">
-          <label>Select Member*</label>
-          <select name="input_member" id="input_member">
-            {{>dropdown noBapMembers}}
-          </select>
-        </div>
-        <p id="member_error" class="error_codes"> </p>
+      <div class="col-3">
+        <legend>Baptismal Date</legend>
+        <input type="date" id="date" name="date" class="form-control" value="{{date record.date}}">
+        <p id="date_error" class="error_codes"> </p>
       </div>
     </div>
-    {{!-- Place --}}
+    <div class="row">
+      <legend>Member</legend>
+      <div class="col">
+        <row></row>
+        <u for="first_name">First Name</u>
+        <p id="first_name">{{record.member_first_name}}</p>
+      </div>
+      <div class="col">
+        <u for="mid_name">Middle Initial</u>
+        <p id="mid_name">{{record.member_mid_name}}</p>
+      </div>
+      <div class="col">
+        <u for="last_name">Last Name</u>
+        <p id="last_name">{{record.member_last_name}}</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-2 offset-10">
+        <button type="button" class="btn btn-secondary mb-4" id="edit_member">Edit Member</button>
+      </div>
+    </div>
     <hr>
-    <fieldset class="form-group">
-      <div class="row">
-        {{!-- <legend>Baptism Location</legend> --}}
-        <div class="col">
-          <label for="location">Baptism Location*</label>
-          <input type="text" id="location" name="location" class="form-control">
-          <p id="location_error" class="error_codes"> </p>
-        </div>
-    </fieldset>
-    {{!-- Date --}}
+    <div class="row">
+      <legend>Officiant</legend>
+      <div class="col">
+        <u for="first_name">First Name</u>
+        <p><span id="officiant_first_name_view">{{record.officiant_first_name}}</span></p>
+      </div>
+      <div class="col">
+        <u for="mid_name">Middle Initial</u>
+        <p><span id="officiant_mid_name_view">{{record.officiant_mid_name}}</span></p>
+      </div>
+      <div class="col">
+        <u for="last_name">Last Name</u>
+        <p><span id="officiant_last_name_view">{{record.officiant_last_name}}</span></p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-2 offset-10">
+        <button type="button" class="btn btn-secondary mb-4" id="edit_officiant">Edit Officiant</button>
+      </div>
+    </div>
     <hr>
     <div class="row">
       <div class="col">
-        <div class="col">
-          <label for="current_date">Baptism Date*</label>
-          <input type="date" id="date" name="date" class="form-control">
-          <p id="date_error" class="error_codes"> </p>
-        </div>
+        <label for="location">Baptism Location*</label>
+        <input type="text" id="location" name="location" class="form-control" value="{{record.place}}">
+        <p id="location_error" class="error_codes"> </p>
       </div>
     </div>
-    {{!-- Officiant--}}
-    <hr>
-    <div class="row">
-     <div class="col">
-        <legend>Officiant</legend>
-        <hr>
-        <input type="checkbox" id="officiant_non_member"> Non-member
-        <input class="mb-3" type="checkbox" id="officiant_member" checked disabled> Member
-        <div id="officiant_member_div" style="display:block">
+
+    <button id="edit-baptismal" type="button" class="btn btn-primary">Save Changes</button>
+    <button id="delete-baptismal" type="button" class="btn btn-danger">Delete Record</button>
+    <p id="create_error" class="error_codes"></p>
+</form>
+
+<div class="modal fade" id="editMemberModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit Member</h5>
+        <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col">
+            <div id="member_div" style="display:block" data-member="{{record.member_id}}" data-person="{{record.person_id}}">
+              <label>Select Member</label>
+              <select name="input" id="input_member">
+                {{>dropdown this.noBapMembers}}
+              </select>
+            </div>
+            <p id="modal_error" class="error_codes"> </p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="cancel_modal" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="save_edit_member">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="editOfficiantModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit Officiant</h5>
+        <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p><span>Changes here are saved after pressing save changes.<br>NOTE: Cannot undo changes</span></p>
+        <input type="radio" id="officiant_non_member" name="officiant_radio"> Non-member
+        {{!-- <input type="checkbox" id="officiant_non_member"> Non-member --}}
+        <input class="mb-3" type="radio" id="officiant_member" name="officiant_radio" checked> Member
+        <div id="officiant_member_div" style="display:block" data-member="{{record.officiant_id}}" data-person="{{record.officiant_person_id}}">
           <label>Select Officiant*</label>
           <select name="input_officiant_member" id="input_officiant_member">
             {{>dropdown members}}
@@ -68,16 +126,17 @@
               </div>
               <div class="col-12">
                 <label for="officiant_last_name">Last Name</label>
-                <input type="text" id="officiant_last_name" name="officiant_last_name"class="form-control">
+                <input type="text" id="officiant_last_name" name="officiant_last_name" class="form-control">
               </div>
             </div>
           </div>
         </fieldset>
         <p id="officiant_error" class="error_codes"> </p>
       </div>
+      <div class="modal-footer">
+        <button type="button" id="cancel_modal" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="save_edit_officiant">Save changes</button>
+      </div>
     </div>
-
-    <button id="edit-baptismal" type="button" class="btn btn-primary">Submit</button>
-    <p id="create_error" class="error_codes"></p>
-
-</form>
+  </div>
+</div>
