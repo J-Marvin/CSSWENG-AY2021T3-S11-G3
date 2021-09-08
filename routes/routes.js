@@ -84,7 +84,7 @@ app.put('/update_observation', validation.observationValidation(), observationCo
 app.put('/update_church', validation.churchValidation(), churchController.putUpdateChurch)
 app.put('/update_bap/member', baptismalController.putUpdateBaptismalMember)
 app.put('/update_bap/officiant', baptismalController.putUpdateBaptismalOfficiant)
-app.put('/update_bap')
+app.put('/update_bap', baptismalController.putUpdateBaptismalMisc)
 
 app.delete('/delete_observation', observationController.delObservation)
 app.delete('/delete_church', churchController.delChurch)

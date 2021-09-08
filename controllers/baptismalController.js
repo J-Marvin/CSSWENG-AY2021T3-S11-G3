@@ -7,7 +7,6 @@ const personFields = require('../models/person')
 const { sendError } = require('../controllers/errorController')
 const { BAPTISMAL_REG } = require('../models/members')
 const { updateMemberToMember, updateMemberToNonMember, updateNonMemberToMember, updateNonMemberToNonMember } = require('./updateController')
-const { series } = require('async')
 
 const baptismalController = {
   /**
@@ -270,9 +269,6 @@ const baptismalController = {
       newPersonId: person.personId
     }
 
-    console.log(isOldMember)
-    console.log(isNewMember)
-
     if (isOldMember && isNewMember) { // From member to member
       const fields = {
         recordId: tables.BAPTISMAL_TABLE + '.' + bapRegFields.ID,
@@ -308,6 +304,20 @@ const baptismalController = {
         res.send(false)
       }
     }
+  },
+
+  putUpdateBaptismalMisc: function (req, res) {
+    const data = {}
+    data[bapRegFields.LOCATION] = req.body.location
+    data[bapRegFields.DATE] = req.body.date
+
+    const recordId = req.body.recordId
+    const recordCond = new Condition(queryTypes.where)
+    recordCond.setKeyValue(bapRegFields.ID, recordId)
+
+    db.update(tables.BAPTISMAL_TABLE, data, recordCond, function (result) {
+      res.send(JSON.stringify(result))
+    })
   },
 
   delBaptismal: function (req, res) {

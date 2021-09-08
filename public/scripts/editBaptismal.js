@@ -62,43 +62,72 @@ $(document).ready(function() {
   })
 
   $('#save_edit_member').click(function () {
-    const oldMemberId = $('#member_div').data('member')
-    const oldPersonId = $('#member_div').data('person')
-    const recordId = $('#baptismal_info').data('baptismal')
-    const info = $('#input_member').find(':selected').val().split(', ')
-    const newPersonId = info[1]
+    if (validateMember) {
+      const oldMemberId = $('#member_div').data('member')
+      const oldPersonId = $('#member_div').data('person')
+      const recordId = $('#baptismal_info').data('baptismal')
+      const info = $('#input_member').find(':selected').val().split(', ')
+      const newPersonId = info[1]
 
-    data = {
-      oldPersonId: oldPersonId,
-      newPersonId: newPersonId,
-      recordId: recordId
-    }
-    $.ajax({
-      type: 'PUT',
-      url: '/update_bap/member',
-      data: data,
-      success: function (result) {
-        // alert(result)
-        if (result) {
-          $('#editMemberModal').modal('hide')
-          $('#member_div').data('member', info[0]) // member id
-          $('#member_div').data('person', info[1]) // person id
-          $('#first_name').text(info[2]) // first name
-          $('#mid_name').text(info[3]) // middle name
-          $('#last_name').text(info[4]) // last name
-        } else {
-          $('#modal_error').text('Error Editing Record')
-        }
+      data = {
+        oldPersonId: oldPersonId,
+        newPersonId: newPersonId,
+        recordId: recordId
       }
-    })
-
+      $.ajax({
+        type: 'PUT',
+        url: '/update_bap/member',
+        data: data,
+        success: function (result) {
+          // alert(result)
+          if (result) {
+            $('#editMemberModal').modal('hide')
+            $('#member_div').data('member', info[0]) // member id
+            $('#member_div').data('person', info[1]) // person id
+            $('#first_name').text(info[2]) // first name
+            $('#mid_name').text(info[3]) // middle name
+            $('#last_name').text(info[4]) // last name
+          } else {
+            $('#modal_error').text('Error Editing Record')
+          }
+        }
+      })
+    }
   })
 
   $('#delete-baptismal').click(function () {
     $('#delConfirmModal').modal('show')
   })
 
+  $('#edit-baptismal').click(function () {
+    $('#edit-baptismal').prop('disabled', true)
+    if (validateMisc()) {
+      const data = {
+        location: $('#location').val(),
+        date: new Date($('#date').val()).toISOString(),
+        recordId: $('#baptismal_info').data('baptismal')
+      }
+  
+      $.ajax({
+        type: 'PUT',
+        url: '/update_bap',
+        data: data,
+        success: function (result) {
+          if (result) {
+            location.href = '/view_baptismal/' + data.recordId
+          } else {
+            $('#modal_error').text('Error Editing Record')
+            $('#edit-baptismal').prop('disabled', false)
+          }
+        }
+      })
+    } else {
+      $('#edit-baptismal').prop('disabled', false)
+    }
+  })
+
   $('#confirm_delete').click(function () {
+    $('#confirm_delete').prop('disabled', true)
     $.ajax({
       type: 'DELETE',
       url: '/delete_baptismal',
@@ -110,6 +139,7 @@ $(document).ready(function() {
           location.href = '/forms_main_page'
         } else {
           $('#modal_error').text('Error Deleting Record')
+          $('#confirm_delete').prop('disabled', false)
         }
       }
     })
@@ -117,51 +147,56 @@ $(document).ready(function() {
 
   $('#save_edit_officiant').click(function () {
     // insert validation
-    let officiantId = $('#officiant_member_div').data('member')
-    let officiantPersonId = $('#officiant_member_div').data('person')
-    let info = $('#input_officiant_member').val().split(', ')
+    $('#save_edit_officiant').prop('disabled', true)
+    if (validateOfficiant) {
+      let officiantId = $('#officiant_member_div').data('member')
+      let officiantPersonId = $('#officiant_member_div').data('person')
+      let info = $('#input_officiant_member').val().split(', ')
 
-    const data = {
-      isOldMember: officiantId !== null && officiantId !== undefined && officiantId !== '',
-      person: getDetails($('#officiant_member'), null, $('#input_officiant_member'), $('#officiant_first_name'), $('#officiant_mid_name'), $('#officiant_last_name')),
-      recordId: $('#baptismal_info').data('baptismal'),
-      oldMemberId: officiantId,
-      oldPersonId: officiantPersonId
-    }
-
-    data.person.personId = officiantPersonId
-    data.person = JSON.stringify(data.person)
-
-    $.ajax({
-      type: 'PUT',
-      url: '/update_bap/officiant',
-      data: data,
-      success: function (result) {
-        if (result) {
-          const personInfo = JSON.parse(data.person)
-          alert("TEST")
-          console.log(personInfo)
-          if (personInfo.isMember) {
-            alert("TEST 1")
-            $('#officiant_member_div').data('member', personInfo.memberId)
-            $('#officiant_member_div').data('person', result)
-            $('#officiant_first_name_view').html(info[2])
-            $('#officiant_mid_name_view').html(info[3])
-            $('#officiant_last_name_view').html(info[4])
-          } else {
-            alert("TEST 2")
-            $('#officiant_member_div').removeData('member')
-            $('#officiant_member_div').data('person', result)
-            $('#officiant_first_name_view').html(personInfo.firstName)
-            $('#officiant_mid_name_view').html(personInfo.midName)
-            $('#officiant_last_name_view').html(personInfo.lastName)
-          }
-          $('#editOfficiantModal').modal('hide')
-        } else {
-          $('#create_error').text('Error Editing Officiant')
-        }
+      const data = {
+        isOldMember: officiantId !== null && officiantId !== undefined && officiantId !== '',
+        person: getDetails($('#officiant_member'), null, $('#input_officiant_member'), $('#officiant_first_name'), $('#officiant_mid_name'), $('#officiant_last_name')),
+        recordId: $('#baptismal_info').data('baptismal'),
+        oldMemberId: officiantId,
+        oldPersonId: officiantPersonId
       }
-    })
+
+      data.person.personId = officiantPersonId
+      data.person = JSON.stringify(data.person)
+
+      $.ajax({
+        type: 'PUT',
+        url: '/update_bap/officiant',
+        data: data,
+        success: function (result) {
+          if (result) {
+            const personInfo = JSON.parse(data.person)
+            console.log(personInfo)
+            if (personInfo.isMember) {
+              $('#officiant_member_div').data('member', personInfo.memberId)
+              $('#officiant_member_div').data('person', result)
+              $('#officiant_first_name_view').html(info[2])
+              $('#officiant_mid_name_view').html(info[3])
+              $('#officiant_last_name_view').html(info[4])
+              $('#save_edit_officiant').prop('disabled', false)
+            } else {
+              $('#officiant_member_div').removeData('member')
+              $('#officiant_member_div').data('person', result)
+              $('#officiant_first_name_view').html(personInfo.firstName)
+              $('#officiant_mid_name_view').html(personInfo.midName)
+              $('#officiant_last_name_view').html(personInfo.lastName)
+              $('#save_edit_officiant').prop('disabled', false)
+            }
+            $('#editOfficiantModal').modal('hide')
+          } else {
+            $('#create_error').text('Error Editing Officiant')
+            $('#save_edit_officiant').prop('disabled', false)
+          }
+        }
+      })
+    } else {
+      $('#save_edit_officiant').prop('disabled', false)
+    }
   })
 
   function selectizeEnable(data) {
@@ -193,18 +228,8 @@ $(document).ready(function() {
     }
   }
 
-  function validateFields() {
-    var isValid = true
+  function validateMember() {
     var hasMember = $('#input_member').val() !== '' && $('#input_member').val() !== '0'
-    var hasLocation = !validator.isEmpty($('#location').val())
-    var hasDate = !validator.isEmpty($('#date').val())
-    
-    var officiantIsMember = $('#officiant_member').is(':checked')
-    var officiantHasMember = $('#input_officiant_member').val() !== '' && $('#input_officiant_member').val() !== '0'
-    var officiantHasFirstName = !validator.isEmpty($('#officiant_first_name').val())
-    var officiantHasMidName = !validator.isEmpty($('#officiant_mid_name').val())
-    var officiantIsValidMidName = validator.isLength($('#officiant_mid_name').val(), {min: 1, max: 1})
-    var officiantHasLastName = !validator.isEmpty($('#officiant_last_name').val())
 
     if (!hasMember) {
       isValid = false
@@ -212,6 +237,45 @@ $(document).ready(function() {
     } else {
       $('#member_error').text('')
     }
+
+    return hasMember
+  }
+
+  function validateOfficiant() {
+    var isValid = true
+    var officiantIsMember = $('#officiant_member').is(':checked')
+    var officiantHasMember = $('#input_officiant_member').val() !== '' && $('#input_officiant_member').val() !== '0'
+    var officiantHasFirstName = !validator.isEmpty($('#officiant_first_name').val())
+    var officiantHasMidName = !validator.isEmpty($('#officiant_mid_name').val())
+    var officiantIsValidMidName = validator.isLength($('#officiant_mid_name').val(), { min: 1, max: 1 })
+    var officiantHasLastName = !validator.isEmpty($('#officiant_last_name').val())
+
+    if (officiantIsMember) {
+      if (!officiantHasMember) {
+        isValid = false
+        $('#officiant_error').text('Please select member')
+      } else {
+        $('#officiant_error').text('')
+      }
+    } else {
+      if (!officiantHasFirstName || !officiantHasLastName || !officiantHasLastName) {
+        isValid = false
+        $('#officiant_error').text('Please fill up all fields')
+      } else if (!officiantIsValidMidName) {
+        isValid = false
+        $('#officiant_error').text('Middle initial should only contain one letter')
+      } else {
+        $('#officiant_error').text('')
+      }
+    }
+
+    return isValid
+  }
+
+  function validateMisc() {
+    var isValid = true
+    var hasLocation = !validator.isEmpty($('#location').val())
+    var hasDate = !validator.isEmpty($('#date').val())
 
     if (!hasDate) {
       isValid = false
@@ -227,26 +291,7 @@ $(document).ready(function() {
       $('#location_error').text('')
     }
 
-    if (officiantIsMember) {
-      if (!officiantHasMember) {
-        isValid = false
-        $('#officiant_error').text('Please select member')
-      } else {
-        $('#officiant_error').text('')
-      }
-    } else {
-      if (!officiantHasFirstName || !officiantHasLastName || !officiantHasLastName) {
-        isValid = false
-        $('#officiant_error').text('Please fill up all fields')
-      } else if(!officiantIsValidMidName) {
-        isValid = false
-        $('#officiant_error').text('Middle initial should only contain one letter')
-      } else {
-        $('#officiant_error').text('')
-      }
-    }
-
-
     return isValid
   }
+
 })
