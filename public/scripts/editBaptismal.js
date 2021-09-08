@@ -95,6 +95,23 @@ $(document).ready(function() {
 
   })
 
+  $('#delete-baptismal').click(function () {
+    $.ajax({
+      type: 'DELETE',
+      url: '/delete_baptismal',
+      data: {
+        recordId: $('#baptismal_info').data('baptismal')
+      },
+      success: function(result) {
+        if (result) {
+          alert("TEST")
+        } else {
+          alert("NOT")
+        }
+      }
+    })
+  })
+
   $('#save_edit_officiant').click(function () {
     // insert validation
     let officiantId = $('#officiant_member_div').data('member')

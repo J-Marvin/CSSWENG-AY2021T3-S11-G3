@@ -2,57 +2,55 @@ const knex = require('knex')
 const async = require('async')
 const fse = require('fs-extra')
 const sqlite3 = require('better-sqlite3')
+const { dbInfo } = require('./dbInfo')
+const startIds = dbInfo.startIds
+const bcrypt = require('bcrypt')
+const saltRounds = 10
+const data = require('./dummyData')
 let currFile = null
-
-// gettings fields of all tables
-const memberFields = require('./members.js')
-const addressFields = require('./address.js')
-const accountFields = require('./accounts.js')
-const personFields = require('./person.js')
-const donationFields = require('./donation.js')
-const bapRegFields = require('./baptismalRegistry.js')
-const weddingRegFields = require('./weddingRegistry.js')
-const prenupRecordFields = require('./prenupRecord.js')
-const witnessFields = require('./witness.js')
-const infDedFields = require('./infantDedication.js')
-const coupleFields = require('./couple.js')
-const observationFields = require('./observation.js')
-const resetDb = require('../database/resetDb.js')
-const churchFields = require('./church.js')
 
 let knexClient = null
 
-const tables = {
-  MEMBER_TABLE: 'members',
-  ADDRESS_TABLE: 'address',
-  ACCOUNT_TABLE: 'accounts',
-  PERSON_TABLE: 'people',
-  DONATION_TABLE: 'donations',
-  BAPTISMAL_TABLE: 'bap_reg',
-  WEDDING_TABLE: 'wedding_reg',
-  PRENUPTIAL_TABLE: 'pre_nuptial',
-  WITNESS_TABLE: 'witness',
-  INFANT_TABLE: 'inf_dedication',
-  COUPLE_TABLE: 'couples',
-  OBSERVATION_TABLE: 'observations',
-  CHURCH_TABLE: 'churches'
-}
+const tables = dbInfo.tables
 const tableNames = Object.values(tables)
 
-const fields = {
-  members: Object.values(memberFields),
-  address: Object.values(addressFields),
-  accounts: Object.values(accountFields),
-  people: Object.values(personFields),
-  donations: Object.values(donationFields),
-  bap_reg: Object.values(bapRegFields),
-  wedding_reg: Object.values(weddingRegFields),
-  pre_nuptial: Object.values(prenupRecordFields),
-  witness: Object.values(witnessFields),
-  inf_dedication: Object.values(infDedFields),
-  couples: Object.values(coupleFields),
-  observations: Object.values(observationFields),
-  churches: Object.values(churchFields)
+const fields = {}
+for (const table of tableNames) {
+  fields[table] = dbInfo.fields[table]
+}
+
+function reset (file) {
+  if (fse.existsSync(file)) {
+    fse.remove(file, (err) => {
+      if (err) {
+        console.log(err)
+      } else {
+        initDatabase(file)
+        insertData()
+        insertAccounts()
+      }
+    })
+  } else {
+    initDatabase(file)
+    insertData()
+    insertAccounts()
+  }
+}
+
+function initialize (file) {
+  if (fse.existsSync(file)) {
+    fse.remove(file, (err) => {
+      if (err) {
+        console.log(err)
+      } else {
+        initDatabase(file)
+        insertAccounts()
+      }
+    })
+  } else {
+    initDatabase(file)
+    insertAccounts()
+  }
 }
 
 const database = {
@@ -63,9 +61,8 @@ const database = {
   initDB: async function (file) {
     currFile = file
     if (!fse.existsSync(file)) {
-      resetDb.reset(file)
+      reset(file)
       // resetDb.initialize(file)
-      knexClient = resetDb.knexClient
     } else {
       knexClient = knex({
         client: 'sqlite3',
@@ -350,7 +347,6 @@ const database = {
    * @param {Array<Conditions>} condition - an array of objects containing the WHERE conditions paired to their respective column name
    */
   update: function (table, data, conditions, callback = null) {
-    console.log(data)
     if (data && Object.keys(data).length === 0) {
       if (callback) {
         const result = 0
@@ -598,6 +594,109 @@ const database = {
         }
       })
   }
+}
+
+function initDatabase (file) {
+  const db = sqlite3(file)
+
+  // Initialize Knex connection
+  knexClient = knex({
+    client: 'sqlite3',
+    connection: {
+      filename: file
+    },
+    useNullAsDefault: true
+  })
+
+  startIds.forEach((record) => {
+    knexClient('sqlite_sequence').insert({
+      name: record.table,
+      seq: record.start
+    }).catch((err) => { console.log(err) })
+  })
+
+  // execute all statements
+  for (const stmt of Object.values(dbInfo.create)) {
+    db.prepare(stmt).run()
+  }
+  // close the connection to the db
+  db.close()
+}
+
+function insertAccounts (level1 = 'NormandyN7', level2 = 'HelloSweng', level3 = 'Coffee118') {
+  knexClient('accounts').select().then(function (res) {
+    if (res.length === 0) {
+      bcrypt.hash(level1, saltRounds, (err, hash) => {
+        if (err) {
+          console.log(err)
+        }
+        knexClient('accounts').insert({
+          level: 1,
+          hashed_password: hash
+        }).catch(function (err) {
+          console.log(err)
+        })
+      })
+      bcrypt.hash(level2, saltRounds, (err, hash) => {
+        if (err) {
+          console.log(err)
+        }
+
+        knexClient('accounts').insert({
+          level: 2,
+          hashed_password: hash
+        }).catch(function (err) {
+          console.log(err)
+        })
+      })
+      bcrypt.hash(level3, saltRounds, (err, hash) => {
+        if (err) {
+          console.log(err)
+        }
+        knexClient('accounts').insert({
+          level: 3,
+          hashed_password: hash
+        }).catch(function (err) {
+          console.log(err)
+        })
+      })
+    }
+  })
+}
+
+function insertData () {
+  // insert accounts
+
+  data.forEach((record) => {
+    knexClient('people').insert(record.person).then((person) => {
+      if (person) {
+        record.member.person_id = person[0]
+
+        knexClient('address').insert(record.address).then((address) => {
+          if (address) {
+            record.member.address_id = address[0]
+            knexClient('members').insert(record.member).then((result) => {
+              if (result) {
+                knexClient('people').where('person_id', '=', record.member.person_id).update({
+                  member_id: result[0]
+                }).then((result) => {
+                  if (result) {
+                    console.log('Filled up database with dummy data')
+                  }
+                })
+              } else {
+                console.log(result)
+              }
+            })
+          } else {
+            console.log(address)
+          }
+        })
+      } else {
+        console.log(person)
+      }
+    })
+  })
 }
 
 module.exports = database

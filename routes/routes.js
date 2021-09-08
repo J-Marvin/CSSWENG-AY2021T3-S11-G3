@@ -88,5 +88,6 @@ app.put('/update_bap')
 
 app.delete('/delete_observation', observationController.delObservation)
 app.delete('/delete_church', churchController.delChurch)
+app.delete('/delete_baptismal', baptismalController.delBaptismal)
 
 module.exports = app

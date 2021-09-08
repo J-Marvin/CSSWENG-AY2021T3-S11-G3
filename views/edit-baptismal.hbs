@@ -62,7 +62,8 @@
       </div>
     </div>
 
-    <button id="edit-baptismal" type="button" class="btn btn-primary">Submit</button>
+    <button id="edit-baptismal" type="button" class="btn btn-primary">Save Changes</button>
+    <button id="delete-baptismal" type="button" class="btn btn-danger">Delete Record</button>
     <p id="create_error" class="error_codes"></p>
 </form>
 
@@ -102,6 +103,7 @@
         <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
+        <p><span>Changes here are saved after pressing save changes.<br>NOTE: Cannot undo changes</span></p>
         <input type="radio" id="officiant_non_member" name="officiant_radio"> Non-member
         {{!-- <input type="checkbox" id="officiant_non_member"> Non-member --}}
         <input class="mb-3" type="radio" id="officiant_member" name="officiant_radio" checked> Member

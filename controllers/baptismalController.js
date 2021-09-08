@@ -307,6 +307,25 @@ const baptismalController = {
         res.send(false)
       }
     }
+  },
+
+  delBaptismal: function (req, res) {
+    const id = req.body.recordId
+    const personConds = []
+    const joinTables = [
+      {
+        tableName: { member: tables.MEMBER_TABLE },
+        sourceCol: tables.BAPTISMAL_TABLE + '.' + bapRegFields.PERSON,
+        destCol: 'member.' + personFields.ID
+      }
+    ]
+    const recordCond = new Condition(queryTypes.where)
+    recordCond.setKeyValue(tables.BAPTISMAL_TABLE + '.' + bapRegFields.ID, id)
+
+    db.find(db.tables.PERSON_TABLE, condition, [], '*', function (result) {
+      console.log(result)
+      res.send(JSON.stringify(result))
+    })
   }
 }
 
