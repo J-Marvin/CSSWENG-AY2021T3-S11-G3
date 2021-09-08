@@ -6,6 +6,7 @@ const { Condition, queryTypes } = require('../models/condition')
 const { validationResult, query } = require('express-validator')
 const memberFields = require('../models/members')
 const { sendError } = require('./errorController')
+const { updateMemberToMember, updateMemberToNonMember, updateNonMemberToMember, updateNonMemberToNonMember } = require('./updateController')
 
 const prenupController = {
   /**
@@ -108,7 +109,7 @@ const prenupController = {
    * @param req - the incoming request containing either the query or body
    * @param res - the result to be sent out after processing the request
    */
-  getPrenupPage: function (req, res) {
+  getAddPrenup: function (req, res) {
     /**
      * This function selects the member based on member_id and renders this
      * one member in the dropdown options in add-prenup-temp.hbs
@@ -794,6 +795,43 @@ const prenupController = {
     }
   },
   /**
+   * This function will update the bride
+   * @param req - the incoming request containing either the query or body
+   * @param res - the result to be sent out after processing the request
+   */
+  putUpdatePrenupBride: function (req, res) {
+
+  },
+  /**
+   * This function will update the groom
+   * @param req - the incoming request containing either the query or body
+   * @param res - the result to be sent out after processing the request
+   */
+  putUpdatePrenupGroom: function (req, res) {
+
+  },
+  /**
+   * This function will update the prenup date
+   * @param req - the incoming request containing either the query or body
+   * @param res - the result to be sent out after processing the request
+   */
+  putUpdatePrenupDate: function (req, res) {
+
+  },
+  /**
+   * This function deletes a row in the prenuptial table
+   * @param req - the incoming request containing either the query or body
+   * @param res - the result to be sent out after processing the request
+   */
+  deletePrenup: function (req, res) {
+    const condition = req.query.condition
+
+    db.delete(db.tables.PRENUPTIAL_TABLE, condition, function (result) {
+      console.log(result)
+      // insert res.render() or res.redirect()
+    })
+  },
+  /**
    * This function updates a row in the prenuptial table given that
    * both partners are members.
    * @param req - the incoming request containing either the query or body.
@@ -1334,19 +1372,6 @@ const prenupController = {
         })
       })
     }
-  },
-  /**
-   * This function deletes a row in the prenuptial table
-   * @param req - the incoming request containing either the query or body
-   * @param res - the result to be sent out after processing the request
-   */
-  deletePrenup: function (req, res) {
-    const condition = req.query.condition
-
-    db.delete(db.tables.PRENUPTIAL_TABLE, condition, function (result) {
-      console.log(result)
-      // insert res.render() or res.redirect()
-    })
   }
 }
 
