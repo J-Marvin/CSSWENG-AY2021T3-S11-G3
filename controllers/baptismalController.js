@@ -314,15 +314,24 @@ const baptismalController = {
     const personConds = []
     const joinTables = [
       {
-        tableName: { member: tables.MEMBER_TABLE },
+        tableName: { member: tables.PERSON_TABLE },
         sourceCol: tables.BAPTISMAL_TABLE + '.' + bapRegFields.PERSON,
         destCol: 'member.' + personFields.ID
+      },
+      {
+        tableName: { officiant: tables.PERSON_TABLE },
+        sourceCol: tables.BAPTISMAL_TABLE + '.' + bapRegFields.OFFICIANT,
+        destCol: 'officiant.' + personFields.ID
       }
+    ]
+    const columns = [
+      'member.' + personFields.MEMBER + ' as member_id',
+      'officiant.' + personFields.MEMBER + ' as officiant_member_id'
     ]
     const recordCond = new Condition(queryTypes.where)
     recordCond.setKeyValue(tables.BAPTISMAL_TABLE + '.' + bapRegFields.ID, id)
 
-    db.find(db.tables.PERSON_TABLE, condition, [], '*', function (result) {
+    db.find(db.tables.PERSON_TABLE, recordCond, joinTables, columns, function (result) {
       console.log(result)
       res.send(JSON.stringify(result))
     })

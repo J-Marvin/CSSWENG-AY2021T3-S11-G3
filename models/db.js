@@ -16,7 +16,10 @@ const tableNames = Object.values(tables)
 
 const fields = {}
 for (const table of tableNames) {
-  fields[table] = dbInfo.fields[table]
+  const field = dbInfo.fields[table]
+  console.log(table)
+  console.log(field)
+  fields[table] = Object.values(field)
 }
 
 function reset (file) {
@@ -103,6 +106,7 @@ const database = {
           })
         } else {
           for (const key in data) {
+            console.log(key)
             if (fields[table].includes(key) && // if the key is a valid field
                (data[key] === null || data[key] === undefined)) {
               // if the value is valid
