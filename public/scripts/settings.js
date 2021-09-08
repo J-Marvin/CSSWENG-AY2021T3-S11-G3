@@ -205,7 +205,7 @@ $(document).ready(function () {
         if ($('#edit-password-submit').text() === "Edit level 1 password") {
             const password = $('#password-low-conf').val()
             const currPass = $('#current_passwords').data('low')
-            const confirmPass = $('#confirm_pass').val()
+            const confirmPass = $('#confirm-pass').val()
             const data = {
                 level: '1',
                 password: password
@@ -213,7 +213,7 @@ $(document).ready(function () {
             if (confirmPass !== '') {
                 $.ajax({
                     type: 'POST',
-                    url: '/comparePasswords',
+                    url: '/postComparePasswords',
                     data: {
                         confirmPass: confirmPass,
                         currPass: currPass
@@ -233,7 +233,7 @@ $(document).ready(function () {
         } else if ($('#edit-password-submit').text() === "Edit level 2 password") {
             const password = $('#password-med-conf').val()
             const currPass = $('#current_passwords').data('med')
-            const confirmPass = $('#confirm_pass').val()
+            const confirmPass = $('#confirm-pass').val()
             const data = {
                 level: '2',
                 password: password
@@ -241,7 +241,7 @@ $(document).ready(function () {
             if (confirmPass !== '') {
                 $.ajax({
                     type: 'POST',
-                    url: '/comparePasswords',
+                    url: '/postComparePasswords',
                     data: {
                         confirmPass: confirmPass,
                         currPass: currPass
@@ -261,7 +261,7 @@ $(document).ready(function () {
         } else if ($('#edit-password-submit').text() === "Edit level 3 password") {
             const password = $('#password-high-conf').val()
             const currPass = $('#current_passwords').data('high')
-            const confirmPass = $('#confirm_pass').val()
+            const confirmPass = $('#confirm-pass').val()
             const data = {
                 level: '3',
                 password: password
@@ -269,7 +269,7 @@ $(document).ready(function () {
             if (confirmPass !== '') {
                 $.ajax({
                     type: 'POST',
-                    url: '/comparePasswords',
+                    url: '/postComparePasswords',
                     data: {
                         confirmPass: confirmPass,
                         currPass: currPass
@@ -278,10 +278,12 @@ $(document).ready(function () {
                         if (result) {
                           sendAjax(data, '3')
                         } else {
-                            $('#confirm-pass-error').text('Current password should not be empty!')
+                            $('#confirm-pass-error').text('Current password does not match!')
                         }
                     }
                 })
+            } else {
+                $('#confirm-pass-error').text('Current password should not be empty!')
             }
         }
     })
@@ -296,19 +298,22 @@ $(document).ready(function () {
         data: data,
         success: function (result) {
             if (result) {
-                $('#confirm-pass').text('')
-                $('#confirm-pass-error').text('')
+                $('#confirm-pass').val('')
+                $('#confirm-pass-error').val('')
                 $('#password-confirmation-modal').modal('hide')
-                let successText = $('#success-password').text()
+                // success text: <insert level> Password has been changed successfully!
                 if (level === '1') {
-                    successText = 'Low Level ' + successText
-                    $('#success-password').text(successText)
+                    $('#success-password').text('Low Level Password has been changed successfully!')
+                    $('#password-low').val('')
+                    $('#password-low-conf').val('')
                 } else if (level === '2') {
-                    successText = 'Medium Level ' + successText
-                    $('#success-password').text(successText)
+                    $('#success-password').text('Medium Level Password has been changed successfully!')
+                    $('#password-med').val('')
+                    $('#password-med-conf').val('')
                 } else if (level === '3') {
-                    successText = 'High Level ' + successText
-                    $('#success-password').text(successText)
+                    $('#success-password').text('High Level Password has been changed successfully!')
+                    $('#password-high').val('')
+                    $('#password-high-conf').val('')
                 }
                 
                 $('#password-success-modal').modal('show')

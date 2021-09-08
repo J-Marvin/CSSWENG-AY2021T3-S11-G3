@@ -416,8 +416,12 @@ const controller = {
   postComparePasswords: function (req, res) {
     const confirmPass = req.body.confirmPass
     const currPass = req.body.currPass
-    const same = bcrypt.compare(confirmPass, currPass)
-    res.send(same)
+    bcrypt.compare(confirmPass, currPass, function (err, result) {
+      if (err) {
+        res.send(false)
+      }
+      res.send(result) // sends boolean true or false
+    })
   }
 }
 
