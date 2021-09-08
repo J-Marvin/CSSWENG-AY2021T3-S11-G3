@@ -27,7 +27,7 @@
             <th>Contact Number</th>
             <th>Email Address</th>
             <th>Address</th>
-            <th>Date Created</th>
+            {{#if fromSearch}}<th>Date Created</th>{{/if}}
           {{/if}}
         </tr>
       </thead>
@@ -44,7 +44,7 @@
               <td>{{this.email}}</td>
               <td>{{this.address}}</td>
             {{/if}}
-            <td>{{dateView this.date_created}}</td>
+            {{#if fromSearch}}<td>{{dateView this.date_created}}</td>{{/if}}
           </tr>
         {{/each}}
       </tbody>
