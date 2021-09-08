@@ -27,10 +27,38 @@
 <form id="edit_dedication_form" class="container">
   <div class="container" style="padding-left: 20%; padding-right: 20%;">
     <div class="row d-flex justify-content-between">
-      <div class="col-8"><h1 class="my-3"> Edit Child Dedication Form </h1></div>
-      <div class="col-4 align-self-end"><p style="text-align:end; margin:0;">* - required</p></div>
+      <h1 class="my-3"> Edit Child Dedication Form </h1>
     </div>
     <hr style="margin-top: 0;">
+    <div class="row">
+      <div class="col">
+        <legend>Dedication Date</legend>
+        <input type="date" id="date" name="date" class="form-control" value="{{date dedication_date}}">
+        <p id="date_info_error" class="error_codes"> </p>
+      </div>
+    </div>
+    <div class="row">
+      <legend>Child Name</legend>
+      <div class="col">
+        <u for="first_name">First Name</u>
+        <p>{{infant_first_name}}</p>
+      </div>
+      <div class="col">
+        <u for="mid_name">Middle Initial</u>
+        <p>{{infant_middle_name}}</p>
+      </div>
+      <div class="col">
+        <u for="last_name">Last Name</u>
+        <p>{{infant_last_name}}</p>
+      </div>
+
+      <div class="row">
+        <div class="col-2 offset-10">
+          <button type="button" class="btn btn-secondary mb-4" id="edit_child">Edit Child</button>
+        </div>
+      </div>
+    </div>
+    {{!-- this div will become modal --}}
     <div class="row">
       <div class="col-6">
         <legend>Child</legend>
