@@ -75,7 +75,7 @@ const baptismalController = {
   getAddBaptismalRecordPage: function (req, res) {
     const memberId = req.params.member_id
 
-    if (parseInt(req.session.level) >= 2) {
+    if (parseInt(req.session.level) >= 1) {
       const data = {}
       const joinTables = [
         {
