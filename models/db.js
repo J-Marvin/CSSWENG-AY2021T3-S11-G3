@@ -589,6 +589,55 @@ const database = {
           }
         }
       })
+  },
+
+  /**
+   * This function deletes all records except the accounts in the database
+   */
+  deleteAndReset: function () {
+    const path = require('path')
+    const file = path.join('database', 'church.db')
+    const db = sqlite3(file)
+
+    db.pragma('foreign_keys = OFF')
+    let stmt = db.prepare('DELETE FROM bap_reg')
+    stmt.run()
+    
+    stmt = db.prepare('DELETE FROM inf_dedication')
+    stmt.run()
+    
+    stmt = db.prepare('DELETE FROM witness')
+    stmt.run()
+    
+    stmt = db.prepare('DELETE FROM pre_nuptial')
+    stmt.run()
+    
+    stmt = db.prepare('DELETE FROM wedding_reg')
+    stmt.run()
+
+    stmt = db.prepare('DELETE FROM donations')
+    stmt.run()
+    
+    stmt = db.prepare('DELETE FROM address')
+    stmt.run()
+
+    stmt = db.prepare('DELETE FROM members')
+    stmt.run()
+
+    stmt = db.prepare('DELETE FROM people')
+    stmt.run()
+
+    stmt = db.prepare('DELETE FROM couples')
+    stmt.run()
+    
+    stmt = db.prepare('DELETE FROM observations')
+    stmt.run()
+
+    stmt = db.prepare('DELETE FROM churches')
+    stmt.run()
+
+    db.pragma('foreign_keys = ON')
+    db.close()
   }
 }
 

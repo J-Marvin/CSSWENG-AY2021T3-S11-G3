@@ -384,7 +384,11 @@ const controller = {
       sendError(req, res, 401)
     }
   },
-
+  /**
+   * This function changes the password of the given level and password
+   * @param req - the incoming request containing either the query or body
+   * @param res - the result to be sent out after processing the request
+   */
   postChangePassword: function (req, res) {
     // process passwords
     if (parseInt(req.session.level) === 3) {
@@ -412,7 +416,11 @@ const controller = {
       sendError(req, res, 401)
     }
   },
-
+  /**
+   * This function changes the password of the given level and password
+   * @param req - the incoming request containing either the query or body
+   * @param res - the result to be sent out after processing the request
+   */
   postComparePasswords: function (req, res) {
     const confirmPass = req.body.confirmPass
     const currPass = req.body.currPass
@@ -422,6 +430,15 @@ const controller = {
       }
       res.send(result) // sends boolean true or false
     })
+  },
+  /**
+   * This function drops all tables in the database
+   * @param req - the incoming request containing either the query or body
+   * @param res - the result to be sent out after processing the request
+   */
+  postDropAllTables: function (req, res) {
+    db.deleteAndReset()
+    res.send(true)
   }
 }
 

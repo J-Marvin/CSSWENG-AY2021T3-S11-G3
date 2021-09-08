@@ -82,6 +82,7 @@ app.post('/add_observation', validation.observationValidation(), observationCont
 app.post('/checkCredentials', loginController.checkCredentials)
 app.post('/postComparePasswords', indexController.postComparePasswords)
 app.post('/postChangePassword', indexController.postChangePassword)
+app.post('/deleteAndReset', indexController.postDropAllTables)
 
 app.put('/update_observation', validation.observationValidation(), observationController.putUpdateObservation)
 app.put('/update_church', validation.churchValidation(), churchController.putUpdateChurch)

@@ -288,6 +288,22 @@ $(document).ready(function () {
         }
     })
 
+    $('#delete-db').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '/deleteAndReset',
+            success: function (result) {
+                if (result) {
+                    $('#delete-db-message').text('Database has been deleted successfully!')
+                    $('#delete-db-modal').modal('show')
+                } else {
+                    $('#delete-db-message').text('Error: Database is not deleted')
+                    $('#delete-db-modal').modal('show')
+                }
+            }
+        })
+    })
+
     /*
       This function sends the post request to indexController for changing the password
     */
