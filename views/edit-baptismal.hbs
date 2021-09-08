@@ -28,8 +28,8 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-2 offset-10">
-        <button type="button" class="btn btn-secondary mb-4" id="edit_member">Edit Member</button>
+      <div class="col  d-flex justify-content-end">
+        <button type="button" class="btn btn-secondary mb-4  float-right" id="edit_member">Edit Member</button>
       </div>
     </div>
     <hr>
@@ -49,8 +49,8 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-2 offset-10">
-        <button type="button" class="btn btn-secondary mb-4" id="edit_officiant">Edit Officiant</button>
+      <div class="col d-flex justify-content-end">
+        <button type="button" class="btn btn-secondary mb-4  float-right" id="edit_officiant">Edit Officiant</button>
       </div>
     </div>
     <hr>
@@ -105,7 +105,6 @@
       <div class="modal-body">
         <p><span>Changes here are saved after pressing save changes.<br>NOTE: Cannot undo changes</span></p>
         <input type="radio" id="officiant_non_member" name="officiant_radio"> Non-member
-        {{!-- <input type="checkbox" id="officiant_non_member"> Non-member --}}
         <input class="mb-3" type="radio" id="officiant_member" name="officiant_radio" checked> Member
         <div id="officiant_member_div" style="display:block" data-member="{{record.officiant_id}}" data-person="{{record.officiant_person_id}}">
           <label>Select Officiant*</label>

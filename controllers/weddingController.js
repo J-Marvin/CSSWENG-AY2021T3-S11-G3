@@ -6,6 +6,7 @@ const witnessFields = require('../models/witness')
 const memberFields = require('../models/members')
 const { Condition, queryTypes } = require('../models/condition')
 const { sendError } = require('../controllers/errorController')
+const { tables } = require('../models/db.js')
 
 const weddingController = {
   /**
@@ -273,12 +274,240 @@ const weddingController = {
   },
 
   getEditWedding: function (req, res) {
-    const data = {
-      scripts: ['editWedding'],
-      styles: ['forms']
+    const weddingId = parseInt(req.params.wedding_id)
+    req.session.level = 3
+    if (parseInt(req.session.level) >= 2 || parseInt(req.session.editId) === weddingId) {
+      /*
+        FROM wedding_reg
+        JOIN couples ON couples.couple_id = wedding_reg.couple_id
+        JOIN people ON people.person_id = couples.
+      */
+      const joinTables = [
+        // joins wedding_reg.couple_id = couples.couple_id
+        {
+          tableName: db.tables.COUPLE_TABLE,
+          sourceCol: db.tables.WEDDING_TABLE + '.' + weddingRegFields.COUPLE,
+          destCol: db.tables.COUPLE_TABLE + '.' + coupleFields.ID
+        },
+        // joins bride's person record
+        {
+          tableName: { bride: db.tables.PERSON_TABLE },
+          sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE,
+          destCol: 'bride.' + personFields.ID
+        },
+        // joins groom's person record
+        {
+          tableName: { groom: db.tables.PERSON_TABLE },
+          sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.MALE,
+          destCol: 'groom.' + personFields.ID
+        },
+        // left join that catches if bride has a member record
+        {
+          type: 'leftJoin',
+          tableName: { bride_member: db.tables.MEMBER_TABLE },
+          sourceCol: 'bride.' + personFields.MEMBER,
+          destCol: 'bride_member.' + memberFields.ID
+        },
+        // left join that catches if groom has a member record
+        {
+          type: 'leftJoin',
+          tableName: { groom_member: db.tables.MEMBER_TABLE },
+          sourceCol: 'groom.' + personFields.MEMBER,
+          destCol: 'groom_member.' + memberFields.ID
+        },
+        // join bride parents
+        {
+          type: 'leftJoin',
+          tableName: { bride_parents: db.tables.COUPLE_TABLE },
+          sourceCol: db.tables.WEDDING_TABLE + '.' + weddingRegFields.BRIDE_PARENTS,
+          destCol: 'bride_parents.' + coupleFields.ID
+        },
+        // join groom parents
+        {
+          type: 'leftJoin',
+          tableName: { groom_parents: db.tables.COUPLE_TABLE },
+          sourceCol: db.tables.WEDDING_TABLE + '.' + weddingRegFields.GROOM_PARENTS,
+          destCol: 'groom_parents.' + coupleFields.ID
+        },
+        // bride_parents (mother)
+        {
+          type: 'leftJoin',
+          tableName: { bride_mother: db.tables.PERSON_TABLE },
+          sourceCol: 'bride_parents.' + coupleFields.FEMALE,
+          destCol: 'bride_mother.' + personFields.ID
+        },
+        // bride_parents (father)
+        {
+          type: 'leftJoin',
+          tableName: { bride_father: db.tables.PERSON_TABLE },
+          sourceCol: 'bride_parents.' + coupleFields.MALE,
+          destCol: 'bride_father.' + personFields.ID
+        },
+        // left join that catches if the bride's mother is a member
+        {
+          type: 'leftJoin',
+          tableName: { bride_mother_member: db.tables.MEMBER_TABLE },
+          sourceCol: 'bride_mother.' + personFields.MEMBER,
+          destCol: 'bride_mother_member.' + memberFields.ID
+        },
+        // left join that catches if the bride's father is a member
+        {
+          type: 'leftJoin',
+          tableName: { bride_father_member: db.tables.MEMBER_TABLE },
+          sourceCol: 'bride_father.' + personFields.MEMBER,
+          destCol: 'bride_father_member.' + memberFields.ID
+        },
+        // groom_parents (mother)
+        {
+          type: 'leftJoin',
+          tableName: { groom_mother: db.tables.PERSON_TABLE },
+          sourceCol: 'groom_parents.' + coupleFields.FEMALE,
+          destCol: 'groom_mother.' + personFields.ID
+        },
+        // groom_parents (father)
+        {
+          type: 'leftJoin',
+          tableName: { groom_father: db.tables.PERSON_TABLE },
+          sourceCol: 'groom_parents.' + coupleFields.MALE,
+          destCol: 'groom_father.' + personFields.ID
+        },
+        // left join that catches if the groom's mother is a member
+        {
+          type: 'leftJoin',
+          tableName: { groom_mother_member: db.tables.MEMBER_TABLE },
+          sourceCol: 'groom_mother.' + personFields.MEMBER,
+          destCol: 'groom_mother_member.' + memberFields.ID
+        },
+        // left join that catches if the bride's father is a member
+        {
+          type: 'leftJoin',
+          tableName: { groom_father_member: db.tables.MEMBER_TABLE },
+          sourceCol: 'groom_father.' + personFields.MEMBER,
+          destCol: 'groom_father_member.' + memberFields.ID
+        }
+      ]
+      // columns to be retrieved
+      const columns = [
+        db.tables.WEDDING_TABLE + '.' + weddingRegFields.ID + ' as wedding_id',
+        db.tables.WEDDING_TABLE + '.' + weddingRegFields.COUPLE + ' as couple_id',
+        db.tables.WEDDING_TABLE + '.' + weddingRegFields.DATE + ' as date',
+        db.tables.WEDDING_TABLE + '.' + weddingRegFields.DATE_OF_WEDDING + ' as wedding_date',
+        db.tables.WEDDING_TABLE + '.' + weddingRegFields.BRIDE_PARENTS + ' as bride_parents_id',
+        db.tables.WEDDING_TABLE + '.' + weddingRegFields.GROOM_PARENTS + ' as groom_parents_id',
+        db.tables.WEDDING_TABLE + '.' + weddingRegFields.LOCATION + ' as location',
+        db.tables.WEDDING_TABLE + '.' + weddingRegFields.SOLEMNIZER + ' as solemnizer',
+        db.tables.WEDDING_TABLE + '.' + weddingRegFields.WEDDING_OFFICIANT + ' as officiant',
+        db.tables.WEDDING_TABLE + '.' + weddingRegFields.CONTRACT + ' as contract_no',
+        // bride's name
+        'bride.' + personFields.FIRST_NAME + ' as bride_first_name',
+        'bride.' + personFields.MID_NAME + ' as bride_mid_name',
+        'bride.' + personFields.LAST_NAME + ' as bride_last_name',
+        'bride.' + personFields.MEMBER + ' as bride_member_id',
+        'bride.' + personFields.ID + ' as bride_person_id',
+        // groom's name
+        'groom.' + personFields.FIRST_NAME + ' as groom_first_name',
+        'groom.' + personFields.MID_NAME + ' as groom_mid_name',
+        'groom.' + personFields.LAST_NAME + ' as groom_last_name',
+        'groom.' + personFields.MEMBER + ' as groom_member_id',
+        'groom.' + personFields.ID + ' as groom_person_id',
+        // name of the bride's mother
+        'bride_mother.' + personFields.FIRST_NAME + ' as bride_mother_first_name',
+        'bride_mother.' + personFields.MID_NAME + ' as bride_mother_mid_name',
+        'bride_mother.' + personFields.LAST_NAME + ' as bride_mother_last_name',
+        'bride_mother.' + personFields.MEMBER + ' as bride_mother_member_id',
+        'bride_mother.' + personFields.ID + ' as bride_mother_person_id',
+        // name of the bride's father
+        'bride_father.' + personFields.FIRST_NAME + ' as bride_father_first_name',
+        'bride_father.' + personFields.MID_NAME + ' as bride_father_mid_name',
+        'bride_father.' + personFields.LAST_NAME + ' as bride_father_last_name',
+        'bride_father.' + personFields.MEMBER + ' as bride_father_member_id',
+        'bride_father.' + personFields.ID + ' as bride_father_person_id',
+        // name of the groom's mother
+        'groom_mother.' + personFields.FIRST_NAME + ' as groom_mother_first_name',
+        'groom_mother.' + personFields.MID_NAME + ' as groom_mother_mid_name',
+        'groom_mother.' + personFields.LAST_NAME + ' as groom_mother_last_name',
+        'groom_mother.' + personFields.MEMBER + ' as groom_mother_member_id',
+        'groom_mother.' + personFields.ID + ' as groom_mother_person_id',
+        // name of the groom's father
+        'groom_father.' + personFields.FIRST_NAME + ' as groom_father_first_name',
+        'groom_father.' + personFields.MID_NAME + ' as groom_father_mid_name',
+        'groom_father.' + personFields.LAST_NAME + ' as groom_father_last_name',
+        'groom_father.' + personFields.MEMBER + ' as groom_father_member_id',
+        'groom_father.' + personFields.ID + ' as groom_father_person_id'
+      ]
+      // set the WHERE condition: wedding_id = <weddingId>
+      const cond = new Condition(queryTypes.where)
+      cond.setKeyValue(db.tables.WEDDING_TABLE + '.' + weddingRegFields.ID, weddingId)
+
+      const witnessJoin = [
+        {
+          tableName: db.tables.PERSON_TABLE,
+          sourceCol: db.tables.WITNESS_TABLE + '.' + witnessFields.PERSON,
+          destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
+        }
+      ]
+      const witnessColumns = [
+        db.tables.WITNESS_TABLE + '.' + witnessFields.DEDICATION + ' as dedication_id',
+        db.tables.WITNESS_TABLE + '.' + witnessFields.PERSON + ' as witness_person_id',
+        db.tables.WITNESS_TABLE + '.' + witnessFields.ID + ' as witness_id',
+        db.tables.PERSON_TABLE + '.' + personFields.MEMBER + ' as witness_member_id',
+        db.tables.PERSON_TABLE + '.' + personFields.FIRST_NAME + ' as witness_first_name',
+        db.tables.PERSON_TABLE + '.' + personFields.MID_NAME + ' as witness_mid_name',
+        db.tables.PERSON_TABLE + '.' + personFields.LAST_NAME + ' as witness_last_name',
+        db.tables.WITNESS_TABLE + '.' + witnessFields.TYPE + ' as type'
+      ]
+
+      // set the WHERE condition: wedding_id = <weddingId>
+      const witnessCond = new Condition(queryTypes.where)
+      witnessCond.setKeyValue(db.tables.WITNESS_TABLE + '.' + witnessFields.WEDDING, weddingId)
+      console.log(cond)
+
+      // find them
+      db.find(db.tables.WEDDING_TABLE, cond, joinTables, columns, function (result) {
+        // store to data\
+        console.log(result)
+        if (result !== null && result.length > 0) {
+          console.log(result)
+          const data = {
+            ...result[0]
+          }
+          data.canSee = (parseInt(req.session.weddingId) === parseInt(weddingId)) || (parseInt(req.session.level) >= 2)
+          if ((parseInt(req.session.level) <= 2)) {
+            data.canSee = false
+          }
+          data.styles = ['forms']
+          data.scripts = ['editWedding']
+          data.backLink = parseInt(req.session.level) >= 2 ? '/wedding_main_page' : '/forms_main_page'
+          db.find(db.tables.WITNESS_TABLE, witnessCond, witnessJoin, witnessColumns, function (result) {
+            if (result) {
+              data.witnesses = result
+              // Filters all Godfathers
+              data.witnessMale = data.witnesses.filter((witness) => { return witness.type === 'Godfather' })
+              // Filters all Godmothers
+              data.witnessFemale = data.witnesses.filter((witness) => { return witness.type === 'Godmother' })
+              console.log(data)
+              db.find(db.tables.MEMBER_TABLE, [], {
+                tableName: tables.PERSON_TABLE, 
+                sourceCol: tables.PERSON_TABLE + '.' + personFields.ID,
+                destCol: tables.MEMBER_TABLE + '.' + memberFields.PERSON
+              }, '*', function (result) {
+                if (result) {
+                  data.males = result.filter(elem => elem[memberFields.SEX] === 'Male')
+                  data.females = result.filter(elem => elem[memberFields.SEX] === 'Female')
+                  res.render('edit-wedding', data)
+                } else {
+                  sendError(req, res, 404, '404 Wedding Record Not Found')
+                }
+              })
+            }
+          })
+        } else {
+          sendError(req, res, 404, '404 Wedding Record Not Found')
+        }
+      })
+    } else {
+      sendError(req, res, 401)
     }
-    console.log('error')
-    res.render('edit-wedding', data)
   },
 
   /**
