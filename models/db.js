@@ -610,22 +610,22 @@ const database = {
     db.pragma('foreign_keys = OFF')
     let stmt = db.prepare('DELETE FROM bap_reg')
     stmt.run()
-    
+
     stmt = db.prepare('DELETE FROM inf_dedication')
     stmt.run()
-    
+
     stmt = db.prepare('DELETE FROM witness')
     stmt.run()
-    
+
     stmt = db.prepare('DELETE FROM pre_nuptial')
     stmt.run()
-    
+
     stmt = db.prepare('DELETE FROM wedding_reg')
     stmt.run()
 
     stmt = db.prepare('DELETE FROM donations')
     stmt.run()
-    
+
     stmt = db.prepare('DELETE FROM address')
     stmt.run()
 
@@ -637,7 +637,7 @@ const database = {
 
     stmt = db.prepare('DELETE FROM couples')
     stmt.run()
-    
+
     stmt = db.prepare('DELETE FROM observations')
     stmt.run()
 
