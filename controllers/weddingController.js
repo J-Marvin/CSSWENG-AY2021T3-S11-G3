@@ -7,6 +7,7 @@ const memberFields = require('../models/members')
 const { Condition, queryTypes } = require('../models/condition')
 const { sendError } = require('../controllers/errorController')
 const { tables } = require('../models/db.js')
+const { updateMemberToMember, updateMemberToNonMember, updateNonMemberToMember, updateNonMemberToNonMember } = require('./updateController.js')
 
 const weddingController = {
   /**
@@ -476,7 +477,7 @@ const weddingController = {
             data.canSee = false
           }
           data.styles = ['forms']
-          data.scripts = ['editWedding']
+          data.scripts = ['editWedding', 'edit']
           data.backLink = parseInt(req.session.level) >= 2 ? '/wedding_main_page' : '/forms_main_page'
           db.find(db.tables.WITNESS_TABLE, witnessCond, witnessJoin, witnessColumns, function (result) {
             if (result) {
@@ -887,6 +888,54 @@ const weddingController = {
       console.log(result)
       // insert res.render() or res.redirect()
     })
+  },
+
+  putUpdateCouple: function (req, res) {
+    const isBride = req.body.isBride === 'true'
+    const isOldMember = req.body.isOldMember === 'true'
+    const person = JSON.parse(req.body.person)
+    const isNewMember = person.isMember
+    const ids = {
+      recordId: req.body.coupleId,
+      oldPersonId: req.body.oldPersonId,
+      newPersonId: person.personId,
+      updateRecordId: req.body.recordId
+    }
+
+    if (isOldMember && isNewMember) { // From member to member
+      const fields = {
+        recordId: coupleFields.ID,
+        memberRecordField: memberFields.WEDDING_REG,
+        recordPersonField: isBride ? coupleFields.FEMALE : coupleFields.MALE
+      }
+      updateMemberToMember(ids, fields, tables.COUPLE_TABLE, sendReply)
+    } else if (isOldMember && !isNewMember) { // From member to non member
+      const fields = {
+        recordId: coupleFields.ID,
+        memberRecordField: memberFields.WEDDING_REG,
+        recordPersonField: isBride ? coupleFields.FEMALE : coupleFields.MALE
+      }
+      console.log(person)
+      updateMemberToNonMember(person, ids, fields, tables.COUPLE_TABLE, sendReply)
+    } else if (!isOldMember && isNewMember) { // From non member to member
+      const fields = {
+        recordId: coupleFields.ID,
+        memberRecordField: memberFields.WEDDING_REG, // No editing to member table since officiant
+        recordPersonField: isBride ? coupleFields.FEMALE : coupleFields.MALE
+      }
+      updateNonMemberToMember(ids, fields, tables.COUPLE_TABLE, sendReply)
+    } else {
+      updateNonMemberToNonMember(person, sendReply)
+    }
+
+    function sendReply (result) {
+      console.log(result)
+      if (result) {
+        res.send(JSON.stringify(result))
+      } else {
+        res.send(false)
+      }
+    }
   }
 }
 

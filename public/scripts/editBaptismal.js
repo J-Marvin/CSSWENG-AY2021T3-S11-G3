@@ -174,7 +174,7 @@ $(document).ready(function() {
             console.log(personInfo)
             if (personInfo.isMember) {
               $('#officiant_member_div').data('member', personInfo.memberId)
-              $('#officiant_member_div').data('person', result)
+              $('#officiant_member_div').data('person', info[1])
               $('#officiant_first_name_view').html(info[2])
               $('#officiant_mid_name_view').html(info[3])
               $('#officiant_last_name_view').html(info[4])

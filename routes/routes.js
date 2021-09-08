@@ -12,6 +12,7 @@ const dedicationController = require('../controllers/dedicationController')
 const weddingController = require('../controllers/weddingController')
 const baptismalController = require('../controllers/baptismalController')
 const searchController = require('../controllers/searchController')
+const { putUpdateBride, putUpdateCouple } = require('../controllers/weddingController')
 
 const app = express()
 app.set('views', path.join(__dirname, '../views'))
@@ -85,6 +86,8 @@ app.put('/update_church', validation.churchValidation(), churchController.putUpd
 app.put('/update_bap/member', baptismalController.putUpdateBaptismalMember)
 app.put('/update_bap/officiant', baptismalController.putUpdateBaptismalOfficiant)
 app.put('/update_bap', baptismalController.putUpdateBaptismalMisc)
+
+app.put('/update_wedding/couple', putUpdateCouple)
 
 app.delete('/delete_observation', observationController.delObservation)
 app.delete('/delete_church', churchController.delChurch)

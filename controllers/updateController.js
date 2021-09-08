@@ -44,8 +44,10 @@ const updateController = {
       updateDataMember[fields.memberRecordField] = null
     }
 
+    console.log(updateDataMember)
+
     db.update(db.tables.MEMBER_TABLE, updateDataMember, memberCondition, function (result) {
-      if (result === 0) {
+      if (fields.memberRecordField != null && result === 0) {
         result = true
       }
 
@@ -93,6 +95,7 @@ const updateController = {
     const oldPersonId = ids.oldPersonId
     const newPersonId = ids.newPersonId
     const recordId = ids.recordId
+    const updateRecordId = ids.updateRecordId ? ids.updateRecordId : ids.recordId
 
     const delCondition = new Condition(queryTypes.where)
     delCondition.setKeyValue(personFields.ID, oldPersonId)
@@ -104,11 +107,11 @@ const updateController = {
 
     const updateMemberData = {}
     if (fields.memberRecord !== null && fields.memberRecord !== undefined) {
-      updateMemberData[fields.memberRecordField] = recordId
+      updateMemberData[fields.memberRecordField] = updateRecordId
     }
 
     const updateRecordCondition = new Condition(queryTypes.where)
-    updateRecordCondition.setKeyValue(fields.recordId, ids.recordId)
+    updateRecordCondition.setKeyValue(fields.recordId, recordId)
 
     const updateMemberCondition = new Condition(queryTypes.where)
     updateMemberCondition.setKeyValue(memberFields.PERSON, newPersonId)
@@ -145,7 +148,7 @@ const updateController = {
 
   /**
    * This function updates a record's related person from a non member to a member
-   * @param {Object} ids - This object contains the following: oldPersonId, newPersonId, recordId
+   * @param {Object} ids - This object contains the following: oldPersonId, newPersonId, recordId, updateRecordId (optional)
    * @param {Object} fields - This object contains the following: recordId, memberRecordField (field in member to be updated), recordPersonField (field in record to be updated)
    * @param {String} recordTable - The table to update the record
    * @param {Function} callback - The callback function to be called after updating the required information
@@ -154,6 +157,7 @@ const updateController = {
     const oldPersonId = ids.oldPersonId
     const newPersonId = ids.newPersonId
     const recordId = ids.recordId
+    const updateRecordId = ids.updateRecordId ? ids.updateRecordId : ids.recordId
 
     const updateRecordData = {}
     updateRecordData[fields.recordPersonField] = newPersonId
@@ -162,7 +166,7 @@ const updateController = {
     const updateOldMemberData = {}
 
     if (fields.memberRecordField !== null) {
-      updateNewMemberData[fields.memberRecordField] = recordId
+      updateNewMemberData[fields.memberRecordField] = updateRecordId
       updateOldMemberData[fields.memberRecordField] = null
     }
 

@@ -1,5 +1,5 @@
 {{>navbar}}
-<div id="wedding-info" 
+<div id="wedding_info" 
     data-wedding-id="{{wedding_id}}" 
     data-couple-id="{{couple_id}}"
     data-date-created="{{date}}"
@@ -27,16 +27,16 @@
       <div class="row" id="bride_info" data-member="{{bride_member_id}}" data-person="{{bride_person_id}}">
         <legend>Bride</legend>
         <div class="col">
-          <u for="first_name">First Name</u>
-          <p><span id="bride_first_name">{{bride_first_name}}</span></p>
+          <u for="first_name_view">First Name</u>
+          <p><span id="bride_first_name_view">{{bride_first_name}}</span></p>
         </div>
         <div class="col">
-          <u for="mid_name">Middle Initial</u>
-          <p><span id="bride_mid_name">{{bride_mid_name}}</span></p>
+          <u for="mid_name_view">Middle Initial</u>
+          <p><span id="bride_mid_name_view">{{bride_mid_name}}</span></p>
         </div>
         <div class="col">
-          <u for="last_name">Last Name</u>
-          <p><span id="bride_last_name">{{bride_last_name}}</span></p>
+          <u for="last_name_view">Last Name</u>
+          <p><span id="bride_last_name_view">{{bride_last_name}}</span></p>
           
         </div>
       </div>
@@ -49,17 +49,17 @@
       <div class="row" id="groom_info" data-member="{{groom_member_id}}" data-person="{{groom_person_id}}">
         <legend>Groom</legend>
         <div class="col">
-          <u for="first_name">First Name</u>
-          <p><span id="groom_first_name">{{groom_first_name}}</span></p>
+          <u for="first_name_view">First Name</u>
+          <p><span id="groom_first_name_view">{{groom_first_name}}</span></p>
         
         </div>
         <div class="col">
-          <u for="mid_name">Middle Initial</u>
-          <p><span id="groom_mid_name">{{groom_mid_name}}</span></p>
+          <u for="mid_name_view">Middle Initial</u>
+          <p><span id="groom_mid_name_view">{{groom_mid_name}}</span></p>
         </div>
         <div class="col">
-          <u for="last_name">Last Name</u>
-          <p><span id="groom_last_name">{{groom_last_name}}</span></p>
+          <u for="last_name_view">Last Name</u>
+          <p><span id="groom_last_name_view">{{groom_last_name}}</span></p>
         </div>
       </div>
       <div class="row">
@@ -71,9 +71,9 @@
       <div class="row" id="bride_mother_info" data-member="{{bride_mother_member_id}}" data-person="{{bride_mother_person_id}}">
         <legend>Bride's Mother</legend>
         <div class="col">
-          <u for="first_name">First Name</u>
+          <u for="first_name_view">First Name</u>
           <p>
-          <span id="bride_mother_first_name">
+          <span id="bride_mother_first_name_view">
             {{#if (isUndefined bride_mother_first_name)}}
               N/A
             {{else}}
@@ -83,9 +83,9 @@
           </p>
         </div>
         <div class="col">
-          <u for="mid_name">Middle Initial</u>
+          <u for="mid_name_view">Middle Initial</u>
           <p>
-          <span id="bride_mother_mid_name">
+          <span id="bride_mother_mid_name_view">
             {{#if (isUndefined bride_mother_mid_name)}}
               N/A
             {{else}}
@@ -95,9 +95,9 @@
           </p>
         </div>
         <div class="col">
-          <u for="last_name">Last Name</u>
+          <u for="last_name_view">Last Name</u>
           <p>
-            <span id="bride_mother_last_name">
+            <span id="bride_mother_last_name_view">
               {{#if (isUndefined bride_mother_last_name)}}
                 N/A
               {{else}}
@@ -115,9 +115,9 @@
       <div class="row" id="bride_father_info" data-member="{{bride_father_member_id}}" data-person="{{bride_father_person_id}}">
         <legend>Bride's Father</legend>
         <div class="col">
-          <u for="first_name">First Name</u>
+          <u for="first_name_view">First Name</u>
           <p>
-          <span id="bride_father_first_name">
+          <span id="bride_father_first_name_view">
             {{#if (isUndefined bride_father_first_name)}}
              N/A
             {{else}}
@@ -127,9 +127,9 @@
           </p>
         </div>
         <div class="col">
-          <u for="mid_name">Middle Initial</u>
+          <u for="mid_name_view">Middle Initial</u>
           <p>
-            <span id="bride_father_mid_name">
+            <span id="bride_father_mid_name_view">
               {{#if (isUndefined bride_father_mid_name)}}
                 N/A
               {{else}}
@@ -139,9 +139,9 @@
           </p>
         </div>
         <div class="col">
-          <u for="last_name">Last Name</u>
+          <u for="last_name_view">Last Name</u>
           <p>
-            <span id="bride_father_last_name">
+            <span id="bride_father_last_name_view">
               {{#if (isUndefined bride_father_last_name)}}
                 N/A
               {{else}}
@@ -160,9 +160,9 @@
       <div class="row" id="groom_mother_info" data-member="{{groom_mother_member_id}}" data-person="{{groom_mother_person_id}}">
         <legend>Groom's Mother</legend>
         <div class="col">
-          <u for="first_name">First Name</u>
+          <u for="first_name_view">First Name</u>
           <p>
-            <span id="groom_mother_first_name">
+            <span id="groom_mother_first_name_view">
               {{#if (isUndefined groom_mother_first_name)}}
                 N/A
               {{else}}
@@ -172,9 +172,9 @@
           </p>
         </div>
         <div class="col">
-          <u for="mid_name">Middle Initial</u>
+          <u for="mid_name_view">Middle Initial</u>
           <p>
-            <span id="groom_mother_mid_name">
+            <span id="groom_mother_mid_name_view">
               {{#if (isUndefined groom_mother_mid_name)}}
                 N/A
               {{else}}
@@ -184,9 +184,9 @@
           </p>
         </div>
         <div class="col">
-          <u for="last_name">Last Name</u>
+          <u for="last_name_view">Last Name</u>
           <p>
-            <span id="groom_mother_last_name">
+            <span id="groom_mother_last_name_view">
               {{#if (isUndefined groom_mother_last_name)}}
                 N/A
               {{else}}
@@ -309,7 +309,106 @@
       </div>
     </div>
 
-  
+  <div class="modal fade" id="brideModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit Bride</h5>
+          <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col">
+              <input type="radio" name="bride_radio" id="bride_non_member"> Non Member
+              <input class="mb-3" name="bride_radio" type="radio" id="bride_member" checked> Member
+              <span id="bride_none_div">
+                <input type="radio" name="bride_radio" id="bride_none"> None
+              </span>
+              <div id="bride_member_div" style="display:block">
+                <label>Select Member</label>
+                <select name="input_bride_member" id="input_bride_member">
+                  {{>dropdown singleFemales}}
+                </select>
+              </div>
+              <fieldset class="form-group" id="bride_non_member_div" style="display:none">
+                <div class="div">
+                  <div class="row">
+                    <div class="col-12">
+                      <label for="bride_first_name">First Name</label>
+                      <input type="text" id="bride_first_name" name="bride_first_name" class="form-control">
+                    </div>
+                    <div class="col-12">
+                      <label for="bride_mid_name">Middle Initial</label>
+                      <input type="text" id="bride_mid_name" name="bride_mid_name" class="form-control">
+                    </div>
+                    <div class="col-12">
+                      <label for="witness_last_name">Last Name</label>
+                      <input type="text" id="bride_last_name" name="bride_last_name" class="form-control">
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+              <p id="bride_modal_info_error" class="error_codes"> </p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="cancel_modal" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="save_bride_btn">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="groomModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit Groom</h5>
+          <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col">
+              <input type="radio" name="groom_radio" id="groom_non_member"> Non Member
+              <input class="mb-3" name="groom_radio"type="radio" id="groom_member" checked> Member
+              <span id="groom_none_div"><input type="radio" id="groom_none"> None</span>
+              <div id="groom_member_div" style="display:block">
+                <label>Select Groom</label>
+                <select name="input_groom" id="input_groom_member">
+                  {{>dropdown singleMales}}
+                </select>
+              </div>
+              <fieldset class="form-group" id="groom_non_member_div" style="display:none">
+                <div class="div">
+                  <div class="row">
+                    <div class="col-12">
+                      <label for="groom_first_name">First Name</label>
+                      <input type="text" id="groom_first_name" name="groom_first_name" class="form-control">
+                    </div>
+                    <div class="col-12">
+                      <label for="groom_mid_name">Middle Initial</label>
+                      <input type="text" id="groom_mid_name" name="groom_mid_name" class="form-control">
+                    </div>
+                    <div class="col-12">
+                      <label for="groom_last_name">Last Name</label>
+                      <input type="text" id="groom_last_name" name="groom_last_name" class="form-control">
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+              <p id="groom_modal_info_error" class="error_codes"> </p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="cancel_modal" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="save_groom_btn">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="modal fade" id="femaleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -372,10 +471,10 @@
           <div class="row">
             <div class="col">
               <input type="radio" id="male_non_member"> Non Member
-              <input class="mb-3" type="radio" id="male_member" checked disabled> Member
+              <input class="mb-3" type="radio" id="male_member" checked> Member
               <span id="male_none_div"><input type="radio" id="male_none"> None</span>
-              <div id="witness_gfather_member_div" style="display:block">
-                <label>Select Witness</label>
+              <div id="male_member_div" style="display:block">
+                <label>Select Father</label>
                 <select name="input_male" id="input_male_member">
                   {{>dropdown males}}
                 </select>
