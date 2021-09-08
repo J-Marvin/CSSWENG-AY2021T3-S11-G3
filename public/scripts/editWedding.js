@@ -9,7 +9,6 @@ $(document).ready(function() {
     var isFemale = false
     var currPerson = {}
 
-
     initSelectize()
     $('select').change(hideChoices)
 
@@ -69,6 +68,101 @@ $(document).ready(function() {
       initFemaleModal('Edit Bride')
     })
 
+    $('#edit_bride_mother').click(function () {
+      modalType = 'editBrideMother'
+      currPerson.firstName = $('#bride_mother_first_name').text()
+      currPerson.midName = $('#bride_mother_mid_name').text()
+      currPerson.lastName = $('#bride_mother_last_name').text()
+      currPerson.doesExist = !(currPerson.firstName === 'N/A')
+      currPerson.memberId = $('#bride_mother_info').data('member')
+      currPerson.personId = $('#bride_mother_info').data('person')
+      currPerson.canBeNone = true
+      isFemale = true
+
+      console.log(currPerson)
+
+      initFemaleModal('Edit Bride Mother')
+    })
+
+    $('#edit_bride_father').click(function () {
+      modalType = 'editBrideFather'
+      currPerson.firstName = $('#bride_father_first_name').text()
+      currPerson.midName = $('#bride_father_mid_name').text()
+      currPerson.lastName = $('#bride_father_last_name').text()
+      currPerson.doesExist = !(currPerson.firstName === 'N/A')
+      currPerson.memberId = $('#bride_father_info').data('member')
+      currPerson.personId = $('#bride_father_info').data('person')
+      currPerson.canBeNone = true
+      isFemale = false
+
+      console.log(currPerson)
+
+      initMaleModal('Edit Bride Father')
+    })
+
+    $('#edit_bride').click(function () {
+      modalType = 'editBride'
+      currPerson.firstName = $('#bride_first_name').text()
+      currPerson.midName = $('#bride_mid_name').text()
+      currPerson.lastName = $('#bride_last_name').text()
+      currPerson.doesExist = !(currPerson.firstName === 'N/A')
+      currPerson.memberId = $('#bride_info').data('member')
+      currPerson.personId = $('#bride_info').data('person')
+      currPerson.canBeNone = false
+      isFemale = true
+
+      console.log(currPerson)
+
+      initFemaleModal('Edit Bride')
+    })
+
+    $('#edit_groom').click(function() {
+      modalType = 'editGroom'
+      currPerson.firstName = $('#groom_first_name').text()
+      currPerson.midName = $('#groom_mid_name').text()
+      currPerson.lastName = $('#groom_last_name').text()
+      currPerson.doesExist = !(currPerson.firstName === 'N/A')
+      currPerson.memberId = $('#groom_info').data('member')
+      currPerson.personId = $('#groom_info').data('person')
+      currPerson.canBeNone = false
+      isFemale = false
+
+
+      initMaleModal('Edit Groom')
+    })
+
+  $('#edit_groom_mother').click(function () {
+    modalType = 'editGroomMother'
+    currPerson.firstName = $('#groom_mother_first_name').text()
+    currPerson.midName = $('#groom_mother_mid_name').text()
+    currPerson.lastName = $('#groom_mother_last_name').text()
+    currPerson.doesExist = !(currPerson.firstName === 'N/A')
+    currPerson.memberId = $('#groom_mother_info').data('member')
+    currPerson.personId = $('#groom_mother_info').data('person')
+    currPerson.canBeNone = true
+    isFemale = true
+
+    console.log(currPerson)
+
+    initFemaleModal('Edit Groom Mother')
+  })
+
+  $('#edit_groom_father').click(function () {
+    modalType = 'editGroomFather'
+    currPerson.firstName = $('#groom_father_first_name').text()
+    currPerson.midName = $('#groom_father_mid_name').text()
+    currPerson.lastName = $('#groom_father_last_name').text()
+    currPerson.doesExist = !(currPerson.firstName === 'N/A')
+    currPerson.memberId = $('#groom_father_info').data('member')
+    currPerson.personId = $('#groom_father_info').data('person')
+    currPerson.canBeNone = true
+    isFemale = false
+
+    console.log(currPerson)
+
+    initMaleModal('Edit Groom Father')
+  })
+
     function initFemaleModal(title) {
       $('#female_modal_title').html(title)
       if (currPerson.canBeNone) {
@@ -100,9 +194,33 @@ $(document).ready(function() {
     }
 
     function initMaleModal(title) {
-      if(isFemale) {
-        
+      $('#male_modal_title').html(title)
+      if (currPerson.canBeNone) {
+        $('#male_none_div').show()
+      } else {
+        $('#male_none_div').hide()
       }
+
+      if (currPerson.memberId !== '' && currPerson.memberId !== null && currPerson.memberId !== undefined) {
+        $('male_member_div').show()
+        $('#male_non_member_div').hide()
+        console.log(currPerson.memberId)
+        const id = currPerson.memberId
+        const value = $('.option[data-value^="' + id + '"]').data('value')
+        console.log(value)
+        selectMale[0].selectize.setValue(value)
+      } else if (currPerson.personId !== '' && currPerson.personId !== null && currPerson.personId !== undefined) {
+        $('male_non_member_div').show()
+        $('#male_member_div').hide()
+        $('male_first_name').val(currPerson.firstName)
+        $('male_mid_name').val(currPerson.midname)
+        $('male_last_name').val(currPerson.lastname)
+      } else {
+        $('#male_member_div').hide()
+        $('#male_non_member_div').hide()
+      }
+
+      $('#maleModal').modal('show')
     }
 
     // SPLIT

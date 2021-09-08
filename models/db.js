@@ -667,7 +667,6 @@ function insertAccounts (level1 = 'NormandyN7', level2 = 'HelloSweng', level3 = 
 
 function insertData () {
   // insert accounts
-
   data.forEach((record) => {
     knexClient('people').insert(record.person).then((person) => {
       if (person) {

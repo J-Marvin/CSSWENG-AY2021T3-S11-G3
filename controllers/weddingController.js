@@ -487,13 +487,15 @@ const weddingController = {
               data.witnessFemale = data.witnesses.filter((witness) => { return witness.type === 'Godmother' })
               console.log(data)
               db.find(db.tables.MEMBER_TABLE, [], {
-                tableName: tables.PERSON_TABLE, 
+                tableName: tables.PERSON_TABLE,
                 sourceCol: tables.PERSON_TABLE + '.' + personFields.ID,
                 destCol: tables.MEMBER_TABLE + '.' + memberFields.PERSON
               }, '*', function (result) {
                 if (result) {
                   data.males = result.filter(elem => elem[memberFields.SEX] === 'Male')
+                  data.singleMales = data.males.filter(elem => elem[memberFields.WEDDING_REG] === null || elem[memberFields.ID] === data.groom_member_id)
                   data.females = result.filter(elem => elem[memberFields.SEX] === 'Female')
+                  data.singleFemales = data.females.filter(elem => elem[memberFields.WEDDING_REG] === null || elem[memberFields.ID] === data.bride_member_id)
                   res.render('edit-wedding', data)
                 } else {
                   sendError(req, res, 404, '404 Wedding Record Not Found')
