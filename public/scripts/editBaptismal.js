@@ -17,9 +17,6 @@ $(document).ready(function() {
 
 
   $('#officiant_member').click(function () {
-    $(this).prop('disabled', true)
-    $('#officiant_non_member').prop('checked', false)
-    $('#officiant_non_member').prop('disabled', false)
     $('#officiant_non_member_div').hide()
     $('#officiant_member_div').show()
     $('#officiant_first_name').val('')
@@ -29,9 +26,6 @@ $(document).ready(function() {
   })
 
   $('#officiant_non_member').click(function () {
-    $(this).prop('disabled', true)
-    $('#officiant_member').prop('checked', false)
-    $('#officiant_member').prop('disabled', false)
     $('#officiant_member_div').hide()
     $('#officiant_non_member_div').show()
     selectizeEnable($('#input_officiant_member').val())
@@ -60,6 +54,7 @@ $(document).ready(function() {
     } else {
       $('#officiant_member_div').hide()
       $('#officiant_non_member_div').show()
+      $('#officiant_non_member').prop('checked', true)
       $('#officiant_first_name').val($('#officiant_first_name_view').text())
       $('#officiant_mid_name').val($('#officiant_mid_name_view').text())
       $('#officiant_last_name').val($('#officiant_last_name_view').text())
@@ -103,12 +98,13 @@ $(document).ready(function() {
   $('#save_edit_officiant').click(function () {
     // insert validation
     let officiantId = $('#officiant_member_div').data('member')
-    let officiantPersonId = $('#officiant_member_div'.data('person'))
+    let officiantPersonId = $('#officiant_member_div').data('person')
+    let info = $('#input_officiant_member').val().split(', ')
 
-    data = {
+    const data = {
       isOldMember: officiantId !== null && officiantId !== undefined && officiantId !== '',
       person: JSON.stringify(getDetails($('#officiant_member'), null, $('#input_officiant_member'), $('#officiant_first_name'), $('#officiant_mid_name'), $('#officiant_last_name'))),
-      recordId: $('#prenup_info').data('baptismal'),
+      recordId: $('#baptismal_info').data('baptismal'),
       oldMemberId: officiantId,
       oldPersonId: officiantPersonId
     }
@@ -118,9 +114,26 @@ $(document).ready(function() {
       url: '/update_bap/officiant',
       data: data,
       success: function (result) {
-        alert(result)
         if (result) {
-
+          const personInfo = JSON.parse(data.person)
+          alert("TEST")
+          console.log(personInfo)
+          if (personInfo.isMember) {
+            alert("TEST 1")
+            $('#officiant_member_div').data('member', personInfo.memberId)
+            $('#officiant_member_div').data('person', result)
+            $('#officiant_first_name_view').html(info[2])
+            $('#officiant_mid_name_view').html(info[3])
+            $('#officiant_last_name_view').html(info[4])
+          } else {
+            alert("TEST 2")
+            $('#officiant_member_div').removeData('member')
+            $('#officiant_member_div').data('person', result)
+            $('#officiant_first_name_view').html(personInfo.firstName)
+            $('#officiant_mid_name_view').html(personInfo.midName)
+            $('#officiant_last_name_view').html(personInfo.lastName)
+          }
+          $('#editOfficiantModal').modal('hide')
         } else {
           $('#create_error').text('Error Editing Officiant')
         }

@@ -25,7 +25,7 @@ const updateController = {
    * This function updates a record's related person from a member to a non member
    * @param {Object} person - This object contains the following: firstName, midName, lastName
    * @param {Object} ids - This object contains the following: recordId (the id of the record to be udpated), oldMemberId
-   * @param {Object} fields - This object contains the following: recordId (the field to be updated), personFieldId, memberRecordField
+   * @param {Object} fields - This object contains the following: recordId (the field to be updated), recordPersonField, memberRecordField
    * @param {String} recordTable - The table to update the record
    * @param {Function} callback - The callback function to be called after updating the required information
    */
@@ -39,9 +39,15 @@ const updateController = {
     memberCondition.setKeyValue(memberFields.PERSON, ids.oldPersonId)
 
     const updateDataMember = {}
-    updateDataMember[fields.memberRecordField] = null
+    if (fields.memberRecordField != null) {
+      updateDataMember[fields.memberRecordField] = null
+    }
 
     db.update(db.tables.MEMBER_TABLE, updateDataMember, memberCondition, function (result) {
+      if (result === 0) {
+        result = true
+      }
+
       if (result) {
         db.insert(db.tables.PERSON_TABLE, personInfo, function (result) {
           if (result) {
@@ -49,9 +55,20 @@ const updateController = {
             const recordCond = new Condition(queryTypes.where)
             recordCond.setKeyValue(fields.recordId, ids.recordId)
             const recordUpdateData = {}
-            recordUpdateData[fields.personFieldId] = result
+            recordUpdateData[fields.recordPersonField] = result
 
-            db.update(recordTable, recordUpdateData, recordCond, callback)
+            db.update(recordTable, recordUpdateData, recordCond, function (result) {
+              if (result === 0) {
+                result = true
+              }
+
+              if (result) {
+                callback(recordUpdateData[fields.recordPersonField])
+              } else {
+                result = false
+                callback(result)
+              }
+            })
           } else {
             result = false
             callback(result)
@@ -82,25 +99,39 @@ const updateController = {
     const updateRecordData = {}
     updateRecordData[fields.recordPersonField] = newPersonId
 
+    console.log(updateRecordData)
+
     const updateMemberData = {}
     if (fields.memberRecord !== null && fields.memberRecord !== undefined) {
       updateMemberData[fields.memberRecordField] = recordId
     }
 
     const updateRecordCondition = new Condition(queryTypes.where)
-    updateRecordCondition.setKeyValue(ids.recordId, ids.recordId)
+    updateRecordCondition.setKeyValue(fields.recordId, ids.recordId)
 
     const updateMemberCondition = new Condition(queryTypes.where)
     updateMemberCondition.setKeyValue(memberFields.PERSON, newPersonId)
 
     // update first the record table so no fk issues
     db.update(recordTable, updateRecordData, updateRecordCondition, function (result) {
+      console.log("TEST")
       if (result) {
         // delete person
         db.delete(db.tables.PERSON_TABLE, delCondition, function (result) {
           if (result) {
             // Update new member
-            db.update(db.tables.MEMBER_TABLE, updateMemberData, updateMemberCondition, callback)
+            console.log("TEST2")
+            db.update(db.tables.MEMBER_TABLE, updateMemberData, updateMemberCondition, function (result) {
+              if (result === 0) {
+                result = true
+              }
+              if (result) {
+                callback(result)
+              } else {
+                result = false
+                callback(result)
+              }
+            })
           } else {
             result = false
             callback(result)

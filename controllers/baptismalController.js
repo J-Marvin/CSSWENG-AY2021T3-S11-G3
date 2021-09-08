@@ -164,7 +164,6 @@ const baptismalController = {
             if (members) {
               data.members = members
               data.noBapMembers = members.filter(elem => elem[BAPTISMAL_REG] === null || elem[BAPTISMAL_REG] === data.record.reg_id)
-              console.log(data)
               res.render('edit-baptismal', data)
             } else {
               sendError(req, res, 404, '404 Baptismal Record Not Found')
@@ -251,6 +250,7 @@ const baptismalController = {
       newPersonId: req.body.newPersonId,
       recordId: req.body.recordId
     }
+
     const fields = {
       recordId: tables.BAPTISMAL_TABLE + '.' + bapRegFields.ID,
       memberRecordField: memberFields.BAPTISMAL_REG,
@@ -260,18 +260,19 @@ const baptismalController = {
   },
 
   putUpdateBaptismalOfficiant: function (req, res) {
-    const isOldMember = req.body.isOldMember
+    const isOldMember = req.body.isOldMember === 'true'
     const person = JSON.parse(req.body.person)
     const isNewMember = person.isMember
     const ids = {
-      recordId: req.body.recordId
+      recordId: req.body.recordId,
+      oldPersonId: req.body.oldPersonId,
+      newPersonId: person.personId
     }
 
-    console.log(ids)
-    if (isOldMember && isNewMember) { // From member to member
-      ids.oldPersonId = req.body.oldPersonId
-      ids.newPersonId = person.person_id
+    console.log(isOldMember)
+    console.log(isNewMember)
 
+    if (isOldMember && isNewMember) { // From member to member
       const fields = {
         recordId: tables.BAPTISMAL_TABLE + '.' + bapRegFields.ID,
         memberRecordField: memberFields.BAPTISMAL_REG,
@@ -279,20 +280,20 @@ const baptismalController = {
       }
       updateMemberToMember(ids, fields, tables.BAPTISMAL_TABLE, sendReply)
     } else if (isOldMember && !isNewMember) { // From member to non member
-      ids.oldPersonId = req.body.oldMemberId
       const fields = {
         recordId: bapRegFields.ID,
-        personFieldId: personFields.ID
+        memberRecordField: null,
+        recordPersonField: bapRegFields.OFFICIANT
       }
+      console.log(person)
       updateMemberToNonMember(person, ids, fields, tables.BAPTISMAL_TABLE, sendReply)
     } else if (!isOldMember && isNewMember) { // From non member to member
-      ids.oldPersonId = req.body.oldPersonId
-      ids.newPersonId = person.person_id
       const fields = {
         recordId: bapRegFields.ID,
         memberRecordField: null, // No editing to member table since officiant
         recordPersonField: bapRegFields.OFFICIANT
       }
+
       updateNonMemberToMember(ids, fields, tables.BAPTISMAL_TABLE, sendReply)
     } else {
       updateNonMemberToNonMember(person, sendReply)
@@ -301,7 +302,7 @@ const baptismalController = {
     function sendReply (result) {
       console.log(result)
       if (result) {
-        res.send(req.body.recordId)
+        res.send(JSON.stringify(result))
       } else {
         res.send(false)
       }

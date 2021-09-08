@@ -36,8 +36,8 @@
     <div class="row">
       <legend>Officiant</legend>
       <div class="col">
-        <u for="first_name"><span id="officiant_first_name_view">First Name</span></u>
-        <p>{{record.officiant_first_name}}</p>
+        <u for="first_name">First Name</u>
+        <p><span id="officiant_first_name_view">{{record.officiant_first_name}}</span></p>
       </div>
       <div class="col">
         <u for="mid_name">Middle Initial</u>
@@ -102,8 +102,9 @@
         <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <input type="checkbox" id="officiant_non_member"> Non-member
-        <input class="mb-3" type="checkbox" id="officiant_member" checked disabled> Member
+        <input type="radio" id="officiant_non_member" name="officiant_radio"> Non-member
+        {{!-- <input type="checkbox" id="officiant_non_member"> Non-member --}}
+        <input class="mb-3" type="radio" id="officiant_member" name="officiant_radio" checked> Member
         <div id="officiant_member_div" style="display:block" data-member="{{record.officiant_id}}" data-person="{{record.officiant_person_id}}">
           <label>Select Officiant*</label>
           <select name="input_officiant_member" id="input_officiant_member">

@@ -8,12 +8,12 @@ function getDetails(memberBox, noneBox, selectField, firstNameField, midNameFiel
 
     if (person.isMember) {
       const info = $(selectField).find(':selected').val().split(', ')
-      person.person_id = info[1]
-      person.member_id = info[0]
+      person.personId = info[1]
+      person.memberId = info[0]
     } else {
-      person.first_name = toTitleCase($(firstNameField).val())
-      person.mid_name = $(midNameField).val().toUpperCase()
-      person.last_name = toTitleCase($(lastNameField).val())
+      person.firstName = toTitleCase($(firstNameField).val())
+      person.midName = $(midNameField).val().toUpperCase()
+      person.lastName = toTitleCase($(lastNameField).val())
     }
     return person
   }
