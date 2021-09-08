@@ -23,9 +23,6 @@ $(document).ready(function() {
   })
 
   $('#officiant_member').click( function () {
-    $(this).prop('disabled', true)
-    $('#officiant_non_member').prop('checked', false)
-    $('#officiant_non_member').prop('disabled', false)
     $('#officiant_non_member_div').hide()
     $('#officiant_member_div').show()
     $('#officiant_first_name').val('')
@@ -35,9 +32,6 @@ $(document).ready(function() {
   })
 
   $('#officiant_non_member').click(function () {
-    $(this).prop('disabled', true)
-    $('#officiant_member').prop('checked', false)
-    $('#officiant_member').prop('disabled', false)
     $('#officiant_member_div').hide()
     $('#officiant_non_member_div').show()
     selectizeEnable($('#input_officiant_member').val())

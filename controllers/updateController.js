@@ -12,6 +12,7 @@ const updateController = {
  */
   updateNonMemberToNonMember: function (person, callback) {
     const data = {}
+    console.log(person)
     data[personFields.FIRST_NAME] = person.firstName
     data[personFields.MID_NAME] = person.midName
     data[personFields.LAST_NAME] = person.lastName
@@ -114,13 +115,11 @@ const updateController = {
 
     // update first the record table so no fk issues
     db.update(recordTable, updateRecordData, updateRecordCondition, function (result) {
-      console.log("TEST")
       if (result) {
         // delete person
         db.delete(db.tables.PERSON_TABLE, delCondition, function (result) {
           if (result) {
             // Update new member
-            console.log("TEST2")
             db.update(db.tables.MEMBER_TABLE, updateMemberData, updateMemberCondition, function (result) {
               if (result === 0) {
                 result = true

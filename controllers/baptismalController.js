@@ -7,6 +7,7 @@ const personFields = require('../models/person')
 const { sendError } = require('../controllers/errorController')
 const { BAPTISMAL_REG } = require('../models/members')
 const { updateMemberToMember, updateMemberToNonMember, updateNonMemberToMember, updateNonMemberToNonMember } = require('./updateController')
+const { series } = require('async')
 
 const baptismalController = {
   /**
@@ -311,7 +312,6 @@ const baptismalController = {
 
   delBaptismal: function (req, res) {
     const id = req.body.recordId
-    const personConds = []
     const joinTables = [
       {
         tableName: { member: tables.PERSON_TABLE },
@@ -325,15 +325,49 @@ const baptismalController = {
       }
     ]
     const columns = [
-      'member.' + personFields.MEMBER + ' as member_id',
-      'officiant.' + personFields.MEMBER + ' as officiant_member_id'
+      'member.' + personFields.ID + ' as member_person_id',
+      'member.' + personFields.MEMBER + ' as member_member_id',
+      'officiant.' + personFields.MEMBER + ' as officiant_member_id',
+      'officiant.' + personFields.ID + ' as officiant_person_id'
     ]
     const recordCond = new Condition(queryTypes.where)
     recordCond.setKeyValue(tables.BAPTISMAL_TABLE + '.' + bapRegFields.ID, id)
 
-    db.find(db.tables.PERSON_TABLE, recordCond, joinTables, columns, function (result) {
-      console.log(result)
-      res.send(JSON.stringify(result))
+    db.find(db.tables.BAPTISMAL_TABLE, recordCond, joinTables, columns, function (result) {
+      if (result) {
+        const nonMembers = []
+        result = result[0]
+        console.log(result)
+        if (result.member_id === null) {
+          nonMembers.push(result.person_id)
+        }
+
+        if (result.officiant_member_id === null) {
+          nonMembers.push(result.officiant_person_id)
+        }
+
+        db.delete(db.tables.BAPTISMAL_TABLE, recordCond, function (result) {
+          const nonMemberCond = new Condition(queryTypes.whereIn)
+          nonMemberCond.setArray(personFields.ID, nonMembers)
+          if (result) {
+            db.delete(db.tables.PERSON_TABLE, nonMemberCond, function (result) {
+              if (result === 0) {
+                result = true
+              }
+
+              if (result) {
+                res.send(true)
+              } else {
+                res.send(false)
+              }
+            })
+          } else {
+            res.send(false)
+          }
+        })
+      } else {
+        res.send(false)
+      }
     })
   }
 }

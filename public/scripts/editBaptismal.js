@@ -22,7 +22,6 @@ $(document).ready(function() {
     $('#officiant_first_name').val('')
     $('#officiant_middle_name').val('')
     $('#officiant_last_name').val('')
-
   })
 
   $('#officiant_non_member').click(function () {
@@ -88,7 +87,7 @@ $(document).ready(function() {
           $('#mid_name').text(info[3]) // middle name
           $('#last_name').text(info[4]) // last name
         } else {
-          $('#modal_error').text('Error Editing Member')
+          $('#modal_error').text('Error Editing Record')
         }
       }
     })
@@ -96,17 +95,21 @@ $(document).ready(function() {
   })
 
   $('#delete-baptismal').click(function () {
+    $('#delConfirmModal').modal('show')
+  })
+
+  $('#confirm_delete').click(function () {
     $.ajax({
       type: 'DELETE',
       url: '/delete_baptismal',
       data: {
         recordId: $('#baptismal_info').data('baptismal')
       },
-      success: function(result) {
+      success: function (result) {
         if (result) {
-          alert("TEST")
+          location.href = '/forms_main_page'
         } else {
-          alert("NOT")
+          $('#modal_error').text('Error Deleting Record')
         }
       }
     })
@@ -120,11 +123,14 @@ $(document).ready(function() {
 
     const data = {
       isOldMember: officiantId !== null && officiantId !== undefined && officiantId !== '',
-      person: JSON.stringify(getDetails($('#officiant_member'), null, $('#input_officiant_member'), $('#officiant_first_name'), $('#officiant_mid_name'), $('#officiant_last_name'))),
+      person: getDetails($('#officiant_member'), null, $('#input_officiant_member'), $('#officiant_first_name'), $('#officiant_mid_name'), $('#officiant_last_name')),
       recordId: $('#baptismal_info').data('baptismal'),
       oldMemberId: officiantId,
       oldPersonId: officiantPersonId
     }
+
+    data.person.personId = officiantPersonId
+    data.person = JSON.stringify(data.person)
 
     $.ajax({
       type: 'PUT',
