@@ -145,6 +145,11 @@ $(document).ready(function () {
     }
   })
 
+  $('#edit-prenup').click(function() {
+    alert('Submit')
+  })
+
+
   function submitBride() {
     const bridePerson = getDetails($('#bride_member'), null, $('#input_bride_member'), $('#bride_first_name'), $('#bride_mid_name'), $('#bride_last_name'))
     const oldBrideMemberId = $('#oldbride-info').data('oldbride-memberid')

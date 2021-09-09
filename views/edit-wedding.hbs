@@ -6,7 +6,7 @@
     data-groom-parents="{{groom_parents_id}}"
     ></div>
 <form id="wedding_form" action="/create_wedding_registry" method="POST" class="container"> 
-  <div class="container" style="padding-left: 25%; padding-right: 20%;">
+  <div class="container" style="padding-left: 20%; padding-right: 20%;">
     <h1 class="my-3"> Edit Wedding Registry </h1>
     <div class="row">
       <hr>
@@ -260,7 +260,7 @@
       <div class="row" id="gmother_witness_row">
         {{#if witnessFemale}}
         {{#each witnessFemale}}
-        {{>edit-witness this}}
+        {{>edit-witness this=this type="female"}}
         {{/each}}
         {{else}}
         <p>N/A</p>
@@ -278,7 +278,7 @@
       <div class="row" id="gfather_witness_row">
         {{#if witnessMale}}
         {{#each witnessMale}}
-        {{>edit-witness this}}
+        {{>edit-witness this=this type="male"}}
         {{/each}}
         {{else}}
         <p>N/A</p>
@@ -487,6 +487,122 @@
         <div class="modal-footer">
           <button type="button" id="cancel_modal" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           <button type="button" class="btn btn-primary" id="save_male_btn">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="maleWitnessModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"><span id="maleWitnessModalTitle">Add Godfather</span></h5>
+          <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col">
+              <input type="radio" name="male_witness_radio" id="male_witness_non_member"> Non Member
+              <input class="mb-3" name="male_witness_radio" type="radio" id="male_witness_member" checked> Member
+              <div id="male_witness_member_div" style="display:block">
+                <label>Select Father</label>
+                <select name="input_male_witness" id="input_male_witness_member">
+                  {{>dropdown males}}
+                </select>
+              </div>
+              <fieldset class="form-group" id="male_witness_non_member_div" style="display:none">
+                <div class="div">
+                  <div class="row">
+                    <div class="col-12">
+                      <label for="male_witness_first_name">First Name</label>
+                      <input type="text" id="male_witness_first_name" name="male_witness_first_name" class="form-control">
+                    </div>
+                    <div class="col-12">
+                      <label for="witness_mid_name">Middle Initial</label>
+                      <input type="text" id="male_witness_mid_name" name="male_witness_mid_name" class="form-control">
+                    </div>
+                    <div class="col-12">
+                      <label for="witness_last_name">Last Name</label>
+                      <input type="text" id="male_witness_last_name" name="male_witness_last_name" class="form-control">
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+              <p id="male_witness_modal_info_error" class="error_codes"> </p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="cancel_modal" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="save_male_witness_btn">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="femaleWitnessModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"><span id="femaleWitnessModalTitle">Add Godfather</span></h5>
+          <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col">
+              <input type="radio" name="female_witness_radio" id="female_witness_non_member"> Non Member
+              <input class="mb-3" name="female_witness_radio" type="radio" id="female_witness_member" checked> Member
+              <div id="female_witness_member_div" style="display:block">
+                <label>Select Member</label>
+                <select name="input_female_witness" id="input_female_witness_member">
+                  {{>dropdown females}}
+                </select>
+              </div>
+              <fieldset class="form-group" id="female_witness_non_member_div" style="display:none">
+                <div class="div">
+                  <div class="row">
+                    <div class="col-12">
+                      <label for="female_witness_first_name">First Name</label>
+                      <input type="text" id="female_witness_first_name" name="female_witness_first_name" class="form-control">
+                    </div>
+                    <div class="col-12">
+                      <label for="witness_mid_name">Middle Initial</label>
+                      <input type="text" id="female_witness_mid_name" name="female_witness_mid_name" class="form-control">
+                    </div>
+                    <div class="col-12">
+                      <label for="witness_last_name">Last Name</label>
+                      <input type="text" id="female_witness_last_name" name="female_witness_last_name" class="form-control">
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+              <p id="female_witness_modal_info_error" class="error_codes"> </p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="cancel_modal" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="save_female_witness_btn">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="confirmDeleteWitnessModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"> Delete Witness</h5>
+          <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row" id="delete_info">
+            <p>Are you sure? This action will be saved automatically and cannot be undone!</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="cancel_modal" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-danger" id="confirm_delete_witness">Delete Witness</button>
         </div>
       </div>
     </div>
