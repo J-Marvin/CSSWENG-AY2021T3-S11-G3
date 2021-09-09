@@ -906,7 +906,6 @@ const weddingController = {
     } else if (isOldNone && !isNewNone && !isNewMember) {
       updateNoneToNonMember(person, ids, fields, tables.COUPLE_TABLE, sendReply)
     } else if (isOldMember && isNewNone) {
-      console.log("REACHED HERE")
       updateMemberToNone(ids, fields, tables.COUPLE_TABLE, sendReply)
     } else if (!isOldMember && isNewNone) {
       updateNonMemberToNone(ids, fields, tables.COUPLE_TABLE, sendReply)
@@ -928,6 +927,57 @@ const weddingController = {
         res.send(false)
       }
     }
+  },
+
+  putUpdateWitness: function (req, res) {
+    console.log(req.body)
+    const isOldMember = req.body.isOldMember === 'true'
+    const person = JSON.parse(req.body.person)
+    const isNewMember = person.isMember
+    const ids = {
+      recordId: req.body.witnessId,
+      oldPersonId: req.body.oldPersonId,
+      newPersonId: person.personId
+    }
+    const fields = {
+      recordId: witnessFields.ID,
+      memberRecordField: null, // No need to edit in witness
+      recordPersonField: witnessFields.PERSON
+    }
+
+    if (isOldMember && isNewMember) { // From member to member
+      updateMemberToMember(ids, fields, tables.WITNESS_TABLE, sendReply)
+    } else if (isOldMember && !isNewMember) { // From member to non member
+      updateMemberToNonMember(person, ids, fields, tables.WITNESS_TABLE, sendReply)
+    } else if (!isOldMember && isNewMember) { // From non member to member
+      updateNonMemberToMember(ids, fields, tables.WITNESS_TABLE, sendReply)
+    } else {
+      updateNonMemberToNonMember(person, sendReply)
+    }
+
+    function sendReply(result) {
+      console.log(result)
+      if (result) {
+        res.send(JSON.stringify(result))
+      } else {
+        res.send(false)
+      }
+    }
+  },
+
+  putAddWitness: function (req, res) {
+    const recordId = req.body.recordId
+    const isFemale = req.body.isFemale === 'true'
+
+    const witnessData = {}
+    witnessData[witnessFields.WEDDING] = recordId
+    witnessData[witnessFields.TYPE] = isFemale ? 'God'
+
+    const personInfo = []
+  },
+
+  delWitness: function (req, res) {
+
   }
 }
 

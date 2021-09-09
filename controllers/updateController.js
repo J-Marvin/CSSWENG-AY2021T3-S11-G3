@@ -40,14 +40,14 @@ const updateController = {
     memberCondition.setKeyValue(memberFields.PERSON, ids.oldPersonId)
 
     const updateDataMember = {}
-    if (fields.memberRecordField != null) {
+    if (fields.memberRecordField) {
       updateDataMember[fields.memberRecordField] = null
     }
 
     console.log(updateDataMember)
 
     db.update(db.tables.MEMBER_TABLE, updateDataMember, memberCondition, function (result) {
-      if (fields.memberRecordField != null && result === 0) {
+      if (fields.memberRecordField === null && result === 0) {
         result = true
       }
 
@@ -106,7 +106,7 @@ const updateController = {
     console.log(updateRecordData)
 
     const updateMemberData = {}
-    if (fields.memberRecord !== null && fields.memberRecord !== undefined) {
+    if (fields.memberRecord) {
       updateMemberData[fields.memberRecordField] = updateRecordId
     }
 
@@ -165,7 +165,7 @@ const updateController = {
     const updateNewMemberData = {}
     const updateOldMemberData = {}
 
-    if (fields.memberRecordField !== null) {
+    if (fields.memberRecordField) {
       updateNewMemberData[fields.memberRecordField] = updateRecordId
       updateOldMemberData[fields.memberRecordField] = null
     }
@@ -225,7 +225,7 @@ const updateController = {
     updateRecordData[fields.recordPersonField] = newPersonId
 
     const updateMemberData = {}
-    if (fields.memberRecord !== null && fields.memberRecord !== undefined) {
+    if (fields.memberRecord) {
       updateMemberData[fields.memberRecordField] = updateRecordId
     }
 
@@ -247,7 +247,6 @@ const updateController = {
             callback(result)
           } else {
             result = false
-            console.log("ERROR HERE")
             callback(result)
           }
         })
@@ -311,7 +310,7 @@ const updateController = {
     memberCondition.setKeyValue(memberFields.PERSON, ids.oldPersonId)
 
     const updateDataMember = {}
-    if (fields.memberRecordField != null) {
+    if (fields.memberRecordField) {
       updateDataMember[fields.memberRecordField] = null
     }
 
@@ -324,7 +323,7 @@ const updateController = {
 
     db.update(db.tables.MEMBER_TABLE, updateDataMember, memberCondition, function (result) {
       console.log(result)
-      if (fields.memberRecordField != null && result === 0) {
+      if (fields.memberRecordField === null && result === 0) {
         result = true
       }
 
