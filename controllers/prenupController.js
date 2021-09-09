@@ -815,7 +815,7 @@ const prenupController = {
         oldPersonId: req.body.oldPersonId,
         newPersonId: person.personId,
         recordId: req.body.recordId
-      },
+      }
       const fields = {
         recordId: coupleFields.ID,
         memberRecordField: memberFields.PRENUP_RECORD,
