@@ -72,6 +72,8 @@ const database = {
         },
         useNullAsDefault: true
       })
+
+      knexClient.raw('PRAGMA foreign_keys = ON')
     }
   },
 
@@ -536,7 +538,7 @@ const database = {
     const path = require('path')
     const file = path.join('database', 'church.db')
     const db = sqlite3(file)
-    if (flag) {
+    if (!flag) {
       db.pragma('foreign_keys = OFF')
     } else {
       db.pragma('foreign_keys = ON')
@@ -549,7 +551,7 @@ const database = {
    * @param {Object} params the object containing the parameters of the statement
    * @param {Function} callback the function to be called after executing the statement
    */
-  executeRaw: function (stmt, params = null, callback) {
+  executeRaw: function (stmt, params = null, callback = null) {
     const client = sqlite3(currFile)
 
     try {
@@ -558,17 +560,39 @@ const database = {
       if (params === null) {
         const result = prepdStmt.run()
         client.close()
-        callback(result)
+        if (callback) {
+          callback(result)
+        }
       } else {
         const result = prepdStmt.run(params)
         client.close()
-        callback(result)
+        if (callback) {
+          callback(result)
+        }
       }
     } catch (err) {
       if (err) {
         const flag = false
-        callback(flag)
+        if (callback) {
+          callback(flag)
+        }
       }
+    }
+  },
+
+  pragmaFKKnex: function (flag, callback) {
+    if (flag) {
+      knexClient.raw('PRAGMA foreign_keys = ON').then(() => {
+        if (callback) {
+          callback()
+        }
+      })
+    } else {
+      knexClient.raw('PRAGMA foreign_keys = OFF').then(() => {
+        if (callback) {
+          callback()
+        }
+      })
     }
   },
 
