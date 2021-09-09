@@ -6,10 +6,10 @@
     data-groom-parents="{{groom_parents_id}}"
     ></div>
 <form id="wedding_form" action="/create_wedding_registry" method="POST" class="container"> 
-  <div class="container" style="padding-left: 18%; padding-right: 10%;">
+  <div class="container" style="padding-left: 25%; padding-right: 20%;">
     <h1 class="my-3"> Edit Wedding Registry </h1>
-    <hr>
     <div class="row">
+      <hr>
       <div class="col-4">
         <label for="current_date">Wedding Date*</label>
         <input type="date" id="date" name="date" class="form-control" value="{{date date}}">
@@ -34,12 +34,9 @@
         <div class="col">
           <u for="last_name_view">Last Name</u>
           <p><span id="bride_last_name_view">{{bride_last_name}}</span></p>
-          
         </div>
-      </div>
-      <div class="row">
         <div class="col d-flex justify-content-end">
-          <button type="button" class="btn btn-secondary mb-4 float-right" id="edit_bride">Edit Bride</button>
+          <button type="button" class="btn btn-secondary mb-4 float-right" id="edit_bride">Edit</button>
         </div>
       </div>
       <hr>
@@ -48,7 +45,6 @@
         <div class="col">
           <u for="first_name_view">First Name</u>
           <p><span id="groom_first_name_view">{{groom_first_name}}</span></p>
-        
         </div>
         <div class="col">
           <u for="mid_name_view">Middle Initial</u>
@@ -58,10 +54,8 @@
           <u for="last_name_view">Last Name</u>
           <p><span id="groom_last_name_view">{{groom_last_name}}</span></p>
         </div>
-      </div>
-      <div class="row">
         <div class="col d-flex justify-content-end">
-          <button type="button" class="btn btn-secondary mb-4 float-right" id="edit_groom">Edit Groom</button>
+          <button type="button" class="btn btn-secondary mb-4 float-right" id="edit_groom">Edit</button>
         </div>
       </div>
       <hr>
@@ -103,10 +97,8 @@
             </span>
           </p>
         </div>
-      </div>
-      <div class="row">
         <div class="col d-flex justify-content-end">
-          <button type="button" class="btn btn-secondary mb-4 float-right" id="edit_bride_mother">Edit Bride's Mother</button>
+          <button type="button" class="btn btn-secondary mb-4 float-right" id="edit_bride_mother">Edit</button>
         </div>
       </div>
       <div class="row" id="bride_father_info" data-member="{{bride_father_member_id}}" data-person="{{bride_father_person_id}}">
@@ -147,10 +139,8 @@
             </span>
           </p>
         </div>
-      </div>
-      <div class="row">
         <div class="col d-flex justify-content-end">
-          <button type="button" class="btn btn-secondary mb-4 float-right" id="edit_bride_father">Edit Bride's Father</button>
+          <button type="button" class="btn btn-secondary mb-4 float-right" id="edit_bride_father">Edit</button>
         </div>
       </div>
       <hr>
@@ -192,10 +182,8 @@
             </span>
           </p>
         </div>
-      </div>
-      <div class="row">
         <div class="col d-flex justify-content-end">
-          <button type="button" class="btn btn-secondary mb-4 float-right" id="edit_groom_mother">Edit Groom's Mother</button>
+          <button type="button" class="btn btn-secondary mb-4 float-right" id="edit_groom_mother">Edit</button>
         </div>
       </div>
       <div class="row" id="groom_father_info" data-member="{{groom_father_member_id}}" data-person="{{groom_father_person_id}}">
@@ -236,10 +224,8 @@
             </span>
           </p>
         </div>
-      </div>
-      <div class="row">
         <div class="col d-flex justify-content-end">
-          <button type="button" class="btn btn-secondary mb-4 float-right" id="edit_groom_father">Edit Groom's Father</button>
+          <button type="button" class="btn btn-secondary mb-4 float-right" id="edit_groom_father">Edit</button>
         </div>
       </div>
       <hr>
