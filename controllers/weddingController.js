@@ -856,13 +856,34 @@ const weddingController = {
    * @param req - the incoming request containing either the query or body
    * @param res - the result to be sent out after processing the request
    */
-  updateWedding: function (req, res) {
-    const data = req.query.data
-    const condition = req.query.condition
+  putUpdateWedding: function (req, res) {
+    const officiant = req.body.officiant
+    const location = req.body.location
+    const solemnizer = req.body.solemnizer
+    const date = req.body.date
+    const contract = req.body.contract
 
-    db.update(db.tables.MEMBER_TABLE, data, condition, function (result) {
-      console.log(result)
-      // insert res.render() or res.redirect()
+    const dataInfo = {}
+    dataInfo[weddingRegFields.WEDDING_OFFICIANT] = officiant
+    dataInfo[weddingRegFields.LOCATION] = location
+    dataInfo[weddingRegFields.SOLEMNIZER] = solemnizer
+    dataInfo[weddingRegFields.DATE_OF_WEDDING] = date
+    dataInfo[weddingRegFields.CONTRACT] = contract
+
+    console.log(req.body)
+    const updateCond = new Condition(queryTypes.where)
+    updateCond.setKeyValue(weddingRegFields.ID, req.body.recordId)
+
+    db.update(tables.WEDDING_TABLE, dataInfo, updateCond, function (result) {
+      if (result === 0) {
+        result = true
+      }
+
+      if (result) {
+        res.send(true)
+      } else {
+        res.send(false)
+      }
     })
   },
   /**
@@ -871,11 +892,52 @@ const weddingController = {
    * @param res - the result to be sent out after processing the request
    */
   deleteWedding: function (req, res) {
-    const condition = req.query.condition
+    const nonMembers = JSON.parse(req.body.nonMembers)
+    const couples = JSON.parse(req.body.couples)
+    const witnesses = JSON.parse(req.body.witnesses)
+    const recordId = req.body.recordId
 
-    db.update(db.tables.MEMBER_TABLE, condition, function (result) {
-      console.log(result)
-      // insert res.render() or res.redirect()
+    const nonMembersCond = new Condition(queryTypes.whereIn)
+    nonMembersCond.setArray(personFields.ID, nonMembers)
+
+    const couplesCond = new Condition(queryTypes.whereIn)
+    couplesCond.setArray(coupleFields.ID, couples)
+
+    const witnessesCond = new Condition(queryTypes.whereIn)
+    witnessesCond.setArray(witnessFields.ID, witnesses)
+
+    const recordCond = new Condition(queryTypes.where)
+    recordCond.setKeyValue(weddingRegFields.ID, recordId)
+
+    // Delete Witnesses
+    db.delete(tables.WITNESS_TABLE, witnessesCond, function (result) {
+      if (result === 0) {
+        result = true
+      }
+
+      if (result) {
+        db.delete(tables.COUPLE_TABLE, couplesCond, function (result) {
+          if (result) {
+            db.delete(tables.PERSON_TABLE, nonMembersCond, function (result) {
+              if (nonMembers.length === 0 || result) {
+                db.delete(tables.WEDDING_TABLE, recordCond, function (result) {
+                  if (result || result === 0) { // Wedding record should be deleted because of FK constraint
+                    res.send(true)
+                  } else {
+                    res.send(false)
+                  }
+                })
+              } else {
+                res.send(false)
+              }
+            })
+          } else {
+            res.send(false)
+          }
+        })
+      } else {
+        res.send(false)
+      }
     })
   },
 
@@ -1038,11 +1100,12 @@ const weddingController = {
 
     let personCondition = null
 
-    if (!person.isMember) {
+    console.log(person)
+    if (!person.memberId) {
       personCondition = new Condition(queryTypes.where)
       personCondition.setKeyValue(personFields.ID, person.personId)
     } else {
-      personCondition = new Condition(queryTypes.whereNotNull)
+      personCondition = new Condition(queryTypes.whereNull)
       personCondition.setField(personFields.ID)
     }
 
@@ -1050,6 +1113,10 @@ const weddingController = {
       if (result) {
         db.delete(tables.PERSON_TABLE, personCondition, function (result) {
           console.log(result)
+
+          if (person.memberId && result === 0) {
+            result = true
+          }
           if (result) {
             res.send(true)
           } else {

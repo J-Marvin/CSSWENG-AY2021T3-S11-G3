@@ -147,12 +147,33 @@ $(document).ready(function() {
     $('#male_member_div').hide()
   })
 
-  $('#edit-wedding-registry').click(function (){
-    $('#edit-wedding-registry').prop('disabled', true)
-    if(validateFields()) {
-      $('#edit-wedding-registry').prop('disabled', false)
+  $('#save_changes').click(function() {
+    const button = $(this)
+    $(button).prop('disabled', true)
+    if (validateMisc()) {
+      const data = {
+        date: new Date($('#date').val()).toISOString(),
+        contract: $('#contract').val(),
+        officiant: $('#officiant').val(),
+        location: $('#location').val(),
+        solemnizer: $('#solemnizer').val(),
+        recordId: $('#wedding_info').data('wedding-id')
+      }
+
+      console.log(data)
+
+      $.ajax({
+        type: 'PUT',
+        url: '/update_wedding',
+        data: data,
+        success: function (result) {
+          if (result) {
+            location.href = '/view_wedding/' + data.recordId
+          }
+        }
+      })
     } else {
-      $('#edit-wedding-registry').prop('disabled', false)
+      $(button).prop('disabled', false)
     }
   })
 
@@ -448,6 +469,7 @@ $(document).ready(function() {
 
   // On Save Female Witnesses Click
   $('#save_female_witness_btn, #save_male_witness_btn').click(function () {
+    $(this).prop('disabled', true)
     let url = ''
     let isFemale = true
     let isEdit = true
@@ -473,7 +495,8 @@ $(document).ready(function() {
   })
 
   $('#confirm_delete_witness').click(function () {
-
+    const button = this
+    $(button).prop('disabled', true)
     let isFemale = true
 
     if (modalType === editKeys.deleteGodFather) {
@@ -517,6 +540,7 @@ $(document).ready(function() {
           errorModal.text('Error deleting witness')
         }
         $('#confirmDeleteWitnessModal').modal('hide')
+        $(button).prop('disabled', false)
       }
     })
   })
@@ -634,6 +658,53 @@ $(document).ready(function() {
       $(button).prop('disabled', false)
     }
   }
+
+  $('#delete_wedding').click(function() {
+    $('#confirmDeleteFormModal').modal('show')
+  })
+
+  $('#confirm_delete_form_btn').click(function () {
+    // $(this).prop('disabled', true)
+
+    const nonMembers = []
+    const couples = [
+      $('#wedding_info').data('couple-id'),
+      $('#wedding_info').data('bride-parents'),
+      $('#wedding_info').data('groom-parents')
+    ]
+    const witnesses = []
+
+    // Get All Non Members
+    $('.person_info').each(function() {
+      if (!($(this).data('member')) && $(this).data('person')) {
+        nonMembers.push($(this).data('person'))
+      }
+    })
+
+    $('.witness').each(function() {
+      witnesses.push($(this).data('record'))
+    })
+
+    const data = {
+      nonMembers: JSON.stringify(nonMembers),
+      couples: JSON.stringify(couples),
+      witnesses: JSON.stringify(witnesses),
+      recordId: $('#wedding_info').data('wedding-id')
+    }
+
+    $.ajax({
+      type: 'DELETE',
+      url: '/delete_wedding',
+      data: data,
+      success: function (result) {
+        if (result) {
+          location.href ="/forms_main_page"
+        } else {
+          alert("SOMETHING WENT WRONG")
+        }
+      }
+    })
+  })
 
   // On Edit Bride Click
   $('#edit_bride').click(function () {
@@ -1163,6 +1234,66 @@ $(document).ready(function() {
     if (isValid) {
       $(errorField).text('')
     }
+    return isValid
+  }
+
+  function validateMisc() {
+    var isValid = true
+    var hasLocation = !validator.isEmpty($('#location').val())
+    var hasDate = !validator.isEmpty($('#date').val())
+    var hasContract = !validator.isEmpty($('#contract').val())
+    var hasOfficiant = !validator.isEmpty($('#officiant').val())
+    var hasSolemnizer = !validator.isEmpty($('#solemnizer').val())
+    
+    if (!hasDate) {
+      isValid = false
+      $('#date_error').text('Please add date')
+    } else {
+      $('#date_error').text('')
+    }
+    
+    if (!hasLocation) {
+      isValid = false
+      $('#location_error').html('Please add location')
+    } else {
+      $('#location_error').text('')
+    }
+
+    if (!hasContract) {
+      isValid = false
+      $('#contract_info_error').text('Please add contract')
+    } else {
+      $('#contract_info_error').text('')
+    }
+
+    if (!hasOfficiant) {
+      isValid = false
+      $('#officiant_info_error').text('Please add officiant')
+    } else {
+      $('#officiant_info_error').text('')
+    }
+
+    if (!hasSolemnizer) {
+      isValid = false
+      $('#solemnizer_info_error').text('Please add solemnizer')
+    } else {
+      $('#solemnizer_info_error').text('')
+    }
+
+    if (GMotherWitnessCtr < 1) {
+      isValid = false
+      $('#witness_gmother_info_error').text('Need at least 1 Godmother')
+    } else {
+      $('#witness_gmother_info_error').text('')
+    }
+
+    if (GFatherWitnessCtr < 1) {
+      isValid = false
+      $('#witness_gfather_info_error').text('Need at least 1 Godfather')
+    } else {
+      $('#witness_gfather_info_error').text('')
+    }
+
     return isValid
   }
 

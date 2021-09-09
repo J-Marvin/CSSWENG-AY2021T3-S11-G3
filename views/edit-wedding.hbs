@@ -5,7 +5,7 @@
     data-bride-parents="{{bride_parents_id}}"
     data-groom-parents="{{groom_parents_id}}"
     ></div>
-<form id="wedding_form" action="/create_wedding_registry" method="POST" class="container"> 
+<form id="wedding_form" method="POST" class="container"> 
   <div class="container" style="padding-left: 20%; padding-right: 20%;">
     <h1 class="my-3"> Edit Wedding Registry </h1>
     <div class="row">
@@ -21,7 +21,7 @@
         <p id="contract_info_error" class="error_codes"> </p>
       </div>
       <hr>
-      <div class="row" id="bride_info" data-member="{{bride_member_id}}" data-person="{{bride_person_id}}">
+      <div class="row person_info" id="bride_info" data-member="{{bride_member_id}}" data-person="{{bride_person_id}}">
         <legend>Bride</legend>
         <div class="col">
           <u for="first_name_view">First Name</u>
@@ -40,7 +40,7 @@
         </div>
       </div>
       <hr>
-      <div class="row" id="groom_info" data-member="{{groom_member_id}}" data-person="{{groom_person_id}}">
+      <div class="row person_info" id="groom_info" data-member="{{groom_member_id}}" data-person="{{groom_person_id}}">
         <legend>Groom</legend>
         <div class="col">
           <u for="first_name_view">First Name</u>
@@ -59,7 +59,7 @@
         </div>
       </div>
       <hr>
-      <div class="row" id="bride_mother_info" data-member="{{bride_mother_member_id}}" data-person="{{bride_mother_person_id}}">
+      <div class="row person_info" id="bride_mother_info" data-member="{{bride_mother_member_id}}" data-person="{{bride_mother_person_id}}">
         <legend>Bride's Mother</legend>
         <div class="col">
           <u for="first_name_view">First Name</u>
@@ -101,7 +101,7 @@
           <button type="button" class="btn btn-secondary mb-4 float-right" id="edit_bride_mother">Edit</button>
         </div>
       </div>
-      <div class="row" id="bride_father_info" data-member="{{bride_father_member_id}}" data-person="{{bride_father_person_id}}">
+      <div class="row person_info" id="bride_father_info" data-member="{{bride_father_member_id}}" data-person="{{bride_father_person_id}}">
         <legend>Bride's Father</legend>
         <div class="col">
           <u for="first_name_view">First Name</u>
@@ -144,7 +144,7 @@
         </div>
       </div>
       <hr>
-      <div class="row" id="groom_mother_info" data-member="{{groom_mother_member_id}}" data-person="{{groom_mother_person_id}}">
+      <div class="row person_info" id="groom_mother_info" data-member="{{groom_mother_member_id}}" data-person="{{groom_mother_person_id}}">
         <legend>Groom's Mother</legend>
         <div class="col">
           <u for="first_name_view">First Name</u>
@@ -186,7 +186,7 @@
           <button type="button" class="btn btn-secondary mb-4 float-right" id="edit_groom_mother">Edit</button>
         </div>
       </div>
-      <div class="row" id="groom_father_info" data-member="{{groom_father_member_id}}" data-person="{{groom_father_person_id}}">
+      <div class="row person_info" id="groom_father_info" data-member="{{groom_father_member_id}}" data-person="{{groom_father_person_id}}">
         <legend>Groom's Father</legend>
         <div class="col">
           <u for="first_name">First Name</u>
@@ -287,7 +287,8 @@
         <p id="witness_gfather_info_error" class="error_codes"> </p>
       <div class="row my-3">
         <div class="col">
-          <button class="btn btn-secondary mb-4">Save Changes</button>
+          <button type="button" class="btn btn-primary mb-4" id="save_changes">Save Changes</button>
+          <button type="button" class="btn btn-danger mb-4" id="delete_wedding">Delete Form</button>
         </div>
       </div>
     </div>
@@ -603,6 +604,27 @@
         <div class="modal-footer">
           <button type="button" id="cancel_modal" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           <button type="button" class="btn btn-danger" id="confirm_delete_witness">Delete Witness</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="confirmDeleteFormModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"> Delete Witness</h5>
+          <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row" id="delete_info">
+            <p>Are you sure? This action cannot be undone!</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="cancel_modal" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-danger" id="confirm_delete_form_btn">Delete Form</button>
         </div>
       </div>
     </div>
