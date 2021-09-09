@@ -133,6 +133,11 @@ $(document).ready(function () {
     }
   })
 
+  $('#edit-prenup').click(function() {
+    alert('Submit')
+  })
+
+
   function submitBride() {
     alert('submit bride function')
   }
