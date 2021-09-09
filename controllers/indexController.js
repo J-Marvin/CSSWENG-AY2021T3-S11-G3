@@ -85,6 +85,7 @@ const controller = {
           })
 
           data.members = result
+          data.backLink = '/main_page'
           res.render('member-main-page', data)
         } else {
           sendError(req, res, 404)
@@ -103,7 +104,8 @@ const controller = {
       level: req.session.level,
       styles: ['mainPage'],
       scripts: [''],
-      canSee: !(parseInt(req.session.level) === 1)
+      canSee: !(parseInt(req.session.level) === 1),
+      backLink: 'main_page'
     })
   },
   /**
@@ -170,7 +172,8 @@ const controller = {
         res.render('dedication-main-page', {
           styles: ['lists'],
           scripts: ['convertDataTable'],
-          dedication: result
+          dedication: result,
+          backLink: 'forms_main_page'
         })
       })
     }
@@ -229,7 +232,8 @@ const controller = {
         res.render('prenup-main-page', {
           styles: ['lists'],
           scripts: ['convertDataTable'],
-          prenup: result
+          prenup: result,
+          backLink: 'forms_main_page'
         })
       })
     }
@@ -287,7 +291,8 @@ const controller = {
         res.render('wedding-main-page', {
           styles: ['lists'],
           scripts: ['convertDataTable'],
-          prenup: result
+          prenup: result,
+          backLink: 'forms_main_page'
         })
       })
     }
@@ -345,6 +350,7 @@ const controller = {
         data.records = result
         data.scripts = ['convertDataTable']
         data.styles = ['lists']
+        data.backLink = 'forms_main_page'
 
         res.render('baptismal-main-page', data)
       })
