@@ -82,8 +82,14 @@ $(document).ready(function () {
         if(firstName || midName || lastName) {
           isValid = false
           $('#bride_info_error').text('Accomplish all fields')
-        } else {
-          $('#bride_info_error').text('')
+        }
+        if (validateMidInitial($('#bride_mid_name').val()) === false) {
+          isValid = false
+          $('#bride_info_error').text("Bride's middle initial should only range from letters A-Z")
+        }
+        if ($('#groom_mid_name').val().length > 1) {
+          isValid = false
+          $('#bride_info_error').text("Bride's middle initial should only contain 1 letter")
         }
       }
 
@@ -114,8 +120,14 @@ $(document).ready(function () {
       if(firstName || midName || lastName) {
         isValid = false
         $('#groom_info_error').text('Accomplish all fields')
-      } else {
-        $('#groom_info_error').text('')
+      }
+      if (validateMidInitial($('#groom_mid_name').val()) === false) {
+        isValid = false
+        $('#groom_info_error').text("Groom's middle initial should only range from letters A-Z")
+      }
+      if ($('#groom_mid_name').val().length > 1) {
+        isValid = false
+        $('#groom_info_error').text("Groom's middle initial should only contain 1 letter")
       }
     }
 
@@ -134,7 +146,41 @@ $(document).ready(function () {
   })
 
   function submitBride() {
-    alert('submit bride function')
+    const bridePerson = getDetails($('#bride_member'), null, $('#input_bride_member'), $('#bride_first_name'), $('#bride_mid_name'), $('#bride_last_name'))
+    const oldBrideMemberId = $('#oldbride-info').data('oldbride-memberid')
+    const oldBridePersonId = $('#oldbride-info').data('oldbride-personid')
+    const inputBrideInfo = $('#input_bride_member').val().split(', ')
+    const prenupRecordId = $('#prenup-info').data('prenuprecord-id')
+    const coupleId = $('#prenup-info').data('couple-id')
+
+    const data = {
+      isOldMember: oldBrideMemberId !== null && oldBrideMemberId !== undefined && oldBrideMemberId !== '',
+      person: bridePerson,
+      recordId: prenupRecordId,
+      coupleId: coupleId,
+      oldMemberId: oldBrideMemberId,
+      oldPersonId: oldBridePersonId
+    }
+    data.person.personId = oldBridePersonId
+    data.person = JSON.stringify(data.person)
+    
+    $.ajax({
+      type: 'PUT',
+      url: '/update_prenup/bride',
+      data: data,
+      success: function (result) {
+        if (result) {
+          // update the frontend bride details
+          const newBrideInfo = JSON.parse(data.person)
+          console.log(newBrideInfo)
+          if(newBrideInfo.isMember) {
+            $('#oldbride-info').data('oldbride-memberid', newBrideInfo.memberId)
+            $('#oldbride-info').data('oldbride-personid', inputBrideInfo[1])
+            // $('#oldbride-info').data('oldbride-first', inputBrideInfo)
+          }
+        }
+      }
+    })
   }
 
   function submitGroom() {

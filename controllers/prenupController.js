@@ -663,7 +663,7 @@ const prenupController = {
       WHERE pre_nuptial.record_id = <some record id>
       */
       const data = {
-        scripts: ['editPrenup'],
+        scripts: ['editPrenup', 'edit'],
         styles: ['forms'],
         bride: {},
         groom: {}
@@ -783,15 +783,7 @@ const prenupController = {
         }
       })
     } else {
-      res.status(401)
-      res.render('error', {
-        title: '401 Unauthorized Access',
-        css: ['global', 'error'],
-        status: {
-          code: '401',
-          message: 'Unauthorized access'
-        }
-      })
+      sendError(req, res, 401)
     }
   },
   /**
@@ -800,7 +792,44 @@ const prenupController = {
    * @param res - the result to be sent out after processing the request
    */
   putUpdatePrenupBride: function (req, res) {
-
+    /*
+      const data = {
+        isOldMember: oldBrideMemberId !== null && oldBrideMemberId !== undefined && oldBrideMemberId !== '',
+        person: bridePerson,
+        recordId: prenupRecordId,
+        coupleId: coupleId,
+        oldMemberId: oldBrideMemberId,
+        oldPersonId: oldBridePersonId
+      }
+    */
+    const isOldMember = req.body.isOldMember === 'true'
+    const person = JSON.parse(req.body.person)
+    const isNewMember = person.isNewMember
+    const recordId = req.body.recordId
+    const coupleId = req.body.coupleId
+    const oldMemberId = req.body.oldMemberId
+    const oldPersonId = req.body.oldPersonId
+    // member to member
+    if (isOldMember && isNewMember) {
+      const ids = {
+        oldPersonId: req.body.oldPersonId,
+        newPersonId: person.personId,
+        recordId: req.body.recordId
+      },
+      const fields = {
+        recordId: coupleFields.ID,
+        memberRecordField: memberFields.PRENUP_RECORD,
+        recordPersonField: prenup
+      }
+    }
+    function sendReply (result) {
+      console.log(result)
+      if (result) {
+        res.send(JSON.stringify(result))
+      } else {
+        res.send(false)
+      }
+    }
   },
   /**
    * This function will update the groom
