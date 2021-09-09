@@ -49,7 +49,7 @@ app.get('/member/:member_id', memberController.getViewMember)
 
 app.get('/prenup_main_page', indexController.getPrenupMainPage)
 app.get('/add_prenup', prenupController.getAddPrenup)
-app.get('/edit_member/:member_id/add_prenup', prenupController.getPrenupPage)
+app.get('/edit_member/:member_id/add_prenup', prenupController.getAddPrenup)
 app.get('/view_prenup/:prenup_id', prenupController.getViewPrenup)
 app.get('/edit_prenup/:prenup_id', prenupController.getEditPrenup)
 

@@ -2,12 +2,9 @@
 <div id="wedding_info" 
     data-wedding-id="{{wedding_id}}" 
     data-couple-id="{{couple_id}}"
-    data-date-created="{{date}}"
-    data-weddingdate="{{wedding_date}}"
-    data-location="{{location}}"
-    data-solemnizer="{{solemnizer}}"
-    data-officiant="{{officiant}}"
-    data-contractno="{{contract_no}}"></div>
+    data-bride-parents="{{bride_parents_id}}"
+    data-groom-parents="{{groom_parents_id}}"
+    ></div>
 <form id="wedding_form" action="/create_wedding_registry" method="POST" class="container"> 
   <div class="container" style="padding-left: 18%; padding-right: 10%;">
     <h1 class="my-3"> Edit Wedding Registry </h1>
@@ -206,7 +203,7 @@
         <div class="col">
           <u for="first_name">First Name</u>
           <p>
-            <span id="groom_father_first_name">
+            <span id="groom_father_first_name_view">
               {{#if (isUndefined groom_father_first_name)}}
                 N/A
               {{else}}
@@ -218,7 +215,7 @@
         <div class="col">
           <u for="mid_name">Middle Initial</u>
           <p>
-            <span id="groom_father_mid_name">
+            <span id="groom_father_mid_name_view">
               {{#if (isUndefined groom_father_mid_name)}}
                 N/A
               {{else}}
@@ -230,7 +227,7 @@
         <div class="col">
           <u for="last_name">Last Name</u>
           <p>
-            <span id="groom_father_last_name">
+            <span id="groom_father_last_name_view">
               {{#if (isUndefined groom_father_last_name)}}
                 N/A
               {{else}}
@@ -470,9 +467,9 @@
         <div class="modal-body">
           <div class="row">
             <div class="col">
-              <input type="radio" id="male_non_member"> Non Member
-              <input class="mb-3" type="radio" id="male_member" checked> Member
-              <span id="male_none_div"><input type="radio" id="male_none"> None</span>
+              <input type="radio" name="male_radio" id="male_non_member"> Non Member
+              <input class="mb-3" name="male_radio" type="radio" id="male_member" checked> Member
+              <input type="radio" name="male_radio" id="male_none"> None
               <div id="male_member_div" style="display:block">
                 <label>Select Father</label>
                 <select name="input_male" id="input_male_member">

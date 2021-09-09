@@ -3,6 +3,12 @@ $(document).ready(function() {
   const selectGroom = $('#input_groom_member').selectize()
   const selectFemale = $('#input_female_member').selectize()
   const selectBride = $('#input_bride_member').selectize()
+  const editKeys = {
+    brideMother: 0,
+    brideFather: 1,
+    groomMother: 2,
+    groomFather: 3
+  }
   var GMotherWitnessCtr = 0
   var GFatherWitnessCtr = 0
   var addedWitness = false
@@ -136,7 +142,7 @@ $(document).ready(function() {
   })
 
   // On Save Edit Bride
-  $('#save_bride_btn').click(function() {
+  $('#save_bride_btn').click(function () {
     $('#save_bride_btn').prop('disabled', true)
     if (validateBride()) {
       let brideId = currPerson.memberId
@@ -150,7 +156,8 @@ $(document).ready(function() {
         coupleId: $('#wedding_info').data('couple-id'),
         oldMemberId: brideId,
         oldPersonId: bridePersonId,
-        isBride: true
+        isFemale: true,
+        isParent: false
       }
 
       data.person.personId = info[1]
@@ -195,7 +202,7 @@ $(document).ready(function() {
   })
 
   // On Save Groom Click
-  $('#save_groom_btn').click(function() {
+  $('#save_groom_btn').click(function () {
     $('#save_groom_btn').prop('disabled', true)
     if (validateGroom()) {
       let groomId = currPerson.memberId
@@ -209,7 +216,8 @@ $(document).ready(function() {
         coupleId: $('#wedding_info').data('couple-id'),
         oldMemberId: groomId,
         oldPersonId: groomPersonId,
-        isBride: false
+        isFemale: false,
+        isParent: false
       }
 
       data.person.personId = info[1]
@@ -253,12 +261,181 @@ $(document).ready(function() {
     }
   })
 
+  $('#save_female_btn').click(function () {
+    $('#save_male_btn').prop('disabled', true)
+    console.log(modalType)
+    let memberId = currPerson.memberId
+    let personId = currPerson.personId
+    let info = $('#input_female_member').val().split(', ')
+
+    const data = {
+      isOldMember: memberId !== null && memberId !== undefined && memberId !== '',
+      person: getDetails($('#female_member'), $('#female_none'), $('#input_female_member'), $('#female_first_name'), $('#female_mid_name'), $('#female_last_name')),
+      recordId: $('#wedding_info').data('wedding-id'),
+      oldMemberId: memberId,
+      oldPersonId: personId,
+      isFemale: true,
+      isParent: false
+    }
+
+    let infoField = null
+    let firstNameField = null
+    let midNameField = null
+    let lastNameField = null
+
+    if (data.person !== null)
+      data.person.personId = info[1]
+    console.log(data)
+    data.person = JSON.stringify(data.person)
+
+    if (modalType === editKeys.brideMother) {
+      data.coupleId = $('#wedding_info').data('bride-parents')
+      infoField = $('#bride_mother_info')
+      firstNameField = $('#bride_mother_first_name_view')
+      midNameField = $('#bride_mother_mid_name_view')
+      lastNameField = $('#bride_mother_last_name_view')
+    } else if (modalType === editKeys.groomMother) {
+      data.coupleId = $('#wedding_info').data('groom-parents')
+      infoField = $('#groom_mother_info')
+      firstNameField = $('#groom_mother_first_name_view')
+      midNameField = $('#groom_mother_mid_name_view')
+      lastNameField = $('#groom_mother_last_name_view')
+    }
+
+    $.ajax({
+      type: 'PUT',
+      url: '/update_wedding/couple',
+      data: data,
+      success: function (result) {
+
+        console.log(result)
+        if (result) {
+          const personInfo = JSON.parse(data.person)
+          console.log(personInfo)
+          if (personInfo === null) {
+            $(infoField).removeData('member')
+            $(infoField).removeData('person')
+            $(firstNameField).text('N/A')
+            $(midNameField).text('N/A')
+            $(lastNameField).text('N/A')
+          } else if (personInfo.isMember) {
+            $(infoField).data('member', personInfo.memberId)
+            $(infoField).data('person', info[1])
+            $(firstNameField).html(info[2])
+            $(midNameField).html(info[3])
+            $(lastNameField).html(info[4])
+          } else {
+            $(infoField).removeData('member')
+            $(infoField).data('person', result)
+            $(firstNameField).html(personInfo.firstName)
+            $(midNameField).html(personInfo.midName)
+            $(lastNameField).html(personInfo.lastName)
+          }
+          $('#save_female_btn').prop('disabled', false)
+          $('#femaleModal').modal('hide')
+        } else {
+          $('#create_error').text('Error Editing Female')
+          $('#save_female_btn').prop('disabled', false)
+        }
+      }
+    })
+
+
+    
+  })
+
+  $('#save_male_btn').click(function () {
+    console.log(modalType)
+    $('#save_male_btn').prop('disabled', true)
+    let memberId = currPerson.memberId
+    let personId = currPerson.personId
+    let info = $('#input_male_member').val().split(', ')
+
+    const data = {
+      isOldMember: memberId !== null && memberId !== undefined && memberId !== '',
+      person: getDetails($('#male_member'), $('#male_none'), $('#input_male_member'), $('#male_first_name'), $('#male_mid_name'), $('#male_last_name')),
+      recordId: $('#wedding_info').data('wedding-id'),
+      oldMemberId: memberId,
+      oldPersonId: personId,
+      isFemale: false,
+      isParent: false
+    }
+
+    let infoField = null
+    let firstNameField = null
+    let midNameField = null
+    let lastNameField = null
+
+    if (data.person !== null)
+      data.person.personId = info[1]
+    console.log(data)
+    data.person = JSON.stringify(data.person)
+
+    if (modalType === editKeys.brideFather) {
+      data.coupleId = $('#wedding_info').data('bride-parents')
+      infoField = $('#bride_father_info')
+      firstNameField = $('#bride_father_first_name_view')
+      midNameField = $('#bride_father_mid_name_view')
+      lastNameField = $('#bride_father_last_name_view')
+    } else if (modalType === editKeys.groomFather) {
+      data.coupleId = $('#wedding_info').data('groom-parents')
+      infoField = $('#groom_father_info')
+      firstNameField = $('#groom_father_first_name_view')
+      midNameField = $('#groom_father_mid_name_view')
+      lastNameField = $('#groom_father_last_name_view')
+    }
+
+    $.ajax({
+      type: 'PUT',
+      url: '/update_wedding/couple',
+      data: data,
+      success: function (result) {
+
+        console.log(result)
+        if (result) {
+          const personInfo = JSON.parse(data.person)
+          console.log(personInfo)
+          if (personInfo === null) {
+            $(infoField).removeData('member')
+            $(infoField).removeData('person')
+            $(firstNameField).text('N/A')
+            $(midNameField).text('N/A')
+            $(lastNameField).text('N/A')
+          } else if (personInfo.isMember) {
+            $(infoField).data('member', personInfo.memberId)
+            $(infoField).data('person', info[1])
+            $(firstNameField).html(info[2])
+            $(midNameField).html(info[3])
+            $(lastNameField).html(info[4])
+          } else {
+            $(infoField).removeData('member')
+            $(infoField).data('person', result)
+            $(firstNameField).html(personInfo.firstName)
+            $(midNameField).html(personInfo.midName)
+            $(lastNameField).html(personInfo.lastName)
+          }
+          $('#save_male_btn').prop('disabled', false)
+          $('#maleModal').modal('hide')
+        } else {
+          $('#create_error').text('Error Editing Female')
+          $('#save_male_btn').prop('disabled', false)
+        }
+      }
+    })
+
+
+
+  })
+
+  function saveBrideMother() {
+
+  }
+
   // On Edit Bride Click
   $('#edit_bride').click(function () {
-    modalType = 'editBride'
-    currPerson.firstName = $('#bride_first_name_view').text()
-    currPerson.midName = $('#bride_mid_name_view').text()
-    currPerson.lastName = $('#bride_last_name_view').text()
+    currPerson.firstName = $('#bride_first_name_view').text().trim()
+    currPerson.midName = $('#bride_mid_name_view').text().trim()
+    currPerson.lastName = $('#bride_last_name_view').text().trim()
     currPerson.doesExist = !(currPerson.firstName === 'N/A')
     currPerson.memberId = $('#bride_info').data('member')
     currPerson.personId = $('#bride_info').data('person')
@@ -272,10 +449,10 @@ $(document).ready(function() {
 
   // On Edit Bride Mother Click
   $('#edit_bride_mother').click(function () {
-    modalType = 'editBrideMother'
-    currPerson.firstName = $('#bride_mother_first_name_view').text()
-    currPerson.midName = $('#bride_mother_mid_name_view').text()
-    currPerson.lastName = $('#bride_mother_last_name_view').text()
+    modalType = editKeys.brideMother
+    currPerson.firstName = $('#bride_mother_first_name_view').text().trim()
+    currPerson.midName = $('#bride_mother_mid_name_view').text().trim()
+    currPerson.lastName = $('#bride_mother_last_name_view').text().trim()
     currPerson.doesExist = !(currPerson.firstName === 'N/A')
     currPerson.memberId = $('#bride_mother_info').data('member')
     currPerson.personId = $('#bride_mother_info').data('person')
@@ -289,10 +466,10 @@ $(document).ready(function() {
 
   // On Edit Bride Father Click
   $('#edit_bride_father').click(function () {
-    modalType = 'editBrideFather'
-    currPerson.firstName = $('#bride_father_first_name_view').text()
-    currPerson.midName = $('#bride_father_mid_name_view').text()
-    currPerson.lastName = $('#bride_father_last_name_view').text()
+    modalType = editKeys.brideFather
+    currPerson.firstName = $('#bride_father_first_name_view').text().trim()
+    currPerson.midName = $('#bride_father_mid_name_view').text().trim()
+    currPerson.lastName = $('#bride_father_last_name_view').text().trim()
     currPerson.doesExist = !(currPerson.firstName === 'N/A')
     currPerson.memberId = $('#bride_father_info').data('member')
     currPerson.personId = $('#bride_father_info').data('person')
@@ -306,10 +483,9 @@ $(document).ready(function() {
 
   // On Edit Groom Click
   $('#edit_groom').click(function() {
-    modalType = 'editGroom'
-    currPerson.firstName = $('#groom_first_name_view').text()
-    currPerson.midName = $('#groom_mid_name_view').text()
-    currPerson.lastName = $('#groom_last_name_view').text()
+    currPerson.firstName = $('#groom_first_name_view').text().trim()
+    currPerson.midName = $('#groom_mid_name_view').text().trim()
+    currPerson.lastName = $('#groom_last_name_view').text().trim()
     currPerson.doesExist = !(currPerson.firstName === 'N/A')
     currPerson.memberId = $('#groom_info').data('member')
     currPerson.personId = $('#groom_info').data('person')
@@ -321,7 +497,7 @@ $(document).ready(function() {
 
     // On Edit Groom Mother Click
   $('#edit_groom_mother').click(function () {
-    modalType = 'editGroomMother'
+    modalType = editKeys.groomMother
     currPerson.firstName = $('#groom_mother_first_name_view').text()
     currPerson.midName = $('#groom_mother_mid_name_view').text()
     currPerson.lastName = $('#groom_mother_last_name_view').text()
@@ -338,10 +514,10 @@ $(document).ready(function() {
 
   // On Edit Groom Father Click
   $('#edit_groom_father').click(function () {
-    modalType = 'editGroomFather'
-    currPerson.firstName = $('#groom_father_first_name_view').text()
-    currPerson.midName = $('#groom_father_mid_name_view').text()
-    currPerson.lastName = $('#groom_father_last_name_view').text()
+    modalType = editKeys.groomFather
+    currPerson.firstName = $('#groom_father_first_name_view').text().trim()
+    currPerson.midName = $('#groom_father_mid_name_view').text().trim()
+    currPerson.lastName = $('#groom_father_last_name_view').text().trim()
     currPerson.doesExist = !(currPerson.firstName === 'N/A')
     currPerson.memberId = $('#groom_father_info').data('member')
     currPerson.personId = $('#groom_father_info').data('person')
@@ -372,12 +548,13 @@ $(document).ready(function() {
       selectFemale[0].selectize.setValue(value)
     } else if (currPerson.personId !== '' && currPerson.personId !== null && currPerson.personId !== undefined){
       $('#female_non_member').prop('checked', true)
-      $('female_non_member_div').show()
+      $('#female_non_member_div').show()
       $('#female_member_div').hide()
-      $('female_first_name').val(currPerson.firstName)
-      $('female_mid_name').val(currPerson.midname)
-      $('female_last_name').val(currPerson.lastname)
+      $('#female_first_name').val(currPerson.firstName)
+      $('#female_mid_name').val(currPerson.midName)
+      $('#female_last_name').val(currPerson.lastName)
     } else {
+      $('#female_none').prop('checked', true)
       $('#female_member_div').hide()
       $('#female_non_member_div').hide()
     }
@@ -470,9 +647,10 @@ $(document).ready(function() {
       $('#male_non_member_div').show()
       $('#male_member_div').hide()
       $('#male_first_name').val(currPerson.firstName)
-      $('#male_mid_name').val(currPerson.midname)
-      $('#male_last_name').val(currPerson.lastname)
+      $('#male_mid_name').val(currPerson.midName)
+      $('#male_last_name').val(currPerson.lastName)
     } else {
+      $('#male_none').prop('checked', true)
       $('#male_member_div').hide()
       $('#male_non_member_div').hide()
     }
@@ -780,7 +958,7 @@ $(document).ready(function() {
     $('#male_member_div').hide()
     $('#male_non_member_div').show()
     selectizeEnable($('#male_member').val())
-    $(selectGodFather)[0].selectize.setValue('0') // TODO: change this to select current member
+    $(selectMale)[0].selectize.setValue('0') // TODO: change this to select current member
   })
 
   // bind function to member (male)
@@ -796,7 +974,7 @@ $(document).ready(function() {
     $('#witness_gmother_member_div').hide()
     $('#witness_gmother_non_member_div').show()
     selectizeEnable($('#male_member').val())
-    $(selectFemale)[0].selectize.setValue('0')
+    $(selectFemale)[0].selectize.setValue('0') // TODO: change this to select current member if exists
   })
 
   // bind function to witness member
