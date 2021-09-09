@@ -1,7 +1,7 @@
 {{>navbar}}
 <form id="baptismal_form" action="/create_wedding_registry" method="POST" class="container">
   <div id="baptismal_info" style="display: none" data-baptismal="{{record.reg_id}}"></div>
-  <div class="container" style="padding-left: 18%; padding-right: 10%;">
+  <div class="container" style="padding-left: 25%; padding-right: 20%;">
     <h1 class="my-3"> Edit Baptismal Record </h1>
     <hr>
     <div class="row">
@@ -26,10 +26,8 @@
         <u for="last_name">Last Name</u>
         <p id="last_name">{{record.member_last_name}}</p>
       </div>
-    </div>
-    <div class="row">
       <div class="col  d-flex justify-content-end">
-        <button type="button" class="btn btn-secondary mb-4  float-right" id="edit_member">Edit Member</button>
+        <button type="button" class="btn btn-secondary mb-4  float-right" id="edit_member">Edit</button>
       </div>
     </div>
     <hr>
@@ -47,10 +45,8 @@
         <u for="last_name">Last Name</u>
         <p><span id="officiant_last_name_view">{{record.officiant_last_name}}</span></p>
       </div>
-    </div>
-    <div class="row">
       <div class="col d-flex justify-content-end">
-        <button type="button" class="btn btn-secondary mb-4  float-right" id="edit_officiant">Edit Officiant</button>
+        <button type="button" class="btn btn-secondary mb-4  float-right" id="edit_officiant">Edit</button>
       </div>
     </div>
     <hr>
