@@ -13,11 +13,13 @@ $(document).ready(function() {
     editGodFather: 4,
     editGodMother: 5,
     addGodFather: 6,
-    addGodMother: 7
+    addGodMother: 7,
+    deleteGodFather: 8,
+    deleteGodMother: 9
   }
   var trigger = null
-  var GMotherWitnessCtr = $('#gmother_witness_row > .witness').length
-  var GFatherWitnessCtr = $('#gfather_witness_row > .witness').length
+  var GMotherWitnessCtr = $('#gmother_witness_row > div').length
+  var GFatherWitnessCtr = $('#gfather_witness_row > div').length
   var addedWitness = false
   var modalType = null
   var isFemale = false
@@ -449,10 +451,10 @@ $(document).ready(function() {
     let url = ''
     let isFemale = true
     let isEdit = true
-    if (modalType === editKeys.editGodMother || editKeys.editGodFather) {
+    if (modalType === editKeys.editGodMother || modalType === editKeys.editGodFather) {
       url = '/update_wedding/witness'
     }
-    else if (modalType === editKeys.addGodMother || editKeys.addGodFather) {
+    else if (modalType === editKeys.addGodMother || modalType === editKeys.addGodFather) {
       url = '/update_wedding/add_witness'
       isEdit = false
     }
@@ -461,8 +463,62 @@ $(document).ready(function() {
       isFemale = false
     }
 
+    let validation = validateFemaleWitness
+
+    if (!isFemale) {
+      validation = validateMaleWitness
+    }
     console.log(url)
-    saveWitness($('#save_female_witness_btn'), () => true, isFemale, isEdit, url)
+    saveWitness($('#save_female_witness_btn'), validation, isFemale, isEdit, url)
+  })
+
+  $('#confirm_delete_witness').click(function () {
+
+    let isFemale = true
+
+    if (modalType === editKeys.deleteGodFather) {
+      isFemale = false
+    }
+
+    let errorModal = null
+
+    if (isFemale) {
+      errorModal = $('#witness_gmother_info_error')
+    } else {
+      errorModal = $('#witness_gfather_info_error')
+    }
+
+    const data = {
+      recordId: $(trigger).data('record'),
+      person: {
+        memberId: $(trigger).data('member'),
+        personId: $(trigger).data('person')
+      }
+    }
+
+    data.person = JSON.stringify(data.person)
+    $.ajax({
+      type: 'DELETE',
+      url: '/delete_wedding/witness',
+      data: data,
+      success: function(result) {
+        console.log(result)
+        if (result) {
+          $(trigger).parent().remove()
+
+          if (isFemale) {
+            GMotherWitnessCtr--
+          } else {
+            GFatherWitnessCtr--
+          }
+
+          errorModal.text('')
+        } else {
+          errorModal.text('Error deleting witness')
+        }
+        $('#confirmDeleteWitnessModal').modal('hide')
+      }
+    })
   })
 
 
@@ -514,9 +570,6 @@ $(document).ready(function() {
       }
 
       let infoField = trigger
-      let firstNameField = trigger.find('.witness_first_name_view')
-      let midNameField = trigger.find('.witness_mid_name_view')
-      let lastNameField = trigger.find('.witness_last_name_view')
 
       if (data.person !== null)
         data.person.personId = info[1]
@@ -527,13 +580,15 @@ $(document).ready(function() {
         url: url,
         data: data,
         success: function (result) {
-
           console.log(result)
           if (result) {
             const personInfo = JSON.parse(data.person)
             console.log(personInfo)
-
+            
             if (isEdit) {
+              let firstNameField = trigger.find('.witness_first_name_view')
+              let midNameField = trigger.find('.witness_mid_name_view')
+              let lastNameField = trigger.find('.witness_last_name_view')
               if (personInfo.isMember) {
                 $(infoField).data('member', personInfo.memberId)
                 $(infoField).data('person', info[1])
@@ -548,7 +603,24 @@ $(document).ready(function() {
                 $(lastNameField).html(personInfo.lastName)
               }
             } else {
-              // add to div
+              let div = null
+              if (isFemale) {
+                div = $('#gmother_witness_row')
+                GMotherWitnessCtr++
+              } else {
+                div = $('#gfather_witness_row')
+                GFatherWitnessCtr++
+              }
+
+              const witness_info = $.parseHTML(result)
+              
+              if (personInfo.isMember) {
+                $(witness_info).find('.witness_first_name_view').text(info[2])
+                $(witness_info).find('.witness_mid_name_view').text(info[3])
+                $(witness_info).find('.witness_last_name_view').text(info[4])
+              } 
+
+              $(div).append(witness_info)
             }
 
             $(modal).modal('hide')
@@ -699,12 +771,14 @@ $(document).ready(function() {
   })
 
   $(document).on('click', '.delete_male_witness_btn', function() {
-    currPerson.witnessId = $(person).data('record')
+    trigger = $(this).closest('.witness')
+    modalType = editKeys.deleteGodFather
     $('#confirmDeleteWitnessModal').modal('show')
   })
 
   $(document).on('click', '.delete_female_witness_btn', function() {
-    currPerson.witnessId = $(person).data('record')
+    trigger = $(this).closest('.witness')
+    modalType = editKeys.deleteGodMother
     $('#confirmDeleteWitnessModal').modal('show')
   })
 
@@ -718,7 +792,6 @@ $(document).ready(function() {
       isFemale = true
       initFemaleWitnessModal('Add Godmother')
     }
-
   })
   
 
@@ -915,7 +988,7 @@ $(document).ready(function() {
     var isMember = $('#groom_member').is(':checked')
     var isValidMemberField = !($('#input_groom_member').val() === '0' || $('#input_groom_member').val() === '')
     var anyEmpty = $('#groom_first_name').val() === '' || $('#groom_mid_name').val() === '' || $('#groom_last_name').val() === ''
-    var isValidMidName = $('#groom_mid_name').val().length === 1
+    var isValidMidName = $('#groom_mid_name').val().length === 1 && validateMidInitial($('#groom_mid_name').val())
 
     // Check if valid member
     if (isMember && !isValidMemberField) {
@@ -946,7 +1019,7 @@ $(document).ready(function() {
     var isMember = $('#bride_member').is(':checked')
     var isValidMemberField = !($('#input_bride_member').val() === '0' || $('#input_bride_member').val() === '')
     var anyEmpty = $('#bride_first_name').val() === '' || $('#bride_mid_name').val() === '' || $('#bride_last_name').val() === ''
-    var isValidMidName = $('#bride_mid_name').val().length === 1
+    var isValidMidName = $('#bride_mid_name').val().length === 1 && validateMidInitial($('#bride_mid_name').val())
 
     // Check if valid member
     if (isMember && !isValidMemberField) {
@@ -978,7 +1051,7 @@ $(document).ready(function() {
     var isNone = $('#male_none').is(':checked')
     var isValidMemberField = !($('#input_male_member').val() === '0' || $('#input_male_member').val() === '')
     var anyEmpty = $('#male_first_name').val() === '' || $('#male_mid_name').val() === '' || $('#male_last_name').val() === ''
-    var isValidMidName = $('#male_mid_name').val().length === 1
+    var isValidMidName = $('#male_mid_name').val().length === 1 && validateMidInitial($('#male_mid_name').val())
 
     // Check if valid member
     if (isMember && !isValidMemberField) {
@@ -1007,9 +1080,9 @@ $(document).ready(function() {
 
     var isMember = $('#female_member').is(':checked')
     var isNone = $('#female_none').is(':checked')
-    var isValidMemberField = !($('#input_male_femember').val() === '0' || $('#input_female_member').val() === '')
+    var isValidMemberField = !($('#input_female_member').val() === '0' || $('#input_female_member').val() === '')
     var anyEmpty = $('#female_first_name').val() === '' || $('#female_mid_name').val() === '' || $('#female_last_name').val() === ''
-    var isValidMidName = $('#female_mid_name').val().length === 1
+    var isValidMidName = $('#female_mid_name').val().length === 1 && validateMidInitial($('#female_mid_name').val())
 
     // Check if valid member
     if (isMember && !isValidMemberField) {
@@ -1031,229 +1104,65 @@ $(document).ready(function() {
     return isValid
   }
 
-  
+  function validateMaleWitness() {
+    var isValid = true
+    var errorField = $('#male_witness_modal_info_error')
+    $(errorField).text('')
 
-  // SPLIT
-  function validateFields() {
-    var groomNonMember = $('#groom_non_member').is(':checked')
-    var groomFieldMember = $('#input_groom_member').val() === '0' || $('#input_groom_member').val() === ''
-    var groomFieldNonMember = $('#groom_first_name').val() === '' || $('#groom_mid_name').val() === '' || $('#groom_last_name').val() === ''
-    var groomMiddleLen = $('#groom_mid_name').val().length === 1
+    var isMember = $('#male_witness_member').is(':checked')
+    var isNone = $('#male_witness_none').is(':checked')
+    var isValidMemberField = !($('#input_male_witness_member').val() === '0' || $('#input_male_witness_member').val() === '')
+    var anyEmpty = $('#male_witness_first_name').val() === '' || $('#male_witness_mid_name').val() === '' || $('#male_witness_last_name').val() === ''
+    var isValidMidName = $('#male_witness_mid_name').val().length === 1 && validateMidInitial($('#male_witness_mid_name').val())
 
-    var brideMotherNonMember = $('#bride_mother_non_member').is(':checked')
-    var brideMotherNone = $('#bride_mother_none').is(':checked')
-    var brideMotherFieldMember = $('#input_bride_mother_member').val() === '0' || $('#input_bride_mother_member').val() === ''
-    var brideMotherFieldNonMember = $('#bride_mother_first_name').val() === '' || $('#bride_mother_mid_name').val() === '' || $('#bride_mother_last_name').val() === ''
-    var brideMotherMiddleLen = $('#bride_mother_mid_name').val().length === 1
-
-    var brideFatherNonMember = $('#bride_father_non_member').is(':checked')
-    var brideFatherNone = $('#bride_father_none').is(':checked')
-    var brideFatherFieldMember = $('#input_bride_father_member').val() === '0' || $('#input_bride_father_member').val() === ''
-    var brideFatherFieldNonMember = $('#bride_father_first_name').val() === '' || $('#bride_father_mid_name').val() === '' || $('#bride_father_last_name').val() === ''
-    var brideFatherMiddleLen = $('#bride_father_mid_name').val().length === 1
-
-    var groomMotherNonMember = $('#groom_mother_non_member').is(':checked')
-    var groomMotherNone = $('#groom_mother_none').is(':checked')
-    var groomMotherFieldMember = $('#input_groom_mother_member').val() === '0' || $('#input_groom_mother_member').val() === ''
-    var groomMotherFieldNonMember = $('#groom_mother_first_name').val() === '' || $('#groom_mother_mid_name').val() === '' || $('#groom_mother_last_name').val() === ''
-    var groomMotherMiddleLen = $('#groom_mother_mid_name').val().length === 1
-
-    var groomFatherNonMember = $('#groom_father_non_member').is(':checked')
-    var groomFatherNone = $('#groom_father_none').is(':checked')
-    var groomFatherFieldMember = $('#input_groom_father_member').val() === '0' || $('#input_groom_father_member').val() === ''
-    var groomFatherFieldNonMember = $('#groom_father_first_name').val() === '' || $('#groom_father_mid_name').val() === '' || $('#groom_father_last_name').val() === ''
-    var groomFatherMiddleLen = $('#groom_father_mid_name').val().length === 1
-
-    var location = $('#location').val() === ''
-    var contract = $('#contract').val() === ''
-    var officiant = $('#officiant').val() === ''
-    var solemnizer = $('#solemnizer').val() === ''
-
-    var dateField = $('#current_date').val() === ''
-
-
-    if ((groomNonMember && groomFieldNonMember) || (!groomNonMember && groomFieldMember)) {
+    // Check if valid member
+    if (isMember && !isValidMemberField) {
       isValid = false
-      $('#groom_info_error').text('Please provide groom name')
-    } else {
-      $('#groom_info_error').text('')
-    }
-    // check middle initial length
-    if (!groomFieldNonMember && !groomMiddleLen) {
-      isValid = false
-      $('#groom_middle_len_error').text("Groom's middle initial should only contain 1 letter")
-    } else {
-      $('#groom_middle_len_error').text('')
+      $(errorField).text('Please select member')
+    } else if (!isMember && !isNone) {
+      if (anyEmpty) {
+        isValid = false
+        $(errorField).text('Please provide name')
+      } else if (!isValidMidName) {
+        isValid = false
+        $(errorField).text("Middle initial should only range from letters A-Z")
+      }
     }
 
-    // check the used middle initial
-    if (groomFieldNonMember === false && validateMidInitial($('#groom_mid_name').val()) === false) {
-      isValid = false
-      $('#groom_middle_error').text("Groom's middle initial should only range from letters A-Z")
-    } else {
-      $('#groom_middle_error').text('')
+    if (isValid) {
+      $(errorField).text('')
     }
-    if(!brideMotherNone && brideMotherFieldMember && brideMotherFieldNonMember) {
+    return isValid
+  }
+
+  function validateFemaleWitness() {
+    var isValid = true
+    var errorField = $('#female_witness_modal_info_error')
+    $(errorField).text('')
+
+    var isMember = $('#female_witness_member').is(':checked')
+    var isNone = $('#female_witness_none').is(':checked')
+    var isValidMemberField = !($('#input_female_witness_member').val() === '0' || $('#input_female_witness_member').val() === '')
+    var anyEmpty = $('#female_witness_first_name').val() === '' || $('#female_witness_mid_name').val() === '' || $('#female_witness_last_name').val() === ''
+    var isValidMidName = $('#female_witness_mid_name').val().length === 1 && validateMidInitial($('#female_witness_mid_name').val())
+
+    // Check if valid member
+    if (isMember && !isValidMemberField) {
       isValid = false
-      $('#bride_mother_info_error').text('Please provide name')
-    } else {
-      $('#bride_mother_info_error').text('')
+      $(errorField).text('Please select member')
+    } else if (!isMember && !isNone) {
+      if (anyEmpty) {
+        isValid = false
+        $(errorField).text('Please provide name')
+      } else if (!isValidMidName) {
+        isValid = false
+        $(errorField).text("Middle initial should only range from letters A-Z")
+      }
     }
 
-    if ((!brideMotherNone && brideMotherNonMember && brideMotherFieldNonMember) || (!brideMotherNone && !brideMotherNonMember && brideMotherFieldMember)) {
-      isValid = false
-      $('#bride_mother_info_error').text('Please provide name')
-    } else {
-      $('#bride_mother_info_error').text('')
+    if (isValid) {
+      $(errorField).text('')
     }
-    // check middle initial length
-    if (!brideMotherFieldNonMember && !brideMotherMiddleLen) {
-      isValid = false
-      $('#bride_mother_middle_len_error').text("The middle initial of the bride's mother should only contain 1 letter")
-    } else {
-      $('#bride_mother_middle_len_error').text('')
-    }
-
-    // check the used middle initial
-    if (brideMotherFieldNonMember === false && validateMidInitial($('#bride_mother_mid_name').val()) === false) {
-      isValid = false
-      $('#bride_mother_middle_error').text("The middle initial of the bride's mother should only range from letters A-Z")
-    } else {
-      $('#bride_mother_middle_error').text('')
-    }
-    
-    // GROOM'S MOTHER
-    if(!groomMotherNone && groomMotherFieldMember && groomMotherFieldNonMember) {
-      isValid = false
-      $('#groom_mother_info_error').text('Please provide name')
-    } else {
-      $('#groom_mother_info_error').text('')
-    }
-
-    if ((!groomMotherNone && groomMotherNonMember && groomMotherFieldNonMember) || (!groomMotherNone && !groomMotherNonMember && groomMotherFieldMember)) {
-      isValid = false
-      $('#groom_mother_info_error').text('Please provide name')
-    } else {
-      $('#groom_mother_info_error').text('')
-    }
-    // check middle initial length
-    if (!groomMotherFieldNonMember && !groomMotherMiddleLen) {
-      isValid = false
-      $('#groom_mother_middle_len_error').text("The middle initial of the groom's mother should only contain 1 letter")
-    } else {
-      $('#groom_mother_middle_len_error').text('')
-    }
-    // check the used middle initial
-    if (groomMotherFieldNonMember === false && validateMidInitial($('#groom_mother_mid_name').val()) === false) {
-      isValid = false
-      $('#groom_mother_middle_error').text("The middle initial of the groom's mother should only range from letters A-Z")
-    } else {
-      $('#groom_mother_middle_error').text('')
-    }
-    
-    // BRIDE'S FATHER
-    if(!brideFatherNone && brideFatherFieldMember && brideFatherFieldNonMember) {
-      isValid = false
-      $('#bride_father_info_error').text('Please provide name')
-    } else {
-      $('#bride_father_info_error').text('')
-    }
-
-    if((!brideFatherNone && brideFatherNonMember && brideFatherFieldNonMember) || (!brideFatherNone && !brideFatherNonMember && brideFatherFieldMember)) {
-      isValid = false
-      $('#bride_father_info_error').text('Please provide name')
-    } else {
-      $('#bride_father_info_error').text('')
-    }
-    // check middle initial length
-    if (!brideFatherFieldNonMember && !brideFatherMiddleLen) {
-      isValid = false
-      $('#bride_father_middle_len_error').text("The middle initial of the bride's father should only contain 1 letter")
-    } else {
-      $('#bride_father_middle_len_error').text('')
-    }
-
-    // check the used middle initial
-    if (brideFatherFieldNonMember === false && validateMidInitial($('#bride_father_mid_name').val()) === false) {
-      isValid = false
-      $('#bride_father_middle_error').text("The middle initial of the bride's father should only range from letters A-Z")
-    } else {
-      $('#bride_father_middle_error').text('')
-    }
-    
-    if(!groomFatherNone && groomFatherFieldMember && groomFatherFieldNonMember) {
-      isValid = false
-      $('#groom_father_info_error').text('Please provide name')
-    } else {
-      $('#groom_father_info_error').text('')
-    }
-
-    if ((!groomFatherNone && groomFatherNonMember && groomFatherFieldNonMember) || (!groomFatherNone && !groomFatherNonMember && groomFatherFieldMember)) {
-      isValid = false
-      $('#groom_father_info_error').text('Please provide name')
-    } else {
-      $('#groom_father_info_error').text('')
-    }
-    // check middle initial length
-    if (!groomFatherFieldNonMember && !groomFatherMiddleLen) {
-      isValid = false
-      $('#groom_father_middle_len_error').text("The middle initial of the groom's father should only contain 1 letter")
-    } else {
-      $('#groom_father_middle_len_error').text('')
-    }
-
-    // check the used middle initial
-    if (groomFatherFieldNonMember === false && validateMidInitial($('#groom_father_mid_name').val()) === false) {
-      isValid = false
-      $('#groom_father_middle_error').text("The middle initial of the groom's father should only range from letters A-Z")
-    } else {
-      $('#groom_father_middle_error').text('')
-    }
-    
-    if (location) {
-      isValid = false
-      $('#location_error').text('Please accomplish')
-    } else {
-      $('#location_error').text('')
-    }
-
-    if(contract) {
-      isValid = false
-      $('#contract_info_error').text('Please accomplish')
-    } else {
-      $('#contract_info_error').text('')
-    }
-
-    if (officiant) {
-      isValid = false
-      $('#officiant_info_error').text('Please accomplish')
-    } else {
-      $('#officiant_info_error').text('')
-    }
-
-    if (solemnizer) {
-      isValid = false
-      $('#solemnizer_info_error').text('Please accomplish')
-    } else {
-      $('#solemnizer_info_error').text('')
-    }
-
-    if (GMotherWitnessCtr === 0 && GFatherWitnessCtr === 0) {
-      isValid = false
-      $('#witness_gmother_info_error').text('There must be at least one godmother or godfather')
-      $('#witness_gfather_info_error').text('There must be at least one godmother or godfather')
-    } else {
-      $('#witness_gmother_info_error').text('')
-      $('#witness_gfather_info_error').text('')
-    }
-
-    if(dateField) {
-      isValid = false
-      $('#current_date_error').text('Please accomplish')
-    } else {
-      $('#current_date_error').text('')
-    }
-  
     return isValid
   }
 
@@ -1319,25 +1228,6 @@ $(document).ready(function() {
     $(selectWitnessMale)[0].selectize.setValue('0') // TODO: change this to select current member if exists
   })
 
-  // $('#add_gmother_button').click(function() {
-  //   if(GMotherWitnessCtr === 6) {
-  //     $('#witness_gmother_info_error').text('You have reached the maximum number of witnesses')
-  //   } else {
-  //     $('#GMotherWitnessModal').modal('show')
-  //     $('#witness_gmother_info_error').text('')
-  //     isMaleModal = false
-  //   }
-  // })
-
-  // $('#add_gfather_button').click(function() {
-  //   if(GFatherWitnessCtr === 6) {
-  //     $('#witness_gfather_info_error').text('You have reached the maximum number of witnesses')
-  //   } else {
-  //     $('#GFatherWitnessModal').modal('show')
-  //     $('#witness_gfather_info_error').text('')
-  //     isMaleModal = true
-  //   }
-  // })
   function validateMidInitial (mid) {
     const re = /^[A-Z]/
     return re.test(mid)

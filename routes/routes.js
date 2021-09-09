@@ -96,6 +96,7 @@ app.put('/update_wedding/add_witness', weddingController.putAddWitness)
 app.delete('/delete_observation', observationController.delObservation)
 app.delete('/delete_church', churchController.delChurch)
 app.delete('/delete_baptismal', baptismalController.delBaptismal)
+app.delete('/delete_wedding/witness', weddingController.delWitness)
 // app.delete('/delete_prenup', prenupController.delete)
 
 module.exports = app
