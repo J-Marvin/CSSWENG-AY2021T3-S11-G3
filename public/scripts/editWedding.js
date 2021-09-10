@@ -30,10 +30,6 @@ $(document).ready(function() {
   initSelectizeOptions()
   $('select').change(hideChoices)
 
-  function getValue(id) {
-    return $('.option[data-value^="' + id + '"]').data('value')
-  }
-
   function hideChoices() {
     var previous = $(this).data('previous')
     var currOption = $(this).val()
@@ -1253,9 +1249,15 @@ $(document).ready(function() {
   $('#male_non_member').change(function() {
     $('#male_member_div').hide()
     $('#male_non_member_div').show()
-    $('#male_first_name').val('')
-    $('#male_mid_name').val('')
-    $('#male_last_name').val('')
+    if (currPerson.memberId !== null && currPerson.memberId !== '') {
+      $('#male_first_name').val('')
+      $('#male_mid_name').val('')
+      $('#male_last_name').val('')
+    } else {
+      $('#male_first_name').val(currPerson.firstName)
+      $('#male_mid_name').val(currPerson.midName)
+      $('#male_last_name').val(curPerson.lastName)
+    }
   })
 
   // bind function to member (male)
@@ -1273,9 +1275,16 @@ $(document).ready(function() {
   $('#female_non_member').change(function() {
     $('#female_member_div').hide()
     $('#female_non_member_div').show()
-    $('#female_first_name').val('')
-    $('#female_mid_name').val('')
-    $('#female_last_name').val('')
+
+    if (currPerson.memberId !== null && currPerson.memberId !== '') {
+      $('#female_first_name').val('')
+      $('#female_mid_name').val('')
+      $('#female_last_name').val('')
+    } else {
+      $('#female_first_name').val(currPerson.firstName)
+      $('#female_mid_name').val(currPerson.midName)
+      $('#female_last_name').val(curPerson.lastName)
+    }
   })
 
   // bind function to witness member
@@ -1307,9 +1316,15 @@ $(document).ready(function() {
     $('#female_witness_member_div').hide()
     $('#female_witness_non_member_div').show()
 
-    $('#female_witness_first_name').val('')
-    $('#female_witness_mid_name').val('')
-    $('#female_witness_last_name').val('')
+    if (currPerson.memberId !== null && currPerson.memberId !== '') {
+      $('#female+_witness_first_name').val('')
+      $('#female+_witness_mid_name').val('')
+      $('#female+_witness_last_name').val('')
+    } else {
+      $('#female+_witness_first_name').val(currPerson.firstName)
+      $('#female+_witness_mid_name').val(currPerson.midName)
+      $('#female+_witness_last_name').val(curPerson.lastName)
+    } 
   })
 
   $('#male_witness_member').change(function() {
@@ -1327,9 +1342,15 @@ $(document).ready(function() {
   $('#male_witness_non_member').change(function () {
     $('#male_witness_member_div').hide()
     $('#male_witness_non_member_div').show()
-    $('#male_witness_first_name').val('')
-    $('#male_witness_mid_name').val('')
-    $('#male_witness_last_name').val('')
+    if (currPerson.memberId !== null && currPerson.memberId !== '') {
+      $('#male_witness_first_name').val('')
+      $('#male_witness_mid_name').val('')
+      $('#male_witness_last_name').val('')
+    } else {
+      $('#male_witness_first_name').val(currPerson.firstName)
+      $('#male_witness_mid_name').val(currPerson.midName)
+      $('#male_witness_last_name').val(curPerson.lastName)
+    }
   })
 
   function validateMidInitial (mid) {
