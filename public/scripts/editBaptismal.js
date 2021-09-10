@@ -157,7 +157,7 @@ $(document).ready(function() {
               $('#officiant_last_name_view').html(info[4])
               $('#save_edit_officiant').prop('disabled', false)
             } else {
-              $('#officiant_member_div').removeData('member')
+              $('#officiant_member_div').data('member', null)
               $('#officiant_member_div').data('person', result)
               $('#officiant_first_name_view').html(personInfo.firstName)
               $('#officiant_mid_name_view').html(personInfo.midName)
