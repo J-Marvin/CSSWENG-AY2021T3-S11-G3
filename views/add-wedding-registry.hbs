@@ -10,8 +10,8 @@
       <div class="col">
         <legend>Bride</legend>
         <hr>
-        <input type="checkbox" id="bride_non_member" onclick="display_div_bride('bride_non_member')"> Non-member
-        <input class="mb-3" type="checkbox" id="bride_member" onclick="display_div_bride('bride_member')" checked disabled> Member
+        <input type="radio" name="bride_radio" id="bride_non_member" onclick="display_div_bride('bride_non_member')"> Non-member
+        <input class="mb-3" type="radio" name="bride_radio" id="bride_member" onclick="display_div_bride('bride_member')" checked > Member
         <div id="bride_member_div" style="display:block">
           <label>Select Bride*</label>
           <select name="input_bride_member" id="input_bride_member">
@@ -43,8 +43,8 @@
       <div class="col">
         <legend>Groom</legend>
         <hr>
-        <input type="checkbox" id="groom_non_member" onclick="display_div_groom('groom_non_member')"> Non-member
-        <input class="mb-3" type="checkbox" id="groom_member" onclick="display_div_groom('groom_member')" checked disabled> Member
+        <input type="radio" name="radio_groom" id="groom_non_member" onclick="display_div_groom('groom_non_member')"> Non-member
+        <input class="mb-3" type="radio" name="radio_groom" id="groom_member" onclick="display_div_groom('groom_member')" checked > Member
 
         <div id="groom_member_div" style="display:block">
           <label>Select Groom*</label>
@@ -82,9 +82,9 @@
     <div class="row"> 
       <div class="col">
         <legend>Mother</legend>
-        <input type="checkbox" id="bride_mother_non_member" onclick="display_div_bride_mother('bride_mother_non_member')"> Non-member
-        <input class="mb-3" type="checkbox" id="bride_mother_member" onclick="display_div_bride_mother('bride_mother_member')" checked disabled> Member
-        <input type="checkbox" id="bride_mother_none" onclick="display_div_bride_mother('bride_mother_none')"> None
+        <input type="radio" name="bride_mother_radio" id="bride_mother_non_member" onclick="display_div_bride_mother('bride_mother_non_member')"> Non-member
+        <input class="mb-3" type="radio" name="bride_mother_radio" id="bride_mother_member" onclick="display_div_bride_mother('bride_mother_member')" checked > Member
+        <input type="radio" name="bride_mother_radio" id="bride_mother_none" onclick="display_div_bride_mother('bride_mother_none')"> None
 
         <div id="bride_mother_member_div" style="display:block">
           <label>Select</label>
@@ -116,9 +116,9 @@
       </div>
       <div class="col">
         <legend>Father</legend>
-        <input type="checkbox" id="bride_father_non_member" onclick="display_div_bride_father('bride_father_non_member')"> Non-member
-        <input class="mb-3" type="checkbox" id="bride_father_member" onclick="display_div_bride_father('bride_father_member')" checked disabled> Member
-        <input type="checkbox" id="bride_father_none" onclick="display_div_bride_father('bride_father_none')"> None
+        <input type="radio" name="bride_father_radio" id="bride_father_non_member" onclick="display_div_bride_father('bride_father_non_member')"> Non-member
+        <input class="mb-3" type="radio" name="bride_father_radio" id="bride_father_member" onclick="display_div_bride_father('bride_father_member')" checked > Member
+        <input type="radio" name="bride_father_radio" id="bride_father_none" onclick="display_div_bride_father('bride_father_none')"> None
 
         <div id="bride_father_member_div" style="display:block">
           <label>Select</label>
@@ -156,9 +156,9 @@
     <div class="row">
       <div class="col">
         <legend>Mother</legend>
-        <input type="checkbox" id="groom_mother_non_member" onclick="display_div_groom_mother('groom_mother_non_member')"> Non-member
-        <input class="mb-3" type="checkbox" id="groom_mother_member" onclick="display_div_groom_mother('groom_mother_member')" checked disabled> Member
-        <input type="checkbox" id="groom_mother_none" onclick="display_div_groom_mother('groom_mother_none')"> None
+        <input type="radio" name="groom_mother_radio" id="groom_mother_non_member" onclick="display_div_groom_mother('groom_mother_non_member')"> Non-member
+        <input class="mb-3" type="radio" name="groom_mother_radio" id="groom_mother_member" onclick="display_div_groom_mother('groom_mother_member')" checked > Member
+        <input type="radio" name="groom_mother_radio" id="groom_mother_none" onclick="display_div_groom_mother('groom_mother_none')"> None
 
         <div id="groom_mother_member_div" style="display:block">
           <label>Select</label>
@@ -190,9 +190,9 @@
       </div>
       <div class="col">
         <legend>Father</legend>
-        <input type="checkbox" id="groom_father_non_member" onclick="display_div_groom_father('groom_father_non_member')"> Non-member
-        <input class="mb-3" type="checkbox" id="groom_father_member" onclick="display_div_groom_father('groom_father_member')" checked disabled> Member
-        <input type="checkbox" id="groom_father_none" onclick="display_div_groom_father('groom_father_none')"> None
+        <input type="radio" type="groom_father_radio" id="groom_father_non_member" onclick="display_div_groom_father('groom_father_non_member')"> Non-member
+        <input class="mb-3" type="radio" type="groom_father_radio" id="groom_father_member" onclick="display_div_groom_father('groom_father_member')" checked > Member
+        <input type="radio" type="groom_father_radio" id="groom_father_none" onclick="display_div_groom_father('groom_father_none')"> None
 
         <div id="groom_father_member_div" style="display:block">
           <label>Select</label>
@@ -306,8 +306,8 @@
         <div class="modal-body">
           <div class="row">
             <div class="col">
-              <input type="checkbox" id="witness_gmother_non_member"> Non Member
-              <input class="mb-3" type="checkbox" id="witness_gmother_member" checked disabled> Member
+              <input type="radio" name="witness_gmother_radio" id="witness_gmother_non_member"> Non Member
+              <input class="mb-3" name="witness_gmother_radio" type="radio" id="witness_gmother_member" checked> Member
               <div id="witness_gmother_member_div" style="display:block">
                 <label>Select Witness</label>
                 <select name="input_witness" id="input_witness_gmother_member">
@@ -356,8 +356,8 @@
         <div class="modal-body">
           <div class="row">
             <div class="col">
-              <input type="checkbox" id="witness_gfather_non_member"> Non Member
-              <input class="mb-3" type="checkbox" id="witness_gfather_member" checked disabled> Member
+              <input type="radio" name="gfather_radio" id="witness_gfather_non_member"> Non Member
+              <input class="mb-3" type="radio" name="gfather_radio" id="witness_gfather_member" checked > Member
               <div id="witness_gfather_member_div" style="display:block">
                 <label>Select Witness</label>
                 <select name="input_witness" id="input_witness_gfather_member">

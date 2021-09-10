@@ -6,23 +6,14 @@
   data-place="{{place}}"
   data-officiant="{{officiant}}"></div>
 <div id="infant_info" 
-  data-infant-personid="{{infant_person_id}}"
-  {{#if infant_member_id}} data-infant-memberid="{{infant_member_id}}" {{else}} data-infant-memberid="" {{/if}}
-  data-infant-first="{{infant_first_name}}"
-  data-infant-middle="{{infant_middle_name}}"
-  data-infant-last="{{infant_last_name}}"></div>
-<div id="guardian1_info"
-  data-guardian1-personid="{{guardianOne_person_id}}"
-  {{#if guardianOne_member_id}} data-guardian1-memberid="{{guardianOne_member_id}}" {{else}} data-guardian1-memberid="" {{/if}}
-  data-guardian1-first="{{guardianOne_first_name}}"
-  data-guardian1-middle="{{guardianOne_middle_name}}"
-  data-guardian1-last="{{guardianOne_last_name}}"></div>
-<div id="guardian2_info"
-  data-guardian2-personid="{{guardianTwo_person_id}}"
-  {{#if guardianTwo_member_id}} data-guardian2-memberid="{{guardianTwo_member_id}}" {{else}} data-guardian2-memberid="" {{/if}}
-  data-guardian2-first="{{guardianTwo_first_name}}"
-  data-guardian2-middle="{{guardianTwo_middle_name}}"
-  data-guardian2-last="{{guardianTwo_last_name}}"></div>
+  data-person ="{{infant_person_id}}"
+  data-member = "{{infant_member_id}}"></div>
+<div id="parent1_info"
+  data-person="{{guardianOne_person_id}}"
+  data-member="{{guardianOne_member_id}}"></div>
+<div id="parent2_info"
+  data-person="{{guardianTwo_person_id}}"
+  data-member="{{guardianTwo_member_id}}"></div>
 
 <form id="edit_dedication_form" class="container">
   <div class="container" style="padding-left: 25%; padding-right: 20%;">
@@ -42,15 +33,15 @@
       <legend>Child Name</legend>
       <div class="col">
         <u for="first_name">First Name</u>
-        <p>{{infant_first_name}}</p>
+        <p><span id="child_first_name_view" >{{infant_first_name}}</span></p>
       </div>
       <div class="col">
         <u for="mid_name">Middle Initial</u>
-        <p>{{infant_middle_name}}</p>
+        <p><span id="child_mid_name_view" >{{infant_middle_name}}</span></p>
       </div>
       <div class="col">
         <u for="last_name">Last Name</u>
-        <p>{{infant_last_name}}</p>
+        <p><span id="child_last_name_view" >{{infant_last_name}}</span></p>
       </div>
       <div class="col d-flex justify-content-end">
         <button type="button" class="btn btn-secondary mb-4" id="edit_child">Edit</button>
@@ -62,15 +53,15 @@
       <legend>Parent / Guardian </legend>
       <div class="col">
         <u for="first_name">First Name</u>
-        <p>{{guardianOne_first_name}}</p>
+        <p><span id="parent1_first_name_view">{{guardianOne_first_name}}</span></p>
       </div>
       <div class="col">
         <u for="mid_name">Middle Initial</u>
-        <p>{{guardianOne_mid_name}}</p>
+        <p><span id="parent1_mid_name_view">{{guardianOne_mid_name}}</span></p>
       </div>
       <div class="col">
         <u for="last_name">Last Name</u>
-        <p>{{guardianOne_last_name}}</p>
+        <p><span id="parent1_last_name_view">{{guardianOne_last_name}}</span></p>
       </div>
       <div class="col d-flex justify-content-end">
         <button type="button" class="btn btn-secondary mb-4" id="edit_parent_one">Edit</button>
@@ -81,15 +72,15 @@
       <legend>Parent / Guardian</legend>
       <div class="col">
         <u for="first_name">First Name</u>
-        <p>{{guardianTwo_first_name}}</p>
+        <p><span id="parent2_first_name_view">{{#if guardianTwo_first_name}}{{guardianTwo_first_name}}{{else}}N/A{{/if}}</span></p>
       </div>
       <div class="col">
         <u for="mid_name">Middle Initial</u>
-        <p>{{guardianTwo_mid_name}}</p>
+        <p><span id="parent2_mid_name_view">{{#if guardianTwo_mid_name}}{{guardianTwo_mid_name}}{{else}}N/A{{/if}}</span></p>
       </div>
       <div class="col">
         <u for="last_name">Last Name</u>
-        <p>{{guardianTwo_last_name}}</p>
+        <p><span id="parent2_last_name_view">{{#if guardianTwo_last_name}}{{guardianTwo_last_name}}{{else}}N/A{{/if}}</span></p>
       </div>
       <div class="col d-flex justify-content-end">
         <button type="button" class="btn btn-secondary mb-4" id="edit_parent_two">Edit</button>
@@ -122,8 +113,11 @@
       </div>
     </div>
     <div class="row" id="gmother_witness_row">
-      <p id="witness_gmother_info_error" class="error_codes"> </p>
+      {{#each witnessFemale}}
+        {{>edit-witness this=this type="female"}}
+      {{/each}}
     </div>
+      <p id="witness_gmother_info_error" class="error_codes"> </p>
     <div class="row">
       <div class="col-12 d-flex justify-content-between">
         <legend>Godfather/s</legend>
@@ -136,8 +130,11 @@
       </div>
     </div>
     <div class="row" id="gfather_witness_row">
-      <p id="witness_gfather_info_error" class="error_codes"> </p>
+      {{#each witnessMale}}
+        {{>edit-witness this=this type="male"}}
+      {{/each}}
     </div>
+      <p id="witness_gfather_info_error" class="error_codes"> </p>
     <button id="edit-dedication" type="button" class="btn btn-primary">Submit</button>
   </div>
 </form>
@@ -146,14 +143,14 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add Godmother</h5>
+        <h5 class="modal-title" id="exampleModalLabel"><span id="godmother_type">Add</span> Godmother</h5>
         <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <div class="row">
           <div class="col">
-            <input type="radio" id="witness_gmother_non_member"> Non Member
-            <input class="mb-3" type="radio" id="witness_gmother_member" checked disabled> Member
+            <input type="radio" name="gmother_radio" id="witness_gmother_non_member"> Non Member
+            <input class="mb-3" name="gmother_radio" type="radio" id="witness_gmother_member" checked > Member
             <div id="witness_gmother_member_div" style="display:block">
               <label>Select Witness</label>
               <select name="input_witness" id="input_witness_gmother_member">
@@ -179,8 +176,6 @@
               </div>
             </fieldset>
             <p id="witness_gmother_modal_info_error" class="error_codes"> </p>
-            <p id="witness_gmother_modal_middle_error" class="error_codes"> </p>
-            <p id="witness_gmother_modal_middle_len_error" class="error_codes"> </p>
           </div>
         </div>
       </div>
@@ -196,14 +191,14 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add Godfather</h5>
+        <h5 class="modal-title" id="exampleModalLabel"><span id="gfather_type">Add</span> Godfather</h5>
         <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <div class="row">
           <div class="col">
-            <input type="radio" id="witness_gfather_non_member"> Non Member
-            <input class="mb-3" type="radio" id="witness_gfather_member" checked disabled> Member
+            <input type="radio" name="gfather_radio" id="witness_gfather_non_member"> Non Member
+            <input class="mb-3" name="gfather_radio" type="radio" id="witness_gfather_member" checked > Member
             <div id="witness_gfather_member_div" style="display:block">
               <label>Select Witness</label>
               <select name="input_witness" id="input_witness_gfather_member">
@@ -229,8 +224,6 @@
               </div>
             </fieldset>
             <p id="witness_gfather_modal_info_error" class="error_codes"> </p>
-            <p id="witness_gfather_modal_middle_error" class="error_codes"> </p>
-            <p id="witness_gfather_modal_middle_len_error" class="error_codes"> </p>
           </div>
         </div>
       </div>
@@ -250,13 +243,13 @@
         <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <input type="radio" id="child_non_member"> Non-member
-        <input class="mb-3" type="radio" id="child_member" checked disabled> Member
+        <input type="radio" name="child_radio" id="child_non_member"> Non-member
+        <input class="mb-3" name="child_radio" type="radio" id="child_member" checked > Member
       
         <div id="child_member_div" style="display:block">
           <label>Select Child*</label>
           <select name="input_child_member" id="input_child_member" >
-            {{>dropdown members}}
+            {{>dropdown noBapReg}}
           </select>
         </div>
       
@@ -294,12 +287,12 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Edit Parent One</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Edit Parent / Guardian</h5>
         <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <input type="radio" id="parent1_non_member"> Non Member
-        <input class="mb-3" type="radio" id="parent1_member" checked disabled> Member
+        <input type="radio" name="parent1_radio" id="parent1_non_member"> Non Member
+        <input class="mb-3" name="parent1_radio" type="radio" id="parent1_member" checked > Member
         <div id="parent1_member_div" style="display:block">
           <label>Select Parent / Guardian*</label>
           <select name="input_parent1" id="input_parent1_member">
@@ -340,13 +333,13 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Edit Parent Two</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Edit Parent / Guardian</h5>
         <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <input type="radio" id="parent2_non_member"> Non-member
-        <input class="mb-3" type="radio" id="parent2_member" checked disabled> Member
-        <input type="radio" id="parent2_none"> None
+        <input type="radio" name="parent2_radio" id="parent2_non_member"> Non-member
+        <input class="mb-3" name="parent2_radio" type="radio" id="parent2_member" checked > Member
+        <input type="radio" name="parent2_radio" id="parent2_none"> None
 
         <div id="parent2_member_div" style="display:block">
           <label>Select Parent / Guardian</label>
@@ -385,103 +378,23 @@
   </div>
 </div>
 
-{{!-- <div class="row">
-  <div class="col-6">
-    <legend>Child</legend>
-    <hr>        
-    <input type="radio" id="child_non_member"> Non-member
-    <input class="mb-3" type="radio" id="child_member" checked disabled> Member
-  
-    <div id="child_member_div" style="display:block">
-      <label>Select Child*</label>
-      <select name="input_child_member" id="input_child_member" >
-        {{>dropdown members}}
-      </select>
-    </div>
-  
-    <fieldset class="form-group" id="child_non_member_div" style="display:none">
-      <div class="div">
-        <div class="row">
-          <div class="col-12">
-            <label for="child_first_name">First Name</label>
-            <input type="text" id="child_first_name" name="child_first_name" class="form-control">
-          </div>
-          <div class="col-12">
-            <label for="child_mid_name">Middle Initial</label>
-            <input type="text" id="child_mid_name" name="child_mid_name" class="form-control">
-          </div>
-          <div class="col-12">
-            <label for="child_last_name">Last Name</label>
-            <input type="text" id="child_last_name" name="child_last_name" class="form-control">
-          </div>
+<div class="modal fade" id="confirmDeleteWitnessModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"> Delete Witness</h5>
+        <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row" id="delete_info">
+          <p>Are you sure? This action will be saved automatically and cannot be undone!</p>
         </div>
       </div>
-    </fieldset>
-    <p id="child_info_error" class="error_codes"> </p>
-    <p id="child_middle_error" class="error_codes"> </p>
-    <p id="child_middle_len_error" class="error_codes"> </p>
-  </div>
-</div> --}}
-
-{{!-- <input type="radio" id="parent1_non_member"> Non Member
-<input class="mb-3" type="radio" id="parent1_member" checked disabled> Member
-<div id="parent1_member_div" style="display:block">
-  <label>Select Parent / Guardian*</label>
-  <select name="input_parent1" id="input_parent1_member">
-    {{>dropdown members}}
-  </select>
-</div>
-<fieldset class="form-group" id="parent1_non_member_div" style="display:none">
-  <div class="div">
-    <div class="row">
-      <div class="col-12">
-        <label for="parent1_first_name">First Name</label>
-        <input type="text" id="parent1_first_name" name="parent1_first_name" class="form-control">
-      </div>
-      <div class="col-12">
-        <label for="parent1_mid_name">Middle Initial</label>
-        <input type="text" id="parent1_mid_name" name="parent1_mid_name" class="form-control">
-      </div>
-      <div class="col-12">
-        <label for="parent1_last_name">Last Name</label>
-        <input type="text" id="parent1_last_name" name="parent1_last_name" class="form-control">
+      <div class="modal-footer">
+        <button type="button" id="cancel_modal" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger" id="confirm_delete_witness">Delete Witness</button>
       </div>
     </div>
   </div>
-</fieldset>
-<p id="parent1_info_error" class="error_codes"> </p>
-<p id="parent1_middle_error" class="error_codes"> </p>
-<p id="parent1_middle_len_error" class="error_codes"> </p> --}}
-
-{{!-- <input type="radio" id="parent2_non_member"> Non-member
-<input class="mb-3" type="radio" id="parent2_member" checked disabled> Member
-<input type="radio" id="parent2_none"> None
-
-<div id="parent2_member_div" style="display:block">
-  <label>Select Parent / Guardian</label>
-  <select name="input_parent2_member" id="input_parent2_member">
-    {{>dropdown members}}
-  </select>
 </div>
-
-<fieldset class="form-group" id="parent2_non_member_div" style="display:none">
-  <div class="div">
-    <div class="row">
-      <div class="col-12">
-        <label for="parent2_first_name">First Name</label>
-        <input type="text" id="parent2_first_name" name="parent2_first_name" class="form-control">
-      </div>
-      <div class="col-12">
-        <label for="parent2_mid_name">Middle Initial</label>
-        <input type="text" id="parent2_mid_name" name="parent2_mid_name" class="form-control">
-      </div>
-      <div class="col-12">
-        <label for="parent2_last_name">Last Name</label>
-        <input type="text" id="parent2_last_name" name="parent2_last_name" class="form-control">
-      </div>
-    </div>
-  </div>
-</fieldset>
-<p id="parent2_info_error" class="error_codes"> </p>
-<p id="parent2_middle_error" class="error_codes"> </p>
-<p id="parent2_middle_len_error" class="error_codes"> </p> --}}

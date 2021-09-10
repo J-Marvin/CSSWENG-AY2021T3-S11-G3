@@ -165,9 +165,9 @@ const searchController = {
       cond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.MEMBER_STATUS, data.member[memberFields.MEMBER_STATUS], '=')
       conditions.push(cond)
     }
-    console.log(conditions)
+    
     db.find(db.tables.MEMBER_TABLE, conditions, joinTables, '*', function (result) {
-      console.log(result)
+      
       if (result) {
         const data = {
           styles: ['lists'],
@@ -308,7 +308,7 @@ const searchController = {
 
     db.find(tables.PRENUPTIAL_TABLE, conditions, joinTables, columns, function (result) {
       if (result) {
-        console.log(result)
+        
         res.render('prenup-main-page', {
           styles: ['lists'],
           scripts: ['convertDataTable'],
@@ -628,7 +628,7 @@ const searchController = {
 
     db.find(db.tables.WEDDING_TABLE, conditions, joinTables, columns, function (result) {
       if (result) {
-        console.log(result)
+        
         res.render('wedding-main-page', {
           styles: ['lists'],
           scripts: ['convertDataTable'],
@@ -797,7 +797,7 @@ const searchController = {
     }
 
     db.find(db.tables.INFANT_TABLE, conditions, joinTables, columns, function (result) {
-      console.log(result)
+      
       res.render('dedication-main-page', {
         styles: ['lists'],
         scripts: ['convertDataTable'],

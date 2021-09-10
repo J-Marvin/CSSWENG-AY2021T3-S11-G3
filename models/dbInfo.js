@@ -22,7 +22,7 @@ const createInfDedication =
   'place TEXT, ' +
   'officiant TEXT,' +
   'FOREIGN KEY(person_id) REFERENCES people(person_id),' +
-  'FOREIGN KEY(parents_id) REFERENCES couples(couple_id)' +
+  'CONSTRAINT fk_parents FOREIGN KEY(parents_id) REFERENCES couples(couple_id) ON DELETE CASCADE' +
   ')'
 
 const createWitness =

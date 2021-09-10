@@ -6,7 +6,8 @@ const memberFields = require('../models/members')
 const infDedFields = require('../models/infantDedication')
 const { Condition, queryTypes } = require('../models/condition')
 const { sendError } = require('../controllers/errorController')
-const { updateMemberToMember, updateMemberToNonMember, updateNonMemberToMember, updateNonMemberToNonMember } = require('./updateController')
+const { updateMemberToMember, updateMemberToNonMember, updateNonMemberToMember, updateNonMemberToNonMember, updateNoneToMember, updateNoneToNonMember, updateMemberToNone, updateNonMemberToNone } = require('./updateController')
+const { tables } = require('../models/db')
 
 const dedicationController = {
   /**
@@ -150,16 +151,16 @@ const dedicationController = {
             data.canSee = false
           }
           data.styles = ['view']
-          // data.scripts = ['']
+          data.scripts = ['deleteDedication']
           data.backLink = parseInt(req.session.level) >= 2 ? '/dedication_main_page' : '/forms_main_page'
           db.find(db.tables.WITNESS_TABLE, witnessCond, witnessJoin, witnessColumns, function (result) {
             if (result) {
+              console.log(data)
               data.witnesses = result
               // Filters all Godfathers
               data.witnessMale = data.witnesses.filter((witness) => { return witness.type === 'Godfather' })
               // Filters all Godmothers
               data.witnessFemale = data.witnesses.filter((witness) => { return witness.type === 'Godmother' })
-              console.log(data)
               res.render('view-dedication', data)
             }
           })
@@ -374,7 +375,6 @@ const dedicationController = {
                               }
 
                               db.update(db.tables.MEMBER_TABLE, memberUpdateData, updateConditions, function (result) {
-                                console.log(result)
                                 if (result === 0) {
                                   result = true
                                 }
@@ -383,7 +383,6 @@ const dedicationController = {
                                   req.session.editId = dedicationId
                                   res.send(JSON.stringify(dedicationId))
                                 } else {
-                                  console.log('error updating into Child Dedication Member table')
                                   res.send(false)
                                 }
                               })
@@ -499,7 +498,7 @@ const dedicationController = {
           data.canSee = false
         }
         data.styles = ['forms']
-        data.scripts = ['editDedication']
+        data.scripts = ['editDedication', 'edit']
         db.find(db.tables.WITNESS_TABLE, witnessCond, witnessJoin, witnessColumns, function (result) {
           if (result) {
             data.witnesses = result
@@ -507,8 +506,21 @@ const dedicationController = {
             data.witnessMale = data.witnesses.filter((witness) => { return witness.type === 'Godfather' })
             // Filters all Godmothers
             data.witnessFemale = data.witnesses.filter((witness) => { return witness.type === 'Godmother' })
-            console.log(data)
-            res.render('edit-dedication', data)
+            db.find(db.tables.MEMBER_TABLE, [], {
+              tableName: tables.PERSON_TABLE,
+              sourceCol: tables.PERSON_TABLE + '.' + personFields.ID,
+              destCol: db.tables.MEMBER_TABLE + '.' + memberFields.PERSON
+            }, '*', function (result) {
+              if (result) {
+                data.members = result
+                data.males = result.filter(elem => elem[memberFields.SEX] === 'Male')
+                data.females = result.filter(elem => elem[memberFields.SEX] === 'Female')
+                data.noBapReg = result.filter(elem => elem[memberFields.BAPTISMAL_REG] === null || elem[memberFields.BAPTISMAL_REG] === data.dedication_id)
+                res.render('edit-dedication', data)
+              } else {
+                sendError(req, res, 404)
+              }
+            })
           }
         })
       } else {
@@ -518,82 +530,299 @@ const dedicationController = {
   },
 
   putUpdateChild: function (req, res) {
+    const isOldMember = req.body.isOldMember === 'true'
+    const person = JSON.parse(req.body.person)
+    const isNewMember = person.isMember
+    const ids = {
+      recordId: req.body.recordId,
+      oldPersonId: req.body.oldPersonId,
+      newPersonId: person.personId
+    }
+    const fields = {
+      recordId: infDedFields.ID,
+      memberRecordField: memberFields.CHILD_DEDICATION,
+      recordPersonField: infDedFields.PERSON
+    }
 
+    if (isOldMember && isNewMember) { // From member to member
+      updateMemberToMember(ids, fields, tables.INFANT_TABLE, sendReply)
+    } else if (isOldMember && !isNewMember) { // From member to non member
+      updateMemberToNonMember(person, ids, fields, tables.INFANT_TABLE, sendReply)
+    } else if (!isOldMember && isNewMember) { // From non member to member
+      updateNonMemberToMember(ids, fields, tables.INFANT_TABLE, sendReply)
+    } else {
+      updateNonMemberToNonMember(person, sendReply)
+    }
+
+    function sendReply (result) {
+      if (result) {
+        res.send(JSON.stringify(result))
+      } else {
+        res.send(false)
+      }
+    }
   },
 
-  putUpdateGuardianeOne: function (req, res) {
+  putUpdateGuardian: function (req, res) {
+    const isFirstGuardian = req.body.isFirstGuardian === 'true'
+    const isOldMember = req.body.isOldMember === 'true'
+    const person = JSON.parse(req.body.person)
+    const isNewMember = person === null ? false : person.isMember
+    const isNewNone = person === null
+    const isOldNone = !req.body.oldPersonId && !req.body.oldMemberId
+    const ids = {
+      recordId: req.body.coupleId,
+      oldPersonId: req.body.oldPersonId,
+      newPersonId: person ? person.personId : null
+    }
+    const fields = {
+      recordId: coupleFields.ID,
+      memberRecordField: null,
+      recordPersonField: isFirstGuardian ? coupleFields.FEMALE : coupleFields.MALE
+    }
+    console.log(person)
 
-  },
+    if (isOldNone && !isNewNone && isNewMember) {
+      updateNoneToMember(ids, fields, tables.COUPLE_TABLE, sendReply)
+    } else if (isOldNone && !isNewNone && !isNewMember) {
+      updateNoneToNonMember(person, ids, fields, tables.COUPLE_TABLE, sendReply)
+    } else if (isOldMember && isNewNone) {
+      updateMemberToNone(ids, fields, tables.COUPLE_TABLE, sendReply)
+    } else if (!isOldMember && isNewNone) {
+      updateNonMemberToNone(ids, fields, tables.COUPLE_TABLE, sendReply)
+    } else if (isOldMember && isNewMember) { // From member to member
+      updateMemberToMember(ids, fields, tables.COUPLE_TABLE, sendReply)
+    } else if (isOldMember && !isNewMember) { // From member to non member
+      updateMemberToNonMember(person, ids, fields, tables.COUPLE_TABLE, sendReply)
+    } else if (!isOldMember && isNewMember) { // From non member to member
+      updateNonMemberToMember(ids, fields, tables.COUPLE_TABLE, sendReply)
+    } else {
+      person.personId = ids.oldPersonId
+      updateNonMemberToNonMember(person, sendReply)
+    }
 
-  putUpdateGuardianeTwo: function (req, res) {
-
-  },
-
-  putUpdateOfficiant: function (req, res) {
-
+    function sendReply (result) {
+      console.log(result)
+      if (result) {
+        res.send(JSON.stringify(result))
+      } else {
+        res.send(false)
+      }
+    }
   },
 
   putUpdateDedication: function (req, res) {
-    // If Child non-member to member
-    // If parent1 non-member to member
-    // If parent2 non-member to member
+    const location = req.body.location
+    const officiant = req.body.officiant
+    const recordId = req.body.recordId
+    const date = req.body.date
 
-    // If child non-member change info
-    // If parent1 non-member change info
-    // If parent2 non-member change info
+    const data = {}
 
-    // If child member to non-member
-    // if parent1 member to non-member
-    // If parent2 member to non-member
+    const recordCond = new Condition(queryTypes.where)
+    recordCond.setKeyValue(infDedFields.ID, recordId)
 
-    // People to be inserted into people table
-    // Cases:
-    // If child member to non-member
-    // if parent1 member to non-member
-    // If parent2 member to non-member
-    const peopleInfo = []
+    data[infDedFields.DEDICATION_DATE] = date
+    data[infDedFields.OFFICIANT] = officiant
+    data[infDedFields.PLACE] = location
 
-    const people = {}
-    const offsets = {
-      child: 0,
-      parent1: 0,
-      parent2: 0
+    db.update(db.tables.INFANT_TABLE, data, recordCond, function (result) {
+      if (result) {
+        res.send(true)
+      } else {
+        res.send(false)
+      }
+    })
+  },
+
+  putUpdateWitness: function (req, res) {
+    const isOldMember = req.body.isOldMember === 'true'
+    const person = JSON.parse(req.body.person)
+    const isNewMember = person.isMember
+    const ids = {
+      recordId: req.body.witnessId,
+      oldPersonId: req.body.oldPersonId,
+      newPersonId: person.personId
+    }
+    const fields = {
+      recordId: witnessFields.ID,
+      memberRecordField: null, // No need to edit in witness
+      recordPersonField: witnessFields.PERSON
     }
 
-    people.child = JSON.parse(req.body.child)
-    people.parent1 = JSON.parse(req.body.parent1)
-    people.parent2 = JSON.parse(req.body.parent2)
-
-    if (people.child.toNonMember) {
-      const child = {}
-      child[personFields.FIRST_NAME] = people.child.first_name
-      child[personFields.MID_NAME] = people.child.mid_name
-      child[personFields.LAST_NAME] = people.child.last_name
-
-      peopleInfo.push(child)
+    if (isOldMember && isNewMember) { // From member to member
+      updateMemberToMember(ids, fields, tables.WITNESS_TABLE, sendReply)
+    } else if (isOldMember && !isNewMember) { // From member to non member
+      updateMemberToNonMember(person, ids, fields, tables.WITNESS_TABLE, sendReply)
+    } else if (!isOldMember && isNewMember) { // From non member to member
+      updateNonMemberToMember(ids, fields, tables.WITNESS_TABLE, sendReply)
+    } else {
+      updateNonMemberToNonMember(person, sendReply)
     }
 
-    if (people.parent1.toNonMember) {
-      const parent = {}
-      parent[personFields.FIRST_NAME] = people.parent1.first_name
-      parent[personFields.MID_NAME] = people.parent1.mid_name
-      parent[personFields.LAST_NAME] = people.parent1.last_name
+    function sendReply(result) {
+      console.log(result)
+      if (result) {
+        res.send(JSON.stringify(result))
+      } else {
+        res.send(false)
+      }
+    }
+  },
 
-      peopleInfo.push(parent)
-      offsets.child += 1
+  putAddWitness: function (req, res) {
+    const recordId = req.body.recordId
+    const isFemale = req.body.isFemale === 'true'
+    const person = JSON.parse(req.body.person)
+
+    const witnessData = {}
+    witnessData[witnessFields.DEDICATION] = recordId
+    witnessData[witnessFields.TYPE] = isFemale ? 'Godmother' : 'Godfather'
+    witnessData[witnessFields.PERSON] = person.personId
+
+    const personInfo = []
+
+    console.log(person)
+    if (!person.isMember) {
+      const personData = {}
+      personData[personFields.FIRST_NAME] = person.firstName
+      personData[personFields.MID_NAME] = person.midName
+      personData[personFields.LAST_NAME] = person.lastName
+
+      personInfo.push(personData)
     }
 
-    if (people.parent2 !== null && people.parent2.toNonMember) {
-      const parent = {}
-      parent[personFields.FIRST_NAME] = people.parent2.first_name
-      parent[personFields.MID_NAME] = people.parent2.mid_name
-      parent[personFields.LAST_NAME] = people.parent2.last_name
+    console.log(personInfo)
 
-      peopleInfo.push(parent)
-      offsets.parent1 += 1
-      offsets.child += 1
+    db.insert(db.tables.PERSON_TABLE, personInfo, function (result) {
+      if (result) {
+        if (!person.isMember) {
+          witnessData[witnessFields.PERSON] = result[0]
+        }
+
+        db.insert(db.tables.WITNESS_TABLE, witnessData, function (result) {
+          console.log(result)
+          if (result) {
+            const data = {
+              layout: false,
+              type: isFemale ? 'female' : 'male',
+              witness_id: result[0],
+              witness_person_id: witnessData[witnessFields.PERSON],
+              witness_member_id: person.memberId,
+              witness_first_name: person.firstName,
+              witness_mid_name: person.midName,
+              witness_last_name: person.lastName
+            }
+
+            console.log(data)
+
+            res.render('partials/edit-witness', data, function (err, html) {
+              if (err) {
+                res.send(false)
+              } else {
+                res.send(html)
+              }
+            })
+          } else {
+            res.send(false)
+          }
+        })
+      } else {
+        res.send(false)
+      }
+    })
+  },
+
+  delWitness: function (req, res) {
+    console.log(req.body)
+    const recordId = req.body.recordId
+    const person = JSON.parse(req.body.person)
+
+    const condition = new Condition(queryTypes.where)
+    condition.setKeyValue(witnessFields.ID, recordId)
+
+    let personCondition = null
+
+    console.log(person)
+    if (!person.memberId) {
+      personCondition = new Condition(queryTypes.where)
+      personCondition.setKeyValue(personFields.ID, person.personId)
+    } else {
+      personCondition = new Condition(queryTypes.whereNull)
+      personCondition.setField(personFields.ID)
     }
-  }
+
+    db.delete(tables.WITNESS_TABLE, condition, function (result) {
+      if (result) {
+        db.delete(tables.PERSON_TABLE, personCondition, function (result) {
+          console.log(result)
+
+          if (person.memberId && result === 0) {
+            result = true
+          }
+          if (result) {
+            res.send(true)
+          } else {
+            res.send(false)
+          }
+        })
+      } else {
+        res.send(false)
+      }
+    })
+  },
+
+  deleteDedication: function (req, res) {
+    const nonMembers = JSON.parse(req.body.nonMembers)
+    const couples = JSON.parse(req.body.couples)
+    const witnesses = JSON.parse(req.body.witnesses)
+    const recordId = req.body.recordId
+
+    console.log(couples)
+    const nonMembersCond = new Condition(queryTypes.whereIn)
+    nonMembersCond.setArray(personFields.ID, nonMembers)
+
+    const couplesCond = new Condition(queryTypes.whereIn)
+    couplesCond.setArray(coupleFields.ID, couples)
+
+    const witnessesCond = new Condition(queryTypes.whereIn)
+    witnessesCond.setArray(witnessFields.ID, witnesses)
+
+    const recordCond = new Condition(queryTypes.where)
+    recordCond.setKeyValue(infDedFields.ID, recordId)
+
+    // Delete Witnesses
+    db.delete(tables.WITNESS_TABLE, witnessesCond, function (result) {
+      if (result === 0) {
+        result = true
+      }
+
+      if (result) {
+        db.delete(tables.COUPLE_TABLE, couplesCond, function (result) {
+          console.log(result)
+          if (result) {
+            db.delete(tables.PERSON_TABLE, nonMembersCond, function (result) {
+              if (nonMembers.length === 0 || result) {
+                db.delete(tables.INFANT_TABLE, recordCond, function (result) {
+                  if (result || result === 0) { // Dedication record should be deleted because of FK constraint
+                    res.send(true)
+                  } else {
+                    res.send(false)
+                  }
+                })
+              } else {
+                res.send(false)
+              }
+            })
+          } else {
+            res.send(false)
+          }
+        })
+      } else {
+        res.send(false)
+      }
+    })
+  },
 }
 
 module.exports = dedicationController
