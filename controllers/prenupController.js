@@ -792,16 +792,6 @@ const prenupController = {
    * @param res - the result to be sent out after processing the request
    */
   putUpdatePrenupBride: function (req, res) {
-    /*
-      const data = {
-        isOldMember: oldBrideMemberId !== null && oldBrideMemberId !== undefined && oldBrideMemberId !== '',
-        person: bridePerson,
-        recordId: prenupRecordId,
-        coupleId: coupleId,
-        oldMemberId: oldBrideMemberId,
-        oldPersonId: oldBridePersonId
-      }
-    */
     const isOldMember = req.body.isOldMember === 'true'
     const person = JSON.parse(req.body.person)
     const isNewMember = person.isNewMember
@@ -809,19 +799,28 @@ const prenupController = {
     const coupleId = req.body.coupleId
     const oldMemberId = req.body.oldMemberId
     const oldPersonId = req.body.oldPersonId
-    // member to member
-    if (isOldMember && isNewMember) {
-      const ids = {
-        oldPersonId: req.body.oldPersonId,
-        newPersonId: person.personId,
-        recordId: req.body.recordId
-      },
-      const fields = {
-        recordId: coupleFields.ID,
-        memberRecordField: memberFields.PRENUP_RECORD,
-        recordPersonField: prenup
-      }
+
+    const ids = {
+      oldPersonId: oldPersonId,
+      newPersonId: person ? person.personId : null,
+      recordId: coupleId,
+      updateRecordId: recordId
     }
+    const fields = {
+      recordId: coupleFields.ID,
+      memberRecordField: memberFields.PRENUP_RECORD,
+      recordPersonField: coupleFields.FEMALE
+    }
+    if (isOldMember && isNewMember) { // member to member
+      updateMemberToMember(ids, fields, db.tables.COUPLE_TABLE, sendReply)
+    } else if (isOldMember && !isNewMember) { // member to non-member
+      updateMemberToNonMember(person, ids, fields, db.tables.COUPLE_TABLE, sendReply)
+    } else if (!isOldMember && isNewMember) { // non-member to member
+      updateNonMemberToMember(ids, fields, db.tables.COUPLE_TABLE, sendReply)
+    } else {
+      updateNonMemberToNonMember(person, sendReply)
+    }
+
     function sendReply (result) {
       console.log(result)
       if (result) {

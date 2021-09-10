@@ -168,7 +168,7 @@ $(document).ready(function () {
     }
     data.person.personId = oldBridePersonId
     data.person = JSON.stringify(data.person)
-    
+
     $.ajax({
       type: 'PUT',
       url: '/update_prenup/bride',
@@ -181,7 +181,18 @@ $(document).ready(function () {
           if(newBrideInfo.isMember) {
             $('#oldbride-info').data('oldbride-memberid', newBrideInfo.memberId)
             $('#oldbride-info').data('oldbride-personid', inputBrideInfo[1])
-            // $('#oldbride-info').data('oldbride-first', inputBrideInfo)
+            $('#oldbride-info').data('oldbride-first', inputBrideInfo[2])
+            $('#oldbride-info').data('oldbride-middle', inputBrideInfo[3])
+            $('#oldbride-info').data('oldbride-last', inputBrideInfo[4])
+            $('#bride_first_name_view').text(inputBrideInfo[2])
+            $('#bride_mid_name_view').text(inputBrideInfo[3])
+            $('#bride_last_name_view').text(inputBrideInfo[4])
+          } else {
+            $('#oldbride-info').data('oldbride-memberid','')
+            $('#oldbride-info').data('oldbride-personid', newBrideInfo.personId)
+            $('#oldbride-info').data('oldbride-first', newBrideInfo.firstName)
+            $('#oldbride-info').data('oldbride-middle', newBrideInfo.midName)
+            $('#oldbride-info').data('oldbride-last', newBrideInfo.lastName)
           }
         }
       }
