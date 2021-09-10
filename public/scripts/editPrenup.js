@@ -146,14 +146,30 @@ $(document).ready(function () {
   })
 
   $('#edit-prenup').click(function() {
-    alert('Submit')
+    // compare date added and planned wedding date
+    const newWeddingDate = new Date($('#wedding_date').val()).toISOString()
+    const prenupId = $('#prenup-info').data('prenuprecord-id')
+
+    $.ajax({
+      type: 'PUT',
+      url: '/update_prenup/date',
+      data: {
+        newWeddingDate: newWeddingDate,
+        prenupId: prenupId
+      },
+      success: function (result) {
+        if (result) {
+          location.href = '/view_prenup/' + prenupId
+        }
+      }
+    })
   })
 
 
   function submitBride() {
     const bridePerson = getDetails($('#bride_member'), null, $('#input_bride_member'), $('#bride_first_name'), $('#bride_mid_name'), $('#bride_last_name'))
-    const oldBrideMemberId = $('#oldbride-info').data('oldbride-memberid')
-    const oldBridePersonId = $('#oldbride-info').data('oldbride-personid')
+    const oldBrideMemberId = $('#bride-info').data('memberid')
+    const oldBridePersonId = $('#bride-info').data('personid')
     const inputBrideInfo = $('#input_bride_member').val().split(', ')
     const prenupRecordId = $('#prenup-info').data('prenuprecord-id')
     const coupleId = $('#prenup-info').data('couple-id')
@@ -167,7 +183,7 @@ $(document).ready(function () {
     }
     data.person.personId = oldBridePersonId
     data.person = JSON.stringify(data.person)
-    console.log(data)
+
     $.ajax({
       type: 'PUT',
       url: '/update_prenup/bride',
@@ -178,20 +194,35 @@ $(document).ready(function () {
           const newBrideInfo = JSON.parse(data.person)
           console.log(newBrideInfo)
           if(newBrideInfo.isMember) {
-            $('#oldbride-info').data('oldbride-memberid', newBrideInfo.memberId)
-            $('#oldbride-info').data('oldbride-personid', inputBrideInfo[1])
-            $('#oldbride-info').data('oldbride-first', inputBrideInfo[2])
-            $('#oldbride-info').data('oldbride-middle', inputBrideInfo[3])
-            $('#oldbride-info').data('oldbride-last', inputBrideInfo[4])
+            $('#bride-info').data('memberid', newBrideInfo.memberId)
+            $('#bride-info').data('personid', newBrideInfo.personId)
+            $('#bride-info').data('first', inputBrideInfo[2])
+            $('#bride-info').data('middle', inputBrideInfo[3])
+            $('#bride-info').data('last', inputBrideInfo[4])
             $('#bride_first_name_view').text(inputBrideInfo[2])
             $('#bride_mid_name_view').text(inputBrideInfo[3])
             $('#bride_last_name_view').text(inputBrideInfo[4])
+
+            // clear modal fields and hide bride modal
+            $('#bride_first_name').text('')
+            $('#bride_mid_name').text('')
+            $('#bride_last_name').text('')
+            $('#brideModal').modal('hide')
           } else {
-            $('#oldbride-info').data('oldbride-memberid','')
-            $('#oldbride-info').data('oldbride-personid', newBrideInfo.personId)
-            $('#oldbride-info').data('oldbride-first', newBrideInfo.firstName)
-            $('#oldbride-info').data('oldbride-middle', newBrideInfo.midName)
-            $('#oldbride-info').data('oldbride-last', newBrideInfo.lastName)
+            $('#bride-info').data('memberid','')
+            $('#bride-info').data('personid', newBrideInfo.personId)
+            $('#bride-info').data('first', newBrideInfo.firstName)
+            $('#bride-info').data('middle', newBrideInfo.midName)
+            $('#bride-info').data('last', newBrideInfo.lastName)
+            $('#bride_first_name_view').text(inputBrideInfo[2])
+            $('#bride_mid_name_view').text(inputBrideInfo[3])
+            $('#bride_last_name_view').text(inputBrideInfo[4])
+
+            // clear modal fields and hide bride modal
+            $('#bride_first_name').text('')
+            $('#bride_mid_name').text('')
+            $('#bride_last_name').text('')
+            $('#brideModal').modal('hide')
           }
         }
       }

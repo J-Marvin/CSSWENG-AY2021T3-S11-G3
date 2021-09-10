@@ -3,22 +3,20 @@
     data-prenuprecord-id="{{bride.record_id}}" 
     data-couple-id="{{bride.couple_id}}"
     data-currentdate="{{bride.date}}"
-    data-oldweddingdate="{{bride.date_of_wedding}}"
-    data-checkbride-member="1"
-    data-checkgroom-member="1"></div>
-<div id="oldbride-info"
-    {{#if (isUndefined bride.member_id)}} data-oldbride-memberid="" {{else}}data-oldbride-memberid="{{bride.member_id}}"{{/if}}
-    data-oldbride-personid="{{bride.person_id}}"
-    data-oldbride-first="{{bride.first_name}}"
-    data-oldbride-middle="{{bride.middle_name}}"
-    data-oldbride-last="{{bride.last_name}}"></div>
-<div id="oldgroom-info"
-    {{#if (isUndefined groom.member_id)}} data-oldgroom-memberid="" {{else}} data-oldgroom-memberid="{{groom.member_id}}"{{/if}}
-    data-oldgroom-personid="{{groom.person_id}}"
-    data-oldgroom-first="{{groom.first_name}}"
-    data-oldgroom-middle="{{groom.middle_name}}"
-    data-oldgroom-last="{{groom.last_name}}"></div>
-{{!--       Edit prenup member connection, route will dynamically change     --}}
+    data-oldweddingdate="{{bride.date_of_wedding}}"></div>
+<div id="bride-info"
+    {{#if (isUndefined bride.member_id)}} data-memberid="" {{else}}data-memberid="{{bride.member_id}}"{{/if}}
+    data-personid="{{bride.person_id}}"
+    data-first="{{bride.first_name}}"
+    data-middle="{{bride.middle_name}}"
+    data-last="{{bride.last_name}}"></div>
+<div id="groom-info"
+    {{#if (isUndefined groom.member_id)}} data-memberid="" {{else}} data-memberid="{{groom.member_id}}"{{/if}}
+    data-personid="{{groom.person_id}}"
+    data-first="{{groom.first_name}}"
+    data-middle="{{groom.middle_name}}"
+    data-last="{{groom.last_name}}"></div>
+
 <form id="prenup_form" method="POST" class="container"> 
   <div class="container" style="padding-left: 25%; padding-right: 20%;">
     <h1 class="my-3">Edit Prenup Form</h1>
@@ -65,7 +63,7 @@
     <div class="row">
       <div class="col">
         <label>Date Added</label>
-        <input type="text" value="{{dateView bride.date}}" class="form-control" disabled>
+        <input type="text" id="date_added" value="{{dateView bride.date}}" class="form-control" disabled>
       </div>
       <div class="col">
         <label for="wedding_date">Planned Wedding Date</label>

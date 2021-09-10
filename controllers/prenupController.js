@@ -799,6 +799,9 @@ const prenupController = {
     const coupleId = req.body.coupleId
     const oldPersonId = req.body.oldPersonId
 
+    console.log('isOldMember = ' + isOldMember)
+    console.log('isNewMember = ' + isNewMember)
+
     const fields = {
       recordId: coupleFields.ID,
       memberRecordField: memberFields.PRENUP_RECORD,
@@ -852,7 +855,16 @@ const prenupController = {
    * @param res - the result to be sent out after processing the request
    */
   putUpdatePrenupDate: function (req, res) {
+    const newWeddingDate = req.body.newWeddingDate
+    const prenupId = req.body.prenupId
+    const cond = new Condition(queryTypes.where)
+    cond.setKeyValue(db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.DATE_OF_WEDDING, prenupId)
 
+    db.update(db.tables.PRENUPTIAL_TABLE, { date_of_wedding: newWeddingDate }, cond, function (result) {
+      if (result !== null) {
+        res.send(true)
+      }
+    })
   },
   /**
    * This function deletes a row in the prenuptial table
