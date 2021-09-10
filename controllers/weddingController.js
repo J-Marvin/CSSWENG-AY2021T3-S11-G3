@@ -985,6 +985,7 @@ const weddingController = {
     } else if (!isOldMember && isNewMember) { // From non member to member
       updateNonMemberToMember(ids, fields, tables.COUPLE_TABLE, sendReply)
     } else {
+      person.personId = ids.oldPersonId
       updateNonMemberToNonMember(person, sendReply)
     }
 
