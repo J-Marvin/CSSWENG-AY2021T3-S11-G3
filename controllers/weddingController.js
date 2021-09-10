@@ -856,13 +856,34 @@ const weddingController = {
    * @param req - the incoming request containing either the query or body
    * @param res - the result to be sent out after processing the request
    */
-  updateWedding: function (req, res) {
-    const data = req.query.data
-    const condition = req.query.condition
+  putUpdateWedding: function (req, res) {
+    const officiant = req.body.officiant
+    const location = req.body.location
+    const solemnizer = req.body.solemnizer
+    const date = req.body.date
+    const contract = req.body.contract
 
-    db.update(db.tables.MEMBER_TABLE, data, condition, function (result) {
-      console.log(result)
-      // insert res.render() or res.redirect()
+    const dataInfo = {}
+    dataInfo[weddingRegFields.WEDDING_OFFICIANT] = officiant
+    dataInfo[weddingRegFields.LOCATION] = location
+    dataInfo[weddingRegFields.SOLEMNIZER] = solemnizer
+    dataInfo[weddingRegFields.DATE_OF_WEDDING] = date
+    dataInfo[weddingRegFields.CONTRACT] = contract
+
+    console.log(req.body)
+    const updateCond = new Condition(queryTypes.where)
+    updateCond.setKeyValue(weddingRegFields.ID, req.body.recordId)
+
+    db.update(tables.WEDDING_TABLE, dataInfo, updateCond, function (result) {
+      if (result === 0) {
+        result = true
+      }
+
+      if (result) {
+        res.send(true)
+      } else {
+        res.send(false)
+      }
     })
   },
   /**
@@ -871,11 +892,52 @@ const weddingController = {
    * @param res - the result to be sent out after processing the request
    */
   deleteWedding: function (req, res) {
-    const condition = req.query.condition
+    const nonMembers = JSON.parse(req.body.nonMembers)
+    const couples = JSON.parse(req.body.couples)
+    const witnesses = JSON.parse(req.body.witnesses)
+    const recordId = req.body.recordId
 
-    db.update(db.tables.MEMBER_TABLE, condition, function (result) {
-      console.log(result)
-      // insert res.render() or res.redirect()
+    const nonMembersCond = new Condition(queryTypes.whereIn)
+    nonMembersCond.setArray(personFields.ID, nonMembers)
+
+    const couplesCond = new Condition(queryTypes.whereIn)
+    couplesCond.setArray(coupleFields.ID, couples)
+
+    const witnessesCond = new Condition(queryTypes.whereIn)
+    witnessesCond.setArray(witnessFields.ID, witnesses)
+
+    const recordCond = new Condition(queryTypes.where)
+    recordCond.setKeyValue(weddingRegFields.ID, recordId)
+
+    // Delete Witnesses
+    db.delete(tables.WITNESS_TABLE, witnessesCond, function (result) {
+      if (result === 0) {
+        result = true
+      }
+
+      if (result) {
+        db.delete(tables.COUPLE_TABLE, couplesCond, function (result) {
+          if (result) {
+            db.delete(tables.PERSON_TABLE, nonMembersCond, function (result) {
+              if (nonMembers.length === 0 || result) {
+                db.delete(tables.WEDDING_TABLE, recordCond, function (result) {
+                  if (result || result === 0) { // Wedding record should be deleted because of FK constraint
+                    res.send(true)
+                  } else {
+                    res.send(false)
+                  }
+                })
+              } else {
+                res.send(false)
+              }
+            })
+          } else {
+            res.send(false)
+          }
+        })
+      } else {
+        res.send(false)
+      }
     })
   },
 
@@ -968,16 +1030,103 @@ const weddingController = {
   putAddWitness: function (req, res) {
     const recordId = req.body.recordId
     const isFemale = req.body.isFemale === 'true'
+    const person = JSON.parse(req.body.person)
 
     const witnessData = {}
     witnessData[witnessFields.WEDDING] = recordId
-    witnessData[witnessFields.TYPE] = isFemale ? 'God'
+    witnessData[witnessFields.TYPE] = isFemale ? 'Godmother' : 'Godfather'
+    witnessData[witnessFields.PERSON] = person.personId
 
     const personInfo = []
+
+    console.log(person)
+    if (!person.isMember) {
+      const personData = {}
+      personData[personFields.FIRST_NAME] = person.firstName
+      personData[personFields.MID_NAME] = person.midName
+      personData[personFields.LAST_NAME] = person.lastName
+
+      personInfo.push(personData)
+    }
+
+    console.log(personInfo)
+
+    db.insert(db.tables.PERSON_TABLE, personInfo, function (result) {
+      if (result) {
+        if (!person.isMember) {
+          witnessData[witnessFields.PERSON] = result[0]
+        }
+
+        db.insert(db.tables.WITNESS_TABLE, witnessData, function (result) {
+          console.log(result)
+          if (result) {
+            const data = {
+              layout: false,
+              type: isFemale ? 'female' : 'male',
+              witness_id: result[0],
+              witness_person_id: witnessData[witnessFields.PERSON],
+              witness_member_id: person.memberId,
+              witness_first_name: person.firstName,
+              witness_mid_name: person.midName,
+              witness_last_name: person.lastName
+            }
+
+            console.log(data)
+
+            res.render('partials/edit-witness', data, function (err, html) {
+              if (err) {
+                res.send(false)
+              } else {
+                res.send(html)
+              }
+            })
+          } else {
+            res.send(false)
+          }
+        })
+      } else {
+        res.send(false)
+      }
+    })
   },
 
   delWitness: function (req, res) {
+    console.log(req.body)
+    const recordId = req.body.recordId
+    const person = JSON.parse(req.body.person)
 
+    const condition = new Condition(queryTypes.where)
+    condition.setKeyValue(witnessFields.ID, recordId)
+
+    let personCondition = null
+
+    console.log(person)
+    if (!person.memberId) {
+      personCondition = new Condition(queryTypes.where)
+      personCondition.setKeyValue(personFields.ID, person.personId)
+    } else {
+      personCondition = new Condition(queryTypes.whereNull)
+      personCondition.setField(personFields.ID)
+    }
+
+    db.delete(tables.WITNESS_TABLE, condition, function (result) {
+      if (result) {
+        db.delete(tables.PERSON_TABLE, personCondition, function (result) {
+          console.log(result)
+
+          if (person.memberId && result === 0) {
+            result = true
+          }
+          if (result) {
+            res.send(true)
+          } else {
+            res.send(false)
+          }
+        })
+      } else {
+        res.send(false)
+      }
+    })
   }
 }
 

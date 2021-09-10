@@ -32,9 +32,9 @@ const createWitness =
   'wedding_id INTEGER,' +
   'type TEXT,' +
   'person_id INTEGER NOT NULL,' +
-  'CONSTRAINT fk_inf_dedications FOREIGN KEY(dedication_id) REFERENCES inf_dedication(dedication_id) ON DELETE SET NULL,' +
-  'CONSTRAINT fk_wedding FOREIGN KEY(wedding_id) REFERENCES wedding_reg(reg_id) ON DELETE SET NULL,' +
-  'FOREIGN KEY(person_id) REFERENCES people(person_id)' +
+  'CONSTRAINT fk_inf_dedications FOREIGN KEY(dedication_id) REFERENCES inf_dedication(dedication_id) ON DELETE CASCADE,' +
+  'CONSTRAINT fk_wedding FOREIGN KEY(wedding_id) REFERENCES wedding_reg(wedding_id) ON DELETE CASCADE,' +
+  'CONSTRAINT fk_person FOREIGN KEY(person_id) REFERENCES people(person_id) ON DELETE CASCADE' +
   ')'
 
 const createAccounts =
@@ -64,9 +64,9 @@ const createWeddingReg =
   'wedding_officiant TEXT,' +
   'solemnizing_officer TEXT,' +
   'contract_no TEXT, ' +
-  'FOREIGN KEY(couple_id) REFERENCES couples(couple_id)' +
-  'FOREIGN KEY(bride_parents_id) REFERENCES couples(couple_id)' +
-  'FOREIGN KEY(groom_parents_id) REFERENCES couples(couple_id)' +
+  'CONSTRAINT fk_couple FOREIGN KEY(couple_id) REFERENCES couples(couple_id) ON DELETE CASCADE,' +
+  'CONSTRAINT fk_couple_bride FOREIGN KEY(bride_parents_id) REFERENCES couples(couple_id) ON DELETE SET NULL,' +
+  'CONSTRAINT fk_couple_groom FOREIGN KEY(groom_parents_id) REFERENCES couples(couple_id) ON DELETE SET NULL' +
   ')'
 
 const createDonationRecord =
@@ -115,10 +115,10 @@ const createMembers =
   'family_members TEXT,' +
   'parents_id INTEGER,' +
   'CONSTRAINT fk_address FOREIGN KEY(address_id) REFERENCES address(address_id) ON DELETE SET NULL,' +
-  'CONSTRAINT fk_bap_reg FOREIGN KEY(bap_reg_id) REFERENCES bap_reg(reg_id)  ON DELETE SET NULL, ' +
-  'CONSTRAINT fk_wedding_reg FOREIGN KEY(wedding_reg_id) REFERENCES wedding_reg(reg_id)  ON DELETE SET NULL,' +
-  'CONSTRAINT fk_prenup FOREIGN KEY(prenup_record_id) REFERENCES pre_nuptial(record_id)  ON DELETE SET NULL,' +
-  'CONSTRAINT fk_parents FOREIGN KEY(parents_id) REFERENCES couple(couple_id)  ON DELETE SET NULL,' +
+  'CONSTRAINT fk_bap_reg FOREIGN KEY(bap_reg_id) REFERENCES bap_reg(reg_id) ON DELETE SET NULL, ' +
+  'CONSTRAINT fk_wedding_reg FOREIGN KEY(wedding_reg_id) REFERENCES wedding_reg(wedding_id) ON DELETE SET NULL,' +
+  'CONSTRAINT fk_prenup FOREIGN KEY(prenup_record_id) REFERENCES pre_nuptial(record_id) ON DELETE SET NULL,' +
+  'CONSTRAINT fk_parents FOREIGN KEY(parents_id) REFERENCES couples(couple_id) ON DELETE SET NULL,' +
   'CONSTRAINT fk_child_ded FOREIGN KEY(child_dedication_id) REFERENCES inf_dedication(dedication_id) ON DELETE SET NULL,' +
   'FOREIGN KEY(person_id) REFERENCES people(person_id)' +
   ')'
