@@ -163,12 +163,11 @@ $(document).ready(function () {
       person: bridePerson,
       recordId: prenupRecordId,
       coupleId: coupleId,
-      oldMemberId: oldBrideMemberId,
       oldPersonId: oldBridePersonId
     }
     data.person.personId = oldBridePersonId
     data.person = JSON.stringify(data.person)
-
+    console.log(data)
     $.ajax({
       type: 'PUT',
       url: '/update_prenup/bride',

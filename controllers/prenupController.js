@@ -794,28 +794,36 @@ const prenupController = {
   putUpdatePrenupBride: function (req, res) {
     const isOldMember = req.body.isOldMember === 'true'
     const person = JSON.parse(req.body.person)
-    const isNewMember = person.isNewMember
-    const recordId = req.body.recordId
+    const isNewMember = person.isMember
+    const prenupRecId = req.body.recordId
     const coupleId = req.body.coupleId
-    const oldMemberId = req.body.oldMemberId
     const oldPersonId = req.body.oldPersonId
 
-    const ids = {
-      oldPersonId: oldPersonId,
-      newPersonId: person ? person.personId : null,
-      recordId: coupleId,
-      updateRecordId: recordId
-    }
     const fields = {
       recordId: coupleFields.ID,
       memberRecordField: memberFields.PRENUP_RECORD,
       recordPersonField: coupleFields.FEMALE
     }
     if (isOldMember && isNewMember) { // member to member
+      const ids = {
+        oldPersonId: oldPersonId,
+        newPersonId: person.personId,
+        recordId: coupleId,
+        updateRecordId: prenupRecId
+      }
       updateMemberToMember(ids, fields, db.tables.COUPLE_TABLE, sendReply)
     } else if (isOldMember && !isNewMember) { // member to non-member
+      const ids = {
+        recordId: coupleId,
+        oldPersonId: oldPersonId
+      }
       updateMemberToNonMember(person, ids, fields, db.tables.COUPLE_TABLE, sendReply)
     } else if (!isOldMember && isNewMember) { // non-member to member
+      const ids = {
+        oldPersonId: oldPersonId,
+        newPersonId: person.personId,
+        recordId: coupleId
+      }
       updateNonMemberToMember(ids, fields, db.tables.COUPLE_TABLE, sendReply)
     } else {
       updateNonMemberToNonMember(person, sendReply)

@@ -25,7 +25,7 @@ const updateController = {
   /**
    * This function updates a record's related person from a member to a non member
    * @param {Object} person - This object contains the following: firstName, midName, lastName
-   * @param {Object} ids - This object contains the following: recordId (the id of the record to be udpated), oldMemberId
+   * @param {Object} ids - This object contains the following: recordId (the id of the record to be udpated), oldPersonId
    * @param {Object} fields - This object contains the following: recordId (the field to be updated), recordPersonField, memberRecordField
    * @param {String} recordTable - The table to update the record
    * @param {Function} callback - The callback function to be called after updating the required information
