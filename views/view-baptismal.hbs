@@ -8,7 +8,7 @@
 
 {{>navbar}}
 
-<div id="prenup_info" style="display: none" data-baptismal="{{record.reg_id}}"></div>
+<div id="baptismal_info" style="display: none" data-baptismal="{{record.reg_id}}"></div>
 <div class="container" style="padding-left: 18%; padding-right: 10%;">
   <h1 class="my-3"> View Baptismal Record </h1>
   <hr>
@@ -68,6 +68,9 @@
   <div class="row my-3">
     <div class="col">
       <a href="/edit_baptismal/{{record.reg_id}}"><button class="btn btn-secondary mb-4">Edit Baptismal Form</button></a>
+      <button id="delete-baptismal" type="button" class="btn btn-danger mb-4">Delete Record</button>
     </div>
   </div>
+  <p id="delete_error" class="error_codes"></p>
   {{/if}}
+  {{> del-record-modal}}
