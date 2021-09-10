@@ -52,7 +52,7 @@
     <hr>
     <div class="row">
       <div class="col">
-        <label for="location">Baptism Location*</label>
+        <label for="location">Baptism Location <span style="color: red;">*</span></label>
         <input type="text" id="location" name="location" class="form-control" value="{{record.place}}">
         <p id="location_error" class="error_codes"> </p>
       </div>
@@ -102,7 +102,7 @@
         <input type="radio" id="officiant_non_member" name="officiant_radio"> Non-member
         <input class="mb-3" type="radio" id="officiant_member" name="officiant_radio" checked> Member
         <div id="officiant_member_div" style="display:block" data-member="{{record.officiant_id}}" data-person="{{record.officiant_person_id}}">
-          <label>Select Officiant*</label>
+          <label>Select Officiant <span style="color: red;">*</span></label>
           <select name="input_officiant_member" id="input_officiant_member">
             {{>dropdown members}}
           </select>

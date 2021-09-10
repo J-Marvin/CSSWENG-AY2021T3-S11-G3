@@ -91,12 +91,12 @@
         <hr>
       </div>
       <div class="col">
-        <label for="officiant">Officiant*</label>
+        <label for="officiant">Officiant <span style="color: red;">*</span></label>
         <input type="text" id="officiant" name="officiant" class="form-control" value="{{officiant}}">
         <p id="officiant_info_error" class="error_codes"> </p>
       </div>
       <div class="col">
-        <label for="address">Address of Dedication*</label>
+        <label for="address">Address of Dedication <span style="color: red;">*</span></label>
         <input type="text" id="address" name="address" class="form-control" value="{{place}}">
         <p id="address_info_error" class="error_codes"> </p>
       </div>
@@ -247,7 +247,7 @@
         <input class="mb-3" name="child_radio" type="radio" id="child_member" checked > Member
       
         <div id="child_member_div" style="display:block">
-          <label>Select Child*</label>
+          <label>Select Child <span style="color: red;">*</span></label>
           <select name="input_child_member" id="input_child_member" >
             {{>dropdown noBapReg}}
           </select>
@@ -294,7 +294,7 @@
         <input type="radio" name="parent1_radio" id="parent1_non_member"> Non Member
         <input class="mb-3" name="parent1_radio" type="radio" id="parent1_member" checked > Member
         <div id="parent1_member_div" style="display:block">
-          <label>Select Parent / Guardian*</label>
+          <label>Select Parent / Guardian <span style="color: red;">*</span></label>
           <select name="input_parent1" id="input_parent1_member">
             {{>dropdown members}}
           </select>
