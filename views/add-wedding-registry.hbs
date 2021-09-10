@@ -3,7 +3,7 @@
   <div class="container" style="padding-left: 20%; padding-right: 20%;">
     <div class="row d-flex justify-content-between">
       <div class="col-8"><h1 class="my-3"> Add Wedding Registry </h1></div>
-      <div class="col-4 align-self-end"><p style="text-align:end; margin:0;">* - required</p></div>
+      <div class="col-4 align-self-end"><p style="text-align:end; margin:0;"> <span style="color: red;">*</span> - required</p></div>
     </div>
     <hr style="margin-top: 0;">
     <div class="row">
@@ -13,7 +13,7 @@
         <input type="radio" name="bride_radio" id="bride_non_member" onclick="display_div_bride('bride_non_member')"> Non-member
         <input class="mb-3" type="radio" name="bride_radio" id="bride_member" onclick="display_div_bride('bride_member')" checked > Member
         <div id="bride_member_div" style="display:block">
-          <label>Select Bride*</label>
+          <label>Select Bride <span style="color: red;">*</span></label>
           <select name="input_bride_member" id="input_bride_member">
             {{>dropdown singleFemales}}
           </select>
@@ -47,7 +47,7 @@
         <input class="mb-3" type="radio" name="radio_groom" id="groom_member" onclick="display_div_groom('groom_member')" checked > Member
 
         <div id="groom_member_div" style="display:block">
-          <label>Select Groom*</label>
+          <label>Select Groom <span style="color: red;">*</span></label>
           <select name="input_groom_member" id="input_groom_member" >
             {{>dropdown singleMales}}
           </select>
@@ -229,7 +229,7 @@
     <fieldset class="form-group">
       <div class="row">
         <div class="col">
-          <label for="location">Wedding Location*</label>
+          <label for="location">Wedding Location <span style="color: red;">*</span></label>
           <input type="text" id="location" name="location" class="form-control">
           <p id="location_error" class="error_codes"> </p>
         </div>
@@ -238,7 +238,7 @@
     <hr>
     <div class="row">
       <div class="col">
-        <label for="current_date">Wedding Date*</label>
+        <label for="current_date">Wedding Date <span style="color: red;">*</span></label>
         <input type="date" id="current_date" name="current_date" class="form-control">
         <p id="current_date_error" class="error_codes"> </p>
       </div>
@@ -247,19 +247,19 @@
     <hr>
     <div class="row">
       <div class="col">
-        <label>Officiant*</label>
+        <label>Officiant <span style="color: red;">*</span></label>
         <input type="text" id="officiant" class="form-control">
         <p id="officiant_info_error" class="error_codes"> </p>
       </div>
       <div class="col">
-        <label>Solemnizing Officer*</label>
+        <label>Solemnizing Officer <span style="color: red;">*</span></label>
         <input type="text" id="solemnizer" class="form-control">
         <p id="solemnizer_info_error" class="error_codes"> </p>
       </div>
     </div>
     <div class="row">
       <div class="col-6">
-        <label>Contract No.*</label>
+        <label>Contract No. <span style="color: red;">*</span></label>
         <input type="text" id="contract" class="form-control">
         <p id="contract_info_error" class="error_codes"> </p>
       </div>

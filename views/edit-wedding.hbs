@@ -11,12 +11,12 @@
     <div class="row">
       <hr>
       <div class="col-4">
-        <label for="current_date">Wedding Date*</label>
+        <label for="current_date">Wedding Date <span style="color: red;">*</span></label>
         <input type="date" id="date" name="date" class="form-control" value="{{date date}}">
         <p id="date_error" class="error_codes"> </p>
       </div>
       <div class="col-4">
-        <label>Contract No.*</label>
+        <label>Contract No. <span style="color: red;">*</span></label>
         <input type="text" id="contract" class="form-control" value="{{contract_no}}">
         <p id="contract_info_error" class="error_codes"> </p>
       </div>
@@ -231,19 +231,19 @@
       <hr>
       <div class="row">
         <div class="col">
-          <label>Officiant*</label>
+          <label>Officiant <span style="color: red;">*</span></label>
           <input type="text" id="officiant" class="form-control" value="{{officiant}}">
           <p id="officiant_info_error" class="error_codes"> </p>
         </div>
         <div class="col">
-          <label>Solemnizing Officer*</label>
+          <label>Solemnizing Officer <span style="color: red;">*</span></label>
           <input type="text" id="solemnizer" class="form-control" value="{{solemnizer}}">
           <p id="solemnizer_info_error" class="error_codes"> </p>
         </div>
       </div>
       <div class="row">
         <div class="col">
-          <label for="location">Wedding Location*</label>
+          <label for="location">Wedding Location <span style="color: red;">*</span></label>
           <input type="text" id="location" name="location" class="form-control" value={{location}}>
           <p id="location_error" class="error_codes"> </p>
         </div>

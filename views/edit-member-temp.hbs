@@ -3,21 +3,24 @@
 <div id="member_info" style="display: none" data-member="{{member.member_id}}" data-address="{{member.address_id}}" data-person="{{member.person_id}}" ></div>
 <form action="/add_member" method="POST" class="container" id="create-member-form">
   <div class="container" style="padding-left: 20%; padding-right: 20%;">
-    <h1 class="my-3"> Edit Member </h1>
-    <hr>
+    <div class="row d-flex justify-content-between">
+      <div class="col-8"><h1 class="my-3"> Edit Member </h1></div>
+      <div class="col-4 align-self-end"><p style="text-align:end; margin:0;"><span style="color: red;">*</span> - required</p></div>
+    </div>
+    <hr style="margin-top: 0;">
     <div class="row">
       <div class="col">
-        <label for="first_name">First Name</label>
+        <label for="first_name">First Name <span style="color: red;">*</span></label>
         <input type="text" id="first_name" name="first_name" class="form-control" value="{{member.first_name}}">
         <p id="first_name_error" class="error_codes">  </p>
       </div>
       <div class="col">
-        <label for="mid_name">Middle Name</label>
+        <label for="mid_name">Middle Name <span style="color: red;">*</span></label>
         <input type="text" id="mid_name" name="middle_name" class="form-control" value="{{member.middle_name}}">
         <p id="mid_name_error" class="error_codes">  </p>
       </div>
       <div class="col">
-        <label for="last_name">Last Name</label>
+        <label for="last_name">Last Name <span style="color: red;">*</span></label>
         <input type="text" id="last_name" name="last_name" class="form-control" value="{{member.last_name}}">
         <p id="last_name_error" class="error_codes">  </p>
       </div>
@@ -52,12 +55,12 @@
     </div>
     <div class="row">
       <div class="col">
-        <label for="birthday">Birthday</label>
+        <label for="birthday">Birthday <span style="color: red;">*</span></label>
         <input type="date" id="birthday" name="birthday" class="form-control" value="{{date member.birthday}}">
         <p id="birthday_error" class="error_codes"> </p>
       </div>
       <div class="col">
-        <label for="occupation">Occupation</label>
+        <label for="occupation">Occupation <span style="color: red;">*</span></label>
         <input type="text" id="occupation" name="occupation" class="form-control" value="{{member.occupation}}">
         <p id="occupation_error" class="error_codes">  </p>
       </div>
@@ -106,7 +109,7 @@
     <fieldset class="form-group">
       <div class="row">
         <div class="col">
-          <label for="adress_line">Address Line 1</label>
+          <label for="adress_line">Address Line 1 <span style="color: red;">*</span></label>
           <input type="text" id="address_line" name="address_line" class="form-control" value="{{member.address_line}}">
           <p id="address_line_error" class="error_codes">  </p>
         </div>
@@ -117,7 +120,7 @@
       </div>
       <div class="row">
         <div class="col">
-          <label for="city" class="mb-4 mb-md-0">City</label>
+          <label for="city" class="mb-4 mb-md-0">City <span style="color: red;">*</span></label>
           <input type="text" id="city" name="city" class="form-control" value="{{member.city}}">
           <p id="city_error" class="error_codes">  </p>
         </div>
@@ -132,7 +135,7 @@
           <input type="text" id="postal_code" name="postal_code" class="form-control" value="{{member.postal_code}}">
         </div>
         <div class="col">
-          <label for="country">Country</label>
+          <label for="country">Country <span style="color: red;">*</span></label>
           <input type="text" id="country" name="country" class="form-control" value="{{member.country}}">
           <p id="country_error" class="error_codes">  </p>
         </div>
