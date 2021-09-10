@@ -238,7 +238,6 @@ const baptismalController = {
 
   putUpdateBaptismalMember: function (req, res) {
     function sendReply (result) {
-      
       if (result) {
         res.send(req.body.recordId)
       } else {
@@ -282,7 +281,6 @@ const baptismalController = {
         memberRecordField: null,
         recordPersonField: bapRegFields.OFFICIANT
       }
-      
       updateMemberToNonMember(person, ids, fields, tables.BAPTISMAL_TABLE, sendReply)
     } else if (!isOldMember && isNewMember) { // From non member to member
       const fields = {
@@ -297,7 +295,6 @@ const baptismalController = {
     }
 
     function sendReply (result) {
-      
       if (result) {
         res.send(JSON.stringify(result))
       } else {
@@ -347,7 +344,7 @@ const baptismalController = {
       if (result) {
         const nonMembers = []
         result = result[0]
-        
+
         if (result.member_id === null) {
           nonMembers.push(result.person_id)
         }

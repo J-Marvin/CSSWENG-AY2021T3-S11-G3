@@ -624,7 +624,6 @@ $(document).ready(function() {
             console.log(personInfo)
             
             if (isEdit) {
-              $(infoField).css('background-color', 'blue')
               let firstNameField = trigger.find('.witness_first_name_view')
               let midNameField = trigger.find('.witness_mid_name_view')
               let lastNameField = trigger.find('.witness_last_name_view')

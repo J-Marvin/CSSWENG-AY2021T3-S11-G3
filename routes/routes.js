@@ -94,6 +94,9 @@ app.put('/update_wedding/witness', weddingController.putUpdateWitness)
 app.put('/update_wedding/add_witness', weddingController.putAddWitness)
 app.put('/update_wedding', weddingController.putUpdateWedding)
 
+app.put('/update_dedication/child', dedicationController.putUpdateChild)
+app.put('/update_dedication/guardian', dedicationController.putUpdateGuardian)
+
 app.delete('/delete_observation', observationController.delObservation)
 app.delete('/delete_church', churchController.delChurch)
 app.delete('/delete_baptismal', baptismalController.delBaptismal)

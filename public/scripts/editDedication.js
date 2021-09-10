@@ -11,6 +11,12 @@ $(document).ready(function() {
   const selectWitnessGMother = $('#input_witness_gmother_member').selectize()
   const selectWitnessGFather = $('#input_witness_gfather_member').selectize()
   const currPerson = {}
+  const editKeys = {
+    editGodmother: 1,
+    editGodfather: 2,
+    addGodmother: 3,
+    addGodfather: 4
+  }
 
   initSelectize()
   initSelectizeOptions()
@@ -21,12 +27,14 @@ $(document).ready(function() {
   $('#edit_child').click(function() {
     currPerson.memberId = $('#infant_info').data('member')
     currPerson.personId = $('#infant_info').data('person')
-    currPerson.firstName = $('#infant_info').data('first-name')
-    currPerson.midName = $('#infant_info').data('mid-name')
-    currPerson.lastName = $('#infant_info').data('last-name')
+    currPerson.firstName = $('#child_first_name_view').text()
+    currPerson.midName = $('#child_mid_name_view').text()
+    currPerson.lastName = $('#child_last_name_view').text()
     currPerson.doesExist = true
 
-    if (currPerson.memberId !== null && currPerson.personId !== '') {
+    console.log(currPerson)
+
+    if (currPerson.memberId !== null && currPerson.memberId !== '') {
       $('#child_member').prop('checked', true)
       $('#child_member_div').show()
       $('#child_non_member_div').hide()
@@ -47,12 +55,12 @@ $(document).ready(function() {
   $('#edit_parent_one').click(function() {
     currPerson.memberId = $('#parent1_info').data('member')
     currPerson.personId = $('#parent1_info').data('person')
-    currPerson.firstName = $('#parent1_info').data('first-name')
-    currPerson.midName = $('#parent1_info').data('mid-name')
-    currPerson.lastName = $('#parent1_info').data('last-name')
+    currPerson.firstName = $('#parent1_first_name_view').text()
+    currPerson.midName = $('#parent1_mid_name_view').text()
+    currPerson.lastName = $('#parent1_last_name_view').text()
     currPerson.doesExist = true
 
-    if (currPerson.memberId !== null && currPerson.personId !== '') {
+    if (currPerson.memberId !== null && currPerson.memberId !== '') {
       $('#parent1_member').prop('checked', true)
       $('#parent1_member_div').show()
       $('#parent1_non_member_div').hide()
@@ -73,10 +81,10 @@ $(document).ready(function() {
   $('#edit_parent_two').click(function() {
     currPerson.memberId = $('#parent2_info').data('member')
     currPerson.personId = $('#parent2_info').data('person')
-    currPerson.firstName = $('#parent2_info').data('first-name')
-    currPerson.midName = $('#parent2_info').data('mid-name')
-    currPerson.lastName = $('#parent2_info').data('last-name')
-    currPerson.doesExist = !(currPerson.firstName === '' || currPerson.firstName === null)
+    currPerson.firstName = $('#parent2_first_name_view').text()
+    currPerson.midName = $('#parent2_mid_name_view').text()
+    currPerson.lastName = $('#parent2_last_name_view').text()
+    currPerson.doesExist = !(currPerson.firstName === 'N/A')
 
     if (currPerson.memberId !== null && currPerson.personId !== '') {
       $('#parent2_member').prop('checked', true)
@@ -100,16 +108,80 @@ $(document).ready(function() {
   })
 
   $('#save_edit_child').click(function() {
+    const button = this
+
+    $(button).prop('disabled', true)
+
+    if(validateChild()) {
+      let memberId = currPerson.memberId
+      let personId = currPerson.personId
+      let newPersonInfo = $('#input_child_member').val().split(', ')
+
+      const data = {
+        isOldMember: memberId !== null && memberId !== '',
+        person: getDetails($('#child_member'), null, $('#input_child_member'), $('#child_first_name'), $('#child_mid_name'), $('#child_last_name')),
+        recordId: $('#dedication_info').data('dedicationid'),
+        oldMemberId: memberId,
+        oldPersonId: personId
+      }
+
+      if (!data.person.isMember) {
+        data.person.personId = newPersonInfo[1]
+      }
+
+      data.person = JSON.stringify(data.person)
+
+      $.ajax({
+        type: 'PUT',
+        url: '/update_dedication/child',
+        data: data,
+        success: function (result) {
+          if (result) { 
+            const personInfo = JSON.parse(data.person)
+            let infoField = $('#infant_info')
+            let firstNameField = $('#child_first_name_view')
+            let midNameField = $('#child_mid_name_view')
+            let lastNameField = $('#child_last_name_view')
+            if (personInfo.isMember) {
+              $(infoField).data('member', personInfo.memberId)
+              $(infoField).data('person', newPersonInfo[1])
+              $(firstNameField).html(newPersonInfo[2])
+              $(midNameField).html(newPersonInfo[3])
+              $(lastNameField).html(newPersonInfo[4])
+            } else {
+              $(infoField).data('member', null)
+              $(infoField).data('person', result)
+              $(firstNameField).html(personInfo.firstName)
+              $(midNameField).html(personInfo.midName)
+              $(lastNameField).html(personInfo.lastName)
+            }
+
+            if (memberId) {
+              selectizeEnable(getValue(memberId))
+            }
+          } else {
+            alert("SOMETHING WENT WRONG")
+          }
+          $('#editChild').modal('hide')
+          $(button).prop('disabled', false)
+        }
+      })
+    } else {
+      $(button).prop('disabled', false)
+    }
+  })
+
+  function validateChild() {
     var firstName = validator.isEmpty($('#child_first_name').val())
-    var midName =  validator.isEmpty($('#child_mid_name').val())
+    var midName = validator.isEmpty($('#child_mid_name').val())
     var lastName = validator.isEmpty($('#child_last_name').val())
 
     var inputChild = validator.isEmpty($('#input_child_member').val())
 
     var isValid = true;
 
-    if($('#child_non_member').is(':checked')) {
-      if(firstName || midName || lastName) {
+    if ($('#child_non_member').is(':checked')) {
+      if (firstName || midName || lastName) {
         isValid = false
         $('#child_info_error').text('Accomplish all fields')
       } else {
@@ -117,8 +189,8 @@ $(document).ready(function() {
       }
     }
 
-    if($('#child_member').is(':checked')) {
-      if(inputChild) {
+    if ($('#child_member').is(':checked')) {
+      if (inputChild) {
         isValid = false
         $('#child_info_error').text('Accomplish all fields')
       } else {
@@ -126,26 +198,86 @@ $(document).ready(function() {
       }
     }
 
-    if(isValid) {
-      submitChild()
+    return isValid
+  }
+
+  $('#save_edit_parent_one').click(function() {
+
+    const button = this
+
+    $(button).prop('disabled', true)
+
+    if (validateParent1()) {
+      let memberId = currPerson.memberId
+      let personId = currPerson.personId
+      let newPersonInfo = $('#input_parent1_member').val().split(', ')
+
+      const data = {
+        isOldMember: memberId !== null && memberId !== '',
+        person: getDetails($('#parent1_member'), null, $('#input_parent1_member'), $('#parent1_first_name'), $('#parent1_mid_name'), $('#parent1_last_name')),
+        coupleId: $('#dedication_info').data('parentsid'),
+        oldMemberId: memberId,
+        oldPersonId: personId,
+        isFirstGuardian: true
+      }
+
+      if (!data.person.isMember) {
+        data.person.personId = newPersonInfo[1]
+      }
+
+      data.person = JSON.stringify(data.person)
+
+      $.ajax({
+        type: 'PUT',
+        url: '/update_dedication/guardian',
+        data: data,
+        success: function (result) {
+          if (result) {
+            const personInfo = JSON.parse(data.person)
+            let infoField = $('#parent1_info')
+            let firstNameField = $('#parent1_first_name_view')
+            let midNameField = $('#parent1_mid_name_view')
+            let lastNameField = $('#parent1_last_name_view')
+            if (personInfo.isMember) {
+              $(infoField).data('member', personInfo.memberId)
+              $(infoField).data('person', newPersonInfo[1])
+              $(firstNameField).html(newPersonInfo[2])
+              $(midNameField).html(newPersonInfo[3])
+              $(lastNameField).html(newPersonInfo[4])
+            } else {
+              $(infoField).data('member', null)
+              $(infoField).data('person', result)
+              $(firstNameField).html(personInfo.firstName)
+              $(midNameField).html(personInfo.midName)
+              $(lastNameField).html(personInfo.lastName)
+            }
+
+            if (memberId) {
+              selectizeEnable(getValue(memberId))
+            }
+          } else {
+            alert("SOMETHING WENT WRONG")
+          }
+          $('#editParentOne').modal('hide')
+          $(button).prop('disabled', false)
+        }
+      })
+    } else {
+      $(button).prop('disabled', false)
     }
   })
 
-  function submitChild () {
-    alert('Add child')
-  }  
-
-  $('#save_edit_parent_one').click(function() {
+  function validateParent1() {
     var firstName = validator.isEmpty($('#parent1_first_name').val())
-    var midName =  validator.isEmpty($('#parent1_mid_name').val())
+    var midName = validator.isEmpty($('#parent1_mid_name').val())
     var lastName = validator.isEmpty($('#parent1_last_name').val())
 
     var inputParent = validator.isEmpty($('#input_parent1_member').val())
 
     var isValid = true;
 
-    if($('#parent1_non_member').is(':checked')) {
-      if(firstName || midName || lastName) {
+    if ($('#parent1_non_member').is(':checked')) {
+      if (firstName || midName || lastName) {
         isValid = false
         $('#parent1_info_error').text('Accomplish all fields')
       } else {
@@ -153,8 +285,8 @@ $(document).ready(function() {
       }
     }
 
-    if($('#parent1_member').is(':checked')) {
-      if(inputParent) {
+    if ($('#parent1_member').is(':checked')) {
+      if (inputParent) {
         isValid = false
         $('#parent1_info_error').text('Accomplish all fields')
       } else {
@@ -162,26 +294,95 @@ $(document).ready(function() {
       }
     }
 
-    if(isValid) {
-      submitParentOne()
+    return isValid
+  }
+
+
+  $('#save_edit_parent_two').click(function() {
+
+    const button = this
+
+    $(button).prop('disabled', true)
+
+    if (validateParent2()) {
+      let memberId = currPerson.memberId
+      let personId = currPerson.personId
+      let newPersonInfo = $('#input_parent2_member').val().split(', ')
+
+      const data = {
+        isOldMember: memberId !== null && memberId !== '',
+        person: getDetails($('#parent2_member'), $('#parent2_none'), $('#input_parent2_member'), $('#parent2_first_name'), $('#parent2_mid_name'), $('#parent2_last_name')),
+        coupleId: $('#dedication_info').data('parentsid'),
+        oldMemberId: memberId,
+        oldPersonId: personId,
+        isFirstGuardian: false
+      }
+
+      if (data.person !== null) {
+        if (data.person.isMember) {
+          data.person.personId = newPersonInfo[1]
+        }
+      }
+
+      data.person = JSON.stringify(data.person)
+
+      $.ajax({
+        type: 'PUT',
+        url: '/update_dedication/guardian',
+        data: data,
+        success: function (result) {
+          if (result) {
+            const personInfo = JSON.parse(data.person)
+            let infoField = $('#parent2_info')
+            let firstNameField = $('#parent2_first_name_view')
+            let midNameField = $('#parent2_mid_name_view')
+            let lastNameField = $('#parent2_last_name_view')
+            if (personInfo === null) {
+              $(infoField).data('member', null)
+              $(infoField).data('person', null)
+              $(firstNameField).text('N/A')
+              $(midNameField).text('N/A')
+              $(lastNameField).text('N/A')
+            } else if (personInfo.isMember) {
+              $(infoField).data('member', personInfo.memberId)
+              $(infoField).data('person', newPersonInfo[1])
+              $(firstNameField).html(newPersonInfo[2])
+              $(midNameField).html(newPersonInfo[3])
+              $(lastNameField).html(newPersonInfo[4])
+            } else {
+              $(infoField).data('member', null)
+              $(infoField).data('person', result)
+              $(firstNameField).html(personInfo.firstName)
+              $(midNameField).html(personInfo.midName)
+              $(lastNameField).html(personInfo.lastName)
+            }
+
+            if (memberId) {
+              selectizeEnable(getValue(memberId))
+            }
+          } else {
+            alert("SOMETHING WENT WRONG")
+          }
+          $('#editParentTwo').modal('hide')
+          $(button).prop('disabled', false)
+        }
+      })
+    } else {
+      $(button).prop('disabled', false)
     }
   })
 
-  function submitParentOne () {
-    alert('Add parent one')
-  }  
-
-  $('#save_edit_parent_two').click(function() {
+  function validateParent2() {
     var firstName = validator.isEmpty($('#parent2_first_name').val())
-    var midName =  validator.isEmpty($('#parent2_mid_name').val())
+    var midName = validator.isEmpty($('#parent2_mid_name').val())
     var lastName = validator.isEmpty($('#parent2_last_name').val())
 
     var inputParent = validator.isEmpty($('#input_parent2_member').val())
 
     var isValid = true;
 
-    if($('#parent2_non_member').is(':checked')) {
-      if(firstName || midName || lastName) {
+    if ($('#parent2_non_member').is(':checked')) {
+      if (firstName || midName || lastName) {
         isValid = false
         $('#parent2_info_error').text('Accomplish all fields')
       } else {
@@ -189,23 +390,16 @@ $(document).ready(function() {
       }
     }
 
-    if($('#parent2_member').is(':checked')) {
-      if(inputParent) {
+    if ($('#parent2_member').is(':checked')) {
+      if (inputParent) {
         isValid = false
         $('#parent2_info_error').text('Accomplish all fields')
       } else {
         $('#parent2_info_error').text('')
       }
     }
-
-    if(isValid) {
-      submitParentTwo()
-    }
-  })
-
-  function submitParentTwo () {
-    alert('Add parent Two')
-  }  
+    return isValid
+  }
 
   function validateFields() {
     var isValid = true
@@ -216,259 +410,150 @@ $(document).ready(function() {
 
   // bind function to child non-member
   $('#child_non_member').change(function() {
-    $(this).attr('disabled', true)
-    $('#child_member').removeAttr('disabled')
-    $('#child_member').prop('checked', false)
     $('#child_member_div').hide()
     $('#child_non_member_div').show()
 
-    selectizeEnable($('#input_child_member').val())
-    $(selectChild)[0].selectize.setValue('0')
+    if (currPerson.memberId !== null && currPerson.memberId !== '') {
+      $('#child_first_name').val('')
+      $('#child_mid_name').val('')
+      $('#child_last_name').val('')
+    } else {
+      $('#child_first_name').val(currPerson.firstName)
+      $('#child_mid_name').val(currPerson.midName)
+      $('#child_last_name').val(currPerson.lastName)
+    }
   })
 
   // bind function to child member
   $('#child_member').change(function () {
-    $(this).attr('disabled', true)
-    $('#child_non_member').removeAttr('disabled')
-    $('#child_non_member').prop('checked', false)
     $('#child_member_div').show()
     $('#child_non_member_div').hide()
-    $('#child_first_name').val('')
-    $('#child_mid_name').val('')
-    $('#child_last_name').val('')
+    
+    let value = '0'
+
+    if (currPerson.memberId !== null && currPerson.memberId !== '') {
+      value = getValue(currPerson.memberId)
+    }
+    $(selectChild)[0].selectize.setValue(value)
   })
 
   $('#witness_gmother_non_member').change(function() {
-    $(this).attr('disabled', true)
-    $('#witness_gmother_member').removeAttr('disabled')
-    $('#witness_gmother_member').prop('checked', false)
     $('#witness_gmother_member_div').hide()
     $('#witness_gmother_non_member_div').show()
-    selectizeEnable($('#input_witness_gmother_member').val())
-    $(selectWitnessGMother)[0].selectize.setValue('0')
+
+    if (currPerson.memberId !== null && currPerson.memberId !== '') {
+      $('#witness_gmother_first_name').val('')
+      $('#witness_gmother_mid_name').val('')
+      $('#witness_gmother_last_name').val('')
+    } else {
+      $('#witness_gmother_first_name').val(currPerson.firstName)
+      $('#witness_gmother_mid_name').val(currPerson.midName)
+      $('#witness_gmother_last_name').val(currPerson.lastName)
+    }
   })
 
   // bind function to witness member
   $('#witness_gmother_member').change(function () {
-    $(this).attr('disabled', true)
-    $('#witness_gmother_non_member').removeAttr('disabled')
-    $('#witness_gmother_non_member').prop('checked', false)
     $('#witness_gmother_non_member_div').hide()
     $('#witness_gmother_member_div').show()
-    $('#witness_gmother_first_name').val('')
-    $('#witness_gmother_mid_name').val('')
-    $('#witness_gmother_last_name').val('')
+
+    let value = '0'
+
+    if (currPerson.memberId !== null && currPerson.memberId !== '') {
+      value = getValue(currPerson.memberId)
+    }
+    $(selectWitnessGMother)[0].selectize.setValue(value)
   })
 
   $('#witness_gfather_non_member').change(function() {
-    $(this).attr('disabled', true)
-    $('#witness_gfather_member').removeAttr('disabled')
-    $('#witness_gfather_member').prop('checked', false)
     $('#witness_gfather_member_div').hide()
     $('#witness_gfather_non_member_div').show()
-    selectizeEnable($('#input_witness_gfather_member').val())
-    $(selectWitnessGFather)[0].selectize.setValue('0')
+
+    if (currPerson.memberId !== null && currPerson.memberId !== '') {
+      $('#witness_gfather_first_name').val('')
+      $('#witness_gfather_mid_name').val('')
+      $('#witness_gfather_last_name').val('')
+    } else {
+      $('#witness_gfather_first_name').val(currPerson.firstName)
+      $('#witness_gfather_mid_name').val(currPerson.midName)
+      $('#witness_gfather_last_name').val(currPerson.lastName)
+    }
   })
 
   // bind function to witness member
   $('#witness_gfather_member').change(function () {
-    $(this).attr('disabled', true)
-    $('#witness_gfather_non_member').removeAttr('disabled')
-    $('#witness_gfather_non_member').prop('checked', false)
     $('#witness_gfather_non_member_div').hide()
     $('#witness_gfather_member_div').show()
-    $('#witness_gfather_first_name').val('')
-    $('#witness_gfather_mid_name').val('')
-    $('#witness_gfather_last_name').val('')
+
+    let value = '0'
+
+    if (currPerson.memberId !== null && currPerson.memberId !== '') {
+      value = getValue(currPerson.memberId)
+    }
+    $(selectWitnessGFather)[0].selectize.setValue(value)
   })
 
   // bind function to parent1 non member
   $('#parent1_non_member').change(function() {
-    $(this).attr('disabled', true)
-    $('#parent1_member').removeAttr('disabled')
-    $('#parent1_member').prop('checked', false)
     $('#parent1_member_div').hide()
     $('#parent1_non_member_div').show()
-    selectizeEnable($('#input_parent1_member').val())
-    $(selectParent1)[0].selectize.setValue('0')
+
+    if (currPerson.memberId !== null && currPerson.memberId !== '') {
+      $('#parent1_first_name').val('')
+      $('#parent1_mid_name').val('')
+      $('#parent1_last_name').val('')
+    } else {
+      $('#parent1_first_name').val(currPerson.firstName)
+      $('#parent1_mid_name').val(currPerson.midName)
+      $('#parent1_last_name').val(currPerson.lastName)
+    }
   })
 
   // bind function to parent1 member
   $('#parent1_member').change(function () {
-    $('#parent1_non_member').removeAttr('disabled')
-    $('#parent1_non_member').prop('checked', false)
     $('#parent1_non_member_div').hide()
     $('#parent1_member_div').show()
-    $('#parent1_first_name').val('')
-    $('#parent1_mid_name').val('')
-    $('#parent1_last_name').val('')
+
+    let value = '0'
+    if (currPerson.memberId !== null && currPerson.memberId !== '') {
+      value = getValue(currPerson.memberId)
+    }
+    $(selectParent1)[0].selectize.setValue(value)
   })
 
   $('#parent2_non_member').change(function () {
-    $(this).attr('disabled', true)
-    $('#parent2_member').removeAttr('disabled')
-    $('#parent2_member').prop('checked', false)
     $('#parent2_member_div').hide()
     $('#parent2_non_member_div').show()
 
-    selectizeEnable($('#input_parent2_member').val())
-    $(selectParent2)[0].selectize.setValue('0')
-
-    $('#parent2_none').removeAttr('disabled')
-    $('#parent2_none').prop('checked', false)
+    if (currPerson.memberId !== null && currPerson.memberId !== '' ) {
+      $('#parent2_first_name').val('')
+      $('#parent2_mid_name').val('')
+      $('#parent2_last_name').val('')
+    } else if (currPerson.personId !== null && currPerson.personId !== ''){
+      $('#parent2_first_name').val(currPerson.firstName)
+      $('#parent2_mid_name').val(currPerson.midName)
+      $('#parent2_last_name').val(currPerson.lastName)
+    } else {
+      $('#parent2_first_name').val('')
+      $('#parent2_mid_name').val('')
+      $('#parent2_last_name').val('')
+    }
   })
 
   $('#parent2_member').change(function () {
     $('#parent2_non_member_div').hide()
     $('#parent2_member_div').show()
 
+    let value = '0'
+    if (currPerson.memberId !== null && currPerson.memberId !== '') {
+      value = getValue(currPerson.memberId)
+    }
+    $(selectParent2)[0].selectize.setValue(value)
   })
 
   $('#parent2_none').change(function () {
-    $(this).attr('disabled', true)
-    $('#parent2_non_member').removeAttr('disabled')
-    $('#parent2_member').removeAttr('disabled')
-
-    $('#parent2_non_member').prop('checked', false)
-    $('#parent2_member').prop('checked', false)
-
     $('#parent2_non_member_div').hide()
     $('#parent2_member_div').hide()
-
-    $('#parent2_first_name').val('')
-    $('#parent2_mid_name').val('')
-    $('#parent2_last_name').val('')
-
-    selectizeEnable($('#input_parent2_member').val())
-    $(selectParent2)[0].selectize.setValue('0')
-    $('#parent2_info_error').text('')
-  })
-
-  $('#add_gmother_witness').click(function (){
-    var isValid = true
-
-    var witnessMember = $('#input_witness_gmother_member').val() === '0' || $('#input_witness_gmother_member').val() === ''
-    var witnessNonMember = $('#witness_gmother_first_name').val() === '' || $('#witness_gmother_mid_name').val() === '' || $('#witness_gmother_last_name').val() === ''
-    var witnessMiddleLen = $('#witness_gmother_mid_name').val().length === 1
-
-    if (witnessMember && witnessNonMember) {
-      isValid = false
-      $('#witness_gmother_modal_info_error').text('Please accomplish all fields')
-    } else {
-      $('#witness_gmother_modal_info_error').text('')
-    }
-    if (!witnessNonMember && !witnessMiddleLen) {
-      isValid = false
-      $('#witness_gmother_modal_middle_len_error').text('Middle Initial should only contain 1 letter')
-    } else {
-      $('#witness_gmother_modal_middle_len_error').text('')
-    }
-
-    if (witnessNonMember === false && validateMidInitial($('#witness_gmother_mid_name').val()) === false) {
-      isValid = false
-      $('#witness_gmother_modal_middle_error').text('Middle Initial should only range from letters A-Z')
-    } else {
-      $('#witness_gmother_modal_middle_error').text('')
-    }
-
-    if(isValid) {
-      var witnessName
-      if(witnessMember) {
-        const firstName = $('#witness_gmother_first_name').val()
-        const midName = $('#witness_gmother_mid_name').val()
-        const lastName = $('#witness_gmother_last_name').val()
-        $('#gmother_witness_row').append(
-          "<div class='col-4' style='margin-bottom: 1em;'>" +
-            "<div class='card witness female'><div class='card-body'>" + 
-              "<p class='card-text'>" + 
-                "<span class='first_name'>" + firstName + "</span> " + 
-                "<span class='mid_name'>" + midName + "</span> " + 
-                "<span class='last_name'>" + lastName + "</span>" + 
-              "</p>" +
-              "<button type='button' class='fas fa-trash delGMotherWitnessBtn '></button>" + 
-            "</div>" + 
-          "</div>" + 
-        "</div>")
-      } else {
-        const witness_info = $('#input_witness_gmother_member').val()
-        witnessName = witness_info.replace(/\d+/g, '')
-        witnessName = witnessName.replace(/,/g, '')
-        $('#gmother_witness_row').append("<div class='col-4' style='margin-bottom: 1em;'><div class='card witness' data-member-info=\"" + witness_info + "\"><div class='card-body'><p class='card-text'>" + witnessName + "</p><button type='button' class='fas fa-trash delGMotherWitnessBtn '></button> </div></div></div>")
-      }
-      $('#witness_gmother_info_error').text('')
-      $('#witness_gfather_info_error').text('')
-      $('#witness_gmother_first_name').val('')
-      $('#witness_gmother_mid_name').val('')
-      $('#witness_gmother_last_name').val('')
-      GMotherWitnessCtr++;
-      
-      addedWitness = true
-      $('#GMotherWitnessModal').modal('hide');
-    }
-  })
-
-  $('#add_gfather_witness').click(function (){
-    var isValid = true
-
-    var witnessMember = $('#input_witness_gfather_member').val() === '0' || $('#input_witness_gfather_member').val() === ''
-    var witnessNonMember = $('#witness_gfather_first_name').val() === '' || $('#witness_gfather_mid_name').val() === '' || $('#witness_gfather_last_name').val() === ''
-    var witnessMiddleLen = $('#witness_gfather_mid_name').val().length === 1
-
-    if (witnessMember && witnessNonMember) {
-      isValid = false
-      $('#witness_gfather_modal_info_error').text('Please accomplish all fields')
-    } else {
-      $('#witness_gfather_modal_info_error').text('')
-    }
-    if (!witnessNonMember && !witnessMiddleLen) {
-      isValid = false
-      $('#witness_gfather_modal_middle_len_error').text('Middle Initial should only contain 1 letter')
-    } else {
-      $('#witness_gfather_modal_middle_len_error').text('')
-    }
-
-    if (witnessNonMember === false && validateMidInitial($('#witness_gfather_mid_name').val()) === false) {
-      isValid = false
-      $('#witness_gfather_modal_middle_error').text('Middle Initial should only range from letters A-Z')
-    } else {
-      $('#witness_gfather_modal_middle_error').text('')
-    }
-
-
-    if(isValid) {
-      var witnessName
-      if(witnessMember) {
-        const firstName = $('#witness_gfather_first_name').val()
-        const midName = $('#witness_gfather_mid_name').val()
-        const lastName = $('#witness_gfather_last_name').val()
-        $('#gfather_witness_row').append(
-          "<div class='col-4' style='margin-bottom: 1em;'>" +
-            "<div class='card witness male'><div class='card-body'>" + 
-              "<p class='card-text'>" + 
-                "<span class='first_name'>" + firstName + "</span> " + 
-                "<span class='mid_name'>" + midName + "</span> " + 
-                "<span class='last_name'>" + lastName + "</span>" + 
-              "</p>" +
-              "<button type='button' class='fas fa-trash delGFatherWitnessBtn '></button>" + 
-            "</div>" + 
-          "</div>" + 
-        "</div>")
-      } else {
-        const witness_info = $('#input_witness_gfather_member').val()
-        witnessName = witness_info.replace(/\d+/g, '')
-        witnessName = witnessName.replace(/,/g, '')
-        $('#gfather_witness_row').append("<div class='col-4' style='margin-bottom: 1em;'><div class='card witness male' data-member-info=\"" + witness_info + "\"><div class='card-body'><p class='card-text'>" + witnessName + "</p><button type='button' class='fas fa-trash delGFatherWitnessBtn '></button> </div></div></div>")
-      }
-      $('#witness_gfather_info_error').text('')
-      $('#witness_gmother_info_error').text('')
-      $('#witness_gfather_first_name').val('')
-      $('#witness_gfather_mid_name').val('')
-      $('#witness_gfather_last_name').val('')
-      GFatherWitnessCtr++;
-      
-      addedWitness = true
-      $('#GFatherWitnessModal').modal('hide');
-    }
   })
 
   $('#add_gmother_button').click(function() {
@@ -491,23 +576,23 @@ $(document).ready(function() {
     }
   })
 
-  $(document).on('click', '.delGMotherWitnessBtn', function () {
-    const member = $(this).closest('.card').attr('data-member-info')
-    if (member !== null) {
-      selectizeEnable(member)
-    }
-    $(this).closest('.col-4').remove()
-    GMotherWitnessCtr--
-  })
+  // $(document).on('click', '.delGMotherWitnessBtn', function () {
+  //   const member = $(this).closest('.card').attr('data-member-info')
+  //   if (member !== null) {
+  //     selectizeEnable(member)
+  //   }
+  //   $(this).closest('.col-4').remove()
+  //   GMotherWitnessCtr--
+  // })
 
-  $(document).on('click', '.delGFatherWitnessBtn', function () {
-    const member = $(this).closest('.card').attr('data-member-info')
-    if (member !== null) {
-      selectizeEnable(member)
-    }
-    $(this).closest('.col-4').remove()
-    GFatherWitnessCtr--
-  })
+  // $(document).on('click', '.delGFatherWitnessBtn', function () {
+  //   const member = $(this).closest('.card').attr('data-member-info')
+  //   if (member !== null) {
+  //     selectizeEnable(member)
+  //   }
+  //   $(this).closest('.col-4').remove()
+  //   GFatherWitnessCtr--
+  // })
 
 
   // $('.modal').on('hide.bs.modal', resetModal)

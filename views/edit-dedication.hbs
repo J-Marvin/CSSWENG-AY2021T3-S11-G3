@@ -7,22 +7,13 @@
   data-officiant="{{officiant}}"></div>
 <div id="infant_info" 
   data-person ="{{infant_person_id}}"
-  data-member = "{{infant_member_id}}"
-  data-first-name="{{infant_first_name}}"
-  data-middle-name="{{infant_middle_name}}"
-  data-last-name="{{infant_last_name}}"></div>
+  data-member = "{{infant_member_id}}"></div>
 <div id="parent1_info"
   data-person="{{guardianOne_person_id}}"
-  data-member="{{guardianOne_member_id}}"
-  data-first-name="{{guardianOne_first_name}}"
-  data-middle-name="{{guardianOne_middle_name}}"
-  data-last-name="{{guardianOne_last_name}}"></div>
+  data-member="{{guardianOne_member_id}}"></div>
 <div id="parent2_info"
   data-person="{{guardianTwo_person_id}}"
-  data-member="{{guardianTwo_member_id}}"
-  data-first-name="{{guardianTwo_first_name}}"
-  data-middle-name="{{guardianTwo_middle_name}}"
-  data-last-name="{{guardianTwo_last_name}}"></div>
+  data-member="{{guardianTwo_member_id}}"></div>
 
 <form id="edit_dedication_form" class="container">
   <div class="container" style="padding-left: 25%; padding-right: 20%;">
@@ -42,15 +33,15 @@
       <legend>Child Name</legend>
       <div class="col">
         <u for="first_name">First Name</u>
-        <p>{{infant_first_name}}</p>
+        <p><span id="child_first_name_view" >{{infant_first_name}}</span></p>
       </div>
       <div class="col">
         <u for="mid_name">Middle Initial</u>
-        <p>{{infant_middle_name}}</p>
+        <p><span id="child_mid_name_view" >{{infant_middle_name}}</span></p>
       </div>
       <div class="col">
         <u for="last_name">Last Name</u>
-        <p>{{infant_last_name}}</p>
+        <p><span id="child_last_name_view" >{{infant_last_name}}</span></p>
       </div>
       <div class="col d-flex justify-content-end">
         <button type="button" class="btn btn-secondary mb-4" id="edit_child">Edit</button>
@@ -62,15 +53,15 @@
       <legend>Parent / Guardian </legend>
       <div class="col">
         <u for="first_name">First Name</u>
-        <p>{{guardianOne_first_name}}</p>
+        <p><span id="parent1_first_name_view">{{guardianOne_first_name}}</span></p>
       </div>
       <div class="col">
         <u for="mid_name">Middle Initial</u>
-        <p>{{guardianOne_mid_name}}</p>
+        <p><span id="parent1_mid_name_view">{{guardianOne_mid_name}}</span></p>
       </div>
       <div class="col">
         <u for="last_name">Last Name</u>
-        <p>{{guardianOne_last_name}}</p>
+        <p><span id="parent1_last_name_view">{{guardianOne_last_name}}</span></p>
       </div>
       <div class="col d-flex justify-content-end">
         <button type="button" class="btn btn-secondary mb-4" id="edit_parent_one">Edit</button>
@@ -81,15 +72,15 @@
       <legend>Parent / Guardian</legend>
       <div class="col">
         <u for="first_name">First Name</u>
-        <p>{{guardianTwo_first_name}}</p>
+        <p><span id="parent2_first_name_view">{{#if guardianTwo_first_name}}{{guardianTwo_first_name}}{{else}}N/A{{/if}}</span></p>
       </div>
       <div class="col">
         <u for="mid_name">Middle Initial</u>
-        <p>{{guardianTwo_mid_name}}</p>
+        <p><span id="parent2_mid_name_view">{{#if guardianTwo_mid_name}}{{guardianTwo_mid_name}}{{else}}N/A{{/if}}</span></p>
       </div>
       <div class="col">
         <u for="last_name">Last Name</u>
-        <p>{{guardianTwo_last_name}}</p>
+        <p><span id="parent2_last_name_view">{{#if guardianTwo_last_name}}{{guardianTwo_last_name}}{{else}}N/A{{/if}}</span></p>
       </div>
       <div class="col d-flex justify-content-end">
         <button type="button" class="btn btn-secondary mb-4" id="edit_parent_two">Edit</button>
@@ -158,8 +149,8 @@
       <div class="modal-body">
         <div class="row">
           <div class="col">
-            <input type="radio" id="witness_gmother_non_member"> Non Member
-            <input class="mb-3" type="radio" id="witness_gmother_member" checked > Member
+            <input type="radio" name="gmother_radio" id="witness_gmother_non_member"> Non Member
+            <input class="mb-3" name="gmother_radio" type="radio" id="witness_gmother_member" checked > Member
             <div id="witness_gmother_member_div" style="display:block">
               <label>Select Witness</label>
               <select name="input_witness" id="input_witness_gmother_member">
@@ -206,8 +197,8 @@
       <div class="modal-body">
         <div class="row">
           <div class="col">
-            <input type="radio" id="witness_gfather_non_member"> Non Member
-            <input class="mb-3" type="radio" id="witness_gfather_member" checked > Member
+            <input type="radio" name="gfather_radio" id="witness_gfather_non_member"> Non Member
+            <input class="mb-3" name="gfather_radio" type="radio" id="witness_gfather_member" checked > Member
             <div id="witness_gfather_member_div" style="display:block">
               <label>Select Witness</label>
               <select name="input_witness" id="input_witness_gfather_member">
@@ -252,8 +243,8 @@
         <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <input type="radio" id="child_non_member"> Non-member
-        <input class="mb-3" type="radio" id="child_member" checked > Member
+        <input type="radio" name="child_radio" id="child_non_member"> Non-member
+        <input class="mb-3" name="child_radio" type="radio" id="child_member" checked > Member
       
         <div id="child_member_div" style="display:block">
           <label>Select Child*</label>
@@ -300,8 +291,8 @@
         <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <input type="radio" id="parent1_non_member"> Non Member
-        <input class="mb-3" type="radio" id="parent1_member" checked > Member
+        <input type="radio" name="parent1_radio" id="parent1_non_member"> Non Member
+        <input class="mb-3" name="parent1_radio" type="radio" id="parent1_member" checked > Member
         <div id="parent1_member_div" style="display:block">
           <label>Select Parent / Guardian*</label>
           <select name="input_parent1" id="input_parent1_member">
@@ -346,9 +337,9 @@
         <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <input type="radio" id="parent2_non_member"> Non-member
-        <input class="mb-3" type="radio" id="parent2_member" checked > Member
-        <input type="radio" id="parent2_none"> None
+        <input type="radio" name="parent2_radio" id="parent2_non_member"> Non-member
+        <input class="mb-3" name="parent2_radio" type="radio" id="parent2_member" checked > Member
+        <input type="radio" name="parent2_radio" id="parent2_none"> None
 
         <div id="parent2_member_div" style="display:block">
           <label>Select Parent / Guardian</label>

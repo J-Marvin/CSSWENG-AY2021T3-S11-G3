@@ -6,7 +6,7 @@ const memberFields = require('../models/members')
 const infDedFields = require('../models/infantDedication')
 const { Condition, queryTypes } = require('../models/condition')
 const { sendError } = require('../controllers/errorController')
-const { updateMemberToMember, updateMemberToNonMember, updateNonMemberToMember, updateNonMemberToNonMember } = require('./updateController')
+const { updateMemberToMember, updateMemberToNonMember, updateNonMemberToMember, updateNonMemberToNonMember, updateNoneToMember, updateNoneToNonMember, updateMemberToNone, updateNonMemberToNone } = require('./updateController')
 const { tables } = require('../models/db')
 
 const dedicationController = {
@@ -529,19 +529,85 @@ const dedicationController = {
   },
 
   putUpdateChild: function (req, res) {
+    const isOldMember = req.body.isOldMember === 'true'
+    const person = JSON.parse(req.body.person)
+    const isNewMember = person.isMember
+    const ids = {
+      recordId: req.body.recordId,
+      oldPersonId: req.body.oldPersonId,
+      newPersonId: person.personId
+    }
+    const fields = {
+      recordId: infDedFields.ID,
+      memberRecordField: memberFields.CHILD_DEDICATION,
+      recordPersonField: infDedFields.PERSON
+    }
 
+    if (isOldMember && isNewMember) { // From member to member
+      updateMemberToMember(ids, fields, tables.INFANT_TABLE, sendReply)
+    } else if (isOldMember && !isNewMember) { // From member to non member
+      updateMemberToNonMember(person, ids, fields, tables.INFANT_TABLE, sendReply)
+    } else if (!isOldMember && isNewMember) { // From non member to member
+      updateNonMemberToMember(ids, fields, tables.INFANT_TABLE, sendReply)
+    } else {
+      updateNonMemberToNonMember(person, sendReply)
+    }
+
+    function sendReply (result) {
+      if (result) {
+        res.send(JSON.stringify(result))
+      } else {
+        res.send(false)
+      }
+    }
   },
 
-  putUpdateGuardianeOne: function (req, res) {
+  putUpdateGuardian: function (req, res) {
+    const isFirstGuardian = req.body.isFirstGuardian === 'true'
+    const isOldMember = req.body.isOldMember === 'true'
+    const person = JSON.parse(req.body.person)
+    const isNewMember = person === null ? false : person.isMember
+    const isNewNone = person === null
+    const isOldNone = !req.body.oldPersonId && !req.body.oldMemberId
+    const ids = {
+      recordId: req.body.coupleId,
+      oldPersonId: req.body.oldPersonId,
+      newPersonId: person ? person.personId : null
+    }
+    const fields = {
+      recordId: coupleFields.ID,
+      memberRecordField: null,
+      recordPersonField: isFirstGuardian ? coupleFields.FEMALE : coupleFields.MALE
+    }
+    console.log(person)
 
-  },
+    if (isOldNone && !isNewNone && isNewMember) {
+      updateNoneToMember(ids, fields, tables.COUPLE_TABLE, sendReply)
+    } else if (isOldNone && !isNewNone && !isNewMember) {
+      updateNoneToNonMember(person, ids, fields, tables.COUPLE_TABLE, sendReply)
+    } else if (isOldMember && isNewNone) {
+      updateMemberToNone(ids, fields, tables.COUPLE_TABLE, sendReply)
+    } else if (!isOldMember && isNewNone) {
+      updateNonMemberToNone(ids, fields, tables.COUPLE_TABLE, sendReply)
+    } else if (isOldMember && isNewMember) { // From member to member
+      updateMemberToMember(ids, fields, tables.COUPLE_TABLE, sendReply)
+    } else if (isOldMember && !isNewMember) { // From member to non member
+      updateMemberToNonMember(person, ids, fields, tables.COUPLE_TABLE, sendReply)
+    } else if (!isOldMember && isNewMember) { // From non member to member
+      updateNonMemberToMember(ids, fields, tables.COUPLE_TABLE, sendReply)
+    } else {
+      person.personId = ids.oldPersonId
+      updateNonMemberToNonMember(person, sendReply)
+    }
 
-  putUpdateGuardianeTwo: function (req, res) {
-
-  },
-
-  putUpdateOfficiant: function (req, res) {
-
+    function sendReply (result) {
+      console.log(result)
+      if (result) {
+        res.send(JSON.stringify(result))
+      } else {
+        res.send(false)
+      }
+    }
   },
 
   putUpdateDedication: function (req, res) {
