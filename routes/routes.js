@@ -96,6 +96,8 @@ app.put('/update_wedding', weddingController.putUpdateWedding)
 
 app.put('/update_dedication/child', dedicationController.putUpdateChild)
 app.put('/update_dedication/guardian', dedicationController.putUpdateGuardian)
+app.put('/update_dedication/witness', dedicationController.putUpdateWitness)
+app.put('/update_dedication/add_witness', dedicationController.putAddWitness)
 
 app.delete('/delete_observation', observationController.delObservation)
 app.delete('/delete_church', churchController.delChurch)
@@ -103,6 +105,7 @@ app.delete('/delete_baptismal', baptismalController.delBaptismal)
 app.delete('/delete_wedding', weddingController.deleteWedding)
 app.delete('/delete_wedding/witness', weddingController.delWitness)
 app.delete('/delete_member', memberController.deleteMember)
+app.delete('/delete_dedication/witness', dedicationController.delWitness)
 // app.delete('/delete_prenup', prenupController.delete)
 
 module.exports = app

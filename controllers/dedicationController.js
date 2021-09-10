@@ -670,6 +670,144 @@ const dedicationController = {
       offsets.parent1 += 1
       offsets.child += 1
     }
+  },
+
+
+  putUpdateWitness: function (req, res) {
+    const isOldMember = req.body.isOldMember === 'true'
+    const person = JSON.parse(req.body.person)
+    const isNewMember = person.isMember
+    const ids = {
+      recordId: req.body.witnessId,
+      oldPersonId: req.body.oldPersonId,
+      newPersonId: person.personId
+    }
+    const fields = {
+      recordId: witnessFields.ID,
+      memberRecordField: null, // No need to edit in witness
+      recordPersonField: witnessFields.PERSON
+    }
+
+    if (isOldMember && isNewMember) { // From member to member
+      updateMemberToMember(ids, fields, tables.WITNESS_TABLE, sendReply)
+    } else if (isOldMember && !isNewMember) { // From member to non member
+      updateMemberToNonMember(person, ids, fields, tables.WITNESS_TABLE, sendReply)
+    } else if (!isOldMember && isNewMember) { // From non member to member
+      updateNonMemberToMember(ids, fields, tables.WITNESS_TABLE, sendReply)
+    } else {
+      updateNonMemberToNonMember(person, sendReply)
+    }
+
+    function sendReply(result) {
+      console.log(result)
+      if (result) {
+        res.send(JSON.stringify(result))
+      } else {
+        res.send(false)
+      }
+    }
+  },
+
+  putAddWitness: function (req, res) {
+    const recordId = req.body.recordId
+    const isFemale = req.body.isFemale === 'true'
+    const person = JSON.parse(req.body.person)
+
+    const witnessData = {}
+    witnessData[witnessFields.DEDICATION] = recordId
+    witnessData[witnessFields.TYPE] = isFemale ? 'Godmother' : 'Godfather'
+    witnessData[witnessFields.PERSON] = person.personId
+
+    const personInfo = []
+
+    console.log(person)
+    if (!person.isMember) {
+      const personData = {}
+      personData[personFields.FIRST_NAME] = person.firstName
+      personData[personFields.MID_NAME] = person.midName
+      personData[personFields.LAST_NAME] = person.lastName
+
+      personInfo.push(personData)
+    }
+
+    console.log(personInfo)
+
+    db.insert(db.tables.PERSON_TABLE, personInfo, function (result) {
+      if (result) {
+        if (!person.isMember) {
+          witnessData[witnessFields.PERSON] = result[0]
+        }
+
+        db.insert(db.tables.WITNESS_TABLE, witnessData, function (result) {
+          console.log(result)
+          if (result) {
+            const data = {
+              layout: false,
+              type: isFemale ? 'female' : 'male',
+              witness_id: result[0],
+              witness_person_id: witnessData[witnessFields.PERSON],
+              witness_member_id: person.memberId,
+              witness_first_name: person.firstName,
+              witness_mid_name: person.midName,
+              witness_last_name: person.lastName
+            }
+
+            console.log(data)
+
+            res.render('partials/edit-witness', data, function (err, html) {
+              if (err) {
+                res.send(false)
+              } else {
+                res.send(html)
+              }
+            })
+          } else {
+            res.send(false)
+          }
+        })
+      } else {
+        res.send(false)
+      }
+    })
+  },
+
+  delWitness: function (req, res) {
+    console.log(req.body)
+    const recordId = req.body.recordId
+    const person = JSON.parse(req.body.person)
+
+    const condition = new Condition(queryTypes.where)
+    condition.setKeyValue(witnessFields.ID, recordId)
+
+    let personCondition = null
+
+    console.log(person)
+    if (!person.memberId) {
+      personCondition = new Condition(queryTypes.where)
+      personCondition.setKeyValue(personFields.ID, person.personId)
+    } else {
+      personCondition = new Condition(queryTypes.whereNull)
+      personCondition.setField(personFields.ID)
+    }
+
+    db.delete(tables.WITNESS_TABLE, condition, function (result) {
+      if (result) {
+        db.delete(tables.PERSON_TABLE, personCondition, function (result) {
+          console.log(result)
+
+          if (person.memberId && result === 0) {
+            result = true
+          }
+          if (result) {
+            res.send(true)
+          } else {
+            res.send(false)
+          }
+        })
+      } else {
+        res.send(false)
+      }
+    })
   }
 }
 

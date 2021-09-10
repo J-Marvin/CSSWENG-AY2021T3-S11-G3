@@ -503,7 +503,7 @@ $(document).ready(function() {
       validation = validateMaleWitness
     }
     console.log(url)
-    saveWitness($('#save_female_witness_btn'), validation, isFemale, isEdit, url)
+    saveWitness(this, validation, isFemale, isEdit, url)
   })
 
   $('#confirm_delete_witness').click(function () {

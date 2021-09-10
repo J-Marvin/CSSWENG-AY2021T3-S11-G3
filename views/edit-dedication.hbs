@@ -114,7 +114,7 @@
     </div>
     <div class="row" id="gmother_witness_row">
       {{#each witnessFemale}}
-        {{>edit-witness this}}
+        {{>edit-witness this=this type="female"}}
       {{/each}}
     </div>
       <p id="witness_gmother_info_error" class="error_codes"> </p>
@@ -131,7 +131,7 @@
     </div>
     <div class="row" id="gfather_witness_row">
       {{#each witnessMale}}
-        {{>edit-witness this}}
+        {{>edit-witness this=this type="male"}}
       {{/each}}
     </div>
       <p id="witness_gfather_info_error" class="error_codes"> </p>
@@ -143,7 +143,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add Godmother</h5>
+        <h5 class="modal-title" id="exampleModalLabel"><span id="godmother_type">Add</span> Godmother</h5>
         <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -191,7 +191,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add Godfather</h5>
+        <h5 class="modal-title" id="exampleModalLabel"><span id="gfather_type">Add</span> Godfather</h5>
         <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -373,6 +373,27 @@
       <div class="modal-footer">
         <button type="button" id="cancel_modal" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary" id="save_edit_parent_two">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="confirmDeleteWitnessModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"> Delete Witness</h5>
+        <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row" id="delete_info">
+          <p>Are you sure? This action will be saved automatically and cannot be undone!</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="cancel_modal" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger" id="confirm_delete_witness">Delete Witness</button>
       </div>
     </div>
   </div>

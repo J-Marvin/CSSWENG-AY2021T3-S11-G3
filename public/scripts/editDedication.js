@@ -10,13 +10,14 @@ $(document).ready(function() {
   const selectParent2 = $('#input_parent2_member').selectize()
   const selectWitnessGMother = $('#input_witness_gmother_member').selectize()
   const selectWitnessGFather = $('#input_witness_gfather_member').selectize()
-  const currPerson = {}
+  let currPerson = {}
   const editKeys = {
-    editGodmother: 1,
-    editGodfather: 2,
-    addGodmother: 3,
-    addGodfather: 4
+    editGodMother: 1,
+    editGodFather: 2,
+    addGodMother: 3,
+    addGodFather: 4
   }
+  let trigger = null
 
   initSelectize()
   initSelectizeOptions()
@@ -297,7 +298,6 @@ $(document).ready(function() {
     return isValid
   }
 
-
   $('#save_edit_parent_two').click(function() {
 
     const button = this
@@ -560,7 +560,9 @@ $(document).ready(function() {
     if(GMotherWitnessCtr === 6) {
       $('#witness_gmother_info_error').text('You have reached the maximum number of witnesses')
     } else {
-      $('#GMotherWitnessModal').modal('show')
+      currPerson = {}
+      modalType = editKeys.addGodMother
+      initFemaleWitnessModal('Add')
       $('#witness_gmother_info_error').text('')
       isMaleModal = false
     }
@@ -570,12 +572,332 @@ $(document).ready(function() {
     if(GFatherWitnessCtr === 6) {
       $('#witness_gfather_info_error').text('You have reached the maximum number of witnesses')
     } else {
-      $('#GFatherWitnessModal').modal('show')
+      currPerson = {}
+      modalType = editKeys.addGodFather
+      initMaleWitnessModal('Add')
       $('#witness_gfather_info_error').text('')
       isMaleModal = true
     }
   })
 
+  $(document).on('click', '.edit_female_witness_btn', function () {
+    const person = $(this).closest('.witness')
+    modalType = editKeys.editGodMother
+    currPerson.firstName = $(person).find('.witness_first_name_view').text().trim()
+    currPerson.midName = $(person).find('.witness_mid_name_view').text().trim()
+    currPerson.lastName = $(person).find('.witness_last_name_view').text().trim()
+    currPerson.doesExist = true
+    currPerson.memberId = $(person).data('member')
+    currPerson.personId = $(person).data('person')
+    currPerson.witnessId = $(person).data('record')
+    currPerson.canBeNone = false
+    isFemale = true
+    trigger = person
+
+    initFemaleWitnessModal('Edit')
+  })
+
+  $(document).on('click', '.edit_male_witness_btn', function () {
+    const person = $(this).closest('.witness')
+    modalType = editKeys.editGodFather
+    currPerson.firstName = $(person).find('.witness_first_name_view').text().trim()
+    currPerson.midName = $(person).find('.witness_mid_name_view').text().trim()
+    currPerson.lastName = $(person).find('.witness_last_name_view').text().trim()
+    currPerson.doesExist = true
+    currPerson.memberId = $(person).data('member')
+    currPerson.personId = $(person).data('person')
+    currPerson.witnessId = $(person).data('record')
+    currPerson.canBeNone = false
+    isFemale = false
+    trigger = person
+
+    initMaleWitnessModal('Edit')
+  })
+
+
+  // On Save Female Witnesses Click
+  $('#add_gmother_witness, #add_gfather_witness').click(function () {
+    $(this).prop('disabled', true)
+    let url = ''
+    let isFemale = true
+    let isEdit = true
+    if (modalType === editKeys.editGodMother || modalType === editKeys.editGodFather) {
+      url = '/update_dedication/witness'
+    }
+    else if (modalType === editKeys.addGodMother || modalType === editKeys.addGodFather) {
+      url = '/update_dedication/add_witness'
+      isEdit = false
+    }
+
+    if (modalType === editKeys.editGodFather || modalType === editKeys.addGodFather) {
+      isFemale = false
+    }
+
+    // let validation = validateFemaleWitness
+    let validation = () => true
+
+    // if (!isFemale) {
+    //   validation = validateMaleWitness
+    // }
+    console.log(url)
+
+    saveWitness(this, validation, isFemale, isEdit, url)
+  })
+
+  $('#confirm_delete_witness').click(function () {
+    const button = this
+    $(button).prop('disabled', true)
+    let isFemale = true
+
+    if (modalType === editKeys.deleteGodFather) {
+      isFemale = false
+    }
+
+    let errorModal = null
+
+    if (isFemale) {
+      errorModal = $('#witness_gmother_info_error')
+    } else {
+      errorModal = $('#witness_gfather_info_error')
+    }
+
+    const data = {
+      recordId: $(trigger).data('record'),
+      person: {
+        memberId: $(trigger).data('member'),
+        personId: $(trigger).data('person')
+      }
+    }
+
+    data.person = JSON.stringify(data.person)
+    $.ajax({
+      type: 'DELETE',
+      url: '/delete_wedding/witness',
+      data: data,
+      success: function (result) {
+        console.log(result)
+        if (result) {
+          $(trigger).parent().remove()
+
+          if (isFemale) {
+            GMotherWitnessCtr--
+          } else {
+            GFatherWitnessCtr--
+          }
+
+          errorModal.text('')
+
+          selectizeEnable(getValue($(trigger).data('member')))
+        } else {
+          errorModal.text('Error deleting witness')
+        }
+        $('#confirmDeleteWitnessModal').modal('hide')
+        $(button).prop('disabled', false)
+      }
+    })
+  })
+
+  $(document).on('click', '.delete_male_witness_btn', function () {
+    trigger = $(this).closest('.witness')
+    modalType = editKeys.deleteGodFather
+    $('#confirmDeleteWitnessModal').modal('show')
+  })
+
+  $(document).on('click', '.delete_female_witness_btn', function () {
+    trigger = $(this).closest('.witness')
+    modalType = editKeys.deleteGodMother
+    $('#confirmDeleteWitnessModal').modal('show')
+  })
+
+  function saveWitness(button, validation, isFemale, isEdit, url) {
+    $(button).prop('disabled', true)
+
+    if (validation()) {
+      let infoSelect = null
+      let memberCheckField = null
+      let memberSelectField = null
+      let firstNameFormField = null
+      let midNameFormField = null
+      let lastNameFormField = null
+      let modal = null
+
+
+      if (isFemale) {
+        infoSelect = $('#input_witness_gmother_member')
+        memberCheckField = $('#witness_gmother_member')
+        memberSelectField = $('#input_witness_gmother_member')
+        firstNameFormField = $('#witness_gmother_first_name')
+        midNameFormField = $('#witness_gmother_mid_name')
+        lastNameFormField = $('#witness_gmother_last_name')
+        modal = $('#GMotherWitnessModal')
+      } else {
+        infoSelect = $('#input_witness_gfather_member')
+        memberCheckField = $('#witness_gfather_member')
+        memberSelectField = $('#input_witness_gfather_member')
+        firstNameFormField = $('#witness_gfather_first_name')
+        midNameFormField = $('#witness_gfather_mid_name')
+        lastNameFormField = $('#witness_gfather_last_name')
+        modal = $('#GFatherWitnessModal')
+      }
+
+      let memberId = currPerson.memberId
+      let personId = currPerson.personId
+      let info = $(infoSelect).val().split(', ')
+
+      console.log(info)
+
+      const data = {
+        isOldMember: memberId !== null && memberId !== undefined && memberId !== '',
+        person: getDetails(memberCheckField, null, memberSelectField, firstNameFormField, midNameFormField, lastNameFormField),
+        recordId: $('#dedication_info').data('dedicationid'),
+        witnessId: currPerson.witnessId,
+        oldMemberId: memberId,
+        oldPersonId: personId,
+        isFemale: isFemale
+      }
+
+      let infoField = trigger
+
+      if (data.person !== null)
+        data.person.personId = info[1]
+
+      data.person = JSON.stringify(data.person)
+      $.ajax({
+        type: 'PUT',
+        url: url,
+        data: data,
+        success: function (result) {
+          console.log(result)
+          if (result) {
+            const personInfo = JSON.parse(data.person)
+            console.log(personInfo)
+
+            if (isEdit) {
+              let firstNameField = trigger.find('.witness_first_name_view')
+              let midNameField = trigger.find('.witness_mid_name_view')
+              let lastNameField = trigger.find('.witness_last_name_view')
+              if (personInfo.isMember) {
+                $(infoField).data('member', personInfo.memberId)
+                $(infoField).data('person', info[1])
+                $(firstNameField).html(info[2])
+                $(midNameField).html(info[3])
+                $(lastNameField).html(info[4])
+              } else {
+                $(infoField).data('member', null)
+                $(infoField).data('person', result)
+                $(firstNameField).html(personInfo.firstName)
+                $(midNameField).html(personInfo.midName)
+                $(lastNameField).html(personInfo.lastName)
+              }
+
+              if (memberId) {
+                selectizeEnable(getValue(memberId))
+              }
+            } else {
+              let div = null
+              if (isFemale) {
+                div = $('#gmother_witness_row')
+                GMotherWitnessCtr++
+              } else {
+                div = $('#gfather_witness_row')
+                GFatherWitnessCtr++
+              }
+
+              const witness_info = $.parseHTML(result)
+
+              if (personInfo.isMember) {
+                $(witness_info).find('.witness_first_name_view').text(info[2])
+                $(witness_info).find('.witness_mid_name_view').text(info[3])
+                $(witness_info).find('.witness_last_name_view').text(info[4])
+              }
+
+              $(div).append(witness_info)
+            }
+
+            $(modal).modal('hide')
+          } else {
+            $('#create_error').text('Error Editing Godmother')
+          }
+          $(button).prop('disabled', false)
+        }
+      })
+    } else {
+      $(button).prop('disabled', false)
+    }
+  }
+
+  $(document).on('click', '.delete_male_witness_btn', function () {
+    trigger = $(this).closest('.witness')
+    modalType = editKeys.deleteGodFather
+    $('#confirmDeleteWitnessModal').modal('show')
+  })
+
+  $(document).on('click', '.delete_female_witness_btn', function () {
+    trigger = $(this).closest('.witness')
+    modalType = editKeys.deleteGodMother
+    $('#confirmDeleteWitnessModal').modal('show')
+  })
+
+  function initMaleWitnessModal(type) {
+    $('#gfather_type').text(type)
+
+    if (modalType === editKeys.addGodFather) {
+      $('#witness_gfather_member').prop('checked', true)
+      $('#witness_gfather_member_div').show()
+      $('#witness_gfather_non_member_div').hide()
+      selectWitnessGFather[0].selectize.setValue('0')
+    } else if (modalType === editKeys.editGodFather) {
+      if (currPerson.memberId !== '' && currPerson.memberId !== null && currPerson.memberId !== undefined) {
+        $('#witness_gfather_member').prop('checked', true)
+        $('#witness_gfather_member_div').show()
+        $('#witness_gfather_non_member_div').hide()
+        const id = currPerson.memberId
+        const value = $('.option[data-value^="' + id + '"]').data('value')
+        selectWitnessGFather[0].selectize.setValue(value)
+        selectizeDisable(value)
+      } else if (currPerson.personId !== '' && currPerson.personId !== null && currPerson.personId !== undefined) {
+        $('#witness_gfather_non_member').prop('checked', true)
+        $('#witness_gfather_non_member_div').show()
+        $('#witness_gfather_member_div').hide()
+        $('#witness_gfather_first_name').val(currPerson.firstName)
+        $('#witness_gfather_mid_name').val(currPerson.midName)
+        $('#witness_gfather_last_name').val(currPerson.lastName)
+      }
+    }
+
+    $('#GFatherWitnessModal').modal('show')
+  }
+
+
+  function initFemaleWitnessModal(type) {
+    $('#gmother_type').text(type)
+
+    if (modalType === editKeys.addGodMother) {
+      $('#witness_gmother_member').prop('checked', true)
+      $('#witness_gmother_member_div').show()
+      $('#witness_gmother_non_member_div').hide()
+      selectWitnessGMother[0].selectize.setValue('0')
+    } else if (modalType === editKeys.editGodMother) {
+      if (currPerson.memberId !== '' && currPerson.memberId !== null && currPerson.memberId !== undefined) {
+        $('#witness_gmother_member').prop('checked', true)
+        $('#witness_gmother_member_div').show()
+        $('#witness_gmother_non_member_div').hide()
+        const id = currPerson.memberId
+        const value = $('.option[data-value^="' + id + '"]').data('value')
+        selectWitnessGMother[0].selectize.setValue(value)
+        selectizeDisable(value)
+      } else if (currPerson.personId !== '' && currPerson.personId !== null && currPerson.personId !== undefined) {
+        $('#witness_gmother_non_member').prop('checked', true)
+        $('#witness_gmother_non_member_div').show()
+        $('#witness_gmother_member_div').hide()
+        $('#witness_gmother_first_name').val(currPerson.firstName)
+        $('#witness_gmother_mid_name').val(currPerson.midName)
+        $('#witness_gmother_last_name').val(currPerson.lastName)
+      }
+    }
+
+    $('#GMotherWitnessModal').modal('show')
+  }
   // $(document).on('click', '.delGMotherWitnessBtn', function () {
   //   const member = $(this).closest('.card').attr('data-member-info')
   //   if (member !== null) {
