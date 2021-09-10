@@ -7,6 +7,7 @@ const infDedFields = require('../models/infantDedication')
 const { Condition, queryTypes } = require('../models/condition')
 const { sendError } = require('../controllers/errorController')
 const { updateMemberToMember, updateMemberToNonMember, updateNonMemberToMember, updateNonMemberToNonMember } = require('./updateController')
+const { tables } = require('../models/db')
 
 const dedicationController = {
   /**
@@ -159,7 +160,6 @@ const dedicationController = {
               data.witnessMale = data.witnesses.filter((witness) => { return witness.type === 'Godfather' })
               // Filters all Godmothers
               data.witnessFemale = data.witnesses.filter((witness) => { return witness.type === 'Godmother' })
-              console.log(data)
               res.render('view-dedication', data)
             }
           })
@@ -374,7 +374,6 @@ const dedicationController = {
                               }
 
                               db.update(db.tables.MEMBER_TABLE, memberUpdateData, updateConditions, function (result) {
-                                console.log(result)
                                 if (result === 0) {
                                   result = true
                                 }
@@ -383,7 +382,6 @@ const dedicationController = {
                                   req.session.editId = dedicationId
                                   res.send(JSON.stringify(dedicationId))
                                 } else {
-                                  console.log('error updating into Child Dedication Member table')
                                   res.send(false)
                                 }
                               })
@@ -499,7 +497,7 @@ const dedicationController = {
           data.canSee = false
         }
         data.styles = ['forms']
-        data.scripts = ['editDedication']
+        data.scripts = ['editDedication', 'edit']
         db.find(db.tables.WITNESS_TABLE, witnessCond, witnessJoin, witnessColumns, function (result) {
           if (result) {
             data.witnesses = result
@@ -507,8 +505,21 @@ const dedicationController = {
             data.witnessMale = data.witnesses.filter((witness) => { return witness.type === 'Godfather' })
             // Filters all Godmothers
             data.witnessFemale = data.witnesses.filter((witness) => { return witness.type === 'Godmother' })
-            console.log(data)
-            res.render('edit-dedication', data)
+            db.find(db.tables.MEMBER_TABLE, [], {
+              tableName: tables.PERSON_TABLE,
+              sourceCol: tables.PERSON_TABLE + '.' + personFields.ID,
+              destCol: db.tables.MEMBER_TABLE + '.' + memberFields.PERSON
+            }, '*', function (result) {
+              if (result) {
+                data.members = result
+                data.males = result.filter(elem => elem[memberFields.SEX] === 'Male')
+                data.females = result.filter(elem => elem[memberFields.SEX] === 'Female')
+                data.noBapReg = result.filter(elem => elem[memberFields.BAPTISMAL_REG] === null || elem[memberFields.BAPTISMAL_REG] === data.dedication_id)
+                res.render('edit-dedication', data)
+              } else {
+                sendError(req, res, 404)
+              }
+            })
           }
         })
       } else {

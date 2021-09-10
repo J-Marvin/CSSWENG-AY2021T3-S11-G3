@@ -53,7 +53,7 @@ const baptismalController = {
 
       db.find(db.tables.BAPTISMAL_TABLE, condition, joinTables, columns, function (result) {
         if (result.length > 0) {
-          console.log(result)
+          
           const data = {
             scripts: ['deleteBaptismal'],
             styles: ['view'],
@@ -148,7 +148,7 @@ const baptismalController = {
 
       db.find(db.tables.BAPTISMAL_TABLE, condition, joinTables, columns, function (result) {
         if (result.length > 0) {
-          console.log(result)
+          
           const data = {
             scripts: ['editBaptismal', 'edit'],
             styles: ['view'],
@@ -209,10 +209,10 @@ const baptismalController = {
     db.insert(db.tables.PERSON_TABLE, peopleInfo, function (result) {
       if (result) {
         if (!officiant.isMember) {
-          console.log('test')
+          
           data[bapRegFields.OFFICIANT] = result[0]
         }
-        console.log(data)
+        
         db.insert(db.tables.BAPTISMAL_TABLE, data, function (result) {
           if (result) {
             bapId = result[0]
@@ -238,7 +238,7 @@ const baptismalController = {
 
   putUpdateBaptismalMember: function (req, res) {
     function sendReply (result) {
-      console.log(result)
+      
       if (result) {
         res.send(req.body.recordId)
       } else {
@@ -282,7 +282,7 @@ const baptismalController = {
         memberRecordField: null,
         recordPersonField: bapRegFields.OFFICIANT
       }
-      console.log(person)
+      
       updateMemberToNonMember(person, ids, fields, tables.BAPTISMAL_TABLE, sendReply)
     } else if (!isOldMember && isNewMember) { // From non member to member
       const fields = {
@@ -297,7 +297,7 @@ const baptismalController = {
     }
 
     function sendReply (result) {
-      console.log(result)
+      
       if (result) {
         res.send(JSON.stringify(result))
       } else {
@@ -347,7 +347,7 @@ const baptismalController = {
       if (result) {
         const nonMembers = []
         result = result[0]
-        console.log(result)
+        
         if (result.member_id === null) {
           nonMembers.push(result.person_id)
         }
