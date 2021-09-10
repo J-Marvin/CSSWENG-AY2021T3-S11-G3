@@ -151,10 +151,11 @@ const dedicationController = {
             data.canSee = false
           }
           data.styles = ['view']
-          // data.scripts = ['']
+          data.scripts = ['deleteDedication']
           data.backLink = parseInt(req.session.level) >= 2 ? '/dedication_main_page' : '/forms_main_page'
           db.find(db.tables.WITNESS_TABLE, witnessCond, witnessJoin, witnessColumns, function (result) {
             if (result) {
+              console.log(data)
               data.witnesses = result
               // Filters all Godfathers
               data.witnessMale = data.witnesses.filter((witness) => { return witness.type === 'Godfather' })
@@ -634,7 +635,6 @@ const dedicationController = {
     })
   },
 
-
   putUpdateWitness: function (req, res) {
     const isOldMember = req.body.isOldMember === 'true'
     const person = JSON.parse(req.body.person)
@@ -770,7 +770,59 @@ const dedicationController = {
         res.send(false)
       }
     })
-  }
+  },
+
+  deleteDedication: function (req, res) {
+    const nonMembers = JSON.parse(req.body.nonMembers)
+    const couples = JSON.parse(req.body.couples)
+    const witnesses = JSON.parse(req.body.witnesses)
+    const recordId = req.body.recordId
+
+    console.log(couples)
+    const nonMembersCond = new Condition(queryTypes.whereIn)
+    nonMembersCond.setArray(personFields.ID, nonMembers)
+
+    const couplesCond = new Condition(queryTypes.whereIn)
+    couplesCond.setArray(coupleFields.ID, couples)
+
+    const witnessesCond = new Condition(queryTypes.whereIn)
+    witnessesCond.setArray(witnessFields.ID, witnesses)
+
+    const recordCond = new Condition(queryTypes.where)
+    recordCond.setKeyValue(infDedFields.ID, recordId)
+
+    // Delete Witnesses
+    db.delete(tables.WITNESS_TABLE, witnessesCond, function (result) {
+      if (result === 0) {
+        result = true
+      }
+
+      if (result) {
+        db.delete(tables.COUPLE_TABLE, couplesCond, function (result) {
+          console.log(result)
+          if (result) {
+            db.delete(tables.PERSON_TABLE, nonMembersCond, function (result) {
+              if (nonMembers.length === 0 || result) {
+                db.delete(tables.INFANT_TABLE, recordCond, function (result) {
+                  if (result || result === 0) { // Dedication record should be deleted because of FK constraint
+                    res.send(true)
+                  } else {
+                    res.send(false)
+                  }
+                })
+              } else {
+                res.send(false)
+              }
+            })
+          } else {
+            res.send(false)
+          }
+        })
+      } else {
+        res.send(false)
+      }
+    })
+  },
 }
 
 module.exports = dedicationController

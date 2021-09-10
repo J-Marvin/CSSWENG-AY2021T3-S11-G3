@@ -8,7 +8,7 @@
 
 {{>navbar}}
 
-<div id="prenup_info" style="display: none" data-dedication="{{infant_dedication_id}}" ></div>
+<div id="dedication_info" style="display: none" data-dedication="{{dedication_id}}" data-couple="{{parents_id}}"></div>
   <div class="container" style="padding-left: 18%; padding-right: 10%;">
     <h1 class="my-3"> View Child Dedication Record </h1>
     <hr>
@@ -24,7 +24,7 @@
     </div>
     <div class="row">
       <legend>Child Name</legend>
-      <div class="col">
+      <div class="col person_info" data-member="{{infant_member_id}}" data-person="{{infant_person_id}}">
         <u for="first_name">First Name</u>
         <p>{{infant_first_name}}</p>
         {{#if infant_member_id}}
@@ -43,7 +43,7 @@
     <hr>
     <div class="row">
       <legend>Guardian One</legend>
-      <div class="col">
+      <div class="col person_info" data-member="{{guardianOne_member_id}}" data-person={{guardianOne_person_id}}>
         <u for="first_name">First Name</u>
         <p>{{guardianOne_first_name}}</p>
         {{#if guardianOne_member_id}}
@@ -60,7 +60,7 @@
       </div>
     </div>
     <hr>
-    <div class="row">
+    <div class="row person_info" data-member="{{guardianTwo_member_id}}" data-person={{guardianTwo_person_id}}>
       <legend>Guardian Two</legend>
       <div class="col">
         <u for="first_name">First Name</u>
@@ -127,6 +127,9 @@
     <div class="row my-3">
       <div class="col">
         <a href="/edit_dedication/{{dedication_id}}"><button class="btn btn-secondary mb-4">Edit Dedication Form</button></a>
+        <button class="btn btn-danger mb-4" id="delete">Delete Dedication Form</button>
       </div>
     </div>
     {{/if}}
+
+    {{>del-record-modal}}

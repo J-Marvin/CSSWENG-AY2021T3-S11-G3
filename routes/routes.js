@@ -107,6 +107,7 @@ app.delete('/delete_wedding', weddingController.deleteWedding)
 app.delete('/delete_wedding/witness', weddingController.delWitness)
 app.delete('/delete_member', memberController.deleteMember)
 app.delete('/delete_dedication/witness', dedicationController.delWitness)
+app.delete('/delete_dedication', dedicationController.deleteDedication)
 // app.delete('/delete_prenup', prenupController.delete)
 
 module.exports = app
