@@ -99,6 +99,7 @@ app.delete('/delete_church', churchController.delChurch)
 app.delete('/delete_baptismal', baptismalController.delBaptismal)
 app.delete('/delete_wedding', weddingController.deleteWedding)
 app.delete('/delete_wedding/witness', weddingController.delWitness)
+app.delete('/delete_member', memberController.deleteMember)
 // app.delete('/delete_prenup', prenupController.delete)
 
 module.exports = app
