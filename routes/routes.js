@@ -98,6 +98,7 @@ app.put('/update_dedication/child', dedicationController.putUpdateChild)
 app.put('/update_dedication/guardian', dedicationController.putUpdateGuardian)
 app.put('/update_dedication/witness', dedicationController.putUpdateWitness)
 app.put('/update_dedication/add_witness', dedicationController.putAddWitness)
+app.put('/update_dedication', dedicationController.putUpdateDedication)
 
 app.delete('/delete_observation', observationController.delObservation)
 app.delete('/delete_church', churchController.delChurch)

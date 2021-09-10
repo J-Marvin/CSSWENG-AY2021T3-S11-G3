@@ -1,7 +1,6 @@
 $(document).ready(function() {
-
-  var GMotherWitnessCtr = 0
-  var GFatherWitnessCtr = 0
+  var GMotherWitnessCtr = $('#gmother_witness_row > div').length
+  var GFatherWitnessCtr = $('#gfather_witness_row > div').length
   var addedWitness = false
   var witnessType = null
 
@@ -401,12 +400,35 @@ $(document).ready(function() {
     return isValid
   }
 
-  function validateFields() {
-    var isValid = true
-    
+  $('#edit-dedication').click(function () {
+    let button = this
+    $(button).prop('disabled', true) 
 
-    return isValid
-  }
+    if (validateMisc()) {
+      const data = {
+        recordId: $('#dedication_info').data('dedicationid'),
+        date: new Date($('#date').val()).toISOString(),
+        officiant: $('#officiant').val(),
+        location: $('#location').val()
+      }
+
+      $.ajax({
+        type: 'PUT',
+        url: '/update_dedication',
+        data: data,
+        success: function (result) {
+          if (result) {
+            location.href = '/view_dedication/' + data.recordId
+          } else {
+            alert("Something Went Wrong")
+          }
+        }
+      })
+    }
+    else {
+      $(button).prop('disabled', false)
+    }
+  })
 
   // bind function to child non-member
   $('#child_non_member').change(function() {
@@ -614,7 +636,6 @@ $(document).ready(function() {
     initMaleWitnessModal('Edit')
   })
 
-
   // On Save Female Witnesses Click
   $('#add_gmother_witness, #add_gfather_witness').click(function () {
     $(this).prop('disabled', true)
@@ -633,12 +654,11 @@ $(document).ready(function() {
       isFemale = false
     }
 
-    // let validation = validateFemaleWitness
-    let validation = () => true
+    let validation = validateFemaleWitness
 
-    // if (!isFemale) {
-    //   validation = validateMaleWitness
-    // }
+    if (!isFemale) {
+      validation = validateMaleWitness
+    }
     console.log(url)
 
     saveWitness(this, validation, isFemale, isEdit, url)
@@ -898,49 +918,6 @@ $(document).ready(function() {
 
     $('#GMotherWitnessModal').modal('show')
   }
-  // $(document).on('click', '.delGMotherWitnessBtn', function () {
-  //   const member = $(this).closest('.card').attr('data-member-info')
-  //   if (member !== null) {
-  //     selectizeEnable(member)
-  //   }
-  //   $(this).closest('.col-4').remove()
-  //   GMotherWitnessCtr--
-  // })
-
-  // $(document).on('click', '.delGFatherWitnessBtn', function () {
-  //   const member = $(this).closest('.card').attr('data-member-info')
-  //   if (member !== null) {
-  //     selectizeEnable(member)
-  //   }
-  //   $(this).closest('.col-4').remove()
-  //   GFatherWitnessCtr--
-  // })
-
-
-  // $('.modal').on('hide.bs.modal', resetModal)
-
-  // function resetModal() {
-
-  //   if (isMaleModal) {
-  //     var currWitness = $('#input_witness_gfather_member').val()
-  //     $('#input_witness_gfather_member').data('previous', null)
-  //     if (currWitness !== '' && !addedWitness) {
-  //       selectizeEnable(currWitness)
-  //     } else {
-  //       addedWitness = false
-  //     }
-  //     $(selectWitnessGFather)[0].selectize.setValue('0')
-  //   } else {
-  //     var currWitness = $('#input_witness_gmother_member').val()
-  //     $('#input_witness_gmother_member').data('previous', null)
-  //     if (currWitness !== '' && !addedWitness) {
-  //       selectizeEnable(currWitness)
-  //     } else {
-  //       addedWitness = false
-  //     }
-  //     $(selectWitnessGMother)[0].selectize.setValue('0')
-  //   }
-  // }
 
   /**
  * This function hides the selected choice for all select fields to avoid duplication of choices
@@ -1003,6 +980,123 @@ $(document).ready(function() {
     $('.witness').each(function () {
       selectizeDisable(getValue($(this).data('member')))
     })
+  }
+
+  $('.modal').on('hidden.bs.modal', function (e) {
+    const val = $(this).find('select').val()
+    if (val !== '0' && val !== '' && val !== 'undefined') {
+      selectizeEnable(val)
+    }
+  })
+
+  $('.modal').on('show.bs.modal', function (e) {
+    initSelectizeOptions()
+  })
+
+  function validateMaleWitness() {
+    var isValid = true
+    var errorField = $('#witness_gfather_modal_info_error')
+    $(errorField).text('')
+
+    var isMember = $('#witness_gfather_member').is(':checked')
+    var isNone = $('#witness_gfather_none').is(':checked')
+    var isValidMemberField = !($('#input_witness_gfather_member').val() === '0' || $('#input_witness_gfather_member').val() === '')
+    var anyEmpty = $('#witness_gfather_first_name').val() === '' || $('#witness_gfather_mid_name').val() === '' || $('#witness_gfather_last_name').val() === ''
+    var isValidMidName = $('#witness_gfather_mid_name').val().length === 1 && validateMidInitial($('#witness_gfather_mid_name').val())
+
+    // Check if valid member
+    if (isMember && !isValidMemberField) {
+      isValid = false
+      $(errorField).text('Please select member')
+    } else if (!isMember && !isNone) {
+      if (anyEmpty) {
+        isValid = false
+        $(errorField).text('Please provide name')
+      } else if (!isValidMidName) {
+        isValid = false
+        $(errorField).text("Middle initial should only range from letters A-Z")
+      }
+    }
+
+    if (isValid) {
+      $(errorField).text('')
+    }
+    return isValid
+  }
+
+  function validateFemaleWitness() {
+    var isValid = true
+    var errorField = $('#witness_gmother_modal_info_error')
+    $(errorField).text('')
+
+    var isMember = $('#witness_gmother_member').is(':checked')
+    var isNone = $('#witness_gmother_none').is(':checked')
+    var isValidMemberField = !($('#input_witness_gmother_member').val() === '0' || $('#input_witness_gmother_member').val() === '')
+    var anyEmpty = $('#witness_gmother_first_name').val() === '' || $('#witness_gmother_mid_name').val() === '' || $('#witness_gmother_last_name').val() === ''
+    var isValidMidName = $('#witness_gmother_mid_name').val().length === 1 && validateMidInitial($('#witness_gmother_mid_name').val())
+
+    // Check if valid member
+    if (isMember && !isValidMemberField) {
+      isValid = false
+      $(errorField).text('Please select member')
+    } else if (!isMember && !isNone) {
+      if (anyEmpty) {
+        isValid = false
+        $(errorField).text('Please provide name')
+      } else if (!isValidMidName) {
+        isValid = false
+        $(errorField).text("Middle initial should only range from letters A-Z")
+      }
+    }
+
+    if (isValid) {
+      $(errorField).text('')
+    }
+    return isValid
+  }
+
+  function validateMisc() {
+    var isValid = true
+    var hasLocation = !validator.isEmpty($('#address').val())
+    var hasDate = !validator.isEmpty($('#date').val())
+    var hasOfficiant = !validator.isEmpty($('#officiant').val())
+
+    if (!hasDate) {
+      isValid = false
+      $('#date_error').text('Please add date')
+    } else {
+      $('#date_error').text('')
+    }
+
+    if (!hasLocation) {
+      isValid = false
+      $('#address_info_error').html('Please add location')
+    } else {
+      $('#address_info_error').text('')
+    }
+
+    if (!hasOfficiant) {
+      isValid = false
+      $('#officiant_info_error').text('Please add officiant')
+    } else {
+      $('#officiant_info_error').text('')
+    }
+
+    if (GMotherWitnessCtr < 1) {
+      isValid = false
+      $('#witness_gmother_info_error').text('Need at least 1 Godmother')
+    } else {
+      $('#witness_gmother_info_error').text('')
+    }
+
+    if (GFatherWitnessCtr < 1) {
+      isValid = false
+      $('#witness_gfather_info_error').text('Need at least 1 Godfather')
+    } else {
+      $('#witness_gfather_info_error').text('')
+    }
+
+    return isValid
   }
 
 })

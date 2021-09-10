@@ -611,65 +611,27 @@ const dedicationController = {
   },
 
   putUpdateDedication: function (req, res) {
-    // If Child non-member to member
-    // If parent1 non-member to member
-    // If parent2 non-member to member
+    const location = req.body.location
+    const officiant = req.body.officiant
+    const recordId = req.body.recordId
+    const date = req.body.date
 
-    // If child non-member change info
-    // If parent1 non-member change info
-    // If parent2 non-member change info
+    const data = {}
 
-    // If child member to non-member
-    // if parent1 member to non-member
-    // If parent2 member to non-member
+    const recordCond = new Condition(queryTypes.where)
+    recordCond.setKeyValue(infDedFields.ID, recordId)
 
-    // People to be inserted into people table
-    // Cases:
-    // If child member to non-member
-    // if parent1 member to non-member
-    // If parent2 member to non-member
-    const peopleInfo = []
+    data[infDedFields.DEDICATION_DATE] = date
+    data[infDedFields.OFFICIANT] = officiant
+    data[infDedFields.PLACE] = location
 
-    const people = {}
-    const offsets = {
-      child: 0,
-      parent1: 0,
-      parent2: 0
-    }
-
-    people.child = JSON.parse(req.body.child)
-    people.parent1 = JSON.parse(req.body.parent1)
-    people.parent2 = JSON.parse(req.body.parent2)
-
-    if (people.child.toNonMember) {
-      const child = {}
-      child[personFields.FIRST_NAME] = people.child.first_name
-      child[personFields.MID_NAME] = people.child.mid_name
-      child[personFields.LAST_NAME] = people.child.last_name
-
-      peopleInfo.push(child)
-    }
-
-    if (people.parent1.toNonMember) {
-      const parent = {}
-      parent[personFields.FIRST_NAME] = people.parent1.first_name
-      parent[personFields.MID_NAME] = people.parent1.mid_name
-      parent[personFields.LAST_NAME] = people.parent1.last_name
-
-      peopleInfo.push(parent)
-      offsets.child += 1
-    }
-
-    if (people.parent2 !== null && people.parent2.toNonMember) {
-      const parent = {}
-      parent[personFields.FIRST_NAME] = people.parent2.first_name
-      parent[personFields.MID_NAME] = people.parent2.mid_name
-      parent[personFields.LAST_NAME] = people.parent2.last_name
-
-      peopleInfo.push(parent)
-      offsets.parent1 += 1
-      offsets.child += 1
-    }
+    db.update(db.tables.INFANT_TABLE, data, recordCond, function (result) {
+      if (result) {
+        res.send(true)
+      } else {
+        res.send(false)
+      }
+    })
   },
 
 
