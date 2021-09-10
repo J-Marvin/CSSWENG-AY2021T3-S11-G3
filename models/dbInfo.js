@@ -49,7 +49,7 @@ const createPreNuptial =
   'couple_id INTEGER NOT NULL,' +
   'date TEXT,' +
   'date_of_wedding TEXT,' +
-  'FOREIGN KEY(couple_id) REFERENCES couples(couple_id)' +
+  'CONSTRAINT fk_couple FOREIGN KEY(couple_id) REFERENCES couples(couple_id) ON DELETE CASCADE' +
   ')'
 
 const createWeddingReg =
