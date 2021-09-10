@@ -1,5 +1,4 @@
 $(document).ready(function() {
-  alert("TEST")
   $('#del_member').click(function() {
     $('#delConfirmModal').modal('show')
   })
