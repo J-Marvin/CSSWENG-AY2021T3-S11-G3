@@ -67,10 +67,6 @@ app.post('/create_prenup_member', validation.addMemberPrenupValid(), prenupContr
 app.post('/addPrenupBrideNonMember', validation.addPrenupBrideNonMember(), prenupController.createPrenupBrideNonMember)
 app.post('/addPrenupGroomNonMember', validation.addPrenupGroomNonMember(), prenupController.createPrenupGroomNonMember)
 
-app.post('/postUpdatePrenupMember', prenupController.postUpdatePrenupMember)
-app.post('/postUpdatePrenupNonMember', prenupController.postUpdatePrenupNonMember)
-app.post('/postUpdatePrenupBrideMember', prenupController.postUpdatePrenupBrideMember)
-app.post('/postUpdatePrenupGroomMember', prenupController.postUpdatePrenupGroomMember)
 app.put('/update_prenup/bride', prenupController.putUpdatePrenupBride)
 app.put('/update_prenup/groom', prenupController.putUpdatePrenupGroom)
 app.put('/update_prenup/date', prenupController.putUpdatePrenupDate)
@@ -108,6 +104,6 @@ app.delete('/delete_wedding/witness', weddingController.delWitness)
 app.delete('/delete_member', memberController.deleteMember)
 app.delete('/delete_dedication/witness', dedicationController.delWitness)
 app.delete('/delete_dedication', dedicationController.deleteDedication)
-// app.delete('/delete_prenup', prenupController.delete)
+app.delete('/delete_prenup', prenupController.deletePrenup)
 
 module.exports = app

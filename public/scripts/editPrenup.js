@@ -2,14 +2,19 @@ function validateMidInitial (mid) {
   const re = /[A-Z]/
   return re.test(mid)
 }
+function selectizeEnable(data) {
+  $('#input_bride_member').parent().find('.option[data-value="' + data + '"]').attr('data-selectable', true)
+  $('#input_groom_member').parent().find('.option[data-value="' + data + '"]').attr('data-selectable', true)
+}
 
 $(document).ready(function () {
+  const brideSelect = $('#input_bride_member').selectize()
+  const groomSelect = $('#input_groom_member').selectize()
+  let currPerson = {}
 
   initSelectize()
 
   function initSelectize() {
-    const brideSelect = $('#input_bride_member').selectize()
-    const groomSelect = $('#input_groom_member').selectize()
     console.log($('#input_bride_member').data('bride'))
     console.log($('#input_groom_member').data('groom'))
     if ($('#input_bride_member').data('bride') !== null) {
@@ -28,10 +33,50 @@ $(document).ready(function () {
   }
 
   $('#edit_bride').click(function() {
+    currPerson.memberId = $('#bride-info').data('memberid')
+    currPerson.personId = $('#bride-info').data('personid')
+    currPerson.firstName = $('#bride_first_name_view').text()
+    currPerson.midName = $('#bride_mid_name_view').text()
+    currPerson.lastName = $('#bride_last_name_view').text()
+
+    if (currPerson.memberId !== null && currPerson.memberId !== '') {
+      $('#bride_member').prop('checked', true)
+      $('#bride_member_div').show()
+      $('#bride_non_member_div').hide()
+      $(brideSelect)[0].selectize.setValue(getValue(currPerson.memberId))
+    } else {
+      $('#bride_non_member').prop('checked', true)
+      $('#bride_non_member_div').show()
+      $('#bride_member_div').hide()
+
+      $('#bride_first_name').val(currPerson.firstName)
+      $('#bride_mid_name').val(currPerson.midName)
+      $('#bride_last_name').val(currPerson.lastName)
+    }
     $('#brideModal').modal('show')
   })
 
   $('#edit_groom').click(function() {
+    currPerson.memberId = $('#groom-info').data('memberid')
+    currPerson.personId = $('#groom-info').data('personid')
+    currPerson.firstName = $('#groom_first_name_view').text()
+    currPerson.midName = $('#groom_mid_name_view').text()
+    currPerson.lastName = $('#groom_last_name_view').text()
+
+    if (currPerson.memberId !== null && currPerson.memberId !== '') {
+      $('#groom_member').prop('checked', true)
+      $('#groom_member_div').show()
+      $('#groom_non_member_div').hide()
+      $(groomSelect)[0].selectize.setValue(getValue(currPerson.memberId))
+    } else {
+      $('#groom_non_member').prop('checked', true)
+      $('#groom_non_member_div').show()
+      $('#groom_member_div').hide()
+
+      $('#groom_first_name').val(currPerson.firstName)
+      $('#groom_mid_name').val(currPerson.midName)
+      $('#groom_last_name').val(currPerson.lastName)
+    }
     $('#groomModal').modal('show')
   })
 
@@ -168,8 +213,8 @@ $(document).ready(function () {
 
   function submitBride() {
     const bridePerson = getDetails($('#bride_member'), null, $('#input_bride_member'), $('#bride_first_name'), $('#bride_mid_name'), $('#bride_last_name'))
-    const oldBrideMemberId = $('#bride-info').data('memberid')
-    const oldBridePersonId = $('#bride-info').data('personid')
+    const oldBrideMemberId = currPerson.memberId
+    const oldBridePersonId = currPerson.personId
     const inputBrideInfo = $('#input_bride_member').val().split(', ')
     const prenupRecordId = $('#prenup-info').data('prenuprecord-id')
     const coupleId = $('#prenup-info').data('couple-id')
@@ -179,9 +224,11 @@ $(document).ready(function () {
       person: bridePerson,
       recordId: prenupRecordId,
       coupleId: coupleId,
-      oldPersonId: oldBridePersonId
+      oldPersonId: oldBridePersonId,
     }
-    data.person.personId = oldBridePersonId
+    if (!data.person.isMember) {
+      data.person.personId = inputBrideInfo[1]
+    }
     data.person = JSON.stringify(data.person)
 
     $.ajax({
@@ -210,13 +257,13 @@ $(document).ready(function () {
             $('#brideModal').modal('hide')
           } else {
             $('#bride-info').data('memberid','')
-            $('#bride-info').data('personid', newBrideInfo.personId)
+            $('#bride-info').data('personid', result)
             $('#bride-info').data('first', newBrideInfo.firstName)
             $('#bride-info').data('middle', newBrideInfo.midName)
             $('#bride-info').data('last', newBrideInfo.lastName)
-            $('#bride_first_name_view').text(inputBrideInfo[2])
-            $('#bride_mid_name_view').text(inputBrideInfo[3])
-            $('#bride_last_name_view').text(inputBrideInfo[4])
+            $('#bride_first_name_view').text(newBrideInfo.firstName)
+            $('#bride_mid_name_view').text(newBrideInfo.midName)
+            $('#bride_last_name_view').text(newBrideInfo.lastName)
 
             // clear modal fields and hide bride modal
             $('#bride_first_name').text('')
@@ -224,12 +271,79 @@ $(document).ready(function () {
             $('#bride_last_name').text('')
             $('#brideModal').modal('hide')
           }
+          if (oldBrideMemberId) {
+            selectizeEnable(getValue(oldBrideMemberId))
+          }
         }
       }
     })
   }
 
   function submitGroom() {
-    alert('submit groom function')
+    const groomPerson = getDetails($('#groom_member'), null, $('#input_groom_member'), $('#groom_first_name'), $('#groom_mid_name'), $('#groom_last_name'))
+    const oldGroomMemberId = currPerson.memberId
+    const oldGroomPersonId = currPerson.personId
+    const inputGroomInfo = $('#input_groom_member').val().split(', ')
+    const prenupRecordId = $('#prenup-info').data('prenuprecord-id')
+    const coupleId = $('#prenup-info').data('couple-id')
+
+    const data = {
+      isOldMember: oldGroomMemberId !== null && oldGroomMemberId !== undefined && oldGroomMemberId !== '',
+      person: groomPerson,
+      recordId: prenupRecordId,
+      coupleId: coupleId,
+      oldPersonId: oldGroomPersonId
+    }
+    if (!data.person.isMember) {
+      data.person.personId = inputGroomInfo[1]
+    }
+    data.person = JSON.stringify(data.person)
+
+    $.ajax({
+      type: 'PUT',
+      url: '/update_prenup/groom',
+      data: data,
+      success: function (result) {
+        if (result) {
+          // update the frontend bride details
+          const newGroomInfo = JSON.parse(data.person)
+          console.log(newGroomInfo)
+          if(newGroomInfo.isMember) {
+            $('#groom-info').data('memberid', newGroomInfo.memberId)
+            $('#groom-info').data('personid', newGroomInfo.personId)
+            $('#groom-info').data('first', inputGroomInfo[2])
+            $('#groom-info').data('middle', inputGroomInfo[3])
+            $('#groom-info').data('last', inputGroomInfo[4])
+            $('#groom_first_name_view').text(inputGroomInfo[2])
+            $('#groom_mid_name_view').text(inputGroomInfo[3])
+            $('#groom_last_name_view').text(inputGroomInfo[4])
+
+            // clear modal fields and hide groom modal
+            $('#groom_first_name').text('')
+            $('#groom_mid_name').text('')
+            $('#groom_last_name').text('')
+            $('#groomModal').modal('hide')
+          } else {
+            $('#groom-info').data('memberid','')
+            $('#groom-info').data('personid', result)
+            $('#groom-info').data('first', newGroomInfo.firstName)
+            $('#groom-info').data('middle', newGroomInfo.midName)
+            $('#groom-info').data('last', newGroomInfo.lastName)
+            $('#groom_first_name_view').text(newGroomInfo.firstName)
+            $('#groom_mid_name_view').text(newGroomInfo.midName)
+            $('#groom_last_name_view').text(newGroomInfo.lastName)
+
+            // clear modal fields and hide bride modal
+            $('#groom_first_name').text('')
+            $('#groom_mid_name').text('')
+            $('#groom_last_name').text('')
+            $('#groomModal').modal('hide')
+          }
+          if (oldGroomMemberId) {
+            selectizeEnable(getValue(oldGroomMemberId))
+          }
+        }
+      }
+    })
   }
 })

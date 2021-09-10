@@ -45,15 +45,15 @@
         <hr>
         <div class="col">
           <u for="first_name_view">First Name</u>
-          <p><span id="bride_first_name_view">{{groom.first_name}}</span></p>
+          <p><span id="groom_first_name_view">{{groom.first_name}}</span></p>
         </div>
         <div class="col">
           <u for="mid_name_view">Middle Initial</u>
-          <p><span id="bride_mid_name_view">{{groom.middle_name}}</span></p>
+          <p><span id="groom_mid_name_view">{{groom.middle_name}}</span></p>
         </div>
         <div class="col">
           <u for="last_name_view">Last Name</u>
-          <p><span id="bride_last_name_view">{{groom.last_name}}</span></p>
+          <p><span id="groom_last_name_view">{{groom.last_name}}</span></p>
         </div>
         <div class="col d-flex justify-content-end">
           <button type="button" class="btn btn-secondary mb-4 float-right" id="edit_groom">Edit</button>
@@ -105,8 +105,8 @@
         <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <input type="radio" id="bride_non_member" onclick="display_div_bride('bride_non_member')" {{#unless bride.member_id}}checked{{/unless}}> Non-member
-        <input class="mb-3" type="radio" id="bride_member" onclick="display_div_bride('bride_member')" {{#if bride.member_id}}checked{{/if}}> Member
+        <input type="radio" id="bride_non_member" {{#unless bride.member_id}}checked{{/unless}}> Non-member
+        <input class="mb-3" type="radio" id="bride_member" {{#if bride.member_id}}checked{{/if}}> Member
 
         <div id="bride_member_div" style="display:{{#if bride.member_id}}block{{else}}none{{/if}}">
           <label>Select Bride</label>
@@ -155,8 +155,8 @@
         <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <input type="radio" id="groom_non_member" onclick="display_div_groom('groom_non_member')" {{#unless groom.member_id}}checked{{/unless}}> Non-member
-        <input class="mb-3" type="radio" id="groom_member" onclick="display_div_groom('groom_member')" {{#if groom.member_id}}checked{{/if}}> Member
+        <input type="radio" id="groom_non_member" {{#unless groom.member_id}}checked{{/unless}}> Non-member
+        <input class="mb-3" type="radio" id="groom_member" {{#if groom.member_id}}checked{{/if}}> Member
 
         <div id="groom_member_div" style="display:{{#if groom.member_id}} block {{else}} none {{/if}}">
           <label>Select Groom</label>

@@ -822,7 +822,7 @@ const dedicationController = {
         res.send(false)
       }
     })
-  },
+  }
 }
 
 module.exports = dedicationController
