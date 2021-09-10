@@ -55,7 +55,7 @@ const baptismalController = {
         if (result.length > 0) {
           console.log(result)
           const data = {
-            scripts: [],
+            scripts: ['deleteBaptismal'],
             styles: ['view'],
             record: result[0]
           }

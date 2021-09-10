@@ -95,10 +95,6 @@ $(document).ready(function() {
     }
   })
 
-  $('#delete-baptismal').click(function () {
-    $('#delConfirmModal').modal('show')
-  })
-
   $('#edit-baptismal').click(function () {
     $('#edit-baptismal').prop('disabled', true)
     if (validateMisc()) {
@@ -124,25 +120,6 @@ $(document).ready(function() {
     } else {
       $('#edit-baptismal').prop('disabled', false)
     }
-  })
-
-  $('#confirm_delete').click(function () {
-    $('#confirm_delete').prop('disabled', true)
-    $.ajax({
-      type: 'DELETE',
-      url: '/delete_baptismal',
-      data: {
-        recordId: $('#baptismal_info').data('baptismal')
-      },
-      success: function (result) {
-        if (result) {
-          location.href = '/forms_main_page'
-        } else {
-          $('#modal_error').text('Error Deleting Record')
-          $('#confirm_delete').prop('disabled', false)
-        }
-      }
-    })
   })
 
   $('#save_edit_officiant').click(function () {
@@ -180,7 +157,7 @@ $(document).ready(function() {
               $('#officiant_last_name_view').html(info[4])
               $('#save_edit_officiant').prop('disabled', false)
             } else {
-              $('#officiant_member_div').removeData('member')
+              $('#officiant_member_div').data('member', null)
               $('#officiant_member_div').data('person', result)
               $('#officiant_first_name_view').html(personInfo.firstName)
               $('#officiant_mid_name_view').html(personInfo.midName)

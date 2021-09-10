@@ -288,7 +288,6 @@
       <div class="row my-3">
         <div class="col">
           <button type="button" class="btn btn-primary mb-4" id="save_changes">Save Changes</button>
-          <button type="button" class="btn btn-danger mb-4" id="delete_wedding">Delete Form</button>
         </div>
       </div>
     </div>
@@ -305,9 +304,6 @@
             <div class="col">
               <input type="radio" name="bride_radio" id="bride_non_member"> Non Member
               <input class="mb-3" name="bride_radio" type="radio" id="bride_member" checked> Member
-              <span id="bride_none_div">
-                <input type="radio" name="bride_radio" id="bride_none"> None
-              </span>
               <div id="bride_member_div" style="display:block">
                 <label>Select Member</label>
                 <select name="input_bride_member" id="input_bride_member">
@@ -356,7 +352,6 @@
             <div class="col">
               <input type="radio" name="groom_radio" id="groom_non_member"> Non Member
               <input class="mb-3" name="groom_radio"type="radio" id="groom_member" checked> Member
-              <span id="groom_none_div"><input type="radio" id="groom_none"> None</span>
               <div id="groom_member_div" style="display:block">
                 <label>Select Groom</label>
                 <select name="input_groom" id="input_groom_member">
@@ -609,24 +604,4 @@
     </div>
   </div>
 
-  <div class="modal fade" id="confirmDeleteFormModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title"> Delete Witness</h5>
-          <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="row" id="delete_info">
-            <p>Are you sure? This action cannot be undone!</p>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" id="cancel_modal" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-danger" id="confirm_delete_form_btn">Delete Form</button>
-        </div>
-      </div>
-    </div>
-  </div>
 </form>

@@ -134,9 +134,10 @@ const memberController = {
 
                   data.member.age = moment.duration(today.diff(b)).years()
                   data.styles = ['view']
-                  data.scripts = ['removeButtons']
+                  data.scripts = ['removeButtons', 'deleteMember']
                   data.canSee = (parseInt(req.session.level) === 3) || req.session.editId !== null
                   data.backLink = parseInt(req.session.level) >= 2 ? '/member_main_page' : '/main_page'
+                  console.log(data)
                   res.render('view-member', data)
                 }
               })
@@ -339,11 +340,28 @@ const memberController = {
    * @param res - the result to be sent out after processing the request
    */
   deleteMember: function (req, res) {
-    const condition = req.query.condition
+    const recordId = req.body.recordId
 
-    db.update(db.tables.MEMBER_TABLE, condition, function (result) {
-      console.log(result)
-      // insert res.render() or res.redirect()
+    const addresses = JSON.parse(req.body.addresses)
+
+    const addressCond = new Condition(queryTypes.whereIn)
+    addressCond.setArray(addressFields.ID, addresses)
+
+    const recordCond = new Condition(queryTypes.where)
+    recordCond.setKeyValue(memberFields.ID, recordId)
+
+    db.delete(db.tables.MEMBER_TABLE, recordCond, function (result) {
+      if (result) {
+        db.delete(db.tables.ADDRESS_TABLE, addressCond, function (result) {
+          if (result) {
+            res.send(true)
+          } else {
+            res.send(false)
+          }
+        })
+      } else {
+        res.send(false)
+      }
     })
   },
   /**

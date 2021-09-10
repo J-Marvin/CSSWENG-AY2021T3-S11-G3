@@ -185,31 +185,37 @@ const weddingController = {
         'bride.' + personFields.MID_NAME + ' as bride_mid_name',
         'bride.' + personFields.LAST_NAME + ' as bride_last_name',
         'bride.' + personFields.MEMBER + ' as bride_member_id',
+        'bride.' + personFields.ID + ' as bride_person_id',
         // groom's name
         'groom.' + personFields.FIRST_NAME + ' as groom_first_name',
         'groom.' + personFields.MID_NAME + ' as groom_mid_name',
         'groom.' + personFields.LAST_NAME + ' as groom_last_name',
         'groom.' + personFields.MEMBER + ' as groom_member_id',
+        'groom.' + personFields.ID + ' as groom_person_id',
         // name of the bride's mother
         'bride_mother.' + personFields.FIRST_NAME + ' as bride_mother_first_name',
         'bride_mother.' + personFields.MID_NAME + ' as bride_mother_mid_name',
         'bride_mother.' + personFields.LAST_NAME + ' as bride_mother_last_name',
         'bride_mother.' + personFields.MEMBER + ' as bride_mother_member_id',
+        'bride_mother.' + personFields.ID + ' as bride_mother_person_id',
         // name of the bride's father
         'bride_father.' + personFields.FIRST_NAME + ' as bride_father_first_name',
         'bride_father.' + personFields.MID_NAME + ' as bride_father_mid_name',
         'bride_father.' + personFields.LAST_NAME + ' as bride_father_last_name',
         'bride_father.' + personFields.MEMBER + ' as bride_father_member_id',
+        'bride_father.' + personFields.ID + ' as bride_father_person_id',
         // name of the groom's mother
         'groom_mother.' + personFields.FIRST_NAME + ' as groom_mother_first_name',
         'groom_mother.' + personFields.MID_NAME + ' as groom_mother_mid_name',
         'groom_mother.' + personFields.LAST_NAME + ' as groom_mother_last_name',
         'groom_mother.' + personFields.MEMBER + ' as groom_mother_member_id',
+        'groom_mother.' + personFields.ID + ' as groom_mother_person_id',
         // name of the groom's father
         'groom_father.' + personFields.FIRST_NAME + ' as groom_father_first_name',
         'groom_father.' + personFields.MID_NAME + ' as groom_father_mid_name',
         'groom_father.' + personFields.LAST_NAME + ' as groom_father_last_name',
-        'groom_father.' + personFields.MEMBER + ' as groom_father_member_id'
+        'groom_father.' + personFields.MEMBER + ' as groom_father_member_id',
+        'groom_father.' + personFields.ID + ' as groom_father_person_id'
       ]
       // set the WHERE condition: wedding_id = <weddingId>
       const cond = new Condition(queryTypes.where)
@@ -251,6 +257,7 @@ const weddingController = {
           if ((parseInt(req.session.level) <= 2)) {
             data.canSee = false
           }
+          data.scripts = ['deleteWedding']
           data.styles = ['view']
           // data.scripts = ['']
           data.backLink = parseInt(req.session.level) >= 2 ? '/wedding_main_page' : '/forms_main_page'
@@ -978,6 +985,7 @@ const weddingController = {
     } else if (!isOldMember && isNewMember) { // From non member to member
       updateNonMemberToMember(ids, fields, tables.COUPLE_TABLE, sendReply)
     } else {
+      person.personId = ids.oldPersonId
       updateNonMemberToNonMember(person, sendReply)
     }
 
