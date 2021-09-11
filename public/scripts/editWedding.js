@@ -635,7 +635,7 @@ $(document).ready(function() {
                 $(lastNameField).html(info[4])
               } else {
                 $(infoField).data('member', null)
-                $(infoField).data('person', result)
+                $(infoField).data('person', JSON.parse(result))
                 $(firstNameField).html(personInfo.firstName)
                 $(midNameField).html(personInfo.midName)
                 $(lastNameField).html(personInfo.lastName)

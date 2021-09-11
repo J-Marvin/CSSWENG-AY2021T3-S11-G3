@@ -19,7 +19,15 @@ const updateController = {
     const condition = new Condition(queryTypes.where)
     condition.setKeyValue(personFields.ID, person.personId)
 
-    db.update(tables.PERSON_TABLE, data, condition, callback)
+    db.update(tables.PERSON_TABLE, data, condition, function (result) {
+      console.log(person.personId)
+      if (result) {
+        callback(person.personId)
+      } else {
+        result = false
+        callback(result)
+      }
+    })
   },
 
   /**
