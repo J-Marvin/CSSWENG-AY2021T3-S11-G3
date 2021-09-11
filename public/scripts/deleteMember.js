@@ -8,6 +8,7 @@ $(document).ready(function() {
       $('#member_info').data('address')
     ]
     const recordId = $('#member_info').data('member')
+    const bapRegId = $('#member_info').data('baptismal')
 
     $('.church_address').each(function() {
       addresses.push($(this).data('address'))
@@ -15,6 +16,7 @@ $(document).ready(function() {
 
     const data = { 
       addresses: JSON.stringify(addresses),
+      bapRecordId: bapRegId,
       recordId: recordId
     }
 
