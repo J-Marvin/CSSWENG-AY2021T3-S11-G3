@@ -972,12 +972,13 @@ $(document).ready(function() {
     // get child
     selectizeDisable(getValue($('#infant_info').data('member')))
     // get parent 1
-    selectizeDisable(getValue($('#guardian1_info').data('member')))
+    selectizeDisable(getValue($('#parent1_info').data('member')))
     // get parent 2
-    selectizeDisable(getValue($('#guardian2_info').data('member')))
+    selectizeDisable(getValue($('#parent2_info').data('member')))
 
     // get witnesses
     $('.witness').each(function () {
+      console.log("WITNESS: " + $(this).data('member'))
       selectizeDisable(getValue($(this).data('member')))
     })
   }
