@@ -90,10 +90,7 @@ const prenupController = {
             ...result[0]
           }
           // canSee is set to the edit button
-          data.canSee = (parseInt(req.session.editId) === parseInt(prenupId)) || (parseInt(req.session.level) >= 2)
-          if ((parseInt(req.session.level) <= 2)) {
-            data.canSee = false
-          }
+          data.canSee = parseInt(req.session.editId) === parseInt(prenupId) || parseInt(req.session.level) >= 2
           data.styles = ['view']
           data.scripts = ['deletePrenup']
           data.backLink = parseInt(req.session.level) >= 2 ? '/forms_main_page' : '/main_page'
@@ -655,7 +652,7 @@ const prenupController = {
    */
   getEditPrenup: function (req, res) {
     const prenupId = req.params.prenup_id
-    if (parseInt(req.session.level) === 3 || parseInt(req.session.editId === parseInt(prenupId))) {
+    if (parseInt(req.session.level) >= 2 || parseInt(req.session.editId === parseInt(prenupId))) {
     // if (parseInt(req.session.level) === 3) { // For testing purposes
       /*
       SELECT *

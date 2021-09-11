@@ -261,6 +261,7 @@ const weddingController = {
           data.styles = ['view']
           // data.scripts = ['']
           data.backLink = parseInt(req.session.level) >= 2 ? '/wedding_main_page' : '/forms_main_page'
+          data.canSee = parseInt(req.session.level) >= 2 || parseInt(req.session.editId) === weddingId
           db.find(db.tables.WITNESS_TABLE, witnessCond, witnessJoin, witnessColumns, function (result) {
             if (result) {
               data.witnesses = result
