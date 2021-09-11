@@ -970,7 +970,7 @@ $(document).ready(function() {
 
   function initSelectizeOptions() {
     // get child
-    selectizeDisable(getValue($('#child_info').data('member')))
+    selectizeDisable(getValue($('#infant_info').data('member')))
     // get parent 1
     selectizeDisable(getValue($('#guardian1_info').data('member')))
     // get parent 2

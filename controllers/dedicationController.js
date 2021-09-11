@@ -413,117 +413,122 @@ const dedicationController = {
   },
 
   getEditDedication: function (req, res) {
+
     const dedicationId = req.params.dedication_id
-    const cond1 = new Condition(queryTypes.where)
-    cond1.setKeyValue(db.tables.INFANT_TABLE + '.' + infDedFields.ID, dedicationId)
-    const witnessCond = new Condition(queryTypes.where)
-    witnessCond.setKeyValue(db.tables.WITNESS_TABLE + '.' + witnessFields.DEDICATION, dedicationId)
-
-    const joinTables = [
-      {
-        tableName: { child: db.tables.PERSON_TABLE },
-        sourceCol: db.tables.INFANT_TABLE + '.' + infDedFields.PERSON,
-        destCol: 'child.' + personFields.ID
-      },
-      {
-        tableName: db.tables.COUPLE_TABLE,
-        sourceCol: db.tables.INFANT_TABLE + '.' + infDedFields.PARENTS,
-        destCol: db.tables.COUPLE_TABLE + '.' + coupleFields.ID
-      },
-      {
-        tableName: { parent1: db.tables.PERSON_TABLE },
-        sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE,
-        destCol: 'parent1.' + personFields.ID
-      },
-      {
-        type: 'leftJoin',
-        tableName: { parent2: db.tables.PERSON_TABLE },
-        sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.MALE,
-        destCol: 'parent2.' + personFields.ID
-      }
-    ]
-
-    const columns = [
-      db.tables.INFANT_TABLE + '.' + infDedFields.ID + ' as dedication_id',
-      db.tables.INFANT_TABLE + '.' + infDedFields.PERSON + ' as infant_person_id',
-      db.tables.INFANT_TABLE + '.' + infDedFields.PARENTS + ' as parents_id',
-      db.tables.INFANT_TABLE + '.' + infDedFields.DATE + ' as date',
-      db.tables.INFANT_TABLE + '.' + infDedFields.DEDICATION_DATE + ' as dedication_date',
-      db.tables.INFANT_TABLE + '.' + infDedFields.PLACE + ' as place',
-      db.tables.INFANT_TABLE + '.' + infDedFields.OFFICIANT + ' as officiant',
-      'parent1.' + personFields.ID + ' as guardianOne_person_id',
-      'parent1.' + personFields.MEMBER + ' as guardianOne_member_id',
-      'parent1.' + personFields.FIRST_NAME + ' as guardianOne_first_name',
-      'parent1.' + personFields.MID_NAME + ' as guardianOne_mid_name',
-      'parent1.' + personFields.LAST_NAME + ' as guardianOne_last_name',
-      'parent2.' + personFields.ID + ' as guardianTwo_person_id',
-      'parent2.' + personFields.MEMBER + ' as guardianTwo_member_id',
-      'parent2.' + personFields.FIRST_NAME + ' as guardianTwo_first_name',
-      'parent2.' + personFields.MID_NAME + ' as guardianTwo_mid_name',
-      'parent2.' + personFields.LAST_NAME + ' as guardianTwo_last_name',
-      'child.' + personFields.MEMBER + ' as infant_member_id',
-      'child.' + personFields.FIRST_NAME + ' as infant_first_name',
-      'child.' + personFields.MID_NAME + ' as infant_middle_name',
-      'child.' + personFields.LAST_NAME + ' as infant_last_name'
-    ]
-
-    const witnessJoin = [
-      {
-        tableName: db.tables.PERSON_TABLE,
-        sourceCol: db.tables.WITNESS_TABLE + '.' + witnessFields.PERSON,
-        destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
-      }
-    ]
-    const witnessColumns = [
-      db.tables.WITNESS_TABLE + '.' + witnessFields.DEDICATION + ' as dedication_id',
-      db.tables.WITNESS_TABLE + '.' + witnessFields.PERSON + ' as witness_person_id',
-      db.tables.WITNESS_TABLE + '.' + witnessFields.ID + ' as witness_id',
-      db.tables.PERSON_TABLE + '.' + personFields.MEMBER + ' as witness_member_id',
-      db.tables.PERSON_TABLE + '.' + personFields.FIRST_NAME + ' as witness_first_name',
-      db.tables.PERSON_TABLE + '.' + personFields.MID_NAME + ' as witness_mid_name',
-      db.tables.PERSON_TABLE + '.' + personFields.LAST_NAME + ' as witness_last_name',
-      db.tables.WITNESS_TABLE + '.' + witnessFields.TYPE + ' as type'
-    ]
-
-    db.find(db.tables.INFANT_TABLE, [cond1], joinTables, columns, function (result) {
-      if (result !== null && result.length > 0) {
-        const data = {
-          ...result[0]
+    if (parseInt(req.session.level) >= 2 || parseInt(req.session.editId) === parseInt(dedicationId)) {
+      const cond1 = new Condition(queryTypes.where)
+      cond1.setKeyValue(db.tables.INFANT_TABLE + '.' + infDedFields.ID, dedicationId)
+      const witnessCond = new Condition(queryTypes.where)
+      witnessCond.setKeyValue(db.tables.WITNESS_TABLE + '.' + witnessFields.DEDICATION, dedicationId)
+  
+      const joinTables = [
+        {
+          tableName: { child: db.tables.PERSON_TABLE },
+          sourceCol: db.tables.INFANT_TABLE + '.' + infDedFields.PERSON,
+          destCol: 'child.' + personFields.ID
+        },
+        {
+          tableName: db.tables.COUPLE_TABLE,
+          sourceCol: db.tables.INFANT_TABLE + '.' + infDedFields.PARENTS,
+          destCol: db.tables.COUPLE_TABLE + '.' + coupleFields.ID
+        },
+        {
+          tableName: { parent1: db.tables.PERSON_TABLE },
+          sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.FEMALE,
+          destCol: 'parent1.' + personFields.ID
+        },
+        {
+          type: 'leftJoin',
+          tableName: { parent2: db.tables.PERSON_TABLE },
+          sourceCol: db.tables.COUPLE_TABLE + '.' + coupleFields.MALE,
+          destCol: 'parent2.' + personFields.ID
         }
-        data.canSee = (parseInt(req.session.editId) === parseInt(dedicationId)) || (parseInt(req.session.level) >= 2)
-        if ((parseInt(req.session.level) <= 2)) {
-          data.canSee = false
+      ]
+  
+      const columns = [
+        db.tables.INFANT_TABLE + '.' + infDedFields.ID + ' as dedication_id',
+        db.tables.INFANT_TABLE + '.' + infDedFields.PERSON + ' as infant_person_id',
+        db.tables.INFANT_TABLE + '.' + infDedFields.PARENTS + ' as parents_id',
+        db.tables.INFANT_TABLE + '.' + infDedFields.DATE + ' as date',
+        db.tables.INFANT_TABLE + '.' + infDedFields.DEDICATION_DATE + ' as dedication_date',
+        db.tables.INFANT_TABLE + '.' + infDedFields.PLACE + ' as place',
+        db.tables.INFANT_TABLE + '.' + infDedFields.OFFICIANT + ' as officiant',
+        'parent1.' + personFields.ID + ' as guardianOne_person_id',
+        'parent1.' + personFields.MEMBER + ' as guardianOne_member_id',
+        'parent1.' + personFields.FIRST_NAME + ' as guardianOne_first_name',
+        'parent1.' + personFields.MID_NAME + ' as guardianOne_mid_name',
+        'parent1.' + personFields.LAST_NAME + ' as guardianOne_last_name',
+        'parent2.' + personFields.ID + ' as guardianTwo_person_id',
+        'parent2.' + personFields.MEMBER + ' as guardianTwo_member_id',
+        'parent2.' + personFields.FIRST_NAME + ' as guardianTwo_first_name',
+        'parent2.' + personFields.MID_NAME + ' as guardianTwo_mid_name',
+        'parent2.' + personFields.LAST_NAME + ' as guardianTwo_last_name',
+        'child.' + personFields.MEMBER + ' as infant_member_id',
+        'child.' + personFields.FIRST_NAME + ' as infant_first_name',
+        'child.' + personFields.MID_NAME + ' as infant_middle_name',
+        'child.' + personFields.LAST_NAME + ' as infant_last_name'
+      ]
+  
+      const witnessJoin = [
+        {
+          tableName: db.tables.PERSON_TABLE,
+          sourceCol: db.tables.WITNESS_TABLE + '.' + witnessFields.PERSON,
+          destCol: db.tables.PERSON_TABLE + '.' + personFields.ID
         }
-        data.styles = ['forms']
-        data.scripts = ['editDedication', 'edit']
-        db.find(db.tables.WITNESS_TABLE, witnessCond, witnessJoin, witnessColumns, function (result) {
-          if (result) {
-            data.witnesses = result
-            // Filters all Godfathers
-            data.witnessMale = data.witnesses.filter((witness) => { return witness.type === 'Godfather' })
-            // Filters all Godmothers
-            data.witnessFemale = data.witnesses.filter((witness) => { return witness.type === 'Godmother' })
-            db.find(db.tables.MEMBER_TABLE, [], {
-              tableName: tables.PERSON_TABLE,
-              sourceCol: tables.PERSON_TABLE + '.' + personFields.ID,
-              destCol: db.tables.MEMBER_TABLE + '.' + memberFields.PERSON
-            }, '*', function (result) {
-              if (result) {
-                data.members = result
-                data.males = result.filter(elem => elem[memberFields.SEX] === 'Male')
-                data.females = result.filter(elem => elem[memberFields.SEX] === 'Female')
-                data.noBapReg = result.filter(elem => elem[memberFields.BAPTISMAL_REG] === null || elem[memberFields.BAPTISMAL_REG] === data.dedication_id)
-                res.render('edit-dedication', data)
-              } else {
-                sendError(req, res, 404)
-              }
-            })
+      ]
+      const witnessColumns = [
+        db.tables.WITNESS_TABLE + '.' + witnessFields.DEDICATION + ' as dedication_id',
+        db.tables.WITNESS_TABLE + '.' + witnessFields.PERSON + ' as witness_person_id',
+        db.tables.WITNESS_TABLE + '.' + witnessFields.ID + ' as witness_id',
+        db.tables.PERSON_TABLE + '.' + personFields.MEMBER + ' as witness_member_id',
+        db.tables.PERSON_TABLE + '.' + personFields.FIRST_NAME + ' as witness_first_name',
+        db.tables.PERSON_TABLE + '.' + personFields.MID_NAME + ' as witness_mid_name',
+        db.tables.PERSON_TABLE + '.' + personFields.LAST_NAME + ' as witness_last_name',
+        db.tables.WITNESS_TABLE + '.' + witnessFields.TYPE + ' as type'
+      ]
+  
+      db.find(db.tables.INFANT_TABLE, [cond1], joinTables, columns, function (result) {
+        if (result !== null && result.length > 0) {
+          const data = {
+            ...result[0]
           }
-        })
-      } else {
-        sendError(req, res, 404, '404 Record Not Found at Child Dedication Table')
-      }
-    })
+          data.canSee = (parseInt(req.session.editId) === parseInt(dedicationId)) || (parseInt(req.session.level) >= 2)
+          if ((parseInt(req.session.level) <= 2)) {
+            data.canSee = false
+          }
+          data.styles = ['forms']
+          data.scripts = ['editDedication', 'edit']
+          db.find(db.tables.WITNESS_TABLE, witnessCond, witnessJoin, witnessColumns, function (result) {
+            if (result) {
+              data.witnesses = result
+              // Filters all Godfathers
+              data.witnessMale = data.witnesses.filter((witness) => { return witness.type === 'Godfather' })
+              // Filters all Godmothers
+              data.witnessFemale = data.witnesses.filter((witness) => { return witness.type === 'Godmother' })
+              db.find(db.tables.MEMBER_TABLE, [], {
+                tableName: tables.PERSON_TABLE,
+                sourceCol: tables.PERSON_TABLE + '.' + personFields.ID,
+                destCol: db.tables.MEMBER_TABLE + '.' + memberFields.PERSON
+              }, '*', function (result) {
+                if (result) {
+                  data.members = result
+                  data.males = result.filter(elem => elem[memberFields.SEX] === 'Male')
+                  data.females = result.filter(elem => elem[memberFields.SEX] === 'Female')
+                  data.noBapReg = result.filter(elem => elem[memberFields.BAPTISMAL_REG] === null || elem[memberFields.BAPTISMAL_REG] === data.dedication_id)
+                  res.render('edit-dedication', data)
+                } else {
+                  sendError(req, res, 404)
+                }
+              })
+            }
+          })
+        } else {
+          sendError(req, res, 404, '404 Record Not Found at Child Dedication Table')
+        }
+      })
+    } else {
+      sendError(req, res, 401)
+    }
   },
 
   putUpdateChild: function (req, res) {
