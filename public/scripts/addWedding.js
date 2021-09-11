@@ -263,7 +263,6 @@ $(document).ready(function() {
             }
           }
         })
-        $('#create-wedding-registry').prop('disabled', false)
       } else {
         $('#create-wedding-registry').prop('disabled', false)
       }
