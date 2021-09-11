@@ -409,7 +409,7 @@ $(document).ready(function() {
         recordId: $('#dedication_info').data('dedicationid'),
         date: new Date($('#date').val()).toISOString(),
         officiant: $('#officiant').val(),
-        location: $('#location').val()
+        location: $('#address').val()
       }
 
       $.ajax({
