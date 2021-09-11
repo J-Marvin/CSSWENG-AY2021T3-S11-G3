@@ -195,11 +195,13 @@
       </div>
     </div>
     <hr>
-    <div class="row">
-      <div class="col">
-        <a href="/edit_member/{{member.member_id}}" class="btn btn-secondary mb-4">Edit Member </a>
-        <button class="btn btn-danger mb-4" id="del_member">Delete Member</button>
+    {{#if canSee}}
+      <div class="row">
+        <div class="col">
+          <a href="/edit_member/{{member.member_id}}" class="btn btn-secondary mb-4">Edit Member </a>
+          <button class="btn btn-danger mb-4" id="del_member">Delete Member</button>
+        </div>
       </div>
-    </div>
+    {{/if}}
 
     {{>del-record-modal isMember=true}}
