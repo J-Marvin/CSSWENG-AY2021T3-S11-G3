@@ -116,6 +116,9 @@ const updateController = {
     const updateMemberCondition = new Condition(queryTypes.where)
     updateMemberCondition.setKeyValue(memberFields.PERSON, newPersonId)
 
+    console.log(updateRecordCondition)
+    console.log(oldPersonId)
+    console.log(newPersonId)
     // update first the record table so no fk issues
     db.update(recordTable, updateRecordData, updateRecordCondition, function (result) {
       if (result) {

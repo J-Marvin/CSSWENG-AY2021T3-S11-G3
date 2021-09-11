@@ -413,7 +413,6 @@ const dedicationController = {
   },
 
   getEditDedication: function (req, res) {
-
     const dedicationId = req.params.dedication_id
     if (parseInt(req.session.level) >= 2 || parseInt(req.session.editId) === parseInt(dedicationId)) {
       const cond1 = new Condition(queryTypes.where)

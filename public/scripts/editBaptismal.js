@@ -1,9 +1,16 @@
 $(document).ready(function() {
   const member = $('#input_member').selectize()
   const officiant = $('#input_officiant_member').selectize()
+  var currPerson = {}
 
   initSelectize()
-  
+  initSelectizeOptions()
+
+  function initSelectizeOptions() {
+    selectizeDisable(getValue($('#member_div').data('member')))
+    selectizeDisable(getValue($('#officiant_member_div').data('member')))
+  }
+
   $('select').change(function () {
     const prev = $(this).data('prev')
 
@@ -15,49 +22,62 @@ $(document).ready(function() {
     $(this).data('prev', $(this).val())
   })
 
-
-  $('#officiant_member').click(function () {
+  $('#officiant_member').change(function () {
     $('#officiant_non_member_div').hide()
     $('#officiant_member_div').show()
-    $('#officiant_first_name').val('')
-    $('#officiant_middle_name').val('')
-    $('#officiant_last_name').val('')
+
+    selectizeEnable($('#input_officiant_member').val())
+
+    let officiantId = currPerson.memberId
+    let value = '0'
+    if (officiantId !== null && officiantId !== undefined && officiantId !== '') {
+      value = getValue(officiantId)
+    } 
+    $(officiant)[0].selectize.setValue(value)
   })
 
-  $('#officiant_non_member').click(function () {
+  $('#officiant_non_member').change(function () {
     $('#officiant_member_div').hide()
     $('#officiant_non_member_div').show()
-    selectizeEnable($('#input_officiant_member').val())
-    let officiantId = $('#officiant_member_div').data('member')
-    if (officiantId !== null && officiantId !== undefined && officiantId !== '') {
-      const value = $('div [data-value^="' + officiantId + '"]').data('value')
-      $(officiant)[0].selectize.setValue(value)
-      selectizeDisable(value)
+
+    if (currPerson.memberId !== null && currPerson.memberId !== '') {
+      $('#officiant_first_name').val('')
+      $('#officiant_mid_name').val('')
+      $('#officiant_last_name').val('')
     } else {
-      $(officiant)[0].selectize.setValue('0')
+      $('#officiant_first_name').val(currPerson.firstName)
+      $('#officiant_mid_name').val(currPerson.midName)
+      $('#officiant_last_name').val(currPerson.lastName)
     }
   })
 
   $('#edit_member').click(function () {
     let memberId = $('#member_div').data('member')
+    currPerson.memberId = memberId
     const value = $('div [data-value^="' + memberId + '"]').data('value')
     $(member)[0].selectize.setValue(value)
     $('#editMemberModal').modal('show')
   })
 
   $('#edit_officiant').click(function () {
-    let officiantId = $('#officiant_member_div').data('member')
-    if (officiantId !== null && officiantId !== undefined && officiantId !== '') {
-      const value = $('div [data-value^="' + officiantId + '"]').data('value')
-      $(officiant)[0].selectize.setValue(value)
+    const person = $('#officiant_member_div')
+    currPerson.memberId = $(person).data('member')
+    currPerson.firstName = $('#officiant_first_name_view').text()
+    currPerson.midName = $('#officiant_mid_name_view').text()
+    currPerson.lastName = $('#officiant_last_name_view').text()
+
+    
+    if (currPerson.memberId != null && currPerson.memberId !== undefined && currPerson.memberId !== '') {
+      $(officiant)[0].selectize.setValue(getValue(currPerson.memberId))
     } else {
       $('#officiant_member_div').hide()
       $('#officiant_non_member_div').show()
       $('#officiant_non_member').prop('checked', true)
-      $('#officiant_first_name').val($('#officiant_first_name_view').text())
-      $('#officiant_mid_name').val($('#officiant_mid_name_view').text())
-      $('#officiant_last_name').val($('#officiant_last_name_view').text())
+      $('#officiant_first_name').val(currPerson.firstName)
+      $('#officiant_mid_name').val(currPerson.midName)
+      $('#officiant_last_name').val(currPerson.lastName)
     }
+
     $('#editOfficiantModal').modal('show')
   })
 
@@ -138,8 +158,11 @@ $(document).ready(function() {
         oldPersonId: officiantPersonId
       }
 
-      data.person.personId = officiantPersonId
+      data.person.personId = info[1]
       data.person = JSON.stringify(data.person)
+
+      console.log(info)
+      console.log(JSON.parse(data.person))
 
       $.ajax({
         type: 'PUT',
@@ -270,5 +293,16 @@ $(document).ready(function() {
 
     return isValid
   }
+
+  $('.modal').on('hidden.bs.modal', function (e) {
+    const val = $(this).find('select').val()
+    if (val !== '0' && val !== '' && val !== 'undefined') {
+      selectizeEnable(val)
+    }
+  })
+
+  $('.modal').on('show.bs.modal', function (e) {
+    initSelectizeOptions()
+  })
 
 })
