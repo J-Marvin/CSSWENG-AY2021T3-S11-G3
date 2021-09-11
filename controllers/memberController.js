@@ -350,14 +350,15 @@ const memberController = {
     addressCond.setArray(addressFields.ID, addresses)
 
     const recordCond = new Condition(queryTypes.where)
-    recordCond.setKeyValue(memberFields.ID, recordId) 
+    recordCond.setKeyValue(memberFields.ID, recordId)
     console.log(req.body)
+    console.log(bapRecordId)
 
     db.delete(db.tables.MEMBER_TABLE, recordCond, function (result) {
       if (result) {
         db.delete(db.tables.ADDRESS_TABLE, addressCond, function (result) {
           if (result) {
-            if (bapRecordId !== null) {
+            if (bapRecordId !== null && bapRecordId !== undefined && bapRecordId !== '') {
               req.body.recordId = bapRecordId
               console.log(req.body)
               baptismalController.delBaptismal(req, res)
