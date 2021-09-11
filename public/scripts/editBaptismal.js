@@ -82,7 +82,7 @@ $(document).ready(function() {
   })
 
   $('#save_edit_member').click(function () {
-    if (validateMember) {
+    if (validateMember()) {
       const oldMemberId = $('#member_div').data('member')
       const oldPersonId = $('#member_div').data('person')
       const recordId = $('#baptismal_info').data('baptismal')
@@ -145,7 +145,7 @@ $(document).ready(function() {
   $('#save_edit_officiant').click(function () {
     // insert validation
     $('#save_edit_officiant').prop('disabled', true)
-    if (validateOfficiant) {
+    if (validateOfficiant()) {
       let officiantId = $('#officiant_member_div').data('member')
       let officiantPersonId = $('#officiant_member_div').data('person')
       let info = $('#input_officiant_member').val().split(', ')
