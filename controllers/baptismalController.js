@@ -16,8 +16,6 @@ const baptismalController = {
    */
   getViewBaptismalRecord: function (req, res) {
     const bapId = req.params.bap_id
-
-    // req.session.level = 3
     if (parseInt(req.session.editId) === parseInt(bapId) || parseInt(req.session.level) >= 2) {
       const joinTables = [
         {
@@ -53,7 +51,6 @@ const baptismalController = {
 
       db.find(db.tables.BAPTISMAL_TABLE, condition, joinTables, columns, function (result) {
         if (result.length > 0) {
-          
           const data = {
             scripts: ['deleteBaptismal'],
             styles: ['view'],

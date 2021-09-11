@@ -283,7 +283,6 @@ const weddingController = {
 
   getEditWedding: function (req, res) {
     const weddingId = parseInt(req.params.wedding_id)
-    req.session.level = 3
     if (parseInt(req.session.level) >= 2 || parseInt(req.session.editId) === weddingId) {
       /*
         FROM wedding_reg
