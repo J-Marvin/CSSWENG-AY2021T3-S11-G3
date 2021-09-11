@@ -1070,6 +1070,7 @@ $(document).ready(function() {
       $('#witness_gmother_info_error').text('Need at least 1 Witness')
       $('#witness_gfather_info_error').text('Need at least 1 Witness')
     } else {
+      $('#witness_gmother_info_error').text('')
       $('#witness_gfather_info_error').text('')
       $('#witness_gmother_info_error').text('')
     }
