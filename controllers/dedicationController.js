@@ -413,6 +413,7 @@ const dedicationController = {
   },
 
   getEditDedication: function (req, res) {
+    req.session.level = 3
     const dedicationId = req.params.dedication_id
     if (parseInt(req.session.level) >= 2 || parseInt(req.session.editId) === parseInt(dedicationId)) {
       const cond1 = new Condition(queryTypes.where)
@@ -443,7 +444,7 @@ const dedicationController = {
           destCol: 'parent2.' + personFields.ID
         }
       ]
-  
+
       const columns = [
         db.tables.INFANT_TABLE + '.' + infDedFields.ID + ' as dedication_id',
         db.tables.INFANT_TABLE + '.' + infDedFields.PERSON + ' as infant_person_id',
@@ -622,7 +623,7 @@ const dedicationController = {
 
     const recordCond = new Condition(queryTypes.where)
     recordCond.setKeyValue(infDedFields.ID, recordId)
-
+    
     data[infDedFields.DEDICATION_DATE] = date
     data[infDedFields.OFFICIANT] = officiant
     data[infDedFields.PLACE] = location
@@ -651,6 +652,9 @@ const dedicationController = {
       recordPersonField: witnessFields.PERSON
     }
 
+    console.log(ids)
+    console.log(req.body)
+
     if (isOldMember && isNewMember) { // From member to member
       updateMemberToMember(ids, fields, tables.WITNESS_TABLE, sendReply)
     } else if (isOldMember && !isNewMember) { // From member to non member
@@ -658,6 +662,8 @@ const dedicationController = {
     } else if (!isOldMember && isNewMember) { // From non member to member
       updateNonMemberToMember(ids, fields, tables.WITNESS_TABLE, sendReply)
     } else {
+      console.log("ENTERED HERE")
+      person.personId = ids.oldPersonId
       updateNonMemberToNonMember(person, sendReply)
     }
 
