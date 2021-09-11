@@ -8,6 +8,7 @@ const { validationResult } = require('express-validator')
 const observationFields = require('../models/observation')
 const { Condition, queryTypes } = require('../models/condition.js')
 const moment = require('moment')
+const baptismalController = require('./baptismalController.js')
 
 const memberController = {
   /**
@@ -341,6 +342,7 @@ const memberController = {
    */
   deleteMember: function (req, res) {
     const recordId = req.body.recordId
+    const bapRecordId = req.body.bapRecordId
 
     const addresses = JSON.parse(req.body.addresses)
 
@@ -348,13 +350,20 @@ const memberController = {
     addressCond.setArray(addressFields.ID, addresses)
 
     const recordCond = new Condition(queryTypes.where)
-    recordCond.setKeyValue(memberFields.ID, recordId)
+    recordCond.setKeyValue(memberFields.ID, recordId) 
+    console.log(req.body)
 
     db.delete(db.tables.MEMBER_TABLE, recordCond, function (result) {
       if (result) {
         db.delete(db.tables.ADDRESS_TABLE, addressCond, function (result) {
           if (result) {
-            res.send(true)
+            if (bapRecordId !== null) {
+              req.body.recordId = bapRecordId
+              console.log(req.body)
+              baptismalController.delBaptismal(req, res)
+            } else {
+              res.send(true)
+            }
           } else {
             res.send(false)
           }
