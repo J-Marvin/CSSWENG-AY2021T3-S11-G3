@@ -107,9 +107,6 @@ const baptismalController = {
   getEditBaptismal: function (req, res) {
     const bapId = req.params.bap_id
 
-    // TODO: Remove this after testing
-    req.session.level = 3
-
     if (parseInt(req.session.editId) === parseInt(bapId) || parseInt(req.session.level) >= 2) {
       const joinTables = [
         {
