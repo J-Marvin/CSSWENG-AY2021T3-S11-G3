@@ -1228,17 +1228,12 @@ $(document).ready(function() {
       $('#solemnizer_info_error').text('')
     }
 
-    if (GMotherWitnessCtr < 1) {
+    if (GMotherWitnessCtr < 1 && GFatherWitnessCtr < 1) {
       isValid = false
       $('#witness_gmother_info_error').text('Need at least 1 Godmother')
-    } else {
-      $('#witness_gmother_info_error').text('')
-    }
-
-    if (GFatherWitnessCtr < 1) {
-      isValid = false
       $('#witness_gfather_info_error').text('Need at least 1 Godfather')
     } else {
+      $('#witness_gmother_info_error').text('')
       $('#witness_gfather_info_error').text('')
     }
 
