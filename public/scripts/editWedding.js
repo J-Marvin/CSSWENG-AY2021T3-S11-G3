@@ -302,7 +302,7 @@ $(document).ready(function() {
 
   // On Save Female Click (Mothers)
   $('#save_female_btn').click(function () {
-    $('#save_male_btn').prop('disabled', true)
+    $('#save_female_btn').prop('disabled', true)
     if (validateFemale()) {
       let memberId = currPerson.memberId
       let personId = currPerson.personId
@@ -383,7 +383,7 @@ $(document).ready(function() {
         }
       })
     } else {
-      $('#save_male_btn').prop('disabled', false)
+      $('#save_female_btn').prop('disabled', false)
     }
     
   })
