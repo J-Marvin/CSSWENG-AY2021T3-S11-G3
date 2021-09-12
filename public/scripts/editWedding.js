@@ -735,15 +735,16 @@ $(document).ready(function() {
     currPerson.canBeNone = false
     isFemale = false
 
+    console.log(currPerson)
     initGroomModal()
   })
 
     // On Edit Groom Mother Click
   $('#edit_groom_mother').click(function () {
     modalType = editKeys.groomMother
-    currPerson.firstName = $('#groom_mother_first_name_view').text()
-    currPerson.midName = $('#groom_mother_mid_name_view').text()
-    currPerson.lastName = $('#groom_mother_last_name_view').text()
+    currPerson.firstName = $('#groom_mother_first_name_view').text().trim()
+    currPerson.midName = $('#groom_mother_mid_name_view').text().trim()
+    currPerson.lastName = $('#groom_mother_last_name_view').text().trim()
     currPerson.doesExist = !(currPerson.firstName === 'N/A')
     currPerson.memberId = $('#groom_mother_info').data('member')
     currPerson.personId = $('#groom_mother_info').data('person')
@@ -962,9 +963,10 @@ $(document).ready(function() {
       $('#groom_non_member').prop('checked', true)
       $('#groom_non_member_div').show()
       $('#groom_member_div').hide()
+      console.log(currPerson)
       $('#groom_first_name').val(currPerson.firstName)
-      $('#groom_mid_name').val(currPerson.midname)
-      $('#groom_last_name').val(currPerson.lastname)
+      $('#groom_mid_name').val(currPerson.midName)
+      $('#groom_last_name').val(currPerson.lastName)
     }
 
     $('#groomModal').modal('show')
