@@ -1048,9 +1048,9 @@ $(document).ready(function() {
 
     if (!hasDate) {
       isValid = false
-      $('#date_error').text('Please add date')
+      $('#date_info_error').text('Please add date')
     } else {
-      $('#date_error').text('')
+      $('#date_info_error').text('')
     }
 
     if (!hasLocation) {
