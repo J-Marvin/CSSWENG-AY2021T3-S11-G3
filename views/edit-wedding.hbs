@@ -1,4 +1,17 @@
 {{>navbar}}
+<div id="wedding-info" 
+    data-wedding-id="{{wedding_id}}" 
+    data-couple-id="{{couple_id}}"
+    data-date-created="{{date}}"
+    data-weddingdate="{{wedding_date}}"
+    data-location="{{location}}"
+    data-solemnizer="{{solemnizer}}"
+    data-officiant="{{officiant}}"
+    data-contractno="{{contract_no}}"></div>
+<div id="bride-info"
+    ></div>
+<div id="groom-info"
+    ></div>
 <form id="wedding_form" action="/create_wedding_registry" method="POST" class="container"> 
   <div class="container" style="padding-left: 20%; padding-right: 20%;">
     <div class="row d-flex justify-content-between">

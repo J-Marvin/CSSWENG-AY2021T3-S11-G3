@@ -1,4 +1,28 @@
 {{>navbar}}
+<div id="dedication_info"
+  data-dedicationid="{{dedication_id}}"
+  data-parentsid="{{parents_id}}"
+  data-dedication-date="{{dedication_date}}"
+  data-place="{{place}}"
+  data-officiant="{{officiant}}"></div>
+<div id="infant_info" 
+  data-infant-personid="{{infant_person_id}}"
+  {{#if infant_member_id}} data-infant-memberid="{{infant_member_id}}" {{else}} data-infant-memberid="" {{/if}}
+  data-infant-first="{{infant_first_name}}"
+  data-infant-middle="{{infant_middle_name}}"
+  data-infant-last="{{infant_last_name}}"></div>
+<div id="guardian1_info"
+  data-guardian1-personid="{{guardianOne_person_id}}"
+  {{#if guardianOne_member_id}} data-guardian1-memberid="{{guardianOne_member_id}}" {{else}} data-guardian1-memberid="" {{/if}}
+  data-guardian1-first="{{guardianOne_first_name}}"
+  data-guardian1-middle="{{guardianOne_middle_name}}"
+  data-guardian1-last="{{guardianOne_last_name}}"></div>
+<div id="guardian2_info"
+  data-guardian2-personid="{{guardianTwo_person_id}}"
+  {{#if guardianTwo_member_id}} data-guardian2-memberid="{{guardianTwo_member_id}}" {{else}} data-guardian2-memberid="" {{/if}}
+  data-guardian2-first="{{guardianTwo_first_name}}"
+  data-guardian2-middle="{{guardianTwo_middle_name}}"
+  data-guardian2-last="{{guardianTwo_last_name}}"></div>
 
 <form id="edit_dedication_form" class="container">
   <div class="container" style="padding-left: 20%; padding-right: 20%;">

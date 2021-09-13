@@ -1,14 +1,19 @@
 const db = require('../models/db.js')
 const memberFields = require('../models/members')
-const personFields = require('../models/person.js')
-const addressFields = require('../models/address.js')
+const personFields = require('../models/person')
+const addressFields = require('../models/address')
 const prenupRecordFields = require('../models/prenupRecord')
 const coupleFields = require('../models/couple')
 const weddingRegFields = require('../models/weddingRegistry')
 const infDedFields = require('../models/infantDedication')
-const bapRegFields = require('../models/baptismalRegistry.js')
+const bapRegFields = require('../models/baptismalRegistry')
+const { Condition, queryTypes } = require('../models/condition')
 const { sendError } = require('./errorController')
 const moment = require('moment')
+const bcrypt = require('bcrypt')
+const accountFields = require('../models/accounts.js')
+const { tables } = require('../models/db.js')
+const saltRounds = 10
 
 const controller = {
   /**
@@ -351,12 +356,89 @@ const controller = {
     }
   },
   /**
-   * This function renders the advanced search page
+   * This function
    * @param req - the incoming request containing either the query or body
    * @param res - the result to be sent out after processing the request
    */
-  getSearchPage: function (req, res) {
-    res.render('search-page')
+  getSettings: function (req, res) {
+    if (parseInt(req.session.level) === 3) {
+      const data = {
+        scripts: ['settings'],
+        styles: ['settings'],
+        passwords: {}
+      }
+      db.findAll(db.tables.ACCOUNT_TABLE, '*', function (result) {
+        // data.passwords = result
+        for (let i = 0; i < result.length; i++) {
+          if (result[i].level === '1') {
+            data.passwords.low = result[i].hashed_password
+          } else if (result[i].level === '2') {
+            data.passwords.med = result[i].hashed_password
+          } else if (result[i].level === '3') {
+            data.passwords.high = result[i].hashed_password
+          }
+        }
+        res.render('settings-page', data)
+      })
+    } else {
+      sendError(req, res, 401)
+    }
+  },
+  /**
+   * This function changes the password of the given level and password
+   * @param req - the incoming request containing either the query or body
+   * @param res - the result to be sent out after processing the request
+   */
+  postChangePassword: function (req, res) {
+    // process passwords
+    if (parseInt(req.session.level) === 3) {
+      const level = req.body.level
+      const password = req.body.password
+
+      bcrypt.hash(password, saltRounds, function (err, hash) {
+        if (err) {
+          res.send(false)
+        } else {
+          const levelCondition = new Condition(queryTypes.where)
+          levelCondition.setKeyValue(accountFields.ID, level)
+          const data = {}
+          data[accountFields.PASSWORD] = hash
+          db.update(tables.ACCOUNT_TABLE, data, levelCondition, function (result) {
+            if (result) {
+              res.send(true)
+            } else {
+              res.send(false)
+            }
+          })
+        }
+      })
+    } else {
+      sendError(req, res, 401)
+    }
+  },
+  /**
+   * This function changes the password of the given level and password
+   * @param req - the incoming request containing either the query or body
+   * @param res - the result to be sent out after processing the request
+   */
+  postComparePasswords: function (req, res) {
+    const confirmPass = req.body.confirmPass
+    const currPass = req.body.currPass
+    bcrypt.compare(confirmPass, currPass, function (err, result) {
+      if (err) {
+        res.send(false)
+      }
+      res.send(result) // sends boolean true or false
+    })
+  },
+  /**
+   * This function drops all tables in the database
+   * @param req - the incoming request containing either the query or body
+   * @param res - the result to be sent out after processing the request
+   */
+  postDropAllTables: function (req, res) {
+    db.deleteAndReset()
+    res.send(true)
   }
 }
 

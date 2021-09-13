@@ -1,0 +1,124 @@
+{{>navbar}}
+<div class="container mt-5 mb-3" style="padding: 0">
+    <h1> Settings </h1>
+</div>
+<div id="current_passwords"
+  data-low="{{passwords.low}}"
+  data-med="{{passwords.med}}"
+  data-high="{{passwords.high}}"></div>
+<div class="container sample" style="box-shadow: 0px 0px 10px rgb(212, 212, 212);">
+    <div class="row">
+        <div class="col mt-3 col-header-btn">
+            <button class="header-btn"><h4 id="btn-passwords"> Edit Passwords </h4></button>
+        </div>
+        <div class="col mt-3 col-header-btn">
+            <button class="header-btn"><h4 id="btn-database"> Database </h4></button>
+        </div>
+    </div>
+    <hr class="header-divider">
+    <div class="row p-3" id="passwords-div">
+        <div class="row mb-3">
+            <div class="col"><p>Edit level 1 password (low)</p></div>
+            <div class="col">
+                <input type="password" id="password-low" class="form-control" placeholder="Enter new password">
+                <p id="level-one-enter-pass" class="error-codes">Please accomplish</p>
+            </div>
+            <div class="col">
+                <input type="password" id="password-low-conf" class="form-control" placeholder="Confirm password">
+                <p id="level-one-conf-pass" class="error-codes">Please accomplish</p>
+            </div>
+            <div class="col btn-submit">
+                <button id="edit-low" type="button" class="btn btn-secondary">Submit</button>
+            </div>
+        </div>
+        <hr>
+        <div class="row mb-3">
+            <div class="col"><p>Edit level 2 password</p></div>
+            <div class="col">
+                <input type="password" id="password-med" class="form-control" placeholder="Enter new password">
+                <p id="level-two-enter-pass" class="error-codes">Please accomplish</p>
+            </div>
+            <div class="col">
+                <input type="password" id="password-med-conf" class="form-control" placeholder="Confirm password">
+                <p id="level-two-conf-pass" class="error-codes">Please accomplish</p>
+            </div>
+            <div class="col btn-submit">
+                <button id="edit-med" type="button" class="btn btn-secondary">Submit</button>
+            </div>
+        </div>
+        <hr>
+        <div class="row mb-3">
+            <div class="col"><p>Edit level 3 password</p></div>
+            <div class="col">
+                <input type="password" id="password-high" class="form-control" placeholder="Enter new password">
+                <p id="level-three-enter-pass" class="error-codes">Please accomplish</p>
+            </div>
+            <div class="col">
+                <input type="password" id="password-high-conf" class="form-control" placeholder="Confirm password">
+                <p id="level-three-conf-pass" class="error-codes">Please accomplish</p>
+            </div>
+            <div class="col btn-submit">
+                <button id="edit-high" type="button" class="btn btn-secondary">Submit</button>
+            </div>
+        </div>
+    </div>
+    <div class="row p-3" id="database-div" style="display: none;">
+        <div class="row mb-3">
+            <div class="col"><p>Delete database</p></div>
+            <div class="col btn-submit">
+                <button id="delete-db" type="button" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="password-confirmation-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirm-password"> Confirm current password </h5>
+        <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col">
+            <input type="password" id="confirm-pass" class="form-control" placeholder="Enter current password to proceed"> 
+            <p id="confirm-pass-error" class="error_codes"></p>
+          </div>
+        </div>
+      <div class="modal-footer">
+        <button type="button" id="cancel_modal" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="edit-password-submit">Save changes</button>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<div class="modal fade" id="password-success-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="success-password"> Password has been changed successfully! </h5>
+        <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="cancel_modal" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="delete-db-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="delete-db-message"> Database has been deleted successfully! </h5>
+        <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="cancel_modal" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
