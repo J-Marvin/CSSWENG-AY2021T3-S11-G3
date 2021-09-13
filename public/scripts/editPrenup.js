@@ -190,11 +190,23 @@ $(document).ready(function () {
     }
   })
 
-  $('#edit-prenup').click(function() {
-    // compare date added and planned wedding date
+  $('#save_changes').click(function () {
+    var isValid = true
+    var hasDate = !validator.isEmpty($('#wedding_date').val())
+    if (!hasDate) {
+      isValid = false
+      $('#wedding_date_error').text('Wedding date should not be empty!')
+    } else {
+      $('#wedding_date_error').text('')
+    }
+    if(isValid) {
+      $('#confirmationModal').modal('toggle')
+    }
+  })
+
+  $('#edit-prenup').click(function () {
     const newWeddingDate = new Date($('#wedding_date').val()).toISOString()
     const prenupId = $('#prenup-info').data('prenuprecord-id')
-
     $.ajax({
       type: 'PUT',
       url: '/update_prenup/date',
@@ -205,11 +217,12 @@ $(document).ready(function () {
       success: function (result) {
         if (result) {
           location.href = '/view_prenup/' + prenupId
+        } else {
+          console.log('update wedding date error')
         }
       }
     })
   })
-
 
   function submitBride() {
     const bridePerson = getDetails($('#bride_member'), null, $('#input_bride_member'), $('#bride_first_name'), $('#bride_mid_name'), $('#bride_last_name'))
