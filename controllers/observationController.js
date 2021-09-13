@@ -11,7 +11,6 @@ const observationController = {
     data[observationFields.COMMENT] = req.body.comment
     data[observationFields.DATE] = new Date().toISOString()
 
-    console.log(data)
     db.insert(db.tables.OBSERVATION_TABLE, data, function (result) {
       if (result) {
         data.observation_id = result[0]
@@ -35,8 +34,6 @@ const observationController = {
     data[observationFields.OBSERVER] = req.body.observer
     data[observationFields.OBSERVEE] = req.body.observee
     data[observationFields.COMMENT] = req.body.comment
-    console.log(req.body.observation_id)
-    console.log(data)
     db.update(db.tables.OBSERVATION_TABLE, data, condition, function (result) {
       if (result) {
         res.send(true)

@@ -259,8 +259,6 @@ const database = {
       const flag = false
       callback(flag)
     })
-
-    console.log(tableClient.toString())
   },
 
   /**

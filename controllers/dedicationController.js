@@ -152,7 +152,6 @@ const dedicationController = {
           data.canSee = parseInt(req.session.level) >= 2 || req.session.editId === parseInt(req.session.editId) === dedicationId
           db.find(db.tables.WITNESS_TABLE, witnessCond, witnessJoin, witnessColumns, function (result) {
             if (result) {
-              console.log(data)
               data.witnesses = result
               // Filters all Godfathers
               data.witnessMale = data.witnesses.filter((witness) => { return witness.type === 'Godfather' })
@@ -413,13 +412,13 @@ const dedicationController = {
   },
 
   getEditDedication: function (req, res) {
+    req.session.level = 3
     const dedicationId = req.params.dedication_id
     if (parseInt(req.session.level) >= 2 || parseInt(req.session.editId) === parseInt(dedicationId)) {
       const cond1 = new Condition(queryTypes.where)
       cond1.setKeyValue(db.tables.INFANT_TABLE + '.' + infDedFields.ID, dedicationId)
       const witnessCond = new Condition(queryTypes.where)
       witnessCond.setKeyValue(db.tables.WITNESS_TABLE + '.' + witnessFields.DEDICATION, dedicationId)
-
       const joinTables = [
         {
           tableName: { child: db.tables.PERSON_TABLE },
@@ -581,7 +580,6 @@ const dedicationController = {
       memberRecordField: null,
       recordPersonField: isFirstGuardian ? coupleFields.FEMALE : coupleFields.MALE
     }
-    console.log(person)
 
     if (isOldNone && !isNewNone && isNewMember) {
       updateNoneToMember(ids, fields, tables.COUPLE_TABLE, sendReply)
@@ -603,7 +601,6 @@ const dedicationController = {
     }
 
     function sendReply (result) {
-      console.log(result)
       if (result) {
         res.send(JSON.stringify(result))
       } else {
@@ -651,9 +648,6 @@ const dedicationController = {
       recordPersonField: witnessFields.PERSON
     }
 
-    console.log(ids)
-    console.log(req.body)
-
     if (isOldMember && isNewMember) { // From member to member
       updateMemberToMember(ids, fields, tables.WITNESS_TABLE, sendReply)
     } else if (isOldMember && !isNewMember) { // From member to non member
@@ -666,7 +660,6 @@ const dedicationController = {
     }
 
     function sendReply (result) {
-      console.log(result)
       if (result) {
         res.send(JSON.stringify(result))
       } else {
@@ -687,7 +680,6 @@ const dedicationController = {
 
     const personInfo = []
 
-    console.log(person)
     if (!person.isMember) {
       const personData = {}
       personData[personFields.FIRST_NAME] = person.firstName
@@ -697,8 +689,6 @@ const dedicationController = {
       personInfo.push(personData)
     }
 
-    console.log(personInfo)
-
     db.insert(db.tables.PERSON_TABLE, personInfo, function (result) {
       if (result) {
         if (!person.isMember) {
@@ -706,7 +696,6 @@ const dedicationController = {
         }
 
         db.insert(db.tables.WITNESS_TABLE, witnessData, function (result) {
-          console.log(result)
           if (result) {
             const data = {
               layout: false,
@@ -718,8 +707,6 @@ const dedicationController = {
               witness_mid_name: person.midName,
               witness_last_name: person.lastName
             }
-
-            console.log(data)
 
             res.render('partials/edit-witness', data, function (err, html) {
               if (err) {
@@ -739,7 +726,6 @@ const dedicationController = {
   },
 
   delWitness: function (req, res) {
-    console.log(req.body)
     const recordId = req.body.recordId
     const person = JSON.parse(req.body.person)
 
@@ -748,7 +734,6 @@ const dedicationController = {
 
     let personCondition = null
 
-    console.log(person)
     if (!person.memberId) {
       personCondition = new Condition(queryTypes.where)
       personCondition.setKeyValue(personFields.ID, person.personId)
@@ -760,8 +745,6 @@ const dedicationController = {
     db.delete(tables.WITNESS_TABLE, condition, function (result) {
       if (result) {
         db.delete(tables.PERSON_TABLE, personCondition, function (result) {
-          console.log(result)
-
           if (person.memberId && result === 0) {
             result = true
           }
@@ -783,7 +766,6 @@ const dedicationController = {
     const witnesses = JSON.parse(req.body.witnesses)
     const recordId = req.body.recordId
 
-    console.log(couples)
     const nonMembersCond = new Condition(queryTypes.whereIn)
     nonMembersCond.setArray(personFields.ID, nonMembers)
 
@@ -804,7 +786,6 @@ const dedicationController = {
 
       if (result) {
         db.delete(tables.COUPLE_TABLE, couplesCond, function (result) {
-          console.log(result)
           if (result) {
             db.delete(tables.PERSON_TABLE, nonMembersCond, function (result) {
               if (nonMembers.length === 0 || result) {
