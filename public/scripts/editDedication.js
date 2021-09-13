@@ -14,7 +14,9 @@ $(document).ready(function() {
     editGodMother: 1,
     editGodFather: 2,
     addGodMother: 3,
-    addGodFather: 4
+    addGodFather: 4,
+    deleteGodFather: 5,
+    deleteGodMother: 6
   }
   let trigger = null
 
@@ -31,8 +33,6 @@ $(document).ready(function() {
     currPerson.midName = $('#child_mid_name_view').text()
     currPerson.lastName = $('#child_last_name_view').text()
     currPerson.doesExist = true
-
-    console.log(currPerson)
 
     if (currPerson.memberId !== null && currPerson.memberId !== '') {
       $('#child_member').prop('checked', true)
@@ -659,7 +659,6 @@ $(document).ready(function() {
     if (!isFemale) {
       validation = validateMaleWitness
     }
-    console.log(url)
 
     saveWitness(this, validation, isFemale, isEdit, url)
   })
@@ -667,15 +666,15 @@ $(document).ready(function() {
   $('#confirm_delete_witness').click(function () {
     const button = this
     $(button).prop('disabled', true)
-    let isFemale = true
+    let isGodMother = true
 
     if (modalType === editKeys.deleteGodFather) {
-      isFemale = false
+      isGodMother = false
     }
 
     let errorModal = null
 
-    if (isFemale) {
+    if (isGodMother) {
       errorModal = $('#witness_gmother_info_error')
     } else {
       errorModal = $('#witness_gfather_info_error')
@@ -695,11 +694,10 @@ $(document).ready(function() {
       url: '/delete_wedding/witness',
       data: data,
       success: function (result) {
-        console.log(result)
         if (result) {
           $(trigger).parent().remove()
 
-          if (isFemale) {
+          if (isGodMother) {
             GMotherWitnessCtr--
           } else {
             GFatherWitnessCtr--
@@ -715,18 +713,6 @@ $(document).ready(function() {
         $(button).prop('disabled', false)
       }
     })
-  })
-
-  $(document).on('click', '.delete_male_witness_btn', function () {
-    trigger = $(this).closest('.witness')
-    modalType = editKeys.deleteGodFather
-    $('#confirmDeleteWitnessModal').modal('show')
-  })
-
-  $(document).on('click', '.delete_female_witness_btn', function () {
-    trigger = $(this).closest('.witness')
-    modalType = editKeys.deleteGodMother
-    $('#confirmDeleteWitnessModal').modal('show')
   })
 
   function saveWitness(button, validation, isFemale, isEdit, url) {
@@ -764,7 +750,6 @@ $(document).ready(function() {
       let personId = currPerson.personId
       let info = $(infoSelect).val().split(', ')
 
-      console.log(info)
 
       const data = {
         isOldMember: memberId !== null && memberId !== undefined && memberId !== '',
@@ -789,10 +774,8 @@ $(document).ready(function() {
         url: url,
         data: data,
         success: function (result) {
-          console.log(result)
           if (result) {
             const personInfo = JSON.parse(data.person)
-            console.log(personInfo)
 
             if (isEdit) {
               let firstNameField = trigger.find('.witness_first_name_view')
@@ -980,7 +963,6 @@ $(document).ready(function() {
 
     // get witnesses
     $('.witness').each(function () {
-      console.log("WITNESS: " + $(this).data('member'))
       selectizeDisable(getValue($(this).data('member')))
     })
   }
@@ -1085,18 +1067,14 @@ $(document).ready(function() {
       $('#officiant_info_error').text('')
     }
 
-    if (GMotherWitnessCtr < 1) {
+    if (GMotherWitnessCtr < 1 && GFatherWitnessCtr < 1) {
       isValid = false
-      $('#witness_gmother_info_error').text('Need at least 1 Godmother')
+      $('#witness_gmother_info_error').text('Need at least 1 Witness')
+      $('#witness_gfather_info_error').text('Need at least 1 Witness')
     } else {
       $('#witness_gmother_info_error').text('')
-    }
-
-    if (GFatherWitnessCtr < 1) {
-      isValid = false
-      $('#witness_gfather_info_error').text('Need at least 1 Godfather')
-    } else {
       $('#witness_gfather_info_error').text('')
+      $('#witness_gmother_info_error').text('')
     }
 
     return isValid
