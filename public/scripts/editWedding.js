@@ -1011,8 +1011,8 @@ $(document).ready(function() {
     var isMember = $('#groom_member').is(':checked')
     var isValidMemberField = !($('#input_groom_member').val() === '0' || $('#input_groom_member').val() === '')
     var anyEmpty = $('#groom_first_name').val() === '' || $('#groom_mid_name').val() === '' || $('#groom_last_name').val() === ''
-    var isValidMidName = $('#groom_mid_name').val().length === 1 && validateMidInitial($('#groom_mid_name').val())
-
+    var isValidMidName = validateMidInitial($('#groom_mid_name').val())
+    var midNameLen = $('#groom_mid_name').val().length === 1
     // Check if valid member
     if (isMember && !isValidMemberField) {
       isValid = false
@@ -1024,6 +1024,9 @@ $(document).ready(function() {
       } else if (!isValidMidName) {
         isValid = false
         $(errorField).text("Bride's middle initial should only range from letters A-Z")
+      } else if (!midNameLen) {
+        isValid = false
+        $(errorField).text("Middle initial should only contain 1 letter")
       }
     }
 
@@ -1041,8 +1044,8 @@ $(document).ready(function() {
     var isMember = $('#bride_member').is(':checked')
     var isValidMemberField = !($('#input_bride_member').val() === '0' || $('#input_bride_member').val() === '')
     var anyEmpty = $('#bride_first_name').val() === '' || $('#bride_mid_name').val() === '' || $('#bride_last_name').val() === ''
-    var isValidMidName = $('#bride_mid_name').val().length === 1 && validateMidInitial($('#bride_mid_name').val())
-
+    var isValidMidName = validateMidInitial($('#bride_mid_name').val())
+    var midNameLen = $('#bride_mid_name').val().length === 1
     // Check if valid member
     if (isMember && !isValidMemberField) {
       isValid = false
@@ -1054,6 +1057,9 @@ $(document).ready(function() {
       } else if (!isValidMidName) {
         isValid = false
         $(errorField).text("Bride's middle initial should only range from letters A-Z")
+      } else if (!midNameLen) {
+        isValid = false
+        $(errorField).text("Middle initial should only contain 1 letter")
       }
     }
 
@@ -1072,8 +1078,8 @@ $(document).ready(function() {
     var isNone = $('#male_none').is(':checked')
     var isValidMemberField = !($('#input_male_member').val() === '0' || $('#input_male_member').val() === '')
     var anyEmpty = $('#male_first_name').val() === '' || $('#male_mid_name').val() === '' || $('#male_last_name').val() === ''
-    var isValidMidName = $('#male_mid_name').val().length === 1 && validateMidInitial($('#male_mid_name').val())
-
+    var isValidMidName = validateMidInitial($('#male_mid_name').val())
+    var midNameLen = $('#male_mid_name').val().length === 1
     // Check if valid member
     if (isMember && !isValidMemberField) {
       isValid = false
@@ -1085,6 +1091,9 @@ $(document).ready(function() {
       } else if (!isValidMidName) {
         isValid = false
         $(errorField).text("Middle initial should only range from letters A-Z")
+      } else if (!midNameLen) {
+        isValid = false
+        $(errorField).text("Middle initial should only contain 1 letter")
       }
     }
 
@@ -1103,8 +1112,8 @@ $(document).ready(function() {
     var isNone = $('#female_none').is(':checked')
     var isValidMemberField = !($('#input_female_member').val() === '0' || $('#input_female_member').val() === '')
     var anyEmpty = $('#female_first_name').val() === '' || $('#female_mid_name').val() === '' || $('#female_last_name').val() === ''
-    var isValidMidName = $('#female_mid_name').val().length === 1 && validateMidInitial($('#female_mid_name').val())
-
+    var isValidMidName = validateMidInitial($('#female_mid_name').val())
+    var midNameLen = $('#female_mid_name').val().length === 1
     // Check if valid member
     if (isMember && !isValidMemberField) {
       isValid = false
@@ -1116,6 +1125,9 @@ $(document).ready(function() {
       } else if (!isValidMidName) {
         isValid = false
         $(errorField).text("Middle initial should only range from letters A-Z")
+      } else if (!midNameLen) {
+        isValid = false
+        $(errorField).text("Middle initial should only contain 1 letter")
       }
     }
 
@@ -1134,8 +1146,8 @@ $(document).ready(function() {
     var isNone = $('#male_witness_none').is(':checked')
     var isValidMemberField = !($('#input_male_witness_member').val() === '0' || $('#input_male_witness_member').val() === '')
     var anyEmpty = $('#male_witness_first_name').val() === '' || $('#male_witness_mid_name').val() === '' || $('#male_witness_last_name').val() === ''
-    var isValidMidName = $('#male_witness_mid_name').val().length === 1 && validateMidInitial($('#male_witness_mid_name').val())
-
+    var isValidMidName = validateMidInitial($('#male_witness_mid_name').val())
+    var midNameLen = $('#male_witness_mid_name').val().length === 1
     // Check if valid member
     if (isMember && !isValidMemberField) {
       isValid = false
@@ -1147,6 +1159,9 @@ $(document).ready(function() {
       } else if (!isValidMidName) {
         isValid = false
         $(errorField).text("Middle initial should only range from letters A-Z")
+      } else if (!midNameLen) {
+        isValid = false
+        $(errorField).text("Middle initial should only contain 1 letter")
       }
     }
 
@@ -1165,8 +1180,8 @@ $(document).ready(function() {
     var isNone = $('#female_witness_none').is(':checked')
     var isValidMemberField = !($('#input_female_witness_member').val() === '0' || $('#input_female_witness_member').val() === '')
     var anyEmpty = $('#female_witness_first_name').val() === '' || $('#female_witness_mid_name').val() === '' || $('#female_witness_last_name').val() === ''
-    var isValidMidName = $('#female_witness_mid_name').val().length === 1 && validateMidInitial($('#female_witness_mid_name').val())
-
+    var isValidMidName = validateMidInitial($('#female_witness_mid_name').val())
+    var midNameLen = $('#female_witness_mid_name').val().length === 1
     // Check if valid member
     if (isMember && !isValidMemberField) {
       isValid = false
@@ -1178,6 +1193,9 @@ $(document).ready(function() {
       } else if (!isValidMidName) {
         isValid = false
         $(errorField).text("Middle initial should only range from letters A-Z")
+      } else if (!midNameLen) {
+        isValid = false
+        $(errorField).text("Middle initial should only contain 1 letter")
       }
     }
 

@@ -132,7 +132,7 @@ $(document).ready(function () {
           isValid = false
           $('#bride_info_error').text("Bride's middle initial should only range from letters A-Z")
         }
-        if ($('#groom_mid_name').val().length > 1) {
+        if ($('#bride_mid_name').val().length > 1) {
           isValid = false
           $('#bride_info_error').text("Bride's middle initial should only contain 1 letter")
         }

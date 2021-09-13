@@ -187,6 +187,12 @@ $(document).ready(function() {
       } else {
         $('#child_info_error').text('')
       }
+      if ($('#child_mid_name').val().length > 1) {
+        isValid = false
+        $('#child_info_error').text("Child's middle initial should only contain 1 letter")
+      } else {
+        $('#child_info_error').text('')
+      }
     }
 
     if ($('#child_member').is(':checked')) {
@@ -283,6 +289,13 @@ $(document).ready(function() {
       } else {
         $('#parent1_info_error').text('')
       }
+      if ($('#parent1_mid_name').val().length > 1) {
+        isValid = false
+        $('#parent1_info_error').text("This guardian's middle initial should only contain 1 letter")
+      } else {
+        $('#parent1_info_error').text('')
+      }
+
     }
 
     if ($('#parent1_member').is(':checked')) {
@@ -384,6 +397,12 @@ $(document).ready(function() {
       if (firstName || midName || lastName) {
         isValid = false
         $('#parent2_info_error').text('Accomplish all fields')
+      } else {
+        $('#parent2_info_error').text('')
+      }
+      if ($('#parent2_mid_name').val().length > 1) {
+        isValid = false
+        $('#parent2_info_error').text("This guardian's middle initial should only contain 1 letter")
       } else {
         $('#parent2_info_error').text('')
       }
@@ -1000,6 +1019,9 @@ $(document).ready(function() {
       } else if (!isValidMidName) {
         isValid = false
         $(errorField).text("Middle initial should only range from letters A-Z")
+      } else if ($('#witness_gfather_mid_name').val().length > 1) {
+        isValid = false
+        $(errorField).text("Middle initial should only contain 1 letter")
       }
     }
 
@@ -1031,6 +1053,9 @@ $(document).ready(function() {
       } else if (!isValidMidName) {
         isValid = false
         $(errorField).text("Middle initial should only range from letters A-Z")
+      } else if ($('#witness_gmother_mid_name').val().length > 1) {
+        isValid = false
+        $(errorField).text("Middle initial should only contain 1 letter")
       }
     }
 

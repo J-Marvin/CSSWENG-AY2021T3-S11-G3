@@ -258,14 +258,15 @@ $(document).ready(function() {
         $('#officiant_error').text('')
       }
     } else {
-      if (!officiantHasFirstName || !officiantHasLastName || !officiantHasLastName) {
+      if (!officiantHasFirstName || !officiantHasMidName || !officiantHasLastName) {
         isValid = false
         $('#officiant_error').text('Please fill up all fields')
       } else if (!officiantIsValidMidName) {
         isValid = false
         $('#officiant_error').text('Middle initial should only contain one letter')
-      } else {
-        $('#officiant_error').text('')
+      } else if ($('#officiant_mid_name').val().length > 1) {
+        isValid = false
+        $(errorField).text("Middle initial should only contain 1 letter")
       }
     }
 
