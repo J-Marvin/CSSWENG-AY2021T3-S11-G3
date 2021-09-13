@@ -173,7 +173,6 @@ const controller = {
         db.tables.INFANT_TABLE + '.' + infDedFields.DATE + ' as date'
       ]
       db.find(db.tables.INFANT_TABLE, null, joinTables, columns, function (result) {
-        // console.log(result)
         res.render('dedication-main-page', {
           styles: ['lists'],
           scripts: ['convertDataTable'],

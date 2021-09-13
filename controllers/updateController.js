@@ -12,7 +12,7 @@ const updateController = {
  */
   updateNonMemberToNonMember: function (person, callback) {
     const data = {}
-    console.log(person)
+
     data[personFields.FIRST_NAME] = person.firstName
     data[personFields.MID_NAME] = person.midName
     data[personFields.LAST_NAME] = person.lastName
@@ -20,7 +20,6 @@ const updateController = {
     condition.setKeyValue(personFields.ID, person.personId)
 
     db.update(tables.PERSON_TABLE, data, condition, function (result) {
-      console.log(person.personId)
       if (result) {
         callback(person.personId)
       } else {
@@ -51,8 +50,6 @@ const updateController = {
     if (fields.memberRecordField) {
       updateDataMember[fields.memberRecordField] = null
     }
-
-    console.log(updateDataMember)
 
     db.update(db.tables.MEMBER_TABLE, updateDataMember, memberCondition, function (result) {
       if (fields.memberRecordField === null && result === 0) {
@@ -111,8 +108,6 @@ const updateController = {
     const updateRecordData = {}
     updateRecordData[fields.recordPersonField] = newPersonId
 
-    console.log(updateRecordData)
-
     const updateMemberData = {}
     if (fields.memberRecord) {
       updateMemberData[fields.memberRecordField] = updateRecordId
@@ -124,9 +119,6 @@ const updateController = {
     const updateMemberCondition = new Condition(queryTypes.where)
     updateMemberCondition.setKeyValue(memberFields.PERSON, newPersonId)
 
-    console.log(updateRecordCondition)
-    console.log(oldPersonId)
-    console.log(newPersonId)
     // update first the record table so no fk issues
     db.update(recordTable, updateRecordData, updateRecordCondition, function (result) {
       if (result) {
@@ -330,10 +322,8 @@ const updateController = {
 
     const recordUpdateData = {}
     recordUpdateData[fields.recordPersonField] = null
-    console.log(updateDataMember)
 
     db.update(db.tables.MEMBER_TABLE, updateDataMember, memberCondition, function (result) {
-      console.log(result)
       if (fields.memberRecordField === null && result === 0) {
         result = true
       }
@@ -371,7 +361,7 @@ const updateController = {
     const updateRecordData = {}
     updateRecordData[fields.recordPersonField] = null
 
-    console.log(updateRecordData)
+    
 
     const updateRecordCondition = new Condition(queryTypes.where)
     updateRecordCondition.setKeyValue(fields.recordId, recordId)

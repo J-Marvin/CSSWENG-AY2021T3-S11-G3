@@ -138,7 +138,6 @@ const memberController = {
                   data.scripts = ['removeButtons', 'deleteMember']
                   data.canSee = (parseInt(req.session.level) === 3) || req.session.editId !== null
                   data.backLink = parseInt(req.session.level) >= 2 ? '/member_main_page' : '/main_page'
-                  console.log(data)
                   res.render('view-member', data)
                 }
               })
@@ -298,8 +297,6 @@ const memberController = {
       data.address[addressFields.POSTAL_CODE] = req.body.postal_code
       data.address[addressFields.COUNTRY] = req.body.country
 
-      console.log(req.body)
-
       data.member[memberFields.BIRTHDAY] = req.body.birthday
       data.member[memberFields.OCCUPATION] = req.body.occupation
       data.member[memberFields.WORKPLACE] = req.body.workplace
@@ -351,8 +348,6 @@ const memberController = {
 
     const recordCond = new Condition(queryTypes.where)
     recordCond.setKeyValue(memberFields.ID, recordId)
-    console.log(req.body)
-    console.log(bapRecordId)
 
     db.delete(db.tables.MEMBER_TABLE, recordCond, function (result) {
       if (result) {
@@ -360,7 +355,6 @@ const memberController = {
           if (result) {
             if (bapRecordId !== null && bapRecordId !== undefined && bapRecordId !== '') {
               req.body.recordId = bapRecordId
-              console.log(req.body)
               baptismalController.delBaptismal(req, res)
             } else {
               res.send(true)

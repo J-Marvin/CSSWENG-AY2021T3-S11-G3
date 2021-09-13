@@ -110,7 +110,6 @@ const churchController = {
     db.update(db.tables.CHURCH_TABLE, church, churchCond, function (result) {
       if (result) {
         db.update(db.tables.ADDRESS_TABLE, address, addressCond, function (result) {
-          console.log(result)
           if (result) {
             res.send(true)
           } else {

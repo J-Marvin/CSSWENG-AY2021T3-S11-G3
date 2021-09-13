@@ -242,14 +242,11 @@ const weddingController = {
       // set the WHERE condition: wedding_id = <weddingId>
       const witnessCond = new Condition(queryTypes.where)
       witnessCond.setKeyValue(db.tables.WITNESS_TABLE + '.' + witnessFields.WEDDING, weddingId)
-      console.log(cond)
 
       // find them
       db.find(db.tables.WEDDING_TABLE, cond, joinTables, columns, function (result) {
-        // store to data\
-        console.log(result)
+        // store to data
         if (result !== null && result.length > 0) {
-          console.log(result)
           const data = {
             ...result[0]
           }
@@ -269,7 +266,6 @@ const weddingController = {
               data.witnessMale = data.witnesses.filter((witness) => { return witness.type === 'Godfather' })
               // Filters all Godmothers
               data.witnessFemale = data.witnesses.filter((witness) => { return witness.type === 'Godmother' })
-              console.log(data)
               res.render('view-wedding', data)
             }
           })
@@ -284,7 +280,7 @@ const weddingController = {
 
   getEditWedding: function (req, res) {
     const weddingId = parseInt(req.params.wedding_id)
-    if (parseInt(req.session.level) == 3 || parseInt(req.session.editId) === weddingId) {
+    if (parseInt(req.session.level) === 3 || parseInt(req.session.editId) === weddingId) {
       /*
         FROM wedding_reg
         JOIN couples ON couples.couple_id = wedding_reg.couple_id
@@ -468,14 +464,11 @@ const weddingController = {
       // set the WHERE condition: wedding_id = <weddingId>
       const witnessCond = new Condition(queryTypes.where)
       witnessCond.setKeyValue(db.tables.WITNESS_TABLE + '.' + witnessFields.WEDDING, weddingId)
-      console.log(cond)
 
       // find them
       db.find(db.tables.WEDDING_TABLE, cond, joinTables, columns, function (result) {
-        // store to data\
-        console.log(result)
+        // store to data
         if (result !== null && result.length > 0) {
-          console.log(result)
           const data = {
             ...result[0]
           }
@@ -493,7 +486,6 @@ const weddingController = {
               data.witnessMale = data.witnesses.filter((witness) => { return witness.type === 'Godfather' })
               // Filters all Godmothers
               data.witnessFemale = data.witnesses.filter((witness) => { return witness.type === 'Godmother' })
-              console.log(data)
               db.find(db.tables.MEMBER_TABLE, [], {
                 tableName: tables.PERSON_TABLE,
                 sourceCol: tables.PERSON_TABLE + '.' + personFields.ID,
@@ -560,7 +552,6 @@ const weddingController = {
     const coupleInfo = []
 
     // Extract data from req.body
-    console.log(req.body)
     people.bride = JSON.parse(req.body.bride)
     people.groom = JSON.parse(req.body.groom)
     people.brideMother = JSON.parse(req.body.brideMother)
@@ -575,8 +566,6 @@ const weddingController = {
     data[weddingRegFields.LOCATION] = req.body.location
     data[weddingRegFields.SOLEMNIZER] = req.body.solemnizer
     data[weddingRegFields.WEDDING_OFFICIANT] = req.body.officiant
-
-    console.log(people)
 
     if (people.bride.isMember) {
       couples.couple[coupleFields.FEMALE] = people.bride.person_id
@@ -667,8 +656,6 @@ const weddingController = {
       peopleOffsets.groomMother += 1
     }
 
-    console.log(peopleInfo)
-    console.log(peopleOffsets)
     db.insert(db.tables.PERSON_TABLE, peopleInfo, function (result) {
       if (result) {
         result = result[0]
@@ -812,14 +799,12 @@ const weddingController = {
                             }
 
                             db.update(db.tables.MEMBER_TABLE, memberUpdateData, updateConditions, function (result) {
-                              console.log(result)
                               if (result === 0) {
                                 result = true
                               }
 
                               if (result) {
                                 req.session.editId = currWedding
-                                console.log(currWedding)
                                 res.send(JSON.stringify(currWedding))
                               } else {
                                 console.log('error updating into member table')
@@ -877,7 +862,6 @@ const weddingController = {
     dataInfo[weddingRegFields.DATE_OF_WEDDING] = date
     dataInfo[weddingRegFields.CONTRACT] = contract
 
-    console.log(req.body)
     const updateCond = new Condition(queryTypes.where)
     updateCond.setKeyValue(weddingRegFields.ID, req.body.recordId)
 
@@ -968,7 +952,6 @@ const weddingController = {
       memberRecordField: memberRecordField,
       recordPersonField: isFemale ? coupleFields.FEMALE : coupleFields.MALE
     }
-    console.log(person)
 
     if (isOldNone && !isNewNone && isNewMember) {
       updateNoneToMember(ids, fields, tables.COUPLE_TABLE, sendReply)
@@ -990,7 +973,6 @@ const weddingController = {
     }
 
     function sendReply (result) {
-      console.log(result)
       if (result) {
         res.send(JSON.stringify(result))
       } else {
@@ -1000,7 +982,6 @@ const weddingController = {
   },
 
   putUpdateWitness: function (req, res) {
-    console.log(req.body)
     const isOldMember = req.body.isOldMember === 'true'
     const person = JSON.parse(req.body.person)
     const isNewMember = person.isMember
@@ -1027,7 +1008,6 @@ const weddingController = {
     }
 
     function sendReply (result) {
-      console.log(result)
       if (result) {
         res.send(JSON.stringify(result))
       } else {
@@ -1048,7 +1028,6 @@ const weddingController = {
 
     const personInfo = []
 
-    console.log(person)
     if (!person.isMember) {
       const personData = {}
       personData[personFields.FIRST_NAME] = person.firstName
@@ -1058,8 +1037,6 @@ const weddingController = {
       personInfo.push(personData)
     }
 
-    console.log(personInfo)
-
     db.insert(db.tables.PERSON_TABLE, personInfo, function (result) {
       if (result) {
         if (!person.isMember) {
@@ -1067,7 +1044,6 @@ const weddingController = {
         }
 
         db.insert(db.tables.WITNESS_TABLE, witnessData, function (result) {
-          console.log(result)
           if (result) {
             const data = {
               layout: false,
@@ -1079,8 +1055,6 @@ const weddingController = {
               witness_mid_name: person.midName,
               witness_last_name: person.lastName
             }
-
-            console.log(data)
 
             res.render('partials/edit-witness', data, function (err, html) {
               if (err) {
@@ -1100,7 +1074,6 @@ const weddingController = {
   },
 
   delWitness: function (req, res) {
-    console.log(req.body)
     const recordId = req.body.recordId
     const person = JSON.parse(req.body.person)
 
@@ -1109,7 +1082,6 @@ const weddingController = {
 
     let personCondition = null
 
-    console.log(person)
     if (!person.memberId) {
       personCondition = new Condition(queryTypes.where)
       personCondition.setKeyValue(personFields.ID, person.personId)
@@ -1121,8 +1093,6 @@ const weddingController = {
     db.delete(tables.WITNESS_TABLE, condition, function (result) {
       if (result) {
         db.delete(tables.PERSON_TABLE, personCondition, function (result) {
-          console.log(result)
-
           if (person.memberId && result === 0) {
             result = true
           }

@@ -3,7 +3,7 @@ const personFields = require('../models/person')
 const prenupRecordFields = require('../models/prenupRecord')
 const coupleFields = require('../models/couple')
 const { Condition, queryTypes } = require('../models/condition')
-const { validationResult, query } = require('express-validator')
+const { validationResult } = require('express-validator')
 const memberFields = require('../models/members')
 const { sendError } = require('./errorController')
 const { updateMemberToMember, updateMemberToNonMember, updateNonMemberToMember, updateNonMemberToNonMember } = require('./updateController')
@@ -132,7 +132,6 @@ const prenupController = {
         // check if member is male
         if (memberInfo[0][memberFields.SEX] === 'Male') {
           const groomNames = result
-          console.log('groomNames: ' + groomNames)
 
           // find all bride members
           // cond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.SEX, 'Female')
@@ -148,7 +147,6 @@ const prenupController = {
           db.find(db.tables.MEMBER_TABLE, [cond, cond2], joinTables3, '*', function (result) {
             if (result !== null) {
               const brideNames = result
-              console.log('brideNames: ' + brideNames)
               req.session.editId = member
               res.render('add-prenup-temp', {
                 scripts: ['addPrenup'],
@@ -164,9 +162,7 @@ const prenupController = {
         // if the member is a female
         } else {
           const brideNames = result
-          console.log('brideNames: ' + brideNames)
           // find all groom members
-          // cond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.SEX, 'Male')
           cond.setQueryObject(
             {
               sex: 'Male',
@@ -179,7 +175,6 @@ const prenupController = {
           db.find(db.tables.MEMBER_TABLE, [cond, cond2], joinTables3, '*', function (result) {
             if (result !== null) {
               const groomNames = result
-              console.log('groomNames: ' + groomNames)
               req.session.editId = member
               res.render('add-prenup-temp', {
                 scripts: ['addPrenup'],
@@ -225,8 +220,6 @@ const prenupController = {
       db.find(db.tables.MEMBER_TABLE, [cond1, cond2], joinTables1, '*', function (result) {
         if (result !== null) {
           brideNames = result
-          console.log(brideNames)
-          // conditions = []
 
           // set the WHERE clause
           cond3.setQueryObject(
@@ -239,10 +232,8 @@ const prenupController = {
 
           // get all male members
           db.find(db.tables.MEMBER_TABLE, [cond3, cond4], joinTables1, '*', function (result) {
-            // console.log(result)
             if (result !== null) {
               groomNames = result
-              console.log(groomNames)
               req.session.editId = null
               res.render('add-prenup-temp', {
                 styles: ['forms'],
@@ -275,7 +266,6 @@ const prenupController = {
     if (!errors.isEmpty()) {
       errors = errors.errors
 
-      console.log(errors)
       let msg = ''
       errors.forEach((error) => {
         msg += error.msg + '<br>'
@@ -317,16 +307,8 @@ const prenupController = {
                   // finally insert to the prenup table
                   db.insert(db.tables.PRENUPTIAL_TABLE, data.prenup, function (result) {
                     if (result !== false) {
-                      console.log(result)
                       req.session.editId = result[0]
                       res.redirect('/view_prenup/' + result[0])
-                      // if (parseInt(req.session.level) === 1) {
-                      //   console.log('here if')
-                      //   res.redirect('/main_page')
-                      // } else {
-                      //   console.log('here else')
-                      //   res.redirect('/view_prenup/' + result[0])
-                      // }
                     } else {
                       res.send('ADD PRENUP ERROR')
                     }
@@ -359,7 +341,6 @@ const prenupController = {
     if (!errors.isEmpty()) {
       errors = errors.errors
 
-      console.log(errors)
       let msg = ''
       errors.forEach((error) => {
         msg += error.msg + '<br>'
@@ -741,7 +722,6 @@ const prenupController = {
                 if (result !== null) {
                   brideNames = result
                   data.brideNames = brideNames
-                  // conditions = []
 
                   // set the WHERE clause
                   maleConds[0].setQueryObject(
@@ -754,7 +734,6 @@ const prenupController = {
 
                   // get all male members
                   db.find(db.tables.MEMBER_TABLE, maleConds, joinTables1, '*', function (result) {
-                    // console.log(result)
                     if (result !== null) {
                       groomNames = result
                       data.groomNames = groomNames
@@ -784,8 +763,6 @@ const prenupController = {
     const coupleId = req.body.coupleId
     const oldPersonId = req.body.oldPersonId
 
-    console.log('isOldMember = ' + isOldMember)
-    console.log('isNewMember = ' + isNewMember)
     const ids = {
       oldPersonId: oldPersonId,
       newPersonId: person.personId,
@@ -809,7 +786,6 @@ const prenupController = {
     }
 
     function sendReply (result) {
-      console.log(result)
       if (result) {
         res.send(JSON.stringify(result))
       } else {
@@ -830,8 +806,6 @@ const prenupController = {
     const coupleId = req.body.coupleId
     const oldPersonId = req.body.oldPersonId
 
-    console.log('isOldMember = ' + isOldMember)
-    console.log('isNewMember = ' + isNewMember)
     const ids = {
       oldPersonId: oldPersonId,
       newPersonId: person.personId,
@@ -855,7 +829,6 @@ const prenupController = {
     }
 
     function sendReply (result) {
-      console.log(result)
       if (result) {
         res.send(JSON.stringify(result))
       } else {
@@ -875,7 +848,6 @@ const prenupController = {
     cond.setKeyValue(db.tables.PRENUPTIAL_TABLE + '.' + prenupRecordFields.ID, prenupId)
 
     db.update(db.tables.PRENUPTIAL_TABLE, { date_of_wedding: newWeddingDate }, cond, function (result) {
-      console.log(result)
       if (result !== null) {
         res.send(true)
       }
@@ -901,7 +873,6 @@ const prenupController = {
     recordCond.setKeyValue(prenupRecordFields.ID, recordId)
 
     db.delete(db.tables.COUPLE_TABLE, couplesCond, function (result) {
-      console.log(result)
       if (result) {
         db.delete(db.tables.PERSON_TABLE, nonMembersCond, function (result) {
           if (nonMembers.length === 0 || result) {
