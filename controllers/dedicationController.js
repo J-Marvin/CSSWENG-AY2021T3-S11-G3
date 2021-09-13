@@ -665,7 +665,7 @@ const dedicationController = {
       updateNonMemberToNonMember(person, sendReply)
     }
 
-    function sendReply(result) {
+    function sendReply (result) {
       console.log(result)
       if (result) {
         res.send(JSON.stringify(result))
