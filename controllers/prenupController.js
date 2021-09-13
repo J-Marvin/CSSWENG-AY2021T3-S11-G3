@@ -652,15 +652,8 @@ const prenupController = {
    */
   getEditPrenup: function (req, res) {
     const prenupId = req.params.prenup_id
-    if (parseInt(req.session.level) >= 2 || parseInt(req.session.editId === parseInt(prenupId))) {
-    // if (parseInt(req.session.level) === 3) { // For testing purposes
-      /*
-      SELECT *
-      FROM pre_nuptial
-      JOIN couples ON pre_nuptial.couple_id = couples.couple_id
-      JOIN people ON couples.male_id = people.person_id
-      WHERE pre_nuptial.record_id = <some record id>
-      */
+    if (parseInt(req.session.level) === 3 || parseInt(req.session.editId === parseInt(prenupId))) {
+      console.log(prenupId)
       const data = {
         scripts: ['editPrenup', 'edit'],
         styles: ['forms'],
@@ -699,13 +692,9 @@ const prenupController = {
       db.find(db.tables.PRENUPTIAL_TABLE, cond, joinTables1, '*', function (result) {
         if (result !== null) {
           data.groom = result[0]
-          console.log('data.groom')
-          console.log(data.groom)
           db.find(db.tables.PRENUPTIAL_TABLE, cond, joinTables2, '*', function (result) {
             if (result !== null) {
               data.bride = result[0]
-              console.log('data.bride')
-              console.log(data.bride)
 
               const femaleConds = [
                 new Condition(queryTypes.where),
@@ -752,8 +741,6 @@ const prenupController = {
                 if (result !== null) {
                   brideNames = result
                   data.brideNames = brideNames
-                  console.log("BRIDES")
-                  console.log(brideNames)
                   // conditions = []
 
                   // set the WHERE clause
@@ -771,7 +758,6 @@ const prenupController = {
                     if (result !== null) {
                       groomNames = result
                       data.groomNames = groomNames
-                      console.log(groomNames)
                       res.render('edit-prenup', data)
                     }
                   })
