@@ -14,12 +14,16 @@
   <hr>
   <div class="row">
     <div class="col">
+      <legend>Registry Number</legend>
+      <p for='reg_id'>{{record.reg_id}}</p>
+    </div>
+    <div class="col">
       <legend>Date Created</legend>
-      <u for='date_created'>{{dateView record.date_created}}</u>
+      <p for='date_created'>{{dateView record.date_created}}</p>
     </div>
     <div class="col">
       <legend>Baptismal Date</legend>
-      <u for='date'>{{dateView record.date}}</u>
+      <p for='date'>{{dateView record.date}}</p>
     </div>
   </div>
   <div class="row">

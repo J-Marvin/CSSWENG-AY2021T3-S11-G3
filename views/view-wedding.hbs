@@ -17,16 +17,23 @@
     <hr>
     <div class="row">
       <div class="col-4">
+        <legend>Registry Number</legend>
+        <p>{{wedding_id}}</p>
+      </div>
+      <div class="col">
+        <legend> Contract No. </legend>
+        <p>{{contract_no}}</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">
         <legend>Date Created</legend>
         <p>{{dateView date}}</p>
       </div>
-      <div class="col-4">
+      <div class="col">
         <legend>Wedding Date</legend>
         <p>{{dateView wedding_date}}</p>
       </div>
-      <div class="col-4">
-        <legend> Contract No. </legend>
-        <p>{{contract_no}}</p>
     </div>
     <hr>
     <div class="row person_info" id="bride_info" data-member="{{bride_member_id}}" data-person="{{bride_person_id}}">
