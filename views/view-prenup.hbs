@@ -8,13 +8,22 @@
 
 {{>navbar}}
 
-<div id="prenup_info" style="display: none" data-prenup="{{prenupId}}" data-groom-person="{{groomPersonId}}" data-bride-person="{{bridePersonId}}" ></div>
+<div id="prenup_info" style="display: none" data-prenup="{{prenupId}}" data-couple="{{coupleId}}" data-groom-person="{{groomPersonId}}" data-bride-person="{{bridePersonId}}" ></div>
   <div class="container" style="padding-left: 18%; padding-right: 10%;">
     <h1 class="my-3"> View Prenuptial Record </h1>
-    <u for="date_added">Date Added</u>
-    <p>{{dateView date}}</p>
     <hr>
     <div class="row">
+      <div class="col-4">
+        <legend>Registry Number</legend>
+        <p>{{prenupId}}</p>
+      </div>
+      <div class="col">
+        <legend>Date Added</legend>
+        <p>{{dateView date}}</p>
+      </div>
+    </div>
+    <hr>
+    <div class="row person_info" data-member="{{brideMemberId}}" data-person="{{bridePersonId}}">
       <legend>Bride's Name</legend>
       <div class="col">
         <u for="first_name">First Name</u>
@@ -30,7 +39,7 @@
       </div>
     </div>
     <hr>
-    <div class="row">
+    <div class="row person_info" data-member="{{groomMemberId}}" data-person="{{groomPersonId}}">
       <legend>Groom's Name</legend>
       <div class="col">
         <u for="first_name">First Name</u>
@@ -55,6 +64,10 @@
       {{#if canSee}}
         <div class="col">
             <a href="/edit_prenup/{{prenupId}}"> <button class="btn btn-secondary mb-4">Edit Prenup Form</button> </a>
+            <button type="button" class="btn btn-danger mb-4" id="delete_prenup">Delete Form</button>
         </div>
       {{/if}}
     </div>
+    {{>del-record-modal}}
+  </div>
+</div>

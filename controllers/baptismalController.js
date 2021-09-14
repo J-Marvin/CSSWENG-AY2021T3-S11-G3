@@ -16,8 +16,6 @@ const baptismalController = {
    */
   getViewBaptismalRecord: function (req, res) {
     const bapId = req.params.bap_id
-
-    // req.session.level = 3
     if (parseInt(req.session.editId) === parseInt(bapId) || parseInt(req.session.level) >= 2) {
       const joinTables = [
         {
@@ -53,9 +51,8 @@ const baptismalController = {
 
       db.find(db.tables.BAPTISMAL_TABLE, condition, joinTables, columns, function (result) {
         if (result.length > 0) {
-          console.log(result)
           const data = {
-            scripts: [],
+            scripts: ['deleteBaptismal'],
             styles: ['view'],
             record: result[0]
           }
@@ -78,7 +75,7 @@ const baptismalController = {
   getAddBaptismalRecordPage: function (req, res) {
     const memberId = req.params.member_id
 
-    if (parseInt(req.session.level) >= 2) {
+    if (parseInt(req.session.level) >= 1) {
       const data = {}
       const joinTables = [
         {
@@ -110,7 +107,6 @@ const baptismalController = {
   getEditBaptismal: function (req, res) {
     const bapId = req.params.bap_id
 
-    req.session.level = 3
     if (parseInt(req.session.editId) === parseInt(bapId) || parseInt(req.session.level) >= 2) {
       const joinTables = [
         {
@@ -148,7 +144,6 @@ const baptismalController = {
 
       db.find(db.tables.BAPTISMAL_TABLE, condition, joinTables, columns, function (result) {
         if (result.length > 0) {
-          console.log(result)
           const data = {
             scripts: ['editBaptismal', 'edit'],
             styles: ['view'],
@@ -209,10 +204,10 @@ const baptismalController = {
     db.insert(db.tables.PERSON_TABLE, peopleInfo, function (result) {
       if (result) {
         if (!officiant.isMember) {
-          console.log('test')
+          
           data[bapRegFields.OFFICIANT] = result[0]
         }
-        console.log(data)
+        
         db.insert(db.tables.BAPTISMAL_TABLE, data, function (result) {
           if (result) {
             bapId = result[0]
@@ -238,7 +233,6 @@ const baptismalController = {
 
   putUpdateBaptismalMember: function (req, res) {
     function sendReply (result) {
-      console.log(result)
       if (result) {
         res.send(req.body.recordId)
       } else {
@@ -269,9 +263,6 @@ const baptismalController = {
       newPersonId: person.personId
     }
 
-    console.log(isOldMember)
-    console.log(isNewMember)
-
     if (isOldMember && isNewMember) { // From member to member
       const fields = {
         recordId: tables.BAPTISMAL_TABLE + '.' + bapRegFields.ID,
@@ -285,7 +276,6 @@ const baptismalController = {
         memberRecordField: null,
         recordPersonField: bapRegFields.OFFICIANT
       }
-      console.log(person)
       updateMemberToNonMember(person, ids, fields, tables.BAPTISMAL_TABLE, sendReply)
     } else if (!isOldMember && isNewMember) { // From non member to member
       const fields = {
@@ -300,7 +290,6 @@ const baptismalController = {
     }
 
     function sendReply (result) {
-      console.log(result)
       if (result) {
         res.send(JSON.stringify(result))
       } else {
@@ -309,9 +298,22 @@ const baptismalController = {
     }
   },
 
+  putUpdateBaptismalMisc: function (req, res) {
+    const data = {}
+    data[bapRegFields.LOCATION] = req.body.location
+    data[bapRegFields.DATE] = req.body.date
+
+    const recordId = req.body.recordId
+    const recordCond = new Condition(queryTypes.where)
+    recordCond.setKeyValue(bapRegFields.ID, recordId)
+
+    db.update(tables.BAPTISMAL_TABLE, data, recordCond, function (result) {
+      res.send(JSON.stringify(result))
+    })
+  },
+
   delBaptismal: function (req, res) {
     const id = req.body.recordId
-    const personConds = []
     const joinTables = [
       {
         tableName: { member: tables.PERSON_TABLE },
@@ -325,15 +327,49 @@ const baptismalController = {
       }
     ]
     const columns = [
-      'member.' + personFields.MEMBER + ' as member_id',
-      'officiant.' + personFields.MEMBER + ' as officiant_member_id'
+      'member.' + personFields.ID + ' as member_person_id',
+      'member.' + personFields.MEMBER + ' as member_member_id',
+      'officiant.' + personFields.MEMBER + ' as officiant_member_id',
+      'officiant.' + personFields.ID + ' as officiant_person_id'
     ]
     const recordCond = new Condition(queryTypes.where)
     recordCond.setKeyValue(tables.BAPTISMAL_TABLE + '.' + bapRegFields.ID, id)
 
-    db.find(db.tables.PERSON_TABLE, recordCond, joinTables, columns, function (result) {
-      console.log(result)
-      res.send(JSON.stringify(result))
+    db.find(db.tables.BAPTISMAL_TABLE, recordCond, joinTables, columns, function (result) {
+      if (result) {
+        const nonMembers = []
+        result = result[0]
+
+        if (result.member_id === null) {
+          nonMembers.push(result.person_id)
+        }
+
+        if (result.officiant_member_id === null) {
+          nonMembers.push(result.officiant_person_id)
+        }
+
+        db.delete(db.tables.BAPTISMAL_TABLE, recordCond, function (result) {
+          const nonMemberCond = new Condition(queryTypes.whereIn)
+          nonMemberCond.setArray(personFields.ID, nonMembers)
+          if (result) {
+            db.delete(db.tables.PERSON_TABLE, nonMemberCond, function (result) {
+              if (result === 0) {
+                result = true
+              }
+
+              if (result) {
+                res.send(true)
+              } else {
+                res.send(false)
+              }
+            })
+          } else {
+            res.send(false)
+          }
+        })
+      } else {
+        res.send(false)
+      }
     })
   }
 }

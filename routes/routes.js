@@ -48,8 +48,8 @@ app.get('/search_dedication', searchController.getSearchDedication)
 app.get('/member/:member_id', memberController.getViewMember)
 
 app.get('/prenup_main_page', indexController.getPrenupMainPage)
-app.get('/add_prenup', prenupController.getPrenupPage)
-app.get('/edit_member/:member_id/add_prenup', prenupController.getPrenupPage)
+app.get('/add_prenup', prenupController.getAddPrenup)
+app.get('/edit_member/:member_id/add_prenup', prenupController.getAddPrenup)
 app.get('/view_prenup/:prenup_id', prenupController.getViewPrenup)
 app.get('/edit_prenup/:prenup_id', prenupController.getEditPrenup)
 
@@ -68,10 +68,9 @@ app.post('/create_prenup_member', validation.addMemberPrenupValid(), prenupContr
 app.post('/addPrenupBrideNonMember', validation.addPrenupBrideNonMember(), prenupController.createPrenupBrideNonMember)
 app.post('/addPrenupGroomNonMember', validation.addPrenupGroomNonMember(), prenupController.createPrenupGroomNonMember)
 
-app.post('/postUpdatePrenupMember', prenupController.postUpdatePrenupMember)
-app.post('/postUpdatePrenupNonMember', prenupController.postUpdatePrenupNonMember)
-app.post('/postUpdatePrenupBrideMember', prenupController.postUpdatePrenupBrideMember)
-app.post('/postUpdatePrenupGroomMember', prenupController.postUpdatePrenupGroomMember)
+app.put('/update_prenup/bride', prenupController.putUpdatePrenupBride)
+app.put('/update_prenup/groom', prenupController.putUpdatePrenupGroom)
+app.put('/update_prenup/date', prenupController.putUpdatePrenupDate)
 
 app.post('/add_dedication', dedicationController.postAddDedication)
 app.post('/add_baptismal', baptismalController.postAddBaptismalRecord)
@@ -88,10 +87,27 @@ app.put('/update_observation', validation.observationValidation(), observationCo
 app.put('/update_church', validation.churchValidation(), churchController.putUpdateChurch)
 app.put('/update_bap/member', baptismalController.putUpdateBaptismalMember)
 app.put('/update_bap/officiant', baptismalController.putUpdateBaptismalOfficiant)
-app.put('/update_bap')
+app.put('/update_bap', baptismalController.putUpdateBaptismalMisc)
+
+app.put('/update_wedding/couple', weddingController.putUpdateCouple)
+app.put('/update_wedding/witness', weddingController.putUpdateWitness)
+app.put('/update_wedding/add_witness', weddingController.putAddWitness)
+app.put('/update_wedding', weddingController.putUpdateWedding)
+
+app.put('/update_dedication/child', dedicationController.putUpdateChild)
+app.put('/update_dedication/guardian', dedicationController.putUpdateGuardian)
+app.put('/update_dedication/witness', dedicationController.putUpdateWitness)
+app.put('/update_dedication/add_witness', dedicationController.putAddWitness)
+app.put('/update_dedication', dedicationController.putUpdateDedication)
 
 app.delete('/delete_observation', observationController.delObservation)
 app.delete('/delete_church', churchController.delChurch)
 app.delete('/delete_baptismal', baptismalController.delBaptismal)
+app.delete('/delete_wedding', weddingController.deleteWedding)
+app.delete('/delete_wedding/witness', weddingController.delWitness)
+app.delete('/delete_member', memberController.deleteMember)
+app.delete('/delete_dedication/witness', dedicationController.delWitness)
+app.delete('/delete_dedication', dedicationController.deleteDedication)
+app.delete('/delete_prenup', prenupController.deletePrenup)
 
 module.exports = app

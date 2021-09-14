@@ -1,8 +1,18 @@
 {{>navbar}}
 
 <div id="maindiv" class="container maindiv d-flex justify-content-center align-items-center">
-  <div class="row">
-    <div class="col pt-3 pt-xxl-0">
+  <div class="row  d-flex justify-content-middle">
+    <div class="col-12 pt-3 d-flex justify-content-center">
+      <a href="{{#if canSee}}/baptismal_main_page{{else}}/add_baptismal{{/if}}" class="mainBtns">
+        <div class="card" style="width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title buttonText">Baptismal Record</h5>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="col-12 pt-3 d-flex justify-content-center">
       <a href="{{#if canSee}}/dedication_main_page{{else}}/add_dedication{{/if}}" class="mainBtns">
         <div class="card" style="width: 18rem;">
           <div class="card-body">
@@ -12,7 +22,7 @@
       </a>
     </div>
 
-    <div class="col pt-3 pt-xxl-0">
+    <div class="col-12 pt-3 d-flex justify-content-center">
       <a href="{{#if canSee}}/prenup_main_page{{else}}/add_prenup{{/if}}" class="mainBtns">
         <div class="card" style="width: 18rem;">
           <div class="card-body">
@@ -22,21 +32,11 @@
       </a>
     </div>
 
-    <div class="col pt-3 pt-xxl-0">
+    <div class="col-12 pt-3 d-flex justify-content-center">
       <a href="{{#if canSee}}/wedding_main_page{{else}}/add_wedding{{/if}}" class="mainBtns">
         <div class="card" style="width: 18rem;">
           <div class="card-body">
             <h5 class="card-title buttonText">Wedding Registry</h5>
-          </div>
-        </div>
-      </a>
-    </div>
-
-    <div class="col pt-3 pt-xxl-0">
-      <a href="{{#if canSee}}/baptismal_main_page{{else}}/add_baptismal{{/if}}" class="mainBtns">
-        <div class="card" style="width: 18rem;">
-          <div class="card-body">
-            <h5 class="card-title buttonText">Baptismal Record</h5>
           </div>
         </div>
       </a>

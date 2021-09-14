@@ -3,34 +3,110 @@
     data-prenuprecord-id="{{bride.record_id}}" 
     data-couple-id="{{bride.couple_id}}"
     data-currentdate="{{bride.date}}"
-    data-oldweddingdate="{{bride.date_of_wedding}}"
-    data-checkbride-member="1"
-    data-checkgroom-member="1"></div>
-<div id="oldbride-info"
-    {{#if (isUndefined bride.member_id)}} data-oldbride-memberid="" {{else}}data-oldbride-memberid="{{bride.member_id}}"{{/if}}
-    data-oldbride-personid="{{bride.person_id}}"
-    data-oldbride-first="{{bride.first_name}}"
-    data-oldbride-middle="{{bride.middle_name}}"
-    data-oldbride-last="{{bride.last_name}}"></div>
-<div id="oldgroom-info"
-    {{#if (isUndefined groom.member_id)}} data-oldgroom-memberid="" {{else}} data-oldgroom-memberid="{{groom.member_id}}"{{/if}}
-    data-oldgroom-personid="{{groom.person_id}}"
-    data-oldgroom-first="{{groom.first_name}}"
-    data-oldgroom-middle="{{groom.middle_name}}"
-    data-oldgroom-last="{{groom.last_name}}"></div>
-{{!--       Edit prenup member connection, route will dynamically change     --}}
+    data-oldweddingdate="{{bride.date_of_wedding}}"></div>
+<div id="bride-info"
+    {{#if (isUndefined bride.member_id)}} data-memberid="" {{else}}data-memberid="{{bride.member_id}}"{{/if}}
+    data-personid="{{bride.person_id}}"
+    data-first="{{bride.first_name}}"
+    data-middle="{{bride.middle_name}}"
+    data-last="{{bride.last_name}}"></div>
+<div id="groom-info"
+    {{#if (isUndefined groom.member_id)}} data-memberid="" {{else}} data-memberid="{{groom.member_id}}"{{/if}}
+    data-personid="{{groom.person_id}}"
+    data-first="{{groom.first_name}}"
+    data-middle="{{groom.middle_name}}"
+    data-last="{{groom.last_name}}"></div>
+
 <form id="prenup_form" method="POST" class="container"> 
-  <div class="container" style="padding-left: 20%; padding-right: 20%;">
+  <div class="container" style="padding-left: 25%; padding-right: 20%;">
     <h1 class="my-3">Edit Prenup Form</h1>
     <hr>
     <div class="row">
+      <legend>Bride</legend>
+      <hr>
       <div class="col">
-        <legend>Bride</legend>
+          <u for="first_name_view">First Name</u>
+          <p><span id="bride_first_name_view">{{bride.first_name}}</span></p>
+        </div>
+        <div class="col">
+          <u for="mid_name_view">Middle Initial</u>
+          <p><span id="bride_mid_name_view">{{bride.middle_name}}</span></p>
+        </div>
+        <div class="col">
+          <u for="last_name_view">Last Name</u>
+          <p><span id="bride_last_name_view">{{bride.last_name}}</span></p>
+        </div>
+        <div class="col d-flex justify-content-end">
+          <button type="button" class="btn btn-secondary mb-4 float-right" id="edit_bride">Edit</button>
+        </div>
+    </div>
+    <div class="row">
+        <legend>Groom</legend>
         <hr>
+        <div class="col">
+          <u for="first_name_view">First Name</u>
+          <p><span id="groom_first_name_view">{{groom.first_name}}</span></p>
+        </div>
+        <div class="col">
+          <u for="mid_name_view">Middle Initial</u>
+          <p><span id="groom_mid_name_view">{{groom.middle_name}}</span></p>
+        </div>
+        <div class="col">
+          <u for="last_name_view">Last Name</u>
+          <p><span id="groom_last_name_view">{{groom.last_name}}</span></p>
+        </div>
+        <div class="col d-flex justify-content-end">
+          <button type="button" class="btn btn-secondary mb-4 float-right" id="edit_groom">Edit</button>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col">
+        <label>Date Added</label>
+        <input type="text" id="date_added" value="{{dateView bride.date}}" class="form-control" disabled>
+      </div>
+      <div class="col">
+        <label for="wedding_date">Planned Wedding Date <span style="color: red;">*</span></label>
+        <input type="date" id="wedding_date" name="wedding_date" class="form-control" value="{{date bride.date_of_wedding}}">
+        <p id="wedding_date_error" class="error_codes"> </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col d-flex justify-content-end">
+        <button id="save_changes" type="button" class="btn btn-primary" data-bs-toggle="modal">
+          Save Changes
+        </button>
+      </div>
+    </div>
+  </div>
 
-        <input type="checkbox" id="bride_non_member" onclick="display_div_bride('bride_non_member')" {{#unless bride.member_id}}checked disabled{{/unless}}>
-        Non-member
-        <input class="mb-3" type="checkbox" id="bride_member" onclick="display_div_bride('bride_member')" {{#if bride.member_id}}checked disabled{{/if}}> Member
+    <!-- Modal -->
+  <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"> Confirm Changes? </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button id="edit-prenup" type="button" class="btn btn-primary confirmationModalBtn">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="modal fade" id="brideModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit Bride</h5>
+        <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input type="radio" id="bride_non_member" {{#unless bride.member_id}}checked{{/unless}}> Non-member
+        <input class="mb-3" type="radio" id="bride_member" {{#if bride.member_id}}checked{{/if}}> Member
 
         <div id="bride_member_div" style="display:{{#if bride.member_id}}block{{else}}none{{/if}}">
           <label>Select Bride</label>
@@ -46,7 +122,7 @@
                 <label for="bride_first_name">First Name</label>
                 <input type="text" id="bride_first_name" name="bride_first_name" class="form-control"
                   {{#unless bride.member_id}}value="{{bride.first_name}}"{{/unless}}>
-              </div>
+              </div>   
               <div class="col-12">
                 <label for="bride_mid_name">Middle Initial</label>
                 <input type="text" id="bride_mid_name" name="bride_mid_name" class="form-control" {{#unless bride.member_id}}value="{{bride.middle_name}}"{{/unless}}>
@@ -63,12 +139,24 @@
         <p id="bride_middle_error" class="error_codes"> </p>
         <p id="bride_middle_len_error" class="error_codes"> </p>
       </div>
-      <div class="col">
-        <legend>Groom</legend>
-        <hr>
-        <input type="checkbox" id="groom_non_member" onclick="display_div_groom('groom_non_member')" {{#unless groom.member_id}}checked disabled{{/unless}}>
-        Non-member
-        <input class="mb-3" type="checkbox" id="groom_member" onclick="display_div_groom('groom_member')" {{#if groom.member_id}}checked disabled{{/if}}> Member
+      <div class="modal-footer">
+        <button type="button" id="cancel_modal" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="save_bride_btn">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="groomModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit Groom</h5>
+        <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input type="radio" id="groom_non_member" {{#unless groom.member_id}}checked{{/unless}}> Non-member
+        <input class="mb-3" type="radio" id="groom_member" {{#if groom.member_id}}checked{{/if}}> Member
 
         <div id="groom_member_div" style="display:{{#if groom.member_id}} block {{else}} none {{/if}}">
           <label>Select Groom</label>
@@ -101,40 +189,10 @@
         <p id="groom_middle_error" class="error_codes"> </p>
         <p id="groom_middle_len_error" class="error_codes"> </p>
       </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <label>Date Added</label>
-        <input type="text" value="{{dateView bride.date}}" class="form-control" disabled>
-      </div>
-      <div class="col">
-        <label for="wedding_date">Planned Wedding Date</label>
-        <input type="date" id="wedding_date" name="wedding_date" class="form-control">
-        <p id="wedding_date_error" class="error_codes"> </p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col d-flex justify-content-end">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmationModal">
-          Save Changes
-        </button>
+      <div class="modal-footer">
+        <button type="button" id="cancel_modal" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="save_groom_btn">Save changes</button>
       </div>
     </div>
   </div>
-
-    <!-- Modal -->
-  <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel"> Confirm Changes? </h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button id="edit-prenup" type="button" class="btn btn-primary confirmationModalBtn">Submit</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</form>
+</div>

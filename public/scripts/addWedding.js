@@ -1,18 +1,10 @@
 function display_div_bride (status) {
     if(status === "bride_non_member") {
       document.getElementById("bride_member_div").style.display = "none"
-      document.getElementById("bride_member").checked = false
-      document.getElementById("bride_member").removeAttribute("disabled")
-      document.getElementById("bride_non_member").setAttribute("disabled", "disabled")
-      $("#prenup_form").attr('action', '/create_prenup')
       
     }
     else {
       document.getElementById("bride_non_member_div").style.display = "none"
-      document.getElementById("bride_non_member").checked = false
-      document.getElementById("bride_non_member").removeAttribute("disabled")
-      document.getElementById("bride_member").setAttribute("disabled", "disabled")
-      $("#prenup_form").attr('action', '/create_prenup_member')
     }
     document.getElementById(status + "_div").style.display = "block"
   }
@@ -20,17 +12,10 @@ function display_div_bride (status) {
 function display_div_groom (status) {
     if(status === "groom_non_member") {
       document.getElementById("groom_member_div").style.display = "none"
-      document.getElementById("groom_member").checked = false
-      document.getElementById("groom_member").removeAttribute("disabled")
-      document.getElementById("groom_non_member").setAttribute("disabled", "disabled")
-      $("#prenup_form").attr('action', '/create_prenup')
     }
     else {
       document.getElementById("groom_non_member_div").style.display = "none"
       document.getElementById("groom_non_member").checked = false
-      document.getElementById("groom_non_member").removeAttribute("disabled")
-      document.getElementById("groom_member").setAttribute("disabled", "disabled")
-      $("#prenup_form").attr('action', '/create_prenup_member')
     }
     document.getElementById(status + "_div").style.display = "block"
   }
@@ -38,32 +23,15 @@ function display_div_groom (status) {
 function display_div_bride_mother (status) {
     if(status === "bride_mother_non_member") {
       document.getElementById("bride_mother_member_div").style.display = "none"
-      document.getElementById("bride_mother_member").checked = false
-      document.getElementById("bride_mother_member").removeAttribute("disabled")
-      document.getElementById("bride_mother_none").checked = false
-      document.getElementById("bride_mother_none").removeAttribute("disabled")
-      document.getElementById("bride_mother_non_member").setAttribute("disabled", "disabled")
-      $("#prenup_form").attr('action', '/create_prenup')
       document.getElementById(status + "_div").style.display = "block"
     }
     else if(status === "bride_mother_member") {
       document.getElementById("bride_mother_non_member_div").style.display = "none"
-      document.getElementById("bride_mother_non_member").checked = false
-      document.getElementById("bride_mother_non_member").removeAttribute("disabled")
-      document.getElementById("bride_mother_none").checked = false
-      document.getElementById("bride_mother_none").removeAttribute("disabled")
-      document.getElementById("bride_mother_member").setAttribute("disabled", "disabled")
-      $("#prenup_form").attr('action', '/create_prenup_member')
       document.getElementById(status + "_div").style.display = "block"
     }
     else {
-      document.getElementById("bride_mother_non_member").checked = false
-      document.getElementById("bride_mother_non_member").removeAttribute("disabled")
-      document.getElementById("bride_mother_member").checked = false
-      document.getElementById("bride_mother_member").removeAttribute("disabled")
-      document.getElementById("bride_mother_none").setAttribute("disabled", "disabled")
-      document.getElementById("bride_mother_non_member_div").style.display = "none"
       document.getElementById("bride_mother_member_div").style.display = "none"
+      document.getElementById("bride_mother_non_member_div").style.display = "none"
       document.getElementById("bride_mother_info_error").innerHTML = ""
     }
   }
@@ -71,30 +39,14 @@ function display_div_bride_mother (status) {
   function display_div_bride_father (status) {
     if(status === "bride_father_non_member") {
       document.getElementById("bride_father_member_div").style.display = "none"
-      document.getElementById("bride_father_member").checked = false
-      document.getElementById("bride_father_member").removeAttribute("disabled")
-      document.getElementById("bride_father_none").checked = false
-      document.getElementById("bride_father_none").removeAttribute("disabled")
-      document.getElementById("bride_father_non_member").setAttribute("disabled", "disabled")
-      $("#prenup_form").attr('action', '/create_prenup')
       document.getElementById(status + "_div").style.display = "block"
     }
     else if(status === "bride_father_member") {
       document.getElementById("bride_father_non_member_div").style.display = "none"
-      document.getElementById("bride_father_non_member").checked = false
-      document.getElementById("bride_father_non_member").removeAttribute("disabled")
-      document.getElementById("bride_father_none").checked = false
-      document.getElementById("bride_father_none").removeAttribute("disabled")
-      document.getElementById("bride_father_member").setAttribute("disabled", "disabled")
       $("#prenup_form").attr('action', '/create_prenup_member')
       document.getElementById(status + "_div").style.display = "block"
     }
     else {
-      document.getElementById("bride_father_non_member").checked = false
-      document.getElementById("bride_father_non_member").removeAttribute("disabled")
-      document.getElementById("bride_father_member").checked = false
-      document.getElementById("bride_father_member").removeAttribute("disabled")
-      document.getElementById("bride_father_none").setAttribute("disabled", "disabled")
       document.getElementById("bride_father_non_member_div").style.display = "none"
       document.getElementById("bride_father_member_div").style.display = "none"
       document.getElementById("bride_father_info_error").innerHTML = ""
@@ -104,30 +56,13 @@ function display_div_bride_mother (status) {
   function display_div_groom_mother (status) {
     if(status === "groom_mother_non_member") {
       document.getElementById("groom_mother_member_div").style.display = "none"
-      document.getElementById("groom_mother_member").checked = false
-      document.getElementById("groom_mother_member").removeAttribute("disabled")
-      document.getElementById("groom_mother_none").checked = false
-      document.getElementById("groom_mother_none").removeAttribute("disabled")
-      document.getElementById("groom_mother_non_member").setAttribute("disabled", "disabled")
-      $("#prenup_form").attr('action', '/create_prenup')
       document.getElementById(status + "_div").style.display = "block"
     }
     else if(status === "groom_mother_member") {
       document.getElementById("groom_mother_non_member_div").style.display = "none"
-      document.getElementById("groom_mother_non_member").checked = false
-      document.getElementById("groom_mother_non_member").removeAttribute("disabled")
-      document.getElementById("groom_mother_none").checked = false
-      document.getElementById("groom_mother_none").removeAttribute("disabled")
-      document.getElementById("groom_mother_member").setAttribute("disabled", "disabled")
-      $("#prenup_form").attr('action', '/create_prenup_member')
       document.getElementById(status + "_div").style.display = "block"
     }
     else {
-      document.getElementById("groom_mother_non_member").checked = false
-      document.getElementById("groom_mother_non_member").removeAttribute("disabled")
-      document.getElementById("groom_mother_member").checked = false
-      document.getElementById("groom_mother_member").removeAttribute("disabled")
-      document.getElementById("groom_mother_none").setAttribute("disabled", "disabled")
       document.getElementById("groom_mother_non_member_div").style.display = "none"
       document.getElementById("groom_mother_member_div").style.display = "none"
       document.getElementById("groom_mother_info_error").innerHTML = ""
@@ -137,30 +72,14 @@ function display_div_bride_mother (status) {
   function display_div_groom_father (status) {
     if(status === "groom_father_non_member") {
       document.getElementById("groom_father_member_div").style.display = "none"
-      document.getElementById("groom_father_member").checked = false
-      document.getElementById("groom_father_member").removeAttribute("disabled")
-      document.getElementById("groom_father_none").checked = false
-      document.getElementById("groom_father_none").removeAttribute("disabled")
-      document.getElementById("groom_father_non_member").setAttribute("disabled", "disabled")
-      $("#prenup_form").attr('action', '/create_prenup')
       document.getElementById(status + "_div").style.display = "block"
     }
     else if(status === "groom_father_member") {
       document.getElementById("groom_father_non_member_div").style.display = "none"
-      document.getElementById("groom_father_non_member").checked = false
-      document.getElementById("groom_father_non_member").removeAttribute("disabled")
-      document.getElementById("groom_father_none").checked = false
-      document.getElementById("groom_father_none").removeAttribute("disabled")
-      document.getElementById("groom_father_member").setAttribute("disabled", "disabled")
-      $("#prenup_form").attr('action', '/create_prenup_member')
       document.getElementById(status + "_div").style.display = "block"
     }
     else {
       document.getElementById("groom_father_non_member").checked = false
-      document.getElementById("groom_father_non_member").removeAttribute("disabled")
-      document.getElementById("groom_father_member").checked = false
-      document.getElementById("groom_father_member").removeAttribute("disabled")
-      document.getElementById("groom_father_none").setAttribute("disabled", "disabled")
       document.getElementById("groom_father_non_member_div").style.display = "none"
       document.getElementById("groom_father_member_div").style.display = "none"
       document.getElementById("groom_father_info_error").innerHTML = ""
@@ -344,7 +263,6 @@ $(document).ready(function() {
             }
           }
         })
-        $('#create-wedding-registry').prop('disabled', false)
       } else {
         $('#create-wedding-registry').prop('disabled', false)
       }

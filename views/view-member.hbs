@@ -8,7 +8,7 @@
 
 {{>navbar}}
 
-<div id="member_info" style="display: none" data-member="{{member.member_id}}" data-address="{{member.address_id}}" data-person="{{member.person_id}}" ></div>
+<div id="member_info" style="display: none" data-member="{{member.member_id}}" data-address="{{member.address_id}}" data-person="{{member.person_id}}" data-baptismal={{member.bap_reg_id}}></div>
   <div class="container" style="padding-left: 18%; padding-right: 10%;">
     <div class="row">
       <h1 class="my-3"> View Member </h1>
@@ -195,9 +195,13 @@
       </div>
     </div>
     <hr>
-    <div class="row">
-      <div class="col">
-        <a href="/edit_member/{{member.member_id}}" class="btn btn-secondary mb-4">Edit Member </a>
-        <button class="btn btn-danger mb-4">Delete Member</button>
+    {{#if canSee}}
+      <div class="row">
+        <div class="col">
+          <a href="/edit_member/{{member.member_id}}" class="btn btn-secondary mb-4">Edit Member </a>
+          <button class="btn btn-danger mb-4" id="del_member">Delete Member</button>
+        </div>
       </div>
-    </div>
+    {{/if}}
+
+    {{>del-record-modal isMember=true}}

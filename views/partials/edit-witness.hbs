@@ -1,0 +1,15 @@
+<div class='col-4' style='margin-bottom: 1em;'>
+  <div class='card witness {{type}} person_info' data-member="{{this.witness_member_id}}" data-person="{{this.witness_person_id}}" data-record="{{this.witness_id}}">
+    <div class='card-body'>
+      <p class='card-text'> 
+      <span class="witness_first_name_view">{{this.witness_first_name}} </span>
+      <span class="witness_mid_name_view">{{this.witness_mid_name}}</span>. 
+      <span class="witness_last_name_view">{{this.witness_last_name}}</span></p>
+      <button class="plus-btn edit_{{type}}_witness_btn" type="button"><i style="width: 1em; height: 1em; color:black;"
+          class="fa fa-edit"></i> </button>
+      <button class="plus-btn delete_{{type}}_witness_btn" type="button"><i style="width: 1em; height: 1em; color:black;"
+          class="fa fa-trash"></i> </button>
+
+    </div>
+  </div>
+</div>

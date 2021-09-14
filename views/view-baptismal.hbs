@@ -8,18 +8,22 @@
 
 {{>navbar}}
 
-<div id="prenup_info" style="display: none" data-baptismal="{{record.reg_id}}"></div>
+<div id="baptismal_info" style="display: none" data-baptismal="{{record.reg_id}}"></div>
 <div class="container" style="padding-left: 18%; padding-right: 10%;">
   <h1 class="my-3"> View Baptismal Record </h1>
   <hr>
   <div class="row">
     <div class="col">
+      <legend>Registry Number</legend>
+      <p for='reg_id'>{{record.reg_id}}</p>
+    </div>
+    <div class="col">
       <legend>Date Created</legend>
-      <u for='date_created'>{{dateView record.date_created}}</u>
+      <p for='date_created'>{{dateView record.date_created}}</p>
     </div>
     <div class="col">
       <legend>Baptismal Date</legend>
-      <u for='date'>{{dateView record.date}}</u>
+      <p for='date'>{{dateView record.date}}</p>
     </div>
   </div>
   <div class="row">
@@ -68,6 +72,9 @@
   <div class="row my-3">
     <div class="col">
       <a href="/edit_baptismal/{{record.reg_id}}"><button class="btn btn-secondary mb-4">Edit Baptismal Form</button></a>
+      <button id="delete-baptismal" type="button" class="btn btn-danger mb-4">Delete Record</button>
     </div>
   </div>
+  <p id="delete_error" class="error_codes"></p>
   {{/if}}
+  {{> del-record-modal}}

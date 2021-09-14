@@ -38,9 +38,11 @@ if (process.env.PORTABLE_EXECUTABLE_DIR !== undefined) {
 
 if (fse.existsSync(dbPath)) {
   db.initDB(file)
+  db.pragmaFKKnex(true, null)
 } else {
   fse.mkdirSync(dbPath)
   db.initDB(file)
+  db.pragmaFKKnex(true, null)
 }
 
 if (!fse.existsSync(logPath)) {

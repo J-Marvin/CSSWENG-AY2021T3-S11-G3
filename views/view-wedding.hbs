@@ -8,25 +8,35 @@
 
 {{>navbar}}
 
-<div id="prenup_info" style="display: none" data-wedding="{{wedding_id}}" ></div>
+<div id="wedding_info" data-wedding-id="{{wedding_id}}" data-couple-id="{{couple_id}}"
+  data-bride-parents="{{bride_parents_id}}" data-groom-parents="{{groom_parents_id}}"></div>
+
+<div id="wedding_div" style="display: none"></div>
   <div class="container" style="padding-left: 18%; padding-right: 10%;">
     <h1 class="my-3"> View Wedding Registry </h1>
     <hr>
     <div class="row">
       <div class="col-4">
+        <legend>Registry Number</legend>
+        <p>{{wedding_id}}</p>
+      </div>
+      <div class="col">
+        <legend> Contract No. </legend>
+        <p>{{contract_no}}</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">
         <legend>Date Created</legend>
         <p>{{dateView date}}</p>
       </div>
-      <div class="col-4">
+      <div class="col">
         <legend>Wedding Date</legend>
         <p>{{dateView wedding_date}}</p>
       </div>
-      <div class="col-4">
-        <legend> Contract No. </legend>
-        <p>{{contract_no}}</p>
     </div>
     <hr>
-    <div class="row">
+    <div class="row person_info" id="bride_info" data-member="{{bride_member_id}}" data-person="{{bride_person_id}}">
       <legend>Bride's Name</legend>
       <div class="col">
         <u for="first_name">First Name</u>
@@ -45,7 +55,7 @@
       </div>
     </div>
     <hr>
-    <div class="row">
+    <div class="row person_info" id="groom_info" data-member="{{groom_member_id}}" data-person="{{groom_person_id}}">
       <legend>Groom's Name</legend>
       <div class="col">
         <u for="first_name">First Name</u>
@@ -64,7 +74,7 @@
       </div>
     </div>
     <hr>
-    <div class="row">
+    <div class="row person_info" id="bride_mother_info" data-member="{{bride_mother_member_id}}" data-person="{{bride_mother_person_id}}">
       <legend>Bride's Mother</legend>
       <div class="col">
         <u for="first_name">First Name</u>
@@ -94,7 +104,7 @@
         {{/if}}
       </div>
     </div>
-    <div class="row">
+    <div  class="row person_info" id="bride_father_info" data-member="{{bride_father_member_id}}" data-person="{{bride_father_person_id}}">
       <legend>Bride's Father</legend>
       <div class="col">
         <u for="first_name">First Name</u>
@@ -125,7 +135,7 @@
       </div>
     </div>
     <hr>
-    <div class="row">
+    <div class="row person_info" id="groom_mother_info" data-member="{{groom_mother_member_id}}" data-person="{{groom_mother_person_id}}">
       <legend>Groom's Mother</legend>
       <div class="col">
         <u for="first_name">First Name</u>
@@ -155,7 +165,7 @@
         {{/if}}
       </div>
     </div>
-    <div class="row">
+    <div class="row person_info" id="groom_father_info" data-member="{{groom_father_member_id}}" data-person="{{groom_father_person_id}}">
       <legend>Groom's Father</legend>
       <div class="col">
         <u for="first_name">First Name</u>
@@ -226,8 +236,10 @@
     <div class="row my-3">
       <div class="col">
         <a href="/edit_wedding/{{wedding_id}}"><button class="btn btn-secondary mb-4">Edit Wedding Form</button></a>
+        <button type="button" class="btn btn-danger mb-4" id="delete_wedding">Delete Form</button>
       </div>
     </div>
     {{/if}}
   </div>
+{{> del-record-modal}}
   

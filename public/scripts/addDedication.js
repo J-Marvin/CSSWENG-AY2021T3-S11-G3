@@ -18,8 +18,6 @@ $(document).ready(function() {
 
   // bind function to child non-member
   $('#child_non_member').change(function() {
-    $(this).attr('disabled', true)
-    $('#child_member').removeAttr('disabled')
     $('#child_member').prop('checked', false)
     $('#child_member_div').hide()
     $('#child_non_member_div').show()
@@ -30,8 +28,6 @@ $(document).ready(function() {
 
   // bind function to child member
   $('#child_member').change(function () {
-    $(this).attr('disabled', true)
-    $('#child_non_member').removeAttr('disabled')
     $('#child_non_member').prop('checked', false)
     $('#child_member_div').show()
     $('#child_non_member_div').hide()
@@ -41,8 +37,6 @@ $(document).ready(function() {
   })
 
   $('#witness_gmother_non_member').change(function() {
-    $(this).attr('disabled', true)
-    $('#witness_gmother_member').removeAttr('disabled')
     $('#witness_gmother_member').prop('checked', false)
     $('#witness_gmother_member_div').hide()
     $('#witness_gmother_non_member_div').show()
@@ -52,8 +46,6 @@ $(document).ready(function() {
 
   // bind function to witness member
   $('#witness_gmother_member').change(function () {
-    $(this).attr('disabled', true)
-    $('#witness_gmother_non_member').removeAttr('disabled')
     $('#witness_gmother_non_member').prop('checked', false)
     $('#witness_gmother_non_member_div').hide()
     $('#witness_gmother_member_div').show()
@@ -63,8 +55,6 @@ $(document).ready(function() {
   })
 
   $('#witness_gfather_non_member').change(function() {
-    $(this).attr('disabled', true)
-    $('#witness_gfather_member').removeAttr('disabled')
     $('#witness_gfather_member').prop('checked', false)
     $('#witness_gfather_member_div').hide()
     $('#witness_gfather_non_member_div').show()
@@ -74,8 +64,6 @@ $(document).ready(function() {
 
   // bind function to witness member
   $('#witness_gfather_member').change(function () {
-    $(this).attr('disabled', true)
-    $('#witness_gfather_non_member').removeAttr('disabled')
     $('#witness_gfather_non_member').prop('checked', false)
     $('#witness_gfather_non_member_div').hide()
     $('#witness_gfather_member_div').show()
@@ -86,8 +74,6 @@ $(document).ready(function() {
 
   // bind function to parent1 non member
   $('#parent1_non_member').change(function() {
-    $(this).attr('disabled', true)
-    $('#parent1_member').removeAttr('disabled')
     $('#parent1_member').prop('checked', false)
     $('#parent1_member_div').hide()
     $('#parent1_non_member_div').show()
@@ -97,8 +83,6 @@ $(document).ready(function() {
 
   // bind function to parent1 member
   $('#parent1_member').change(function () {
-    $(this).attr('disabled', true)
-    $('#parent1_non_member').removeAttr('disabled')
     $('#parent1_non_member').prop('checked', false)
     $('#parent1_non_member_div').hide()
     $('#parent1_member_div').show()
@@ -108,8 +92,6 @@ $(document).ready(function() {
   })
 
   $('#parent2_non_member').change(function () {
-    $(this).attr('disabled', true)
-    $('#parent2_member').removeAttr('disabled')
     $('#parent2_member').prop('checked', false)
     $('#parent2_member_div').hide()
     $('#parent2_non_member_div').show()
@@ -117,13 +99,10 @@ $(document).ready(function() {
     selectizeEnable($('#input_parent2_member').val())
     $(selectParent2)[0].selectize.setValue('0')
 
-    $('#parent2_none').removeAttr('disabled')
     $('#parent2_none').prop('checked', false)
   })
 
   $('#parent2_member').change(function () {
-    $(this).attr('disabled', true)
-    $('#parent2_non_member').removeAttr('disabled')
     $('#parent2_non_member').prop('checked', false)
     $('#parent2_non_member_div').hide()
     $('#parent2_member_div').show()
@@ -131,15 +110,10 @@ $(document).ready(function() {
     $('#parent2_mid_name').val('')
     $('#parent2_last_name').val('')
 
-    $('#parent2_none').removeAttr('disabled')
     $('#parent2_none').prop('checked', false)
   })
 
   $('#parent2_none').change(function () {
-    $(this).attr('disabled', true)
-    $('#parent2_non_member').removeAttr('disabled')
-    $('#parent2_member').removeAttr('disabled')
-
     $('#parent2_non_member').prop('checked', false)
     $('#parent2_member').prop('checked', false)
 

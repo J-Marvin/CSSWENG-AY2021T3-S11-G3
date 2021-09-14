@@ -8,6 +8,7 @@ const { validationResult } = require('express-validator')
 const observationFields = require('../models/observation')
 const { Condition, queryTypes } = require('../models/condition.js')
 const moment = require('moment')
+const baptismalController = require('./baptismalController.js')
 
 const memberController = {
   /**
@@ -134,7 +135,7 @@ const memberController = {
 
                   data.member.age = moment.duration(today.diff(b)).years()
                   data.styles = ['view']
-                  data.scripts = ['removeButtons']
+                  data.scripts = ['removeButtons', 'deleteMember']
                   data.canSee = (parseInt(req.session.level) === 3) || req.session.editId !== null
                   data.backLink = parseInt(req.session.level) >= 2 ? '/member_main_page' : '/main_page'
                   res.render('view-member', data)
@@ -296,8 +297,6 @@ const memberController = {
       data.address[addressFields.POSTAL_CODE] = req.body.postal_code
       data.address[addressFields.COUNTRY] = req.body.country
 
-      console.log(req.body)
-
       data.member[memberFields.BIRTHDAY] = req.body.birthday
       data.member[memberFields.OCCUPATION] = req.body.occupation
       data.member[memberFields.WORKPLACE] = req.body.workplace
@@ -339,11 +338,34 @@ const memberController = {
    * @param res - the result to be sent out after processing the request
    */
   deleteMember: function (req, res) {
-    const condition = req.query.condition
+    const recordId = req.body.recordId
+    const bapRecordId = req.body.bapRecordId
 
-    db.update(db.tables.MEMBER_TABLE, condition, function (result) {
-      console.log(result)
-      // insert res.render() or res.redirect()
+    const addresses = JSON.parse(req.body.addresses)
+
+    const addressCond = new Condition(queryTypes.whereIn)
+    addressCond.setArray(addressFields.ID, addresses)
+
+    const recordCond = new Condition(queryTypes.where)
+    recordCond.setKeyValue(memberFields.ID, recordId)
+
+    db.delete(db.tables.MEMBER_TABLE, recordCond, function (result) {
+      if (result) {
+        db.delete(db.tables.ADDRESS_TABLE, addressCond, function (result) {
+          if (result) {
+            if (bapRecordId !== null && bapRecordId !== undefined && bapRecordId !== '') {
+              req.body.recordId = bapRecordId
+              baptismalController.delBaptismal(req, res)
+            } else {
+              res.send(true)
+            }
+          } else {
+            res.send(false)
+          }
+        })
+      } else {
+        res.send(false)
+      }
     })
   },
   /**
