@@ -1,6 +1,6 @@
 # Disciples Christian Church DB
 
-## Instructions
+## Instructions for running the application
 1. run `npm i` to install dependencies
 2. run `./node_modules/.bin/electron-rebuild` to install native modules
    - if you run up to any issues with this command, run `.\node_modules\.bin\electron-rebuild.cmd` instead
@@ -11,10 +11,11 @@
 4. the server can be accessed through any web browser at `http://localhost:3000`
 
 ## Instructions for building executable
-1. run `npm run dist`
-2. wait for the build to finish
-3. run `npm run postinstall` to install necessary dependencies
-4. access the executable at dist/win-unpacked
+1. Follow steps 1-2 in **Instructions for running the application**
+2. run `npm run postinstall` to install necessary dependencies
+3. run `npm run dist`
+4. wait for the build to finish
+5. access the executable at release/Disciples Christian Church.exe
 
 ### Resetting the db
 1. delete `church.db`

@@ -33,7 +33,7 @@
         "zip",
         "portable"
       ],
-      "icon": "build/icon.png"
+      "icon": "build/Disciples_Christian_Church.ico"
     },
     "portable": {
       "artifactName": "Disciples Christian Church.exe"
