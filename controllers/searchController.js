@@ -401,6 +401,7 @@ const searchController = {
     const columns = [
       db.tables.WEDDING_TABLE + '.' + weddingRegFields.ID + ' as wedding_id',
       db.tables.WEDDING_TABLE + '.' + weddingRegFields.DATE_OF_WEDDING + ' as date_of_wedding',
+      db.tables.WEDDING_TABLE + '.' + weddingRegFields.DATE + ' as date',
       // bride's name
       'bride.' + personFields.FIRST_NAME + ' as bride_first_name',
       'bride.' + personFields.MID_NAME + ' as bride_mid_name',
