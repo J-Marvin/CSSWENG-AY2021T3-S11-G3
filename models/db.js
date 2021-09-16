@@ -62,8 +62,8 @@ const database = {
   initDB: async function (file) {
     currFile = file
     if (!fse.existsSync(file)) {
-      reset(file)
-      // resetDb.initialize(file)
+      // reset(file)
+      initialize(file)
     } else {
       knexClient = knex({
         client: 'sqlite3',
