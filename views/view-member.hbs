@@ -32,28 +32,32 @@
     </div>
     {{#if canSee}}
       <div class="row">
-        <div class="col-4">
+        <div class="col">
           <u for="birthday">Birthday</u>
           <p>{{dateView member.birthday}}</p>
         </div>
-        <div class="col-8">
+        <div class="col">
           <u for="occupation">Occupation</u>
           <p>{{member.occupation}}</p>
         </div>
+        <div class="col">
+          <u for="sex">Sex</u>
+          <p>{{member.sex}}</p>
+        </div>
       </div>
       <div class="row">
-      <div class="col">
-        <u for="membership_status">Membership Status</u>
-        <p>{{member.member_status}}</p>
-      </div>
-      <div class="col">
-        <u for="civil_status">Civil Status</u>
-        <p>{{member.civil_status}}</p>
-      </div>
-      <div class="col">
-        <u for="sex">Sex</u>
-        <p>{{member.sex}}</p>
-      </div>
+        <div class="col">
+          <u for="membership_status">Membership Status</u>
+          <p>{{member.member_status}}</p>
+        </div>
+        <div class="col">
+          <u for="membership_type">Membership Type</u>
+          <p> sample </p>
+        </div>
+        <div class="col">
+          <u for="civil_status">Civil Status</u>
+          <p>{{member.civil_status}}</p>
+        </div>
       </div>
       <hr>
       <div class="row">

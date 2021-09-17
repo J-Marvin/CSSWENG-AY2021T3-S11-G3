@@ -34,11 +34,11 @@
         <p id="membership_status_error" class="error_codes">  </p>
       </div>
       <div class="col">
-        <label for="civil_status">Civil Status</label>
-        <select id="civil_status" name="civil_status" class="form-select">
-          {{{civilStatusSelection member.civil_status}}}
+        <label for="membership_type">Membership Type</label>
+        <select id="membership_type" name="membership_type" class="form-select">
+          {{!-- Options --}}
         </select>
-        <p id="civil_status_error" class="error_codes">  </p>
+        <p id="membership_type_error" class="error_codes">  </p>
       </div>
       <div class="col" style="display: {{{otherColDisplay member.civil_status}}};">
         <label for="civil_status">If others, specify</label>
@@ -54,6 +54,13 @@
       </div>
     </div>
     <div class="row">
+      <div class="col">
+        <label for="civil_status">Civil Status</label>
+        <select id="civil_status" name="civil_status" class="form-select">
+          {{{civilStatusSelection member.civil_status}}}
+        </select>
+        <p id="civil_status_error" class="error_codes">  </p>
+      </div>
       <div class="col">
         <label for="birthday">Birthday <span style="color: red;">*</span></label>
         <input type="date" id="birthday" name="birthday" class="form-control" value="{{date member.birthday}}">
