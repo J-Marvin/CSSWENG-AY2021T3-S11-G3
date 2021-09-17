@@ -251,7 +251,7 @@
       <hr class="mb-4">
       <div class="row">
         <div class="col-12 d-flex justify-content-between">
-          <legend>Godmother/s</legend>
+          <legend>Sponsors (Female)</legend>
           <button id="add_gmother_button" type="button" class="plus-btn"><i style="width: 2.5em; height: 2.5em; color:black;"
               class="far fa-plus-square"></i></button>
         </div>
@@ -269,7 +269,7 @@
         <p id="witness_gmother_info_error" class="error_codes"> </p>
       <div class="row">
         <div class="col-12 d-flex justify-content-between">
-          <legend>Godfather/s</legend>
+          <legend>Sponsors (Male)</legend>
           <button id="add_gfather_button" class="plus-btn" type="button"><i style="width: 2.5em; height: 2.5em; color:black;"
               class="far fa-plus-square"></i></button>
         </div>
@@ -300,6 +300,7 @@
           <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+          <p><span>Changes here are saved after pressing 'save changes'.<br><b>Note:</b> Cannot undo changes</span></p>
           <div class="row">
             <div class="col">
               <input type="radio" name="bride_radio" id="bride_non_member"> Non Member
@@ -348,6 +349,7 @@
           <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+          <p><span>Changes here are saved after pressing 'save changes'.<br><b>Note:</b> Cannot undo changes</span></p>
           <div class="row">
             <div class="col">
               <input type="radio" name="groom_radio" id="groom_non_member"> Non Member
@@ -392,10 +394,11 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel"><span id="female_modal_title">Add Godmother</span></h5>
+          <h5 class="modal-title" id="exampleModalLabel"><span id="female_modal_title">Add Sponsor</span></h5>
           <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+          <p><span>Changes here are saved after pressing 'save changes'.<br><b>Note:</b> Cannot undo changes</span></p>
           <div class="row">
             <div class="col">
               <input type="radio" name="female_radio" id="female_non_member"> Non Member
@@ -404,7 +407,7 @@
                 <input type="radio" name="female_radio" id="female_none"> None
               </span>
               <div id="female_member_div" style="display:block">
-                <label>Select Member</label>
+                <label>Select</label>
                 <select name="input_female_member" id="input_female_member">
                   {{>dropdown females}}
                 </select>
@@ -443,17 +446,18 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel"><span id="maleModalTitle">Add Godfather</span></h5>
+          <h5 class="modal-title" id="exampleModalLabel"><span id="maleModalTitle">Add Sponsor</span></h5>
           <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+          <p><span>Changes here are saved after pressing 'save changes'.<br><b>Note:</b> Cannot undo changes</span></p>
           <div class="row">
             <div class="col">
               <input type="radio" name="male_radio" id="male_non_member"> Non Member
               <input class="mb-3" name="male_radio" type="radio" id="male_member" checked> Member
               <input type="radio" name="male_radio" id="male_none"> None
               <div id="male_member_div" style="display:block">
-                <label>Select Father</label>
+                <label>Select</label>
                 <select name="input_male" id="input_male_member">
                   {{>dropdown males}}
                 </select>
@@ -492,16 +496,17 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel"><span id="maleWitnessModalTitle">Add Godfather</span></h5>
+          <h5 class="modal-title" id="exampleModalLabel"><span id="maleWitnessModalTitle">Add Sponsor</span></h5>
           <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+          <p><span>Changes here are saved after pressing 'save changes'.<br><b>Note:</b> Cannot undo changes</span></p>
           <div class="row">
             <div class="col">
               <input type="radio" name="male_witness_radio" id="male_witness_non_member"> Non Member
               <input class="mb-3" name="male_witness_radio" type="radio" id="male_witness_member" checked> Member
               <div id="male_witness_member_div" style="display:block">
-                <label>Select Father</label>
+                <label>Select</label>
                 <select name="input_male_witness" id="input_male_witness_member">
                   {{>dropdown males}}
                 </select>
@@ -540,10 +545,11 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel"><span id="femaleWitnessModalTitle">Add Godfather</span></h5>
+          <h5 class="modal-title" id="exampleModalLabel"><span id="femaleWitnessModalTitle">Add Sponsor</span></h5>
           <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+          <p><span>Changes here are saved after pressing 'save changes'.<br><b>Note:</b> Cannot undo changes</span></p>
           <div class="row">
             <div class="col">
               <input type="radio" name="female_witness_radio" id="female_witness_non_member"> Non Member

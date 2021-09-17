@@ -105,6 +105,7 @@
         <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
+        <p><span>Changes here are saved after pressing 'save changes'.<br><b>Note:</b> Cannot undo changes</span></p>
         <input type="radio" id="bride_non_member" {{#unless bride.member_id}}checked{{/unless}}> Non-member
         <input class="mb-3" type="radio" id="bride_member" {{#if bride.member_id}}checked{{/if}}> Member
 
@@ -155,6 +156,7 @@
         <button type="button" id="close_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
+        <p><span>Changes here are saved after pressing 'save changes'.<br><b>Note:</b> Cannot undo changes</span></p>
         <input type="radio" id="groom_non_member" {{#unless groom.member_id}}checked{{/unless}}> Non-member
         <input class="mb-3" type="radio" id="groom_member" {{#if groom.member_id}}checked{{/if}}> Member
 

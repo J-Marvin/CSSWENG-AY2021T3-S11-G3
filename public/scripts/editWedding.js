@@ -784,7 +784,7 @@ $(document).ready(function() {
     isFemale = true
     trigger = person
     
-    initFemaleWitnessModal('Edit Godmother')
+    initFemaleWitnessModal('Edit Sponsor')
   })
 
   $(document).on('click', '.edit_male_witness_btn', function () {
@@ -801,7 +801,7 @@ $(document).ready(function() {
     isFemale = false
     trigger = person
 
-    initMaleWitnessModal('Edit Godfather')
+    initMaleWitnessModal('Edit Sponsor')
   })
 
   $(document).on('click', '.delete_male_witness_btn', function() {
@@ -824,7 +824,7 @@ $(document).ready(function() {
       modalType = editKeys.addGodMother
       currPerson = {}
       isFemale = true
-      initFemaleWitnessModal('Add Godmother')
+      initFemaleWitnessModal('Add Sponsor')
     }
   })
   
@@ -836,7 +836,7 @@ $(document).ready(function() {
       modalType = editKeys.addGodFather
       currPerson = {}
       isFemale = false
-      initMaleWitnessModal('Add Godfather')
+      initMaleWitnessModal('Add Sponsor')
     }
   })
 
