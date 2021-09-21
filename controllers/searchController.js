@@ -73,6 +73,7 @@ const searchController = {
     data.member[memberFields.EDUCATIONAL_ATTAINMENT] = req.query.educational_attainment
     data.member[memberFields.OCCUPATION] = req.query.occupation
     data.member[memberFields.MEMBER_STATUS] = req.query.membership_status
+    data.member[memberFields.MEMBER_TYPE] = req.query.membership_type
 
     data.address[addressFields.CITY] = req.query.city
 
@@ -165,9 +166,13 @@ const searchController = {
       cond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.MEMBER_STATUS, data.member[memberFields.MEMBER_STATUS], '=')
       conditions.push(cond)
     }
-    
+
+    if (data.member[memberFields.MEMBER_STATUS] !== 'Deceased' && data.member[memberFields.MEMBER_TYPE] !== 'Any') {
+      cond = new Condition(queryTypes.where)
+      cond.setKeyValue(db.tables.MEMBER_TABLE + '.' + memberFields.MEMBER_TYPE, data.member[memberFields.MEMBER_TYPE])
+      conditions.push(cond)
+    }
     db.find(db.tables.MEMBER_TABLE, conditions, joinTables, '*', function (result) {
-      
       if (result) {
         const data = {
           styles: ['lists'],
