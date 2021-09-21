@@ -313,7 +313,6 @@ const searchController = {
 
     db.find(tables.PRENUPTIAL_TABLE, conditions, joinTables, columns, function (result) {
       if (result) {
-        
         res.render('prenup-main-page', {
           styles: ['lists'],
           scripts: ['convertDataTable'],
