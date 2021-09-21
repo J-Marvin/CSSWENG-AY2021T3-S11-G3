@@ -2,6 +2,7 @@ const memberFields = {
   ID: 'member_id',
   ADDRESS: 'address_id',
   MEMBER_STATUS: 'member_status',
+  MEMBER_TYPE: 'member_type',
   CIVIL_STATUS: 'civil_status',
   BIRTHDAY: 'birthday',
   OCCUPATION: 'occupation',

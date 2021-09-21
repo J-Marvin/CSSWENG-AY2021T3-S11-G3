@@ -205,6 +205,11 @@ const memberController = {
         data.member[memberFields.FAMILY] = req.body.family_members
         data.member[memberFields.SEX] = req.body.sex
         data.member[memberFields.DATE] = new Date().toISOString()
+        data.member[memberFields.MEMBER_TYPE] = req.body.membership_type
+
+        if (req.body.membership_status !== 'Active' && req.body.membership_status !== 'Inactive') {
+          data.member[memberFields.MEMBER_TYPE] = null
+        }
 
         if (req.body.civil_status !== 'Others') {
           data.member[memberFields.CIVIL_STATUS] = req.body.civil_status
@@ -310,6 +315,12 @@ const memberController = {
       data.member[memberFields.MEMBER_STATUS] = req.body.membership_status
       data.member[memberFields.CIVIL_STATUS] = req.body.civil_status
       data.member[memberFields.SEX] = req.body.sex
+
+      data.member[memberFields.MEMBER_TYPE] = req.body.membership_type
+
+      if (req.body.membership_status !== 'Active' && req.body.membership_status !== 'Inactive') {
+        data.member[memberFields.MEMBER_TYPE] = null
+      }
 
       db.update(db.tables.PERSON_TABLE, data.person, personCondition, function (result) {
         if (!result) {

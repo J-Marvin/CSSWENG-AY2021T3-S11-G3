@@ -36,6 +36,17 @@
         <p id="membership_status_error" class="error_codes">  </p>
       </div>
       <div class="col">
+        <label for="membership_type">Membership Type</label>
+        <select name="membership_type" id="membership_type" class="form-select">
+          <option>Regular Member (Resident)</option>
+          <option>Regular Member (Non Resident)</option>
+          <option>Associate Member</option>
+          <option>Affiliate Member</option>
+          <option>Preparatory Member</option>
+          <option>Honorary Member</option>
+        </select>
+      </div>
+      <div class="col">
         <label for="civil_status">Civil Status</label>
         <select id="civil_status" name="civil_status" class="form-select">
           <option selected> Single </option>
@@ -49,17 +60,17 @@
         <input type="text" id="civil_status_others" name="civil_status_others" class="form-control" >
         <p id="civil_status_others_error" class="error_codes">  </p>
       </div>
+    </div>
+    <div class="row">
       <div class="col">
         <label for="sex">Sex</label>
         <select id="sex" name="sex" class="form-select">
           <option selected> Male </option>
           <option> Female </option>
         </select>
-        <p id="sex_error" class="error_codes">  </p>
+        <p id="sex_error" class="error_codes"> </p>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-4">
+      <div class="col">
         <label for="birthday">Birthday <span style="color: red;">*</span></label>
         <input type="date" id="birthday" name="birthday" class="form-control" >
         <p id="birthday_error" class="error_codes">  </p>

@@ -36,9 +36,13 @@
           <u for="birthday">Birthday</u>
           <p>{{dateView member.birthday}}</p>
         </div>
-        <div class="col-8">
+        <div class="col-4">
           <u for="occupation">Occupation</u>
           <p>{{member.occupation}}</p>
+        </div>
+        <div class="col">
+          <u for="sex">Sex</u>
+          <p>{{member.sex}}</p>
         </div>
       </div>
       <div class="row">
@@ -46,13 +50,15 @@
         <u for="membership_status">Membership Status</u>
         <p>{{member.member_status}}</p>
       </div>
-      <div class="col">
+      {{#if member.member_type}}
+        <div class="col">
+          <u for="membership_type">Membership Type</u>
+          <p>{{member.member_type}}</p>
+        </div>
+      {{/if}}
+      <div class="col{{#unless member.member_type}}-8{{/unless}}">
         <u for="civil_status">Civil Status</u>
         <p>{{member.civil_status}}</p>
-      </div>
-      <div class="col">
-        <u for="sex">Sex</u>
-        <p>{{member.sex}}</p>
       </div>
       </div>
       <hr>

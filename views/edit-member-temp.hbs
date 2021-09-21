@@ -33,6 +33,13 @@
         </select>
         <p id="membership_status_error" class="error_codes">  </p>
       </div>
+      <div class="col" {{#unless member.member_type}}style="display: none"{{/unless}}>
+        <label for="membership_type">Membership Type</label>
+        <select id="membership_type" name="membership_type" class="form-select">
+          {{{memberTypeSelection member.member_type}}}
+        </select>
+        <p id="membership_type_error" class="error_codes"> </p>
+      </div>
       <div class="col">
         <label for="civil_status">Civil Status</label>
         <select id="civil_status" name="civil_status" class="form-select">
@@ -45,6 +52,8 @@
         <input type="text" id="civil_status_others" name="civil_status_others" class="form-control" value="{{{otherCivilStatus member.civil_status}}}">
         <p id="civil_status_others_error" class="error_codes" > </p>
       </div>
+    </div>
+    <div class="row">
       <div class="col">
         <label for="sex">Sex</label>
         <select id="sex" name="sex" class="form-select">
@@ -52,8 +61,6 @@
         </select>
         <p id="sex_error" class="error_codes">  </p>
       </div>
-    </div>
-    <div class="row">
       <div class="col">
         <label for="birthday">Birthday <span style="color: red;">*</span></label>
         <input type="date" id="birthday" name="birthday" class="form-control" value="{{date member.birthday}}">

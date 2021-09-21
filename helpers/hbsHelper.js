@@ -25,6 +25,29 @@ const hbHelpers = {
       return '<option>Male</option> <option selected>Female</option>'
     }
   },
+
+  memberTypeSelection: function (memberType) {
+    const memberTypes = [
+      'Regular Member (Resident)',
+      'Regular Member (Non Resident)',
+      'Associate Member',
+      'Affiliate Member',
+      'Preparatory Member',
+      'Honorary Member'
+    ]
+
+    let options = ''
+
+    for (const type of memberTypes) {
+      if (type === memberType) {
+        options += '<option selected>' + type + '</option>'
+      } else {
+        options += '<option>' + type + '</option>'
+      }
+    }
+
+    return options
+  },
   civilStatusSelection: function (civilStatus) {
     if (civilStatus.toLowerCase() === 'single') {
       return '<option selected>Single</option> <option>Married</option> <option>Others</option>'

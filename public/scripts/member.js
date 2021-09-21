@@ -180,6 +180,16 @@ $(document).ready(function () {
     }
   })
 
+  $('#membership_status').on('change', function() {
+    const status = $('#membership_status').val()
+
+    if (status === 'Active' || status === 'Inactive') {
+      $('#membership_type').closest('div').show()
+    } else {
+      $('#membership_type').closest('div').hide()
+    }
+  })
+
   $('#edit-member').click(function() {
 
     var civil_status
@@ -218,7 +228,8 @@ $(document).ready(function () {
         skills: $('#skills').val(),
         member_id: $('#member_info').attr('data-member'),
         address_id: $('#member_info').attr('data-address'),
-        person_id: $('#member_info').attr('data-person')
+        person_id: $('#member_info').attr('data-person'),
+        membership_type: $('#membership_type').val()
       }
       
       console.log("data")
