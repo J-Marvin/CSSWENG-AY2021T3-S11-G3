@@ -49,6 +49,15 @@ $(document).ready(function () {
         $('.birthday-range').hide()
         $('.age-div').show()
     })
+
+    $('#membership_status').on('change', function() {
+      const status = $('#membership_status').val()
+      if (status === 'Active' || status === 'Inactive') {
+        $('#membership_type').closest('div').show()
+      }  else {
+        $('#membership_type').closest('div').hide()
+      }
+    })
     
     $('#member-search-submit').click(function () {
         var isValid = true
